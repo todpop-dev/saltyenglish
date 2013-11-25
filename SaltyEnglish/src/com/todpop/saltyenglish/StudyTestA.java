@@ -220,7 +220,9 @@ public class StudyTestA extends Activity {
 					pageNumber.setBackgroundResource(resID);
 					//update test word
 					setupTestWords(wordCount);
-					finalAnswerForRequest+="0";
+					if (wordCount>1) {
+						finalAnswerForRequest+="0";
+					}
 
 					progressTimer.start();
 				} else {
@@ -315,42 +317,45 @@ public class StudyTestA extends Activity {
 	{
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
-		Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + currentStage + ";", null);
-		
-		while(cursor.moveToNext()) {
-			englishWords.add(cursor.getString(0));
-			optionOne.add(cursor.getString(1));
+		try {
+			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + currentStage + ";", null);
 			
-			Cursor otherCursor = db.rawQuery("SELECT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
-			otherCursor.moveToNext();
-			optionTwo.add(otherCursor.getString(0));
-			otherCursor.moveToNext();
-			optionThree.add(otherCursor.getString(0));
-			otherCursor.moveToNext();
-			optionFour.add(otherCursor.getString(0));
+			if (cursor.getCount()>0) {
+				while(cursor.moveToNext()) {
+					englishWords.add(cursor.getString(0));
+					optionOne.add(cursor.getString(1));
+					
+					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
+					otherCursor.moveToNext();
+					optionTwo.add(otherCursor.getString(0));
+					otherCursor.moveToNext();
+					optionThree.add(otherCursor.getString(0));
+					otherCursor.moveToNext();
+					optionFour.add(otherCursor.getString(0));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+
 	}
 
 	private class ButtonListener implements OnClickListener{
 		public void onClick(View v)
 		{
-			wordCount++;
+			//wordCount++;
 			progressTimer.cancel();
 
 			// english word set next count
-			if(wordCount<10) {
+			
 				//blind animation start
 				imageTimeBlindAni.startNow();
 				crocodileTimeAni.stop();
 				crocodileTimeAni.start();
 				// string to drawable ID
-				String imageID = "test_9_image_number_"+(wordCount+1);
-				int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
-				//update image
-				pageNumber.setBackgroundResource(resID);
 				
-
-				
+				// ------- Compare Answer First!! ---------------
 				SQLiteDatabase db = mHelper.getWritableDatabase();
 
 				// Here we get correct answer, so save to database as 'O'
@@ -377,23 +382,34 @@ public class StudyTestA extends Activity {
 				} else {
 					finalAnswerForRequest+="0";
 				}
+				// ------- Compare Answer First!! ---------------
 
-				setupTestWords(wordCount);
-				progressTimer.start();
-			} else {
-				// Send Final Request to Server
-				Log.d("funny result: -----", finalAnswerForRequest);
-				SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putString("testResult", finalAnswerForRequest);
-				editor.commit();
+				wordCount++;
 				
-				progressTimer.cancel();
-				isTestFinish = true;
-				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
-				startActivity(intent);
-				finish();
-			}
+				// Setup Label
+				String imageID = "test_9_image_number_"+(wordCount+1);
+				int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
+				pageNumber.setBackgroundResource(resID);
+
+				// Setup Words
+				if (wordCount <=9) {
+					setupTestWords(wordCount);
+					progressTimer.start();
+				} else if (wordCount == 10) {
+					// Send Final Request to Server
+					Log.d("funny result: -----", finalAnswerForRequest);
+					SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
+					SharedPreferences.Editor editor = sp.edit();
+					editor.putString("testResult", finalAnswerForRequest);
+					editor.commit();
+					
+					progressTimer.cancel();
+					isTestFinish = true;
+					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+					startActivity(intent);
+					finish();
+				}
+
 		}
 	}
 	

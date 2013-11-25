@@ -2,13 +2,16 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 
-
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -21,18 +24,24 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class HomeWordList extends Activity {
 	ViewHolder viewHolder = null;
 	
 	HomeWordViewAdapter homeWordViewAdapter;
+
 	ArrayList<HomeWordViewItem> listArray;
+	ArrayList<String> deleteWords;
+	
 	HomeWordViewItem mHomeWordViewItem;
 	ListView listView;
 	
@@ -53,11 +62,18 @@ public class HomeWordList extends Activity {
 	PopupWindow popupWindow;
 	View popupview;
 	RelativeLayout relative;
-	
+ 	WordDBHelper mHelper;
+
+	EditText searchText;
 	
 	SharedPreferences myWord;
 	
 	ArrayList<Boolean> boolList = new ArrayList<Boolean>();  
+	
+	static int count = 0;
+	
+	static boolean isSelectAll = false;
+	static boolean isDeleting = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +82,31 @@ public class HomeWordList extends Activity {
 		
 		editBg = (ImageView)findViewById(R.id.wordbook_16_image_edit_bg);
 		selectAllBtn = (CheckBox)findViewById(R.id.home_word_list_id_select_all_btn);
+		selectAllBtn.setEnabled(true);
+		selectAllBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                	isSelectAll = true;
+                	
+                } else {
+                	isSelectAll = false;
+                }
+        		updateListView();
+
+            }
+        });	
 		
 		myWord = getSharedPreferences("myword", 0);
+		
+		// Search Text
+		searchText = (EditText)findViewById(R.id.my_word_id_edittext);
 
+		// DB Helper
+		mHelper = new WordDBHelper(this);
+		deleteWords = new ArrayList<String>();
 		
 		deleteBtn = (Button)findViewById(R.id.home_word_list_id_delete);
 		//popupview
@@ -92,17 +130,39 @@ public class HomeWordList extends Activity {
 		});
 		//popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
+
+		
 		
 		card = (Button)findViewById(R.id.home_word_list_id_card);
 		listArray = new ArrayList<HomeWordViewItem>();
 		listView=(ListView)findViewById(R.id.home_word_list_id_list_view);
 		
+//		for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
+//			mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
+//			listArray.add(mHomeWordViewItem);
+//			boolList.add(false);
+//		}
 		
+		// Get Word List
+		SQLiteDatabase db = mHelper.getWritableDatabase();
+//		try {
+//			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+//					"name TEXT, mean TEXT);");
+//		} catch (Exception e) {
+//			
+//		}
 		
-		for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-			mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
-			listArray.add(mHomeWordViewItem);
-			boolList.add(false);
+		try {
+			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+			Log.d("db count ------ ", Integer.toString(c.getCount()));
+			while (c.moveToNext()) {
+				Log.d("name --- ", c.getString(0));
+				Log.d("mean --- ", c.getString(1));
+				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+				listArray.add(mHomeWordViewItem);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		updateListView();
@@ -110,9 +170,11 @@ public class HomeWordList extends Activity {
 	
 	public void updateListView()
     {
+		listView.setAdapter(null);
 		homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray);
 		listView.setAdapter(homeWordViewAdapter);
     }
+	
 	
 	
 	class HomeWordViewItem 
@@ -159,24 +221,34 @@ public class HomeWordList extends Activity {
 		public View getView(int position,View convertView,ViewGroup parent)
 		{
 			View v = convertView;
-			if(v == null)
-			{
+			if(v == null) {
 				viewHolder = new ViewHolder();
 				v = Inflater.inflate(layout, parent,false);
 				viewHolder.textEn = (TextView)v.findViewById(R.id.home_word_list_id_word1);
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
 				v.setTag(viewHolder);
-			}else{
+			} else {
 				viewHolder = (ViewHolder)v.getTag();
 			}
-			if(checkEdit==false)
-			{
+			
+			if(checkEdit==false) {
 				viewHolder.select.setVisibility(LinearLayout.GONE);
-			}else
-			{
+			} else {
 				viewHolder.select.setVisibility(LinearLayout.VISIBLE);
+				if (isSelectAll == true) {
+					viewHolder.select.setChecked(true);
+					if (checkChangeWord==false) {
+						deleteWords.add(arSrc.get(position).word1);
+					} else {
+						deleteWords.add(arSrc.get(position).word2);
+					}
+				} else {
+					viewHolder.select.setChecked(false);
+				}
 			}
+			
+			
 			viewHolder.textEn.setText(arSrc.get(position).word1);
 			viewHolder.textEn.setTag(position);
 
@@ -184,28 +256,39 @@ public class HomeWordList extends Activity {
 			viewHolder.textKr.setTag(position);
 			
 			viewHolder.select.setTag(position);
-			viewHolder.select.setOnClickListener(buttonClickListener);
+			//viewHolder.select.setOnClickListener(buttonClickListener);
+			viewHolder.select.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+    					if (checkChangeWord==false) {
+    						deleteWords.add(arSrc.get((Integer)buttonView.getTag()).word1);
+    					} else {
+    						deleteWords.add(arSrc.get((Integer)buttonView.getTag()).word2);
+    					}
+                    } else {
+    					if (checkChangeWord==false) {
+    						deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).word1);
+    					} else {
+    						deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).word2);
+    					}
+                    }
+                }
+            });
+			
 
 			if (position%2 == 1) {
 				v.setBackgroundResource(R.drawable.wordbook_1_image_separatebox_white);
 			} else {
 				v.setBackgroundResource(R.drawable.wordbook_1_image_separatebox_yellow);
 			}
+			
+			selectAllBtn.setEnabled(true);
+			selectAllBtn.setChecked(false);
 			return v;
 		}
-		
-		public View.OnClickListener buttonClickListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				 if (((CheckBox) v).isChecked()) {
-                     //Case 1
-				 }
-				 else {
-					 
-				 }
-			}
-		};
-	
 	}
 	
 	class ViewHolder{
@@ -260,22 +343,29 @@ public class HomeWordList extends Activity {
 	
 	public void editWord(View v)
 	{
-		if(checkEdit==false)
-		{
+		if(checkEdit==false) {
 			listArray.clear();
-			if(checkChangeWord == false)
-			{
-				checkChangeWord = false;
-				for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-					mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
-					listArray.add(mHomeWordViewItem);
+			try {
+				if(checkChangeWord == false) {				
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+						listArray.add(mHomeWordViewItem);
+					}
+				} else {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+						listArray.add(mHomeWordViewItem);
+					}
 				}
-			}else{
-				for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-					mHomeWordViewItem = new HomeWordViewItem(myWord.getString("krWord"+i, ""),myWord.getString("enWord"+i, ""));
-					listArray.add(mHomeWordViewItem);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			
 			updateListView();
 			LayoutParams lp = (LayoutParams) listView.getLayoutParams();
 		       lp.height = 450*(int)density;
@@ -285,21 +375,31 @@ public class HomeWordList extends Activity {
 			selectAllBtn.setVisibility(RelativeLayout.VISIBLE);
 			deleteBtn.setVisibility(RelativeLayout.VISIBLE);
 			checkEdit=true;
-		}else
-		{
+		} else {
 			listArray.clear();
-			if(checkChangeWord == false)
-			{
-				for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-					mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
-					listArray.add(mHomeWordViewItem);
+			
+			try {
+				if(checkChangeWord == false) {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+						listArray.add(mHomeWordViewItem);
+					}
+				} else {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+						listArray.add(mHomeWordViewItem);
+					}
 				}
-			}else{
-				for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-					mHomeWordViewItem = new HomeWordViewItem(myWord.getString("krWord"+i, ""),myWord.getString("enWord"+i, ""));
-					listArray.add(mHomeWordViewItem);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			
+
+			
 			updateListView();
 			LayoutParams lp = (LayoutParams) listView.getLayoutParams();
 		       lp.height = 500*(int)density;
@@ -330,6 +430,164 @@ public class HomeWordList extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.home_word_list, menu);
 		return true;
+	}
+	
+	// Search words
+	public void searchEnWord (View v) 
+	{
+		String sT = searchText.getText().toString();
+		if (sT.length() > 0) {
+			// Get Word List
+			listArray.clear();
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			
+			
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				while (c.moveToNext()) {
+					Log.d("name --- ", c.getString(0));
+					Log.d("mean --- ", c.getString(1));
+					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			updateListView();
+
+		} else {
+			// Get Word List
+			listArray.clear();
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+				while (c.moveToNext()) {
+					Log.d("name --- ", c.getString(0));
+					Log.d("mean --- ", c.getString(1));
+					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			updateListView();
+		}
+	}
+	
+	// Change Word position
+	public void changeWordPosition(View v)
+	{
+		
+		count++;
+		
+		String sT = searchText.getText().toString();
+		if (sT.length() > 0) {
+			// Get Word List
+			listArray.clear();
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				while (c.moveToNext()) {
+					if (count%2==1) {
+						checkChangeWord = true;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+					} else {
+						checkChangeWord = false;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					}
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			updateListView();
+
+		} else {
+			// Get Word List
+			listArray.clear();
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+				while (c.moveToNext()) {
+					if (count%2==1) {
+						checkChangeWord = true;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+					} else {
+						checkChangeWord = false;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					}				
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			updateListView();
+		}
+	}
+	
+	// Delete words
+	public void deleteWords(View v)
+	{
+		for (int i=0; i<deleteWords.size(); i++) {
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			try {
+				db.delete("mywords", "name='" + deleteWords.get(i) + "'", null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		listArray.clear();
+		SQLiteDatabase db = mHelper.getWritableDatabase();
+		
+		try {
+			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+			while (c.moveToNext()) {
+				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+				listArray.add(mHomeWordViewItem);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		updateListView();
+	}
+	
+	//------- Database Operation ------------------
+	private class WordDBHelper extends SQLiteOpenHelper {
+		public WordDBHelper(Context context) {
+			super(context, "EngWord.db", null, 1);
+		}
+		
+		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT NOT NULL UNIQUE, mean TEXT);");
+		}
+		
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS mywords");
+			onCreate(db);
+		}
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		mHelper.close();
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -22,6 +23,10 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.animation.Animator.AnimatorListener;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -42,9 +47,13 @@ import android.widget.TextView;
 
 public class LvTestBigin extends Activity {
 	RelativeLayout introView;
+	
 	AnimationDrawable imageTimeAni ;
-	TranslateAnimation imageTimeBlindAni;
+	ImageView imageTime ;
+	
+	ObjectAnimator imageTimeBlindAni;
 	ImageView imageTimeBlind;
+	
 	RelativeLayout endView;
 	AnimationDrawable imageTestendAni;
 	ImageView numberView;
@@ -60,7 +69,7 @@ public class LvTestBigin extends Activity {
 	String krWord4;
 	int count=1;
 	String level=null;
-	float density;
+	int density;
 
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
@@ -72,12 +81,23 @@ public class LvTestBigin extends Activity {
 	
 	String userId = "";
 	String checkRW = "";
+	
+	boolean checkAni = false;
+	
+	ArrayList<Integer> randomP = new ArrayList<Integer>(); 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lv_test_bigin);
 		
+		density = (int) getResources().getDisplayMetrics().density;
+		
+		randomP.add(506/2*density);
+		randomP.add(640/2*density);
+		randomP.add(774/2*density);
+		randomP.add(908/2*density);
 		
 		lvTextWord = getSharedPreferences("lvTextWord",0);
 		lvTextWordEdit = lvTextWord.edit();
@@ -107,6 +127,7 @@ public class LvTestBigin extends Activity {
 		select3.setClickable(false);
 		select4.setClickable(false);
 
+		
 		new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?step=1");
 
 
@@ -120,23 +141,16 @@ public class LvTestBigin extends Activity {
 		AnimationDrawable imageTestStartAni = (AnimationDrawable) imageTestStart.getBackground();
 		imageTestStartAni.start();	
 
-		ImageView imageTime = (ImageView) findViewById(R.id.lv_test_image_time);
+		imageTime = (ImageView) findViewById(R.id.lv_test_image_time);
 		imageTime.setBackgroundResource(R.drawable.lvtest_begin_drawable_time_img);
 		imageTimeAni = (AnimationDrawable) imageTime.getBackground();
 
 
 		imageTimeBlind = (ImageView)findViewById(R.id.lv_test_image_timeblind);
-		//density = getResources().getDisplayMetrics().density;
-		//imageTimeBlindAni = new TranslateAnimation(0, 360*density,0, 0); 
-		imageTimeBlindAni = new TranslateAnimation(
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
-				);
-
+		
+		imageTimeBlindAni = ObjectAnimator.ofFloat(imageTimeBlind, "x",-720/2*density, 0/2*density);		
 		imageTimeBlindAni.setDuration(10000);
-		imageTimeBlindAni.setRepeatCount(0);
+		imageTimeBlindAni.addListener(mAnimationListener);
 
 		endView = (RelativeLayout)findViewById(R.id.lvtest_7_view);
 
@@ -145,54 +159,77 @@ public class LvTestBigin extends Activity {
 		imageTestendAni = (AnimationDrawable) imageTestend.getBackground();
 
 
-		MyAnimationListener = new Animation.AnimationListener() {
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub			
-			}		
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub			
-			}		
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub	
-				count++;
-
-				imageTimeAni.stop();
-				imageTimeBlind.setAnimation(null);
-				//imageTimeBlindAni = new TranslateAnimation(0, 360*density,0, 0);  
-				imageTimeBlindAni = new TranslateAnimation(
-						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-						TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
-						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
-						);
-				imageTimeBlindAni.setDuration(10000);
-				imageTimeBlindAni.setRepeatCount(0);
-
-				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-				lvTextWordEdit.putString("check"+(count-2), "N");
-				lvTextWordEdit.commit();
-				checkRW = "x";
-
-				if(count == 21)
-				{
-					Log.d("finel level: ", level);
-					new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
-					endView.setVisibility(View.VISIBLE);
-					imageTestendAni.start();
-//					Handler goNextHandler = new Handler();
-//					goNextHandler.postDelayed(GoNextHandler, 1000);
-				}else{
-					new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?step="+count+"&level="+level+"&ox="+checkRW);
-				}
-
-			}
-		};
-		imageTimeBlindAni.setAnimationListener(MyAnimationListener);
-
+		
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(mLaunchTaskMain, 4000);
 	}
+	
+
+	
+	public void setButtonPosition()
+	{
+		
+		Collections.shuffle(randomP);
+		
+		
+
+		for(int i = 0 ; i<4; i++){
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+			lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			lp.setMargins(0, randomP.get(i), 0, 0);
+			
+			Log.d("random",""+randomP.get(i));
+			switch(i)
+			{
+			case 0:
+				select1.setLayoutParams(lp);
+				break;
+			case 1:
+				select2.setLayoutParams(lp);
+
+				break;
+			case 2:
+				select3.setLayoutParams(lp);
+				break;
+			case 3:
+				select4.setLayoutParams(lp);
+				break;
+			}
+		}
+		
+	}
+	
+	private  AnimatorListener mAnimationListener = new AnimatorListenerAdapter() {
+		public void onAnimationEnd(Animator animation) 
+		{
+			count++;
+			imageTimeAni.stop();
+			imageTimeBlindAni.start();
+
+			lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
+			lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
+			lvTextWordEdit.putString("check"+(count-2), "N");
+			lvTextWordEdit.commit();
+			checkRW = "x";
+
+			if(count == 21)
+			{
+				Log.d("finel level: ", level);
+				new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
+				endView.setVisibility(View.VISIBLE);
+				imageTestendAni.start();
+//				Handler goNextHandler = new Handler();
+//				goNextHandler.postDelayed(GoNextHandler, 1000);
+			}else{
+				new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?step="+count+"&level="+level+"&ox="+checkRW);
+			}
+
+	
+		}
+		public void onAnimationCancel(Animator animation) {}
+		public void onAnimationRepeat(Animator animation) {}
+		public void onAnimationStart(Animator animation) {}
+	};
 
 	private class ButtonListener implements OnClickListener{
 		public void onClick(View v)
@@ -242,16 +279,8 @@ public class LvTestBigin extends Activity {
 			}
 			
 			imageTimeAni.stop();
-			imageTimeBlind.setAnimation(null);
-			//imageTimeBlindAni = new TranslateAnimation(0, 360*density,0, 0); 
-			imageTimeBlindAni = new TranslateAnimation(
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
-					);
-			imageTimeBlindAni.setDuration(10000);
-			imageTimeBlindAni.setRepeatCount(0);
+	
+			imageTimeBlindAni.start();
 
 		}
 	}
@@ -321,9 +350,15 @@ public class LvTestBigin extends Activity {
         			
         			if(count<21)
         			{
-        				imageTimeAni.start();
-        				imageTimeBlind.setAnimation(imageTimeBlindAni); 
-        				imageTimeBlindAni.setAnimationListener(MyAnimationListener);
+        				
+        				if(checkAni == true){
+        					
+        					setButtonPosition();
+        					imageTimeAni.start();
+        				      
+            				imageTimeBlindAni.start();
+        				}
+        				
         				switch(count)
         				{
         					case 2:
@@ -408,25 +443,14 @@ public class LvTestBigin extends Activity {
 	private Runnable mLaunchTaskMain = new Runnable() {
 		public void run() {
 			introView.setVisibility(View.GONE);
-
+			checkAni =true;
 			imageTimeAni.start();
-			imageTimeBlind.setAnimation(imageTimeBlindAni); 
-			//image_timeblindAni.start();
+
+			imageTimeBlindAni.start();
 	    }
 	};
-//	private Runnable GoNextHandler = new Runnable() {
-//		public void run() {
-//			imageTestendAni.stop();
-//			SharedPreferences pref = getSharedPreferences("levelTest",0);
-//			SharedPreferences.Editor edit = pref.edit();
-//			edit.putString("level", level);
-//			edit.commit();
-//
-//			Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);
-//			startActivity(intent);
-//			finish();
-//	    }
-//	};
+
+	
     @Override
     protected void onStart() {
         super.onStart();
@@ -445,6 +469,10 @@ public class LvTestBigin extends Activity {
 	@Override
     public void onPause() {
        super.onPause();  
+       imageTimeBlindAni.cancel();
+       imageTestendAni.stop();
+       imageTimeAni.stop();
+       
     }
 	
     @Override

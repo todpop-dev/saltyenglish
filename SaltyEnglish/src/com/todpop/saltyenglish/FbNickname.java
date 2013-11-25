@@ -16,6 +16,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.facebook.Session;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -87,6 +89,26 @@ public class FbNickname extends Activity {
 		
 		isRegisterFailed = false;
 
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Facebook Logout Forcely
+		Session session = Session.getActiveSession();
+		if (session != null) {
+			if (!session.isClosed()) {
+				session.closeAndClearTokenInformation();
+				//clear your preferences if saved
+			}
+		} else {
+			session = new Session(getApplicationContext());
+			Session.setActiveSession(session);
+
+			session.closeAndClearTokenInformation();
+			//clear your preferences if saved
+		}
 	}
 
 	private class SendInfo extends AsyncTask<String, Void, JSONObject> 
