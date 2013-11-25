@@ -1,0 +1,59 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_darkyellowpattern">
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+    
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22.9dp"
+        android:src="@drawable/register_23_image_congratulations"/>
+    
+     <VideoView 
+        android:id="@+id/rg_video_view"
+        android:layout_width="257.78dp"
+        android:layout_height="208.2dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="158.23dp"
+        />
+
+    
+     <ImageView 
+        android:id="@+id/rgregisterfinish_id_ani"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="383.51dp"
+        />
+     
+     <ImageView 
+        android:id="@+id/rgregisterfinish_id_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="148.24dp"/>
+     
+    <Button
+        android:id="@+id/rgregisterfinish_id_test_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="410.58dp"
+        android:enabled="false"
+        android:background="@drawable/rgregisterfinish_drawable_btn_test"
+        android:onClick="showLvTestBiginActivity" />
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

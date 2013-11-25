@@ -1,0 +1,151 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@drawable/common_bg_blue" >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+    
+    
+    <ImageView
+        android:id="@+id/lv_test_image_timeblind" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-320dp"
+        android:layout_marginTop="37.48dp"
+        android:src="@drawable/common_image_timeblind"/>
+    
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9.99dp"
+        android:src="@drawable/common_bgimg_leveltest"/>
+    
+
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150.32dp"
+        android:src="@drawable/lvtest_3_image_wordbar"/>
+    
+    <ImageView 
+        android:id="@+id/lvtextbigin_id_view_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="237.33dp"
+        android:layout_marginTop="54.97dp"
+        android:src="@drawable/lvtest_3_image_number1"/>
+    
+    <TextView 
+        android:id="@+id/lvtextbigin_id_enword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="119.09dp"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        />
+    
+    <Button 
+        android:id="@+id/lvtestbigin_id_select1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="210.7dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn"/>
+    
+    <Button 
+        android:id="@+id/lvtestbigin_id_select2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="266.5dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn"/>
+    
+    <Button 
+        android:id="@+id/lvtestbigin_id_select3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="322.3dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn"/>
+    
+    <Button 
+        android:id="@+id/lvtestbigin_id_select4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="378.1dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn"/>
+    
+    <ImageView 
+        android:id="@+id/lv_test_image_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="461.79dp"
+        />
+    
+    
+    <RelativeLayout 
+    	android:id="@+id/lvtestbigin_id_introView"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent" 
+    	android:background="@drawable/lvtest_2_image_blind" 
+    	android:clickable="true">
+    
+        
+          <ImageView 
+        android:id="@+id/lvtest_2_image_teststart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23.11dp"
+        android:layout_marginTop="62.04dp"
+        />
+        
+    
+        
+        <ImageView 
+        android:id="@+id/lvtest_2_text_ready"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="425.57dp"
+        />
+        
+    
+        
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/lvtest_7_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="@drawable/lvtest_7_bg">
+        
+        <ImageView 
+        android:id="@+id/lvtest_7_image_testend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62.04dp"
+        
+        />
+        
+    </RelativeLayout>
+    
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

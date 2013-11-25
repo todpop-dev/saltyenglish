@@ -1,0 +1,137 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_darkyellowpattern"
+    android:id="@+id/rglogin_id_main_activity"
+	>
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+	
+    <TextView 
+        android:layout_width="200.44dp"
+        android:layout_height="46.22dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="71.21dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="당신은 facebook으로 로그인 가능하며 E-mail로 로그인은 할수없습니다"
+        />
+	
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9.33dp"
+        android:layout_marginTop="8.74dp"
+        android:onClick="onClickBack"
+        android:background="@drawable/rg_drawable_btn_back"/>
+    
+    <ImageView 
+        android:id="@+id/register_info_fb_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:layout_marginLeft="55.56dp"
+    	android:layout_marginTop="135.33dp"
+    	android:src="@drawable/register_4_bgimg_email"
+        />
+    
+
+   	<com.facebook.widget.LoginButton
+   	  	xmlns:fb="http://schemas.android.com/apk/res-auto"
+   	    android:id="@+id/rg_facebook_login_btn"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="354.36dp"
+    	android:background="@drawable/rglogin_drawable_btn_facebook"
+    	fb:login_text=""
+        fb:logout_text=""
+    	 />
+   	
+   	<EditText
+   	    android:id="@+id/rglogin_id_email"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:paddingLeft="25dp"
+   	    android:paddingRight="25dp"
+   	    android:layout_centerHorizontal="true"
+   	    android:layout_marginTop="155.74dp"
+   	    android:singleLine="true"
+   	    android:background="@drawable/common_textbox_long"
+   	    android:inputType="textEmailAddress"
+   	    android:textSize="15sp"
+   	    android:gravity="center"
+   	    android:hint="salty-english@todpop.co.kr"
+   	    />
+   	
+   	<EditText
+   	    android:id="@+id/rglogin_id_emailpassword"
+   	    android:inputType="textPassword"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:paddingLeft="25dp"
+   	    android:paddingRight="25dp"
+   	    android:layout_centerHorizontal="true"
+   	    android:layout_marginTop="203.62dp"
+   	    android:singleLine="true"
+   	    android:background="@drawable/common_textbox_long"
+   	    android:textSize="15sp"
+   	    android:gravity="center"
+   	    android:hint="비밀번호 입력(영문,숫자혼합8-12자)"
+   	    />
+   	
+   	<Button
+   	    android:id="@+id/rglogin_id_loginbtn"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="259.42dp"
+    	android:background="@drawable/rglogin_drawable_btn_email_login"
+    	android:onClick="emailLogin"
+		  />
+   	
+   	
+
+   	<ImageView
+   	    android:id="@+id/register_info_fb_email"
+   	    android:layout_width="wrap_content"
+   	    android:layout_height="wrap_content"
+   	    android:layout_centerHorizontal="true"
+   	    android:layout_marginTop="329.79dp"
+   	    android:src="@drawable/register_4_bgimg_bar" />
+   	
+   	
+   	<ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:layout_marginLeft="18.67dp"
+    	android:layout_marginTop="450.55dp"
+    	android:src="@drawable/common_image_bgcharacter2"
+        />
+   	
+   	<ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="9.99dp"
+    	android:src="@drawable/common_bgimg_login"
+        />
+   	
+   	<ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:layout_marginLeft="22.22dp"
+    	android:layout_marginTop="124.92dp"
+    	android:src="@drawable/register_19_image_emailman"
+        />
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

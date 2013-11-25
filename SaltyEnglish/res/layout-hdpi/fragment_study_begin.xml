@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_study_begin_id_mainview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+        <!-- bg -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="51.63dp"
+            android:src="@drawable/study_8_image_engcard" />
+
+        <!-- speack btn -->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17.78dp"
+            android:layout_marginTop="52.47dp"
+            android:background="@drawable/studybigin_drawable_btn_speaker" />
+
+        <!-- word ON -->
+
+        <ImageView
+            android:id="@+id/fragment_study_begin_id_word_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="243.56dp"
+            android:layout_marginTop="59.96dp"
+            android:background="@drawable/study_8_image_number_01" />
+
+        <!-- baby image -->
+
+        <ImageView
+            android:id="@+id/fragment_study_begin_id_word_img"
+            android:layout_width="177.78dp"
+            android:layout_height="166.56dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="103.27dp"
+            android:scaleType="centerInside" />
+        <!-- android:src="@drawable/study_8_image_eximage" -->
+
+
+        <!-- word -->
+
+        <TextView
+            android:id="@+id/study_word_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="294.82dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="35sp" />
+        <!-- android:background="@drawable/study_8_text_engirritate" -->
+
+
+        <!-- word pronounce -->
+
+        <TextView
+            android:id="@+id/study_word_pron_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="343.12dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="30sp" />
+
+        <!-- android:background="@drawable/study_8_text_pronounce" -->
+
+
+        <!-- word pronounce -->
+
+        <TextView
+            android:id="@+id/study_word_ex_tv"
+            android:layout_width="266.67dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="384.76dp"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+        <!-- android:background="@drawable/study_8_text_exsentence" -->
+
+    </RelativeLayout>
+
+</RelativeLayout>

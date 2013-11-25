@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/homedownload_list_item_id_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="17.78dp"
+        android:src="@drawable/store_2_image_goodsimage" />
+
+    <TextView
+        android:id="@+id/homedownload_list_item_id_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="17.78dp"
+        android:layout_marginTop="5.83dp"
+        android:layout_toRightOf="@id/homedownload_list_item_id_image"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/homedownload_list_item_id_imagecoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17.78dp"
+        android:layout_marginTop="33.31dp"
+        android:layout_toRightOf="@id/homedownload_list_item_id_image"
+        android:src="@drawable/common_image_smallcoin" />
+
+    <TextView
+        android:id="@+id/homedownload_list_item_id_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.67dp"
+        android:layout_marginTop="28.32dp"
+        android:layout_toRightOf="@id/homedownload_list_item_id_imagecoin"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="17sp" />
+
+    <Button
+        android:id="@+id/homedownload_list_item_id_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="17.78dp"
+        android:background="@drawable/homedownload_drawable_btn_saving"
+        android:onClick="SavingCPI" />
+
+</RelativeLayout>
