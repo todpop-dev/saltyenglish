@@ -18,9 +18,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -41,6 +43,7 @@ public class RgRegister extends Activity {
     
     Button emailBtn;
     ImageView rgNotice;
+    CheckBox rgCheckbox;
     
 	PopupWindow popupWindow;
 	View popupview;
@@ -57,6 +60,14 @@ public class RgRegister extends Activity {
 		emailBtn = (Button)findViewById(R.id.register_17_email_btn);
 		final LoginButton fb_btn = (LoginButton)findViewById(R.id.register_id_facebook_btn);
 		rgNotice = (ImageView)findViewById(R.id.register_17_email_notice);
+		rgCheckbox = (CheckBox)findViewById(R.id.rg_register_id_checkbox);
+		
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.id_rg_regster_relative_layout);;
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		float density = getResources().getDisplayMetrics().density;
+		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(110*density),true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 		if(!rgInfo.getString("facebookEmail","NO").equals("NO"))
 		{
@@ -94,7 +105,6 @@ public class RgRegister extends Activity {
 		// Facebook Login Button
 		fb_btn.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "email"));
 		fb_btn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
-		
 //	       try {
 //	            PackageInfo info = getPackageManager().getPackageInfo(
 //	                    "com.todpop.saltyenglish", 
@@ -120,26 +130,40 @@ public class RgRegister extends Activity {
 	// Go do email register activity
 	public void showRgRegisterEmailActivity(View view)
 	{
-
-		Intent intent = new Intent(getApplicationContext(), RgRegisterEmail.class);
-		startActivity(intent);
+		if(!rgCheckbox.isChecked()){
+			//popupview
+			popupText.setText(R.string.popup_register_agree);
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			popupWindow.showAsDropDown(rgCheckbox);
+		}
+		else{
+			Intent intent = new Intent(getApplicationContext(), RgRegisterEmail.class);
+			startActivity(intent);
+		}
 
 
 	}
 	
-	public void showProvisionActivity(View view)
+	public void showProvisionActivity_user(View view)
 	{
 		Intent intent = new Intent(getApplicationContext(), RgRegisterProvision.class);
+		intent.putExtra("wButton", 1);
 		startActivity(intent);
 	}
-
+	
+	public void showProvisionActivity_personal(View view)
+	{
+		Intent intent = new Intent(getApplicationContext(), RgRegisterProvision.class);
+		intent.putExtra("wButton", 2);
+		startActivity(intent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.rg_register, menu);
 		return true;
 	}
-
 	
 	// Facebook delegates
 	
@@ -204,13 +228,23 @@ public class RgRegister extends Activity {
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
-			onSessionStateChange(session, state, exception);
+			if(rgCheckbox.isChecked()){
+				onSessionStateChange(session, state, exception);
+			}
+			else{
+				//popupview
+				popupText.setText(R.string.popup_register_agree);
+    			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+    			popupWindow.showAsDropDown(rgCheckbox);
+    			Log.i("STEVEN", "PopUp");
+    			session.close();
+    			Log.i("STEVEN", "Session Close");
+			}
 		}
 	};
 	
 	private void onSessionStateChange(Session session, SessionState state, Exception exception) {
 		if (session.isOpened()) {
-			
 			// Request user data and show the results
 		    Request.newMeRequest(session, new Request.GraphUserCallback() {
 
@@ -228,6 +262,11 @@ public class RgRegister extends Activity {
 		        }
 		    }).executeAsync();
 		} 
+	}
+	
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
 	}
 	
 	private class CheckFacebookEmail extends AsyncTask<String, Void, JSONObject> 

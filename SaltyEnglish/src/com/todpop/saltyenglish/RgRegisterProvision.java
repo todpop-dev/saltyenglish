@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class RgRegisterProvision extends Activity {
 
@@ -15,6 +18,19 @@ public class RgRegisterProvision extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_register_provision);
+		ImageView provisionImage = (ImageView)this.findViewById(R.id.provisionImage);
+		TextView textViewField = (TextView)this.findViewById(R.id.textViewField);
+		Intent intent = getIntent();
+		int state = intent.getIntExtra("wButton", 0);
+		
+		if(state == 1){
+			provisionImage.setImageResource(R.drawable.register_28_bgimg_agreement);
+			textViewField.setText(R.string.userAgreement);
+		}
+		else{
+			provisionImage.setImageResource(R.drawable.register_28_bgimg_personalinfo);
+			textViewField.setText(R.string.personalInfo);
+		}
 	}
 
 	//----button onClick----

@@ -72,8 +72,9 @@ public class MainActivity extends Activity
 		try {
 			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 			mobile =phoneMgr.getLine1Number().toString();
+			mobile = mobile.replace("+82", "0");
 		} catch(Exception e) {
-			mobile = "010-0000-1001";
+			mobile = "01000001001";
 		}
 
 		SharedPreferences settings = getSharedPreferences("setting", 0);
