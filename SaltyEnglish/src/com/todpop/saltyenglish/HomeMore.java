@@ -1,0 +1,136 @@
+package com.todpop.saltyenglish;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+
+public class HomeMore extends Activity {
+	
+	SharedPreferences rgInfo;
+	SharedPreferences.Editor rgInfoEdit;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_home_more);
+		
+		rgInfo = getSharedPreferences("rgInfo",0);
+		rgInfoEdit = rgInfo.edit();
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		
+		new CheckPw().execute("http://todpop.co.kr/api/users/"+rgInfo.getString("mem_id", "NO")+"/is_set_facebook_password.json");
+		
+		
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.home_more, menu);
+		return true;
+	}
+	
+	private class CheckPw extends AsyncTask<String, Void, JSONObject> 
+	{
+		
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			
+			try {
+				if(json.getBoolean("status")==true)
+				{
+					if(json.getJSONObject("data").getBoolean("is_set"))
+					{
+						rgInfoEdit.putString("password", "1");
+					}else{
+						rgInfoEdit.putString("password", "0");
+					}
+					rgInfoEdit.commit();
+				}else{
+					
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
+
+	// on click
+	public void onClickBack(View view)
+	{
+		finish();
+	}
+	
+	public void showSettingActivity(View view)
+	{
+		Intent intent = new Intent(getApplicationContext(), HomeMoreSetting.class);
+		startActivity(intent);
+	}
+	
+	public void showNoticeActivity(View view)
+	{
+		Intent intent = new Intent(getApplicationContext(), HomeMoreNotice.class);
+		startActivity(intent);
+	}
+	
+	public void showAccountInfoActivity(View view)
+	{
+		Intent intent = new Intent(getApplicationContext(), HomeMoreAcountInfo.class);
+		startActivity(intent);
+	}
+	
+	public void showHelpActivity(View view)
+	{
+		Intent intent = new Intent(getApplicationContext(), HomeMoreHelp.class);
+		startActivity(intent);
+	}
+
+}

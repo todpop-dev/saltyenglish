@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.todpop.saltyenglish"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="18" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        <activity
+            android:name="com.todpop.saltyenglish.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgLoginAndRegister"
+            android:label="@string/title_activity_rg_login_and_register"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgLogin"
+            android:label="@string/title_activity_rg_login"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegister"
+            android:label="@string/title_activity_rg_register"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegisterProvision"
+            android:label="@string/title_activity_rg_register_provision"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegisterEmail"
+            android:label="@string/title_activity_rg_register_email"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegisterEmailInfo"
+            android:label="@string/title_activity_rg_register_email_info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegisterFinish"
+            android:label="@string/title_activity_rg_register_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.LvTestBigin"
+            android:label="@string/title_activity_lv_test_bigin"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.LvTestFinish"
+            android:label="@string/title_activity_lv_test_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.LvTestResult"
+            android:label="@string/title_activity_lvtest_result"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestPause"
+            android:label="@string/title_activity_lvtest_pause"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyHome"
+            android:label="@string/title_activity_study_home"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyCategory"
+            android:label="@string/title_activity_study_category"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyLearn"
+            android:label="@string/title_activity_study_learn"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyFinish"
+            android:label="@string/title_activity_study_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestA"
+            android:label="@string/title_activity_study_testa"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestB"
+            android:label="@string/title_activity_study_test_b"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestC"
+            android:label="@string/title_activity_study_test_c"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyBegin"
+            android:label="@string/title_activity_study_bigin"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestFinish"
+            android:label="@string/title_activity_study_test_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeStore"
+            android:label="@string/title_activity_home_store"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMore"
+            android:label="@string/title_activity_home_more"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreSetting"
+            android:label="@string/title_activity_home_more_setting"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreHelp"
+            android:label="@string/title_activity_home_more_help"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreAcountInfo"
+            android:label="@string/title_activity_home_more_acount_info"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreAcountChangePw"
+            android:label="@string/title_activity_home_more_acount_change_pw"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreNotice"
+            android:label="@string/title_activity_home_more_notice"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMyPage"
+            android:label="@string/title_activity_home_my_page"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMyPageAttendance"
+            android:label="@string/title_activity_home_my_page_attendance"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMyPagePurchased"
+            android:label="@string/title_activity_home_my_page_purchased"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMyPageSaving"
+            android:label="@string/title_activity_home_my_page_saving"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeDownload"
+            android:label="@string/title_activity_home_download"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeWordList"
+            android:label="@string/title_activity_home_word_list"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+        <activity android:name="com.facebook.LoginActivity" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.FbNickname"
+            android:label="@string/title_activity_fb_nickname"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestResult"
+            android:label="@string/title_activity_study_test_result"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMypageOptionCharacter"
+            android:label="@string/title_activity_home_mypage_option_character"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMoreAccountDelete"
+            android:label="@string/title_activity_home_more_account_delete"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.CPLView"
+            android:label="@string/title_activity_cplview" >
+        </activity>
+
+        <service android:name="com.todpop.saltyenglish.ReminderService" >
+        </service>
+
+        <activity
+            android:name="com.todpop.saltyenglish.LvTestPause"
+            android:label="@string/title_activity_lv_test_pause" >
+        </activity>
+    </application>
+
+</manifest>

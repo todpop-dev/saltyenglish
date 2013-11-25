@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true" >
+    <item android:drawable="@drawable/lvtest_3_image_time10" android:duration="400" /> 
+    <item android:drawable="@drawable/lvtest_3_image_time9_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time9" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time8_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time8" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time7_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time7" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time6_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time6" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time5_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time5" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time4_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time4" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time3_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time3" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time2_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time1_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time1" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time0_2" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time0_1" android:duration="422" />
+    <item android:drawable="@drawable/lvtest_3_image_time0" android:duration="422" />
+     
+</animation-list>

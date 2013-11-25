@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_bluepattern">
+	
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:src="@drawable/common_bgimg_wordtest" />
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="194.5dp"
+        android:src="@drawable/test_21_image_addbox" />
+    
+    <VideoView 
+        android:id="@+id/test_video_view"
+        android:layout_width="400dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="200dp"
+        />
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="61.5dp"
+        android:layout_marginTop="115.5dp"
+        android:src="@drawable/test_21_image_marking" />
+    
+    
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="273.5dp"
+        android:layout_marginTop="207dp"
+        android:background="@drawable/studytestinish_drawable_btn_skip"
+        android:onClick="showTestFinishViewCB"
+        />
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="546.5dp"
+        android:src="@drawable/common_image_bgcharacter5" />
+        
+</RelativeLayout>

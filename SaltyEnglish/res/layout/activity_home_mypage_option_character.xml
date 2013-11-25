@@ -1,0 +1,163 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_pinkpattern" >
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="12.5dp"
+        android:src="@drawable/common_bgimg_character" />
+
+   <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.5dp"
+        android:layout_marginTop="10.5dp"
+        android:onClick="onClickBack"
+        android:background="@drawable/rg_drawable_btn_back"/>
+   
+   <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="58dp"
+        android:src="@drawable/common_image_pinkbox_big" />
+   
+   
+   <RadioGroup
+       		android:id="@+id/home_mypage_id_character_radiogroup"
+   	  	    android:layout_width="wrap_content" 
+         	android:layout_height="wrap_content"
+       		android:layout_marginTop="58dp"
+         	android:orientation="vertical"    >
+
+       <RadioButton
+           android:id="@+id/home_mypage_id_character_eric"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="50dp"
+           android:layout_marginTop="26dp"
+           android:background="@drawable/store_44_btn_eric_off"
+           android:button="@drawable/mypagecharacter_drawable_radiobutton_eric" />
+
+       <RadioButton
+           android:id="@+id/home_mypage_id_character_selly"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginLeft="205dp"
+           android:layout_marginTop="-106dp"
+           android:background="@drawable/store_44_btn_eric_off"
+           android:button="@drawable/mypagecharacter_drawable_radiobutton_selly" />
+   
+      	  <RadioButton
+   		      android:id="@+id/home_mypage_id_character_john"
+       	  	  android:layout_width="wrap_content" 
+       	 	  android:layout_height="wrap_content" 
+			  android:layout_marginLeft="50dp"
+       	 	  android:layout_marginTop="26dp"
+       	 	  android:background="@drawable/store_44_btn_eric_off"
+       	 	  android:button="@drawable/mypagecharacter_drawable_radiobutton_john"
+       	 	  />
+
+      	  <RadioButton
+      	      android:id="@+id/home_mypage_id_character_amanda"
+      	      android:layout_width="wrap_content"
+      	      android:layout_height="wrap_content"
+      	      android:layout_marginLeft="205dp"
+      	      android:layout_marginTop="-106dp"
+      	      android:background="@drawable/store_44_btn_eric_off"
+      	      android:button="@drawable/mypagecharacter_drawable_radiobutton_amanda" />
+      	   	 
+    	 <RadioButton
+   		      android:id="@+id/home_mypage_id_character_tom"
+       	  	  android:layout_width="wrap_content" 
+       	 	  android:layout_height="wrap_content" 
+       	 	  android:layout_marginLeft="50dp"
+       	 	  android:layout_marginTop="26dp"
+       	 	  android:background="@drawable/store_44_btn_eric_off"
+       	 	  android:button="@drawable/mypagecharacter_drawable_radiobutton_tom"
+       	 	  />
+    	 <RadioButton 
+    	     android:id="@+id/home_mypage_id_character_jenny"
+    	     android:layout_width="wrap_content" 
+    	     android:layout_height="wrap_content"
+    	      android:layout_marginLeft="205dp"
+      		 android:layout_marginTop="-106dp"
+     	     android:background="@drawable/store_44_btn_eric_off"
+     	     android:button="@drawable/mypagecharacter_drawable_radiobutton_jenny"
+      	   	 />   
+      	   	 
+    	 <RadioButton
+   		      android:id="@+id/home_mypage_id_character_monkey"
+       	  	  android:layout_width="wrap_content" 
+       	 	  android:layout_height="wrap_content" 
+       	 	  android:layout_marginLeft="50dp"
+       	 	  android:layout_marginTop="26dp"
+       	 	  android:background="@drawable/store_44_btn_eric_off"
+       	 	  android:button="@drawable/mypagecharacter_drawable_radiobutton_monkey"
+       	 	  />
+    	 <RadioButton 
+    	     android:id="@+id/home_mypage_id_character_dino"
+    	     android:layout_width="wrap_content" 
+    	     android:layout_height="wrap_content"
+    	     android:layout_marginLeft="205dp"
+      		 android:layout_marginTop="-106dp"
+     	     android:background="@drawable/store_44_btn_eric_off"
+     	     android:button="@drawable/mypagecharacter_drawable_radiobutton_dion"
+      	   	 />   
+      	   	 
+    </RadioGroup>
+    
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="83dp"
+       android:layout_marginTop="190dp"
+       android:src="@drawable/store_44_image_eric"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="235dp"
+       android:layout_marginTop="190dp"
+       android:src="@drawable/store_44_image_selly"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="83dp"
+       android:layout_marginTop="324dp"
+       android:src="@drawable/store_44_image_john"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="230dp"
+       android:layout_marginTop="324dp"
+       android:src="@drawable/store_44_image_amanda"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="83dp"
+       android:layout_marginTop="458dp"
+       android:src="@drawable/store_44_image_tom"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="235dp"
+       android:layout_marginTop="458dp"
+       android:src="@drawable/store_44_image_jenny"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="235dp"
+       android:layout_marginTop="592dp"
+       android:src="@drawable/store_44_image_dino"/>
+   <ImageView 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="73dp"
+       android:layout_marginTop="592dp"
+       android:src="@drawable/store_44_image_monkey"/>
+
+</RelativeLayout>
