@@ -42,6 +42,7 @@ public class RgRegister extends Activity {
     String fbId = null;
     
     Button emailBtn;
+    Button fbCheckPointBtn;
     ImageView rgNotice;
     CheckBox rgCheckbox;
     
@@ -49,7 +50,8 @@ public class RgRegister extends Activity {
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
-
+	LoginButton fb_btn;
+	
 	SharedPreferences rgInfo;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,9 @@ public class RgRegister extends Activity {
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		emailBtn = (Button)findViewById(R.id.register_17_email_btn);
-		final LoginButton fb_btn = (LoginButton)findViewById(R.id.register_id_facebook_btn);
+		fbCheckPointBtn = (Button)findViewById(R.id.register_id_facebook_btn_checkPoint);
+		fbCheckPointBtn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
+		fb_btn = (LoginButton)findViewById(R.id.register_id_facebook_btn);
 		rgNotice = (ImageView)findViewById(R.id.register_17_email_notice);
 		rgCheckbox = (CheckBox)findViewById(R.id.rg_register_id_checkbox);
 		
@@ -71,9 +75,9 @@ public class RgRegister extends Activity {
 		
 		if(!rgInfo.getString("facebookEmail","NO").equals("NO"))
 		{
-			fb_btn.setEnabled(false);
+			fbCheckPointBtn.setEnabled(false);
 		}else{
-			fb_btn.setEnabled(true);
+			fbCheckPointBtn.setEnabled(true);
 		}
 		if(!rgInfo.getString("email","NO").equals("NO"))
 		{
@@ -104,7 +108,7 @@ public class RgRegister extends Activity {
 		
 		// Facebook Login Button
 		fb_btn.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "email"));
-		fb_btn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
+		//fb_btn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
 //	       try {
 //	            PackageInfo info = getPackageManager().getPackageInfo(
 //	                    "com.todpop.saltyenglish", 
@@ -140,8 +144,18 @@ public class RgRegister extends Activity {
 			Intent intent = new Intent(getApplicationContext(), RgRegisterEmail.class);
 			startActivity(intent);
 		}
+	}
 
-
+	public void checkAgreementAndClickFB(View view){
+		if(!rgCheckbox.isChecked()){
+			//popupview
+			popupText.setText(R.string.popup_register_agree);
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			popupWindow.showAsDropDown(rgCheckbox);
+		}
+		else{
+			fb_btn.performClick();
+		}
 	}
 	
 	public void showProvisionActivity_user(View view)
@@ -228,18 +242,7 @@ public class RgRegister extends Activity {
 	private Session.StatusCallback callback = new Session.StatusCallback() {
 		@Override
 		public void call(Session session, SessionState state, Exception exception) {
-			if(rgCheckbox.isChecked()){
 				onSessionStateChange(session, state, exception);
-			}
-			else{
-				//popupview
-				popupText.setText(R.string.popup_register_agree);
-    			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-    			popupWindow.showAsDropDown(rgCheckbox);
-    			Log.i("STEVEN", "PopUp");
-    			session.close();
-    			Log.i("STEVEN", "Session Close");
-			}
 		}
 	};
 	

@@ -31,13 +31,19 @@
     <com.facebook.widget.LoginButton
         xmlns:fb="http://schemas.android.com/apk/res-auto"
         android:id="@+id/register_id_facebook_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        fb:login_text=""
+        fb:logout_text="" />
+
+    <Button
+        android:id="@+id/register_id_facebook_btn_checkPoint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="296.5dp"
-        fb:login_text=""
-        fb:logout_text="" />
-
+        android:onClick="checkAgreementAndClickFB" />
+    
     <Button
         android:id="@+id/register_17_email_btn"
         android:layout_width="wrap_content"
