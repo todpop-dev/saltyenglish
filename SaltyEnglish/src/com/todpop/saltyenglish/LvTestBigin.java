@@ -164,6 +164,8 @@ public class LvTestBigin extends Activity {
 		mHandler.postDelayed(mLaunchTaskMain, 4000);
 	}
 	
+
+	
 	public void setButtonPosition()
 	{
 		
@@ -467,6 +469,10 @@ public class LvTestBigin extends Activity {
 	@Override
     public void onPause() {
        super.onPause();  
+       imageTimeBlindAni.cancel();
+       imageTestendAni.stop();
+       imageTimeAni.stop();
+       
     }
 	
     @Override
