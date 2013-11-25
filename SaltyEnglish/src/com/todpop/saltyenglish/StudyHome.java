@@ -13,6 +13,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.facebook.Session;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.animation.Animator;
@@ -92,7 +94,7 @@ public class StudyHome extends Activity {
 		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
 		rankingItemArray = new ArrayList<RankingListItem>();
 		
-		weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_sexgroup);
+		weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_week_moon_rank_group);
 		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -125,6 +127,21 @@ public class StudyHome extends Activity {
 	public void onResume()
 	{
 		super.onResume();
+		
+		// Facebook Logout
+		Session session = Session.getActiveSession();
+		if (session != null) {
+			if (!session.isClosed()) {
+				session.closeAndClearTokenInformation();
+				//clear your preferences if saved
+			}
+		} else {
+			session = new Session(getApplicationContext());
+			Session.setActiveSession(session);
+
+			session.closeAndClearTokenInformation();
+			//clear your preferences if saved
+		}
 		
 		getInfo();
 	}
@@ -287,7 +304,7 @@ public class StudyHome extends Activity {
 		{
 
 			try {
-
+				rankingItemArray.clear();
 				if	(result.getBoolean("status")==true) {
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
 					for(int i=0;i<6;i++) {
@@ -295,13 +312,15 @@ public class StudyHome extends Activity {
 						rankingItemArray.add(rankingItem);
 					}	
 
-					rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray);
-					rankingList.setAdapter(rankingListAdapter);
+					
 
 					myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);
 					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));;
 					myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
+					
+					rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray);
+					rankingList.setAdapter(rankingListAdapter);
 				}
 
 			} catch (Exception e) {

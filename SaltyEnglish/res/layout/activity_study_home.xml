@@ -145,13 +145,13 @@
             android:background="@drawable/home_image_myrankingbox"/>
         
         <RadioGroup
-                    android:id="@+id/homestore_id_sexgroup"
+                    android:id="@+id/homestore_id_week_moon_rank_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="48dp"
                     android:layout_gravity="center"
                     android:orientation="horizontal"
-                    android:onClick="setWeekMoonRnak" >
+                     >
 
                     <RadioButton
                         android:id="@+id/studyhome_id_week"

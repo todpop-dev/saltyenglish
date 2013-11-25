@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,6 +44,8 @@ public class MainActivity extends Activity
 	SharedPreferences settings;
 	SharedPreferences.Editor settingsEditor;
 	
+	WordDBHelper mHelper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -54,6 +58,7 @@ public class MainActivity extends Activity
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
 	
+		mHelper = new WordDBHelper(this);
 		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.main_activity_id_main);
@@ -73,7 +78,7 @@ public class MainActivity extends Activity
 			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 			mobile =phoneMgr.getLine1Number().toString();
 		} catch(Exception e) {
-			mobile = "010-0000-1001";
+			mobile = "010-1001-1002";
 		}
 
 		SharedPreferences settings = getSharedPreferences("setting", 0);
@@ -272,6 +277,38 @@ public class MainActivity extends Activity
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	
+	//------- Database Operation ------------------
+	private class WordDBHelper extends SQLiteOpenHelper {
+		public WordDBHelper(Context context) {
+			super(context, "EngWord.db", null, 1);
+		}
+		
+		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT NOT NULL UNIQUE, mean TEXT);");
+			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, xo TEXT);");
+		}
+		
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS dic");
+			db.execSQL("DROP TABLE IF EXISTS flip");
+			db.execSQL("DROP TABLE IF EXISTS mywords");
+			onCreate(db);
+		}
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		mHelper.close();
 	}
 
 }

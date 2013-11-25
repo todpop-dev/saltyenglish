@@ -1,14 +1,17 @@
 package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,15 +21,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class LvTestResult extends Activity {
 	
 	ViewHolder viewHolder = null;
 
 	ArrayList<MyItem> arItem;
+	
+ 	// Database
+ 	WordDBHelper mHelper;
 	
 	ArrayList<String> enArray = new ArrayList<String>() ;
 	ArrayList<String> krArray = new ArrayList<String>();
@@ -38,6 +46,9 @@ public class LvTestResult extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lvtest_result);
+		
+		mHelper = new WordDBHelper(this);
+
 		
 		SharedPreferences lvTextWord = getSharedPreferences("lvTextWord",0);
 		arItem = new ArrayList<MyItem>();
@@ -116,8 +127,7 @@ public class LvTestResult extends Activity {
 		public View getView(int position,View convertView,ViewGroup parent)
 		{
 			View v = convertView;
-			if(convertView == null)
-			{
+			if(convertView == null) {
 				viewHolder = new ViewHolder();
 				v = Inflater.inflate(layout, parent,false);
 				viewHolder.textEn = (TextView)v.findViewById(R.id.lv_test_english);
@@ -125,14 +135,15 @@ public class LvTestResult extends Activity {
 				viewHolder.checkView= (ImageView)v.findViewById(R.id.lv_test_check_correct);
 				viewHolder.selectBtn =(CheckBox)v.findViewById(R.id.lv_test_btn);
 				
-				v.setTag(viewHolder);
-			}
-			else {
-				viewHolder = (ViewHolder)v.getTag();
-			}
+				//v.setTag(viewHolder);
+			} 
+			
+//			else {
+//				viewHolder = (ViewHolder)v.getTag();
+//			}
+			
 			viewHolder.textEn.setText(arSrc.get(position).en);
 			viewHolder.textKr.setText(arSrc.get(position).kr);
-			viewHolder.selectBtn.setOnClickListener(buttonClickListener);
 			
 			viewHolder.textEn.setTag(position);
 			viewHolder.textEn.setTag(position);
@@ -148,14 +159,10 @@ public class LvTestResult extends Activity {
 //				}
 //			}
 			
-			if(arSrc.get(position).check.equals("Y"))
-			{
+			if(arSrc.get(position).check.equals("Y")) {
 				viewHolder.checkView.setImageResource(R.drawable.lvtest_10_text_correct);
-
-			}else
-			{
+			} else {
 				viewHolder.checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
-				
 			}
 			
 			if (position%2 == 1) {
@@ -164,27 +171,42 @@ public class LvTestResult extends Activity {
 				v.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_skyblue_center);
 			}
 			
+			// Check if word is in word list
+    		SQLiteDatabase db = mHelper.getWritableDatabase();
+    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
+    		if (c.getCount() > 0) {
+    			viewHolder.selectBtn.setChecked(true);
+    		} else {
+    			viewHolder.selectBtn.setChecked(false);
+    		}
+    		
+    		viewHolder.selectBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+                    	// Insert word to DB
+                		SQLiteDatabase db = mHelper.getWritableDatabase();
+
+            			ContentValues cv = new ContentValues();
+            			cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
+            			cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
+            			db.replace("mywords", null, cv);
+                    } else {
+                    	// Delete word to DB
+                		SQLiteDatabase db = mHelper.getWritableDatabase();       
+                		try {
+                    		db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
+                		} catch(Exception e) {
+                			e.printStackTrace();
+                		}
+                    }
+                }
+            });
 			
 			return v;
 		}
-		public View.OnClickListener buttonClickListener = new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				switch (v.getId()) {
-				
-				case R.id.lv_test_btn:
-					//Button btn = (Button)v.getTag();
-					v.setEnabled(false);
-					
-//					enSave.add(enArray.get((Integer)(v.getTag())));
-//					krSave.add(krArray.get((Integer)(v.getTag())));
-					Log.d("-------------------------",""+v.getTag());
-					break;
-				default:
-					break;
-				}
-			}
-		};
 	}
 	
 	class ViewHolder{
@@ -266,4 +288,29 @@ public class LvTestResult extends Activity {
 		return true;
 	}
 
+	
+	//------- Database Operation ------------------
+	private class WordDBHelper extends SQLiteOpenHelper {
+		public WordDBHelper(Context context) {
+			super(context, "EngWord.db", null, 1);
+		}
+		
+		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT NOT NULL UNIQUE, mean TEXT);");
+		}
+		
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS mywords");
+			onCreate(db);
+		}
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		mHelper.close();
+	}
 }

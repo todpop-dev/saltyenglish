@@ -40,6 +40,7 @@
 
     <!-- srearch btn -->
     <EditText 
+        	android:id="@+id/my_word_id_edittext"
             android:layout_width="160dp"
             android:layout_height="35dp"
             android:layout_marginLeft="22dp"
@@ -56,7 +57,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="185dp"
         android:layout_marginTop="73.5dp"
-        android:background="@drawable/homewordlist_drawable_btn_search"/>
+        android:background="@drawable/homewordlist_drawable_btn_search"
+        android:onClick="searchEnWord"
+        />
     
     <!-- change word btn -->
     <Button
@@ -65,7 +68,7 @@
         android:layout_marginLeft="225dp"
         android:layout_marginTop="72dp"
         android:background="@drawable/homewordlist_drawable_btn_blindword"
-        android:onClick="changeWord"/>
+        android:onClick="changeWordPosition"/>
     
      <!-- test btn -->
     <Button
@@ -74,7 +77,9 @@
         android:layout_marginLeft="283dp"
         android:layout_marginTop="72dp"
         android:background="@drawable/homewordlist_drawable_btn_test"
-        android:onClick="testBtn"/>
+        android:onClick="testBtn"
+        android:visibility="invisible"
+        />
     
     
     <ListView
@@ -125,7 +130,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="582dp"
         android:visibility="gone"
-        android:background="@drawable/homeworldlist_drawable_btn_wrod_delete"/>
+        android:background="@drawable/homeworldlist_drawable_btn_wrod_delete"
+        android:onClick="deleteWords"/>
     
 
 </RelativeLayout>

@@ -113,7 +113,7 @@ public class StudyBegin extends FragmentActivity {
  	ImageButton introBtn;
  	
  	// CPD image view
- 	static ImageButton cpdView;
+ 	static ImageView cpdView;
  	 	
  	
  	static ArrayList<View> rootViewArr = new ArrayList<View>();
@@ -316,19 +316,16 @@ public class StudyBegin extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			
-			//ImageView frontImage = null;
-			ImageView wholeCard = null;
-
+			ImageView frontImage = null;
+			isCardBack = false;
 			
 			Bundle studyBeginArgs = getArguments();
 			if(studyBeginArgs.getInt("studyStartPage")<10)
 			{
 				rootView = inflater.inflate(R.layout.fragment_study_begin, container, false);
 				ImageView wordOn = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_on);
-				//frontImage = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_img);
-				//frontImage.setOnClickListener(new BtnFlipListener());
-				wholeCard = (ImageView)rootView.findViewById(R.id.fragment_study_begin_whole_card);
-				wholeCard.setOnClickListener(new BtnFlipListener());
+				frontImage = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_img);
+				frontImage.setOnClickListener(new BtnFlipListener());
 							
 				int pageNum = studyBeginArgs.getInt("studyStartPage");
 				switch(pageNum)
@@ -377,7 +374,7 @@ public class StudyBegin extends FragmentActivity {
 					pron.setText(jsonWords.getJSONObject(pageNum).get("phonetics").toString());
 					example.setText(jsonWords.getJSONObject(pageNum).get("example_en").toString());
 					wordImage.setImageBitmap(bitmapArr.get(pageNum));
-					wordImage.setScaleType(ImageView.ScaleType.FIT_CENTER);		// center and stretch
+					wordImage.setScaleType(ImageView.ScaleType.FIT_CENTER);        // center and stretch
 				} catch (Exception e) {
 					
 				}
@@ -385,7 +382,7 @@ public class StudyBegin extends FragmentActivity {
 				
 			} else {
 				rootView = inflater.inflate(R.layout.fragment_study_begin_finish, container, false);
-				cpdView = (ImageButton)rootView.findViewById(R.id.studyfinish_id_pop);
+				cpdView = (ImageView)rootView.findViewById(R.id.studyfinish_id_pop);
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
 				
@@ -546,12 +543,15 @@ public class StudyBegin extends FragmentActivity {
 					Log.d("Get Word JSON RESPONSE ---- ", json.toString());				        	
 					
 					SQLiteDatabase db = mHelper.getWritableDatabase();
-					db.execSQL("DELETE FROM dic WHERE stage=" + currentStage + ";");
+					try {
+						db.execSQL("DELETE FROM dic WHERE stage=" + currentStage + ";");
+					} catch (Exception e) {
+						
+					}
 					
 					jsonWords = json.getJSONArray("data");
 					
-					for(int i=0;i<jsonWords.length();i++)
-					{												
+					for(int i=0;i<jsonWords.length();i++) {												
 //						ImageView wordImage = (ImageView)rootViewArr.get(i).findViewById(R.id.fragment_study_begin_id_word_img);
 //						TextView word =  (TextView)rootViewArr.get(i).findViewById(R.id.study_word_tv);
 //						TextView pron = (TextView)rootViewArr.get(i).findViewById(R.id.study_word_pron_tv);
@@ -600,48 +600,18 @@ public class StudyBegin extends FragmentActivity {
 						Cursor otherCursor = db.rawQuery("SELECT name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 								"xo=\'X\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
 								" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT 3" , null);
-						while(otherCursor.moveToNext()) {
-							JSONObject jsonObj= new JSONObject();
-							jsonObj.put("id", 0);
-							jsonObj.put("name", otherCursor.getString(0));
-							jsonObj.put("mean", otherCursor.getString(1));
-							jsonObj.put("example_en", otherCursor.getString(2));
-							jsonObj.put("example_ko", otherCursor.getString(3));
-							jsonObj.put("phonetics", otherCursor.getString(4));
-							jsonObj.put("picture", otherCursor.getInt(5));
-							jsonObj.put("image_url", otherCursor.getString(6));
-
-
-							jsonWords.put(jsonObj);
-							
-							ContentValues row = new ContentValues();
-							row.put("name", otherCursor.getString(0));
-							row.put("mean", otherCursor.getString(1));
-							row.put("example_en", otherCursor.getString(2));
-							row.put("example_ko", otherCursor.getString(3));
-							row.put("phonetics", otherCursor.getString(4));
-							row.put("picture", otherCursor.getString(5));
-							row.put("image_url", otherCursor.getString(6));
-							row.put("stage", currentStage);
-							row.put("xo", "X");
-
-							db.insert("dic", null, row);
-						}
 						
-						if (jsonWords.length()<10) {
-							Cursor otherCursor2 = db.rawQuery("SELECT name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
-									"xo=\'O\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
-									" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
-							while(otherCursor2.moveToNext()) {
+						if (otherCursor.getCount() > 0) {
+							while(otherCursor.moveToNext()) {
 								JSONObject jsonObj= new JSONObject();
 								jsonObj.put("id", 0);
-								jsonObj.put("name", otherCursor2.getString(0));
-								jsonObj.put("mean", otherCursor2.getString(1));
-								jsonObj.put("example_en", otherCursor2.getString(2));
-								jsonObj.put("example_ko", otherCursor2.getString(3));
-								jsonObj.put("phonetics", otherCursor2.getString(4));
-								jsonObj.put("picture", otherCursor2.getInt(5));
-								jsonObj.put("image_url", otherCursor2.getString(6));
+								jsonObj.put("name", otherCursor.getString(0));
+								jsonObj.put("mean", otherCursor.getString(1));
+								jsonObj.put("example_en", otherCursor.getString(2));
+								jsonObj.put("example_ko", otherCursor.getString(3));
+								jsonObj.put("phonetics", otherCursor.getString(4));
+								jsonObj.put("picture", otherCursor.getInt(5));
+								jsonObj.put("image_url", otherCursor.getString(6));
 
 
 								jsonWords.put(jsonObj);
@@ -659,6 +629,43 @@ public class StudyBegin extends FragmentActivity {
 
 								db.insert("dic", null, row);
 							}
+						}
+
+						
+						if (jsonWords.length()<10) {
+							Cursor otherCursor2 = db.rawQuery("SELECT name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
+									"xo=\'O\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
+									" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
+							if (otherCursor2.getCount()>0) {
+								while(otherCursor2.moveToNext()) {
+									JSONObject jsonObj= new JSONObject();
+									jsonObj.put("id", 0);
+									jsonObj.put("name", otherCursor2.getString(0));
+									jsonObj.put("mean", otherCursor2.getString(1));
+									jsonObj.put("example_en", otherCursor2.getString(2));
+									jsonObj.put("example_ko", otherCursor2.getString(3));
+									jsonObj.put("phonetics", otherCursor2.getString(4));
+									jsonObj.put("picture", otherCursor2.getInt(5));
+									jsonObj.put("image_url", otherCursor2.getString(6));
+
+
+									jsonWords.put(jsonObj);
+									
+									ContentValues row = new ContentValues();
+									row.put("name", otherCursor2.getString(0));
+									row.put("mean", otherCursor2.getString(1));
+									row.put("example_en", otherCursor2.getString(2));
+									row.put("example_ko", otherCursor2.getString(3));
+									row.put("phonetics", otherCursor2.getString(4));
+									row.put("picture", otherCursor2.getString(5));
+									row.put("image_url", otherCursor2.getString(6));
+									row.put("stage", currentStage);
+									row.put("xo", "X");
+
+									db.insert("dic", null, row);
+								}
+							}
+
 						}
 						
 						
@@ -748,9 +755,9 @@ public class StudyBegin extends FragmentActivity {
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL); 
 				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 3000; 
+				int timeoutConnection = 5000; 
 				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 3000; 
+				int timeoutSocket = 5000; 
 				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
 
 				httpClient = new DefaultHttpClient(httpParameters); 
@@ -793,7 +800,7 @@ public class StudyBegin extends FragmentActivity {
 						Log.d("CPD back image url ------ ", url2.toString());
 						new DownloadImageTask("BACK").execute(url2.toString());
 					} catch (Exception e) {
-						
+						e.printStackTrace();
 					}
 				}else{		    
 					Log.d("--------- CPD -----------", "JSON return null");
@@ -849,9 +856,9 @@ public class StudyBegin extends FragmentActivity {
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL); 
 				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 3000; 
+				int timeoutConnection = 5000; 
 				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 3000; 
+				int timeoutSocket = 5000; 
 				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
 
 				httpClient = new DefaultHttpClient(httpParameters); 

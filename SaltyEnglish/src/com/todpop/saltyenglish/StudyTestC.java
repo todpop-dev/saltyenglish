@@ -357,21 +357,28 @@ public class StudyTestC extends Activity {
 		
 		// It should be 66 words 11 sets
 		Log.d("stage number", Integer.toString(totalStage));
-		Cursor otherCursor = db.rawQuery("SELECT name, mean FROM dic WHERE " +
+		Cursor otherCursor = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
 				"xo=\'X\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + " ORDER BY RANDOM() LIMIT 36", null);
-		while(otherCursor.moveToNext()) {
-			englishWords.add(otherCursor.getString(0));
-			englishMeans.add(otherCursor.getString(1));
+		
+		if (otherCursor.getCount()>0) {
+			while(otherCursor.moveToNext()) {
+				englishWords.add(otherCursor.getString(0));
+				englishMeans.add(otherCursor.getString(1));
+			}
 		}
+
 		
 		if (englishWords.size() < 36) {
-			Cursor otherCursor2 = db.rawQuery("SELECT name, mean FROM dic WHERE " +
+			Cursor otherCursor2 = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
 					"xo=\'O\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + 
 					" ORDER BY RANDOM() LIMIT " + (36 - englishWords.size()), null);
-			while(otherCursor.moveToNext()) {
-				englishWords.add(otherCursor2.getString(0));
-				englishMeans.add(otherCursor2.getString(1));
+			if (otherCursor.getCount()>0) {
+				while(otherCursor.moveToNext()) {
+					englishWords.add(otherCursor2.getString(0));
+					englishMeans.add(otherCursor2.getString(1));
+				}
 			}
+
 		}
 		
 		Log.d("Array Size: ----- ", Integer.toString(englishWords.size()));
@@ -590,9 +597,11 @@ public class StudyTestC extends Activity {
 		testSetCount++;
 		ImageView setNumView = (ImageView)findViewById(R.id.study_test_c_id_set_number);
 		
-		String imageName = "test_9_image_number_"+(testSetCount+1);
-		int resId = getResources().getIdentifier(imageName , "drawable", getPackageName());
-		setNumView.setImageResource(resId);
+		if (testSetCount <= 6) {
+			String imageName = "test_18_image_number6_"+(testSetCount+1);
+			int resId = getResources().getIdentifier(imageName , "drawable", getPackageName());
+			setNumView.setImageResource(resId);
+		}
 		
 		if (testSetCount == 6) {
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
@@ -604,7 +613,6 @@ public class StudyTestC extends Activity {
 			startActivity(intent);
 			finish();
 		} else {
-
 			
 			card1_1.setVisibility(View.VISIBLE);
 			card1_2.setVisibility(View.VISIBLE);

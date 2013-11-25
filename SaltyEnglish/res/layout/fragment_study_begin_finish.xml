@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_yellowpattern" >
     
-    <ImageButton
+    <ImageView
        	android:id="@+id/studyfinish_id_pop"
-        android:layout_width="265dp"
-        android:layout_height="360dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50.5dp"
+        android:layout_marginTop="100dp"
         android:scaleType="centerInside"
        
         />

@@ -53,7 +53,7 @@ public class HomeMoreAcountInfo extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState); 
 		
 		settings = getSharedPreferences("setting", 0);
 		settingsEditor = settings.edit();

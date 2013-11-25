@@ -199,6 +199,6 @@
     <string name="title_activity_cplview">CplView</string>
     <string name="notificationTitle">영어공부 시간이 되셨습니다!</string>
     <string name="notificationSubject">짧짤한 영어</string>
-    <string name="study_result_score_text">점 맞았습니다!</string>
+    <string name="study_result_score_text"> 점 </string>
 
 </resources>

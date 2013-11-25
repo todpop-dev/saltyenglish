@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,6 +33,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,6 +72,24 @@ public class StudyTestResult extends Activity {
 		rewardView = (TextView)findViewById(R.id.study_test_result_id_score_view);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
 		
+		
+		// Database to store words for My Word list
+		SQLiteDatabase db = mHelper.getWritableDatabase();
+		try {
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, mean TEXT);");
+		} catch (Exception e) {
+			
+		}
+		
+
+			
+			// Save to Flip DB
+//			ContentValues cv = new ContentValues();
+//			cv.put("name", englishWords.get(i));
+//			cv.put("mean", englishMeans.get(i));
+//			cv.put("xo", "X");
+//			db.insert("flip", null, cv);
 		
 //		for(int i=0;i<20;i++)
 //		{
@@ -179,7 +201,7 @@ public class StudyTestResult extends Activity {
 			editor2.commit();
 		} else {
 			int nextStage = currentStage+1;
-			int testLevel = nextStage/10+1;
+			int testLevel = (nextStage-1)/10+1;
 			int stageCount = nextStage%10;
 			if (stageCount ==0){
 				stageCount = 10;
@@ -201,29 +223,25 @@ public class StudyTestResult extends Activity {
 		protected JSONObject doInBackground(String... urls) 
 		{
 			JSONObject result = null;
-			try
-			{
+			try {
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL); 
 				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 3000; 
+				int timeoutConnection = 5000; 
 				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 3000; 
+				int timeoutSocket = 5000; 
 				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
 
 				httpClient = new DefaultHttpClient(httpParameters); 
 				HttpResponse response = httpClient.execute(httpGet); 
 				HttpEntity resEntity = response.getEntity();
 
-				if (resEntity != null)
-				{    
+				if (resEntity != null) {    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
 					//Log.d("RESPONSE ---- ", result.toString());				        	
 				}
 				return result;
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return result;
@@ -242,7 +260,7 @@ public class StudyTestResult extends Activity {
 						resultMedal = resultObj.getString("medal");
 					
 						rewardView.setText(resultReward);
-						scoreView.setText(resultScore);
+						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
 						
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -266,23 +284,27 @@ public class StudyTestResult extends Activity {
 
 		if (currentStage%10 == 0) {
 			Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
-			
-			while(cursor.moveToNext()) {
-				Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
-				mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
-				arItem.add(mi);
+			if (cursor.getCount() > 0) {
+				while(cursor.moveToNext()) {
+					Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
+					mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+					arItem.add(mi);
+				}
+				
+				db.delete("flip", null, null);
 			}
-			
-			db.delete("flip", null, null);
+
 
 		} else {
 			Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + currentStage + ";", null);
-			
-			while(cursor.moveToNext()) {
-				Log.d("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
-				mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
-				arItem.add(mi);
+			if (cursor.getCount() > 0) {
+				while(cursor.moveToNext()) {
+					Log.d("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
+					mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+					arItem.add(mi);
+				}
 			}
+
 		}
 
 	}
@@ -332,10 +354,10 @@ public class StudyTestResult extends Activity {
 		public View getView(int position,View convertView,ViewGroup parent)
 		{
 			count++;
-			if(convertView == null)
-			{
+			if(convertView == null){
 				convertView = Inflater.inflate(layout, parent,false);
 			}
+			
 			TextView textEn = (TextView)convertView.findViewById(R.id.lv_test_english);
 			textEn.setText(arSrc.get(position).en);
 			
@@ -343,16 +365,14 @@ public class StudyTestResult extends Activity {
 			textKr.setText(arSrc.get(position).kr);
 			
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
-			Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
-			if(arSrc.get(position).check.equals("O"))
-			{
+			//Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
+			
+			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);
-
-				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
-			}else
-			{
+				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
+			} else {
 				checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
-				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
+				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			}
 			
 //			if (count ==1) {
@@ -373,6 +393,42 @@ public class StudyTestResult extends Activity {
 				convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_skyblue_center);
 			}
 			
+			CheckBox wordListCB = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
+			wordListCB.setTag(position);
+			
+			// Check if word is in word list
+    		SQLiteDatabase db = mHelper.getWritableDatabase();
+    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
+    		if (c.getCount() > 0) {
+    			wordListCB.setChecked(true);
+    		} else {
+    			wordListCB.setChecked(false);
+    		}
+    		
+			wordListCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if (isChecked) {
+                    	// Insert word to DB
+                		SQLiteDatabase db = mHelper.getWritableDatabase();
+
+            			ContentValues cv = new ContentValues();
+            			cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
+            			cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
+            			db.replace("mywords", null, cv);
+                    } else {
+                    	// Delete word to DB
+                		SQLiteDatabase db = mHelper.getWritableDatabase();       
+                		try {
+                    		db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
+                		} catch(Exception e) {
+                			e.printStackTrace();
+                		}
+                    }
+                }
+            });
 			
 			return convertView;
 		}

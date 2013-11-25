@@ -43,7 +43,7 @@ public class HomeMoreAccountDelete extends Activity {
 	TextView popupText;
 	
 	SharedPreferences rgInfo;
-	
+	SharedPreferences studyLevelInfo;
 	SharedPreferences settings;
 	SharedPreferences.Editor settingsEditor;
 	
@@ -51,6 +51,8 @@ public class HomeMoreAccountDelete extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_more_account_delete);
+		
+		studyLevelInfo = getSharedPreferences("StudyLevelInfo",0);
 		
 		settings = getSharedPreferences("setting", 0);
 		settingsEditor = settings.edit();
@@ -109,9 +111,9 @@ public class HomeMoreAccountDelete extends Activity {
 		protected void onPostExecute(JSONObject result) {
 			try {
 				if (result.getBoolean("status")==true) {
-					popupText.setText(R.string.home_more_acount_change_pw_success);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					popupWindow.showAsDropDown(null);
+//					popupText.setText(R.string.home_more_acount_change_pw_success);
+//					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+//					popupWindow.showAsDropDown(null);
 					
 					settingsEditor.putString("isLogin","NO");
 					settingsEditor.putString("loginType", "NO");
@@ -121,10 +123,16 @@ public class HomeMoreAccountDelete extends Activity {
 					intent.setClass(HomeMoreAccountDelete.this, MainActivity.class);    
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 					startActivity(intent);
+					rgInfo.edit().clear().commit(); 
+					settings.edit().clear().commit();
+					studyLevelInfo.edit().clear().commit();
+					
+					// Delete DB
+					getApplicationContext().deleteDatabase("EngWord.db");
+					
 					finish();
 
-				}else
-				{
+				} else {
 					popupText.setText(R.string.home_more_acount_delete_password);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(null);
