@@ -93,7 +93,20 @@ public class MainActivity extends Activity
 			Log.d("Phone No............. ", mobile);
 			new RgInfo().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
 		}
-
+		
+		// Force create Database
+		
+		SQLiteDatabase db = mHelper.getReadableDatabase();
+		try {
+			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, mean TEXT);");
+			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+						"name TEXT, mean TEXT, xo TEXT);");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	//--- request class ---
