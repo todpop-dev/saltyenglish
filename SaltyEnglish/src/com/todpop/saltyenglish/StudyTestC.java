@@ -354,32 +354,39 @@ public class StudyTestC extends Activity {
 	private void getTestWords()
 	{
 		SQLiteDatabase db = mHelper.getWritableDatabase();
-		
-		// It should be 66 words 11 sets
-		Log.d("stage number", Integer.toString(totalStage));
-		Cursor otherCursor = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
-				"xo=\'X\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + " ORDER BY RANDOM() LIMIT 36", null);
-		
-		if (otherCursor.getCount()>0) {
-			while(otherCursor.moveToNext()) {
-				englishWords.add(otherCursor.getString(0));
-				englishMeans.add(otherCursor.getString(1));
-			}
-		}
 
-		
-		if (englishWords.size() < 36) {
-			Cursor otherCursor2 = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
-					"xo=\'O\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + 
-					" ORDER BY RANDOM() LIMIT " + (36 - englishWords.size()), null);
+		try {
+			
+			// It should be 66 words 11 sets
+			Log.d("stage number", Integer.toString(totalStage));
+			Cursor otherCursor = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
+					"xo=\'X\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + " ORDER BY RANDOM() LIMIT 36", null);
+			
 			if (otherCursor.getCount()>0) {
 				while(otherCursor.moveToNext()) {
-					englishWords.add(otherCursor2.getString(0));
-					englishMeans.add(otherCursor2.getString(1));
+					englishWords.add(otherCursor.getString(0));
+					englishMeans.add(otherCursor.getString(1));
 				}
 			}
 
+			
+			if (englishWords.size() < 36) {
+				Cursor otherCursor2 = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
+						"xo=\'O\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + 
+						" ORDER BY RANDOM() LIMIT " + (36 - englishWords.size()), null);
+				if (otherCursor.getCount()>0) {
+					while(otherCursor.moveToNext()) {
+						englishWords.add(otherCursor2.getString(0));
+						englishMeans.add(otherCursor2.getString(1));
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+
 		
 		Log.d("Array Size: ----- ", Integer.toString(englishWords.size()));
 		
@@ -388,21 +395,26 @@ public class StudyTestC extends Activity {
 		try {
 			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, xo TEXT);");
+			db.delete("flip", null, null);
 		} catch (Exception e) {
 			
 		}
 		
-		db.delete("flip", null, null);
 
 
 		for (int i=0; i<englishWords.size(); i++) {
 			
-			// Save to Flip DB
-			ContentValues cv = new ContentValues();
-			cv.put("name", englishWords.get(i));
-			cv.put("mean", englishMeans.get(i));
-			cv.put("xo", "X");
-			db.insert("flip", null, cv);
+			try {
+				// Save to Flip DB
+				ContentValues cv = new ContentValues();
+				cv.put("name", englishWords.get(i));
+				cv.put("mean", englishMeans.get(i));
+				cv.put("xo", "X");
+				db.insert("flip", null, cv);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			
 			// Randomize
 			if (i<6) {
@@ -562,17 +574,22 @@ public class StudyTestC extends Activity {
 						resetCards();
 					}
 					
-					SQLiteDatabase db = mHelper.getWritableDatabase();
+					try {
+						SQLiteDatabase db = mHelper.getWritableDatabase();
 
-					if (index1 >= 0 && index2 >= 0 && index1==index2) {
-						ContentValues cv = new ContentValues();
-						cv.put("xo", "O");
-						db.update("flip", cv, "name='"+ englishWords.get(index1) +"'", null);
-					} else if (index3>=0 && index4>=0 && index3==index4) {
-						ContentValues cv = new ContentValues();
-						cv.put("xo", "O");
-						db.update("flip", cv, "name='"+ englishWords.get(index4) +"'", null);
+						if (index1 >= 0 && index2 >= 0 && index1==index2) {
+							ContentValues cv = new ContentValues();
+							cv.put("xo", "O");
+							db.update("flip", cv, "name='"+ englishWords.get(index1) +"'", null);
+						} else if (index3>=0 && index4>=0 && index3==index4) {
+							ContentValues cv = new ContentValues();
+							cv.put("xo", "O");
+							db.update("flip", cv, "name='"+ englishWords.get(index4) +"'", null);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
+
 					
 					finalAnswerForRequest++;
 					

@@ -317,22 +317,27 @@ public class StudyTestA extends Activity {
 	{
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
-		Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + currentStage + ";", null);
-		
-		if (cursor.getCount()>0) {
-			while(cursor.moveToNext()) {
-				englishWords.add(cursor.getString(0));
-				optionOne.add(cursor.getString(1));
-				
-				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
-				otherCursor.moveToNext();
-				optionTwo.add(otherCursor.getString(0));
-				otherCursor.moveToNext();
-				optionThree.add(otherCursor.getString(0));
-				otherCursor.moveToNext();
-				optionFour.add(otherCursor.getString(0));
+		try {
+			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + currentStage + ";", null);
+			
+			if (cursor.getCount()>0) {
+				while(cursor.moveToNext()) {
+					englishWords.add(cursor.getString(0));
+					optionOne.add(cursor.getString(1));
+					
+					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
+					otherCursor.moveToNext();
+					optionTwo.add(otherCursor.getString(0));
+					otherCursor.moveToNext();
+					optionThree.add(otherCursor.getString(0));
+					otherCursor.moveToNext();
+					optionFour.add(otherCursor.getString(0));
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 
 	}
 

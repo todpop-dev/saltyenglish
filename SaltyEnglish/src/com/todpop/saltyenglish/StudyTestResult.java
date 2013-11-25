@@ -280,32 +280,38 @@ public class StudyTestResult extends Activity {
 	private void getTestWords()
 	{
 		
-		SQLiteDatabase db = mHelper.getReadableDatabase();
+		try {
+			SQLiteDatabase db = mHelper.getReadableDatabase();
 
-		if (currentStage%10 == 0) {
-			Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
-			if (cursor.getCount() > 0) {
-				while(cursor.moveToNext()) {
-					Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
-					mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
-					arItem.add(mi);
+			if (currentStage%10 == 0) {
+				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
+				if (cursor.getCount() > 0) {
+					while(cursor.moveToNext()) {
+						Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
+						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+						arItem.add(mi);
+					}
+					
+					db.delete("flip", null, null);
 				}
-				
-				db.delete("flip", null, null);
-			}
 
 
-		} else {
-			Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + currentStage + ";", null);
-			if (cursor.getCount() > 0) {
-				while(cursor.moveToNext()) {
-					Log.d("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
-					mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
-					arItem.add(mi);
+			} else {
+				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + currentStage + ";", null);
+				if (cursor.getCount() > 0) {
+					while(cursor.moveToNext()) {
+						Log.d("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
+						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
+						arItem.add(mi);
+					}
 				}
-			}
 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+
 
 	}
 	
@@ -397,36 +403,45 @@ public class StudyTestResult extends Activity {
 			wordListCB.setTag(position);
 			
 			// Check if word is in word list
-    		SQLiteDatabase db = mHelper.getWritableDatabase();
-    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
-    		if (c.getCount() > 0) {
-    			wordListCB.setChecked(true);
-    		} else {
-    			wordListCB.setChecked(false);
-    		}
+			try {
+				
+			} catch (Exception e) {
+	    		SQLiteDatabase db = mHelper.getWritableDatabase();
+	    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
+	    		if (c.getCount() > 0) {
+	    			wordListCB.setChecked(true);
+	    		} else {
+	    			wordListCB.setChecked(false);
+	    		}
+			}
+
     		
 			wordListCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                	try {
+                        if (isChecked) {
+                        	// Insert word to DB
+                    		SQLiteDatabase db = mHelper.getWritableDatabase();
 
-                    if (isChecked) {
-                    	// Insert word to DB
-                		SQLiteDatabase db = mHelper.getWritableDatabase();
+                			ContentValues cv = new ContentValues();
+                			cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
+                			cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
+                			db.replace("mywords", null, cv);
+                        } else {
+                        	// Delete word to DB
+                    		SQLiteDatabase db = mHelper.getWritableDatabase();       
+                    		try {
+                        		db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
+                    		} catch(Exception e) {
+                    			e.printStackTrace();
+                    		}
+                        }
+                	} catch (Exception e) {
+                		e.printStackTrace();
+                	}
 
-            			ContentValues cv = new ContentValues();
-            			cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
-            			cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
-            			db.replace("mywords", null, cv);
-                    } else {
-                    	// Delete word to DB
-                		SQLiteDatabase db = mHelper.getWritableDatabase();       
-                		try {
-                    		db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
-                		} catch(Exception e) {
-                			e.printStackTrace();
-                		}
-                    }
                 }
             });
 			

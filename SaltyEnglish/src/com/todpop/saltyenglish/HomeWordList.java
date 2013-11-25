@@ -152,15 +152,18 @@ public class HomeWordList extends Activity {
 //			
 //		}
 		
-		Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-		Log.d("db count ------ ", Integer.toString(c.getCount()));
-		while (c.moveToNext()) {
-			Log.d("name --- ", c.getString(0));
-			Log.d("mean --- ", c.getString(1));
-			mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-			listArray.add(mHomeWordViewItem);
+		try {
+			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+			Log.d("db count ------ ", Integer.toString(c.getCount()));
+			while (c.moveToNext()) {
+				Log.d("name --- ", c.getString(0));
+				Log.d("mean --- ", c.getString(1));
+				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+				listArray.add(mHomeWordViewItem);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 
 		updateListView();
 	}
@@ -342,22 +345,26 @@ public class HomeWordList extends Activity {
 	{
 		if(checkEdit==false) {
 			listArray.clear();
-			
-			if(checkChangeWord == false) {				
-				SQLiteDatabase db = mHelper.getWritableDatabase();
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-					listArray.add(mHomeWordViewItem);
+			try {
+				if(checkChangeWord == false) {				
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+						listArray.add(mHomeWordViewItem);
+					}
+				} else {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+						listArray.add(mHomeWordViewItem);
+					}
 				}
-			} else {
-				SQLiteDatabase db = mHelper.getWritableDatabase();
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
-					listArray.add(mHomeWordViewItem);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 			
 			updateListView();
 			LayoutParams lp = (LayoutParams) listView.getLayoutParams();
@@ -371,21 +378,27 @@ public class HomeWordList extends Activity {
 		} else {
 			listArray.clear();
 			
-			if(checkChangeWord == false) {
-				SQLiteDatabase db = mHelper.getWritableDatabase();
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-					listArray.add(mHomeWordViewItem);
+			try {
+				if(checkChangeWord == false) {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+						listArray.add(mHomeWordViewItem);
+					}
+				} else {
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+					while (c.moveToNext()) {
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+						listArray.add(mHomeWordViewItem);
+					}
 				}
-			} else {
-				SQLiteDatabase db = mHelper.getWritableDatabase();
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
-					listArray.add(mHomeWordViewItem);
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			
+
 			
 			updateListView();
 			LayoutParams lp = (LayoutParams) listView.getLayoutParams();
@@ -428,13 +441,19 @@ public class HomeWordList extends Activity {
 			listArray.clear();
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			
-			Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
-			while (c.moveToNext()) {
-				Log.d("name --- ", c.getString(0));
-				Log.d("mean --- ", c.getString(1));
-				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-				listArray.add(mHomeWordViewItem);
+			
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				while (c.moveToNext()) {
+					Log.d("name --- ", c.getString(0));
+					Log.d("mean --- ", c.getString(1));
+					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 			
 			updateListView();
 
@@ -443,13 +462,18 @@ public class HomeWordList extends Activity {
 			listArray.clear();
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			
-			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-			while (c.moveToNext()) {
-				Log.d("name --- ", c.getString(0));
-				Log.d("mean --- ", c.getString(1));
-				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-				listArray.add(mHomeWordViewItem);
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+				while (c.moveToNext()) {
+					Log.d("name --- ", c.getString(0));
+					Log.d("mean --- ", c.getString(1));
+					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 			
 			updateListView();
 		}
@@ -467,17 +491,22 @@ public class HomeWordList extends Activity {
 			listArray.clear();
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			
-			Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
-			while (c.moveToNext()) {
-				if (count%2==1) {
-					checkChangeWord = true;
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
-				} else {
-					checkChangeWord = false;
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				while (c.moveToNext()) {
+					if (count%2==1) {
+						checkChangeWord = true;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+					} else {
+						checkChangeWord = false;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					}
+					listArray.add(mHomeWordViewItem);
 				}
-				listArray.add(mHomeWordViewItem);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 			
 			updateListView();
 
@@ -486,17 +515,22 @@ public class HomeWordList extends Activity {
 			listArray.clear();
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			
-			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-			while (c.moveToNext()) {
-				if (count%2==1) {
-					checkChangeWord = true;
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
-				} else {
-					checkChangeWord = false;
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-				}				
-				listArray.add(mHomeWordViewItem);
+			try {
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+				while (c.moveToNext()) {
+					if (count%2==1) {
+						checkChangeWord = true;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(1), c.getString(0));
+					} else {
+						checkChangeWord = false;
+						mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					}				
+					listArray.add(mHomeWordViewItem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
 			
 			updateListView();
 		}
@@ -507,17 +541,26 @@ public class HomeWordList extends Activity {
 	{
 		for (int i=0; i<deleteWords.size(); i++) {
 			SQLiteDatabase db = mHelper.getWritableDatabase();
-			db.delete("mywords", "name='" + deleteWords.get(i) + "'", null);
+			try {
+				db.delete("mywords", "name='" + deleteWords.get(i) + "'", null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		listArray.clear();
 		SQLiteDatabase db = mHelper.getWritableDatabase();
 		
-		Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-		while (c.moveToNext()) {
-			mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-			listArray.add(mHomeWordViewItem);
+		try {
+			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+			while (c.moveToNext()) {
+				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+				listArray.add(mHomeWordViewItem);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
 		
 		updateListView();
 	}
