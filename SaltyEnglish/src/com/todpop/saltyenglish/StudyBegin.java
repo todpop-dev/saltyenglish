@@ -377,6 +377,7 @@ public class StudyBegin extends FragmentActivity {
 					pron.setText(jsonWords.getJSONObject(pageNum).get("phonetics").toString());
 					example.setText(jsonWords.getJSONObject(pageNum).get("example_en").toString());
 					wordImage.setImageBitmap(bitmapArr.get(pageNum));
+					wordImage.setScaleType(ImageView.ScaleType.FIT_CENTER);		// center and stretch
 				} catch (Exception e) {
 					
 				}
