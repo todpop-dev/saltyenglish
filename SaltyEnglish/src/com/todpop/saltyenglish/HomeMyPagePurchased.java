@@ -42,20 +42,20 @@ public class HomeMyPagePurchased extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_my_page_purchased);
-		rgInfo = getSharedPreferences("rgInfo",0);
-		listView = (ListView)findViewById(R.id.home_mypage_purchased_id_list_view);
-		
-		new GetPurchasedInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
-		
-		
-		itemArray = new ArrayList<PurchasedListViewItem>();
-		for(int i=0;i<20;i++) {
-			mPurchasedListItem = new PurchasedListViewItem(R.drawable.home_image_ex3,"10:15","cake","eleven","3,000");
-			itemArray.add(mPurchasedListItem);
-		}
-		
-		purchasedListViewAdapter = new PurchasedListViewAdapter(this,R.layout.home_my_page_purchased_list_item_view, itemArray);
-    	listView.setAdapter(purchasedListViewAdapter);
+//		rgInfo = getSharedPreferences("rgInfo",0);
+//		listView = (ListView)findViewById(R.id.home_mypage_purchased_id_list_view);
+//		
+//		new GetPurchasedInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
+//		
+//		
+//		itemArray = new ArrayList<PurchasedListViewItem>();
+//		for(int i=0;i<20;i++) {
+//			mPurchasedListItem = new PurchasedListViewItem(R.drawable.home_image_ex3,"10:15","cake","eleven","3,000");
+//			itemArray.add(mPurchasedListItem);
+//		}
+//		
+//		purchasedListViewAdapter = new PurchasedListViewAdapter(this,R.layout.home_my_page_purchased_list_item_view, itemArray);
+//    	listView.setAdapter(purchasedListViewAdapter);
 
 	}
 

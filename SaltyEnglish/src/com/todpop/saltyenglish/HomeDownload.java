@@ -57,45 +57,45 @@ public class HomeDownload extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_download);
-		noCPIimage = (ImageView)findViewById(R.id.homedownloal_id_nopci);
-		cpiBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_cpi);
-		couponBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_coupon);
-		cpiBtn.setOnClickListener(radio_listener);
-		couponBtn.setOnClickListener(radio_listener);
-
-		cpiArray = new ArrayList<CpiListViewItem>();
-		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
-
-		couponArray = new ArrayList<CouponListViewItem>();
-		couponListView=(ListView)findViewById(R.id.homedownload_id_listiew_coupon);
-		for(int i=0;i<20;i++) {
-			mCouponListViewItem = new CouponListViewItem(R.drawable.store_33_image_dinosaur_on,"seoga & cook 20% sale");
-			couponArray.add(mCouponListViewItem);
-		}
-		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
-		couponListView.setAdapter(couponListViewAdapter);
-
-		SharedPreferences pref = getSharedPreferences("setting",0);
-
-		new GetCPI().execute("http://todpop.co.kr/api/etc/1/show_cpx_list.json&user_id="+pref.getString("id", "N"));
+//		noCPIimage = (ImageView)findViewById(R.id.homedownloal_id_nopci);
+//		cpiBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_cpi);
+//		couponBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_coupon);
+//		cpiBtn.setOnClickListener(radio_listener);
+//		couponBtn.setOnClickListener(radio_listener);
+//
+//		cpiArray = new ArrayList<CpiListViewItem>();
+//		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
+//
+//		couponArray = new ArrayList<CouponListViewItem>();
+//		couponListView=(ListView)findViewById(R.id.homedownload_id_listiew_coupon);
+//		for(int i=0;i<20;i++) {
+//			mCouponListViewItem = new CouponListViewItem(R.drawable.store_33_image_dinosaur_on,"seoga & cook 20% sale");
+//			couponArray.add(mCouponListViewItem);
+//		}
+//		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
+//		couponListView.setAdapter(couponListViewAdapter);
+//
+//		SharedPreferences pref = getSharedPreferences("setting",0);
+//
+//		new GetCPI().execute("http://todpop.co.kr/api/etc/1/show_cpx_list.json&user_id="+pref.getString("id", "N"));
 	}
 
 
-	OnClickListener radio_listener = new OnClickListener (){
-		public void onClick(View v) {
-			switch(v.getId())
-			{
-			case R.id.homedownload_id_btn_cpi:
-				cpiListView.setVisibility(RelativeLayout.VISIBLE);
-				couponListView.setVisibility(RelativeLayout.GONE);
-				break;
-			case R.id.homedownload_id_btn_coupon:
-				cpiListView.setVisibility(RelativeLayout.GONE);
-				couponListView.setVisibility(RelativeLayout.VISIBLE);
-				break;
-			}
-		}
-	};
+//	OnClickListener radio_listener = new OnClickListener (){
+//		public void onClick(View v) {
+//			switch(v.getId())
+//			{
+//			case R.id.homedownload_id_btn_cpi:
+//				cpiListView.setVisibility(RelativeLayout.VISIBLE);
+//				couponListView.setVisibility(RelativeLayout.GONE);
+//				break;
+//			case R.id.homedownload_id_btn_coupon:
+//				cpiListView.setVisibility(RelativeLayout.GONE);
+//				couponListView.setVisibility(RelativeLayout.VISIBLE);
+//				break;
+//			}
+//		}
+//	};
 
 	class CpiListViewItem 
 	{

@@ -45,33 +45,33 @@ public class HomeStore extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_store);
 
-        eduationBtn = (RadioButton) findViewById(R.id.homestore_id_btn_education);
-        foodBtn = (RadioButton) findViewById(R.id.homestore_id_btn_food);
-        cafeBtn = (RadioButton) findViewById(R.id.homestore_id_btn_cafe);
-        convenientBtn = (RadioButton) findViewById(R.id.homestore_id_btn_convenient);
-        beautyBtn = (RadioButton) findViewById(R.id.homestore_id_btn_beauty);
-        reFundBtn = (RadioButton) findViewById(R.id.homestore_id_btn_refund);
-        
-        listItemView = (RelativeLayout)findViewById(R.id.home_store_id_list_view);
-        refundView = (ScrollView)findViewById(R.id.home_store_id_refund_view);
-        
-    	 eduationBtn.setOnClickListener(radio_listener);
-    	 foodBtn.setOnClickListener(radio_listener);
-    	 cafeBtn.setOnClickListener(radio_listener);
-    	 convenientBtn.setOnClickListener(radio_listener);
-    	 beautyBtn.setOnClickListener(radio_listener);
-    	 reFundBtn.setOnClickListener(radio_listener);
-    	 
-    	 
-    	 
-    	 itemArray = new ArrayList<StoreListViewItem>();
-    	 storeListView=(ListView)findViewById(R.id.homestore_id_listiew);
-    	 storeListView.setOnItemClickListener(listViewItemListener);
-    	 for(int i=0;i<20;i++) {
-    		 mStoreListItem = new StoreListViewItem(R.drawable.store_33_image_dinosaur_on,"cake","eleven","3,000");
-    		 itemArray.add(mStoreListItem);
-    	 }
-    	 this.updateListView();
+//        eduationBtn = (RadioButton) findViewById(R.id.homestore_id_btn_education);
+//        foodBtn = (RadioButton) findViewById(R.id.homestore_id_btn_food);
+//        cafeBtn = (RadioButton) findViewById(R.id.homestore_id_btn_cafe);
+//        convenientBtn = (RadioButton) findViewById(R.id.homestore_id_btn_convenient);
+//        beautyBtn = (RadioButton) findViewById(R.id.homestore_id_btn_beauty);
+//        reFundBtn = (RadioButton) findViewById(R.id.homestore_id_btn_refund);
+//        
+//        listItemView = (RelativeLayout)findViewById(R.id.home_store_id_list_view);
+//        refundView = (ScrollView)findViewById(R.id.home_store_id_refund_view);
+//        
+//    	 eduationBtn.setOnClickListener(radio_listener);
+//    	 foodBtn.setOnClickListener(radio_listener);
+//    	 cafeBtn.setOnClickListener(radio_listener);
+//    	 convenientBtn.setOnClickListener(radio_listener);
+//    	 beautyBtn.setOnClickListener(radio_listener);
+//    	 reFundBtn.setOnClickListener(radio_listener);
+//    	 
+//    	 
+//    	 
+//    	 itemArray = new ArrayList<StoreListViewItem>();
+//    	 storeListView=(ListView)findViewById(R.id.homestore_id_listiew);
+//    	 storeListView.setOnItemClickListener(listViewItemListener);
+//    	 for(int i=0;i<20;i++) {
+//    		 mStoreListItem = new StoreListViewItem(R.drawable.store_33_image_dinosaur_on,"cake","eleven","3,000");
+//    		 itemArray.add(mStoreListItem);
+//    	 }
+//    	 this.updateListView();
     }
     
     public void updateListView()
