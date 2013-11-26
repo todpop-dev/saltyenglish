@@ -450,6 +450,7 @@ public class StudyHome extends Activity {
 	public void showStudyCategory(View view)
 	{
 		Intent intent = new Intent(getApplicationContext(), StudyCategory.class);
+		intent.putExtra("from_home", true);
 		startActivity(intent);
 		//finish();
 	}
