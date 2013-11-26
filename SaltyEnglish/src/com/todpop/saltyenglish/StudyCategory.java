@@ -8,11 +8,28 @@ import android.view.Menu;
 import android.view.View;
 
 public class StudyCategory extends Activity {
-
+	private Intent intent;
+	private SharedPreferences pref;
+	private SharedPreferences.Editor ed;
+	private int test_level;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_category);
+		intent = getIntent();
+		if(intent.getBooleanExtra("from_home", false)) {
+			pref = getSharedPreferences("StudyLevelInfo", MODE_PRIVATE);
+			test_level = pref.getInt("totalStage", 1);
+			if(test_level >= 1 && test_level <= 15) {
+				this.saveInfoGotoStudyLearn(1);
+			} else if(test_level >=16 && test_level <= 60) {
+				this.saveInfoGotoStudyLearn(16);
+			} else if(test_level >=61 && test_level <= 120) {
+				this.saveInfoGotoStudyLearn(61);
+			} else if(test_level >=121 && test_level <= 180) {
+				this.saveInfoGotoStudyLearn(121);
+			}
+		}
 	}
 
 	@Override

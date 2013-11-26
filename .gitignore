@@ -12,7 +12,9 @@
 # generated files
 bin/
 gen/
-
+SaltyEnglish/bin/
+SaltyEnglish/gen/
+SaltyEnglish/project.properties
 # Local configuration file (sdk path, etc)
 local.properties
 
