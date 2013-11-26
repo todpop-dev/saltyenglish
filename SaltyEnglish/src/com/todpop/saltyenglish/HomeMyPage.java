@@ -1,6 +1,8 @@
 package com.todpop.saltyenglish;
 
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -14,12 +16,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -63,7 +65,13 @@ public class HomeMyPage extends FragmentActivity {
 	TextView myNicknameBox;
 	
 	
+	String prideImageUrl;
+	
+	static ArrayList<Bitmap> prizeImageArr;
+	
 	ImageView characterBtn;
+	
+	static int prizeImageCount = 0;
 
 	SharedPreferences rgInfo;
 	@Override
@@ -86,12 +94,29 @@ public class HomeMyPage extends FragmentActivity {
 		
 		myNicknameBox.setText(rgInfo.getString("nickname", "NO"));
 		
+		prizeImageArr = new ArrayList<Bitmap>();
+		
 		for (int i=0;i<3;i++)
 		{
 			rankImageList.add(i,"null");
 			rankNickNameList.add(i,"null");
 		}	
-		new GetRankInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/my_home.json?category=4&period=2");
+		
+		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+		int level = Integer.parseInt(rgInfo.getString("level", "0"));
+		int period = rgInfo.getInt("period", 1);
+		int category = 0;
+			if(level >= 1 && level <= 15) {
+				category = 1;
+			} else if(level >=16 && level <= 60) {
+				category = 2;
+			} else if(level >=61 && level <= 120) {
+				category = 3;
+			} else if(level >=121 && level <= 180) {
+				category = 4;
+			}
+		
+		new GetRankInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/my_home.json?category=" + category + "&period=" + period);
 	}
 
 	@Override
@@ -162,7 +187,9 @@ public class HomeMyPage extends FragmentActivity {
 			switch(args.getInt("page"))
 			{
 				case 0:
-					rankImage.setImageResource(R.drawable.store_31_image_2nd);
+					//rankImage.setImageResource(R.drawable.store_31_image_2nd);
+					rankImage.setImageBitmap(prizeImageArr.get(2));
+					
 					nickName.setText(rankNickNameList.get(2));
 					Log.d("+++++++++++++++++++++","1");
 					indicatorL.setVisibility(View.GONE);
@@ -170,14 +197,18 @@ public class HomeMyPage extends FragmentActivity {
 				break;
 				case 1:
 					Log.d("+++++++++++++++++++++","2");
-					rankImage.setImageResource(R.drawable.store_31_image_1st);
+					//rankImage.setImageResource(R.drawable.store_31_image_1st);
+					rankImage.setImageBitmap(prizeImageArr.get(0));
+
 					nickName.setText(rankNickNameList.get(0));
 					indicatorL.setVisibility(View.VISIBLE);
 					indicatorR.setVisibility(View.VISIBLE);
 				break;
 				case 2:
 					Log.d("+++++++++++++++++++++","3");
-					rankImage.setImageResource(R.drawable.store_31_image_3rd);
+					//rankImage.setImageResource(R.drawable.store_31_image_3rd);
+					rankImage.setImageBitmap(prizeImageArr.get(1));
+
 					nickName.setText(rankNickNameList.get(1));
 					indicatorL.setVisibility(View.GONE);
 					indicatorR.setVisibility(View.GONE);
@@ -210,7 +241,7 @@ public class HomeMyPage extends FragmentActivity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE JSON ---- ", result.toString());				        	
 				}
 				return result;
 			}
@@ -225,8 +256,7 @@ public class HomeMyPage extends FragmentActivity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(json.getBoolean("status") == true)
-				{
+				if(json.getBoolean("status") == true) {
 					myLevel = json.getJSONObject("data").getInt("my_level");
 					myRank = json.getJSONObject("data").getInt("my_rank");
 					myAttendance = json.getJSONObject("data").getInt("attendance");
@@ -235,6 +265,7 @@ public class HomeMyPage extends FragmentActivity {
 					myRewardTotay = json.getJSONObject("data").getInt("reward_today");
 					myRewardCurrent = json.getJSONObject("data").getInt("reward_current");
 					myRewardTotal = json.getJSONObject("data").getInt("reward_total");
+			
 					
 					levelBox.setText("Lv."+myLevel);
 					rankBox.setText(Integer.toString(myRank));
@@ -248,15 +279,19 @@ public class HomeMyPage extends FragmentActivity {
 					rewardTotalBox.setText(Integer.toString(myRewardTotal)+getString(R.string.testname8));
 					
 					JSONArray jsonArray = json.getJSONObject("data").getJSONArray("prize");
-					for (int i=0;i<jsonArray.length();i++)
-					{
+					for (int i=0;i<jsonArray.length();i++) {
 						rankImageList.add(i,jsonArray.getJSONObject(i).getString("image"));
 						rankNickNameList.add(i,jsonArray.getJSONObject(i).getString("nickname"));
+						
+						String imgUrl = "http://todpop.co.kr" + jsonArray.getJSONObject(i).getJSONObject("image").getJSONObject("image").getJSONObject("thumb").getString("url");
+						URL url = new URL(imgUrl);
+						Log.d("prize url ------ ", url.toString());
+						new DownloadImageTask()
+						            .execute(url.toString());
 					}	
 							
 					
 					pageView = (ViewPager)findViewById(R.id.pager);
-					pagerAdapter = new PagerAdapter(getSupportFragmentManager());
 					pageView.setClipChildren(false);
 					pageView.setAdapter(pagerAdapter);
 					pageView.setOffscreenPageLimit(pagerAdapter.getCount());
@@ -266,8 +301,34 @@ public class HomeMyPage extends FragmentActivity {
 					
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
+		}
+		
+		private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		    protected Bitmap doInBackground(String... urls) {
+		        String urldisplay = urls[0];
+		        Bitmap mIcon11 = null;
+		        try {
+		            InputStream in = new java.net.URL(urldisplay).openStream();
+		            mIcon11 = BitmapFactory.decodeStream(in);
+		        } catch (Exception e) {
+		            Log.e("Error", e.getMessage());
+		            e.printStackTrace();
+		        }
+		        return mIcon11;
+		    }
+
+		    protected void onPostExecute(Bitmap result) 
+		    {
+		        //bmImage.setImageBitmap(result);
+		    	prizeImageArr.add(result);
+
+		    	if (prizeImageArr.size()==3) {
+					pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+		    	}
+
+		    }
 		}
 	}
 	
@@ -290,7 +351,7 @@ public class HomeMyPage extends FragmentActivity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE JSON ---- ", result.toString());				        	
 				}
 				return result;
 			}
