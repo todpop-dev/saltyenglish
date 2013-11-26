@@ -23,7 +23,6 @@
         android:onClick="onClickBack"/>
     
     <!-- bg -->
-    <!-- 
     
     <ImageView 
         android:layout_width="match_parent"
@@ -44,9 +43,7 @@
         android:layout_marginLeft="18.5dp"
         android:layout_marginTop="107dp"
         android:src="@drawable/common_image_bigcoin"/>
-     -->
      <!-- search -->
-     <!--  
      <TextView 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,7 +52,7 @@
             android:gravity="center"
             android:textColor="#000000"
             android:background="@drawable/store_2_textbox_money"
-            android:text = "3,500"/>
+            android:text = "0"/>
      
      <EditText 
             android:layout_width="215dp"
@@ -108,7 +105,7 @@
         
     </RadioGroup>
     
-    
+    <!--
     <ListView 
             android:id="@+id/homedownload_id_listiew_cpi"
             android:layout_width="match_parent"
@@ -135,7 +132,7 @@
             >
             
         </ListView>
-        
+       -->
     
     <ImageView
         android:id="@+id/homedownloal_id_nopci"
@@ -145,5 +142,4 @@
         android:visibility="gone"
         android:src="@drawable/store_41_image_nocpi"/>
     
-   -->
 </RelativeLayout>
