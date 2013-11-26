@@ -54,7 +54,7 @@ public class StudyTestFinish extends Activity {
 		private Runnable mLaunchTaskMain = new Runnable() {
 			public void run() {
 				skipBtn.setEnabled(true);
-				skipBtn.setBackgroundResource(R.drawable.lvtestfinish_drawable_skip_btn);
+				skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 			}
 		};
 

@@ -36,8 +36,6 @@ public class LvTestFinish extends Activity {
 		setContentView(R.layout.activity_lv_test_finish);
 		skipBtn = (Button)findViewById(R.id.lvtestfinish_id_skip_btn);
 		adView = (ImageView)findViewById(R.id.rgregisterfinish_id_ad);
-		Handler mHandler = new Handler();
-		  mHandler.postDelayed(mLaunchTaskMain, 5000);
 		  
 		  video = (VideoView)findViewById(R.id.test_video_view);
 		  rgInfo = getSharedPreferences("rgInfo",0);
@@ -104,6 +102,11 @@ public class LvTestFinish extends Activity {
 					//mc.hide();
 					//video.setMediaController(mc);
 					video.start();
+					
+					Handler mHandler = new Handler();
+					mHandler.postDelayed(mLaunchTaskMain, 8000);		// should be 5000 but timing difficulty
+
+					
 				}else{		        
 					Log.d("-----------------------", "Login Failed");
 				}
