@@ -371,7 +371,7 @@ public class StudyBegin extends FragmentActivity {
 				// Setup word textview
 				try {
 					word.setText(jsonWords.getJSONObject(pageNum).get("name").toString());
-					pron.setText(jsonWords.getJSONObject(pageNum).get("phonetics").toString());
+					pron.setText("["+jsonWords.getJSONObject(pageNum).get("phonetics").toString()+"]");		// [+phonetics+]
 					example.setText(jsonWords.getJSONObject(pageNum).get("example_en").toString());
 					wordImage.setImageBitmap(bitmapArr.get(pageNum));
 					wordImage.setScaleType(ImageView.ScaleType.FIT_CENTER);        // center and stretch
