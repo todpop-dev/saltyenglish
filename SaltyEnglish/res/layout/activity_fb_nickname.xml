@@ -83,7 +83,7 @@
          android:layout_centerHorizontal="true"
          android:layout_marginTop="393dp"
          android:background="@drawable/rgregisteremail_drawable_btn_next"
-         android:onClick="showLvtest"
+         android:onClick="bridgeToShowLvTest"
          />
      
       <ImageView 

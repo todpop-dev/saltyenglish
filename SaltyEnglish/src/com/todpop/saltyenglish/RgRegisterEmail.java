@@ -133,9 +133,9 @@ public class RgRegisterEmail extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(nickname.getText().toString().length()<3){
+				if(nickname.getText().toString().length()<3||nickname.getText().toString().length()>8){
 					edit.putString("nickname","NO");
-					popupText.setText(R.string.popup_nickname_null);
+					popupText.setText(R.string.popup_nickname_length);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}else if(json.getJSONObject("data").getBoolean("result")){
