@@ -7,7 +7,8 @@
    
     
     <!-- bg  -->
-    <ImageView 
+    <ImageView
+        android:id="@+id/fragment_study_begin_whole_card" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -15,6 +16,7 @@
         android:src="@drawable/study_8_image_engcard"/>
     
     <!-- speack btn -->
+    <!-- 
     <Button 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +24,8 @@
         android:layout_marginTop="63dp"
         android:background="@drawable/studybigin_drawable_btn_speaker"
         />
-    
+     -->
+     
     <!-- word ON -->
     <ImageView 
         android:id="@+id/fragment_study_begin_id_word_on"

@@ -316,7 +316,7 @@ public class StudyBegin extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			
-			ImageView frontImage = null;
+			ImageView wholeCard = null;
 			isCardBack = false;
 			
 			Bundle studyBeginArgs = getArguments();
@@ -324,8 +324,8 @@ public class StudyBegin extends FragmentActivity {
 			{
 				rootView = inflater.inflate(R.layout.fragment_study_begin, container, false);
 				ImageView wordOn = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_on);
-				frontImage = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_img);
-				frontImage.setOnClickListener(new BtnFlipListener());
+				wholeCard = (ImageView)rootView.findViewById(R.id.fragment_study_begin_whole_card);
+				wholeCard.setOnClickListener(new BtnFlipListener());
 							
 				int pageNum = studyBeginArgs.getInt("studyStartPage");
 				switch(pageNum)
