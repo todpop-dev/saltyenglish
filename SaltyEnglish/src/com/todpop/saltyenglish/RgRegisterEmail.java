@@ -183,7 +183,7 @@ public class RgRegisterEmail extends Activity {
 			@Override
 			protected void onPostExecute(JSONObject json) {
 				try {
-					if(json.getBoolean("status")==true)
+					if(json.getJSONObject("data").getBoolean("result"))
 					{
 						edit.putString("email", email.getText().toString());
 						edit.putString("Password", emailPassword.getText().toString());
