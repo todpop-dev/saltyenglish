@@ -359,6 +359,9 @@ public class StudyTestB extends Activity {
 			yellowAni.end();
 			blueAni.end();
 			greenAni.end();
+
+			// Setup Test Words
+			setupTestWords(wordCount);
 		}
 	};
 
@@ -512,8 +515,6 @@ public class StudyTestB extends Activity {
 
 				}
 				
-				// Setup Test Words
-				setupTestWords(wordCount);
 			}else{
 				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 				startActivity(intent);
