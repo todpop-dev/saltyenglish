@@ -6,28 +6,31 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
 public class StudyTestFinish extends Activity {
 	
-	
+	Button skipBtn;	
 	SharedPreferences rgInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_study_test_finish);
-		 
+		skipBtn = (Button)findViewById(R.id.testfinish_id_skip_btn);
 		rgInfo = getSharedPreferences("rgInfo",0);
 		new GetCPDM().execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="+rgInfo.getString("mem_id", "0"));
 
@@ -46,6 +49,16 @@ public class StudyTestFinish extends Activity {
 		
 //		video.start();
 	}
+
+
+		private Runnable mLaunchTaskMain = new Runnable() {
+			public void run() {
+				skipBtn.setEnabled(true);
+				skipBtn.setBackgroundResource(R.drawable.lvtestfinish_drawable_skip_btn);
+			}
+		};
+
+	
 	
 	//--- request class ---
 		private class GetCPDM extends AsyncTask<String, Void, JSONObject> 
@@ -84,6 +97,10 @@ public class StudyTestFinish extends Activity {
 						//mc.hide();
 						//video.setMediaController(mc);
 						video.start();
+						
+						Handler mHandler = new Handler();
+						mHandler.postDelayed(mLaunchTaskMain, 8000);	// should be 5000 but timing difficulty
+						
 					} else {		        
 					}
 				} catch (Exception e) {
