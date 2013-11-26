@@ -317,7 +317,7 @@ public class StudyBegin extends FragmentActivity {
 				Bundle savedInstanceState) {
 			
 			ImageView wholeCard = null;
-			isCardBack = false;
+			
 			
 			Bundle studyBeginArgs = getArguments();
 			if(studyBeginArgs.getInt("studyStartPage")<10)
@@ -371,7 +371,7 @@ public class StudyBegin extends FragmentActivity {
 				// Setup word textview
 				try {
 					word.setText(jsonWords.getJSONObject(pageNum).get("name").toString());
-					pron.setText(jsonWords.getJSONObject(pageNum).get("phonetics").toString());
+					pron.setText("["+jsonWords.getJSONObject(pageNum).get("phonetics").toString()+"]");		// [+phonetics+]
 					example.setText(jsonWords.getJSONObject(pageNum).get("example_en").toString());
 					wordImage.setImageBitmap(bitmapArr.get(pageNum));
 					wordImage.setScaleType(ImageView.ScaleType.FIT_CENTER);        // center and stretch
@@ -402,6 +402,7 @@ public class StudyBegin extends FragmentActivity {
 
 		class BtnFlipListener implements OnClickListener 
 		{ 
+			private boolean isCardBack = false;
 			public void onClick(View v)
 			{
 				
@@ -471,6 +472,7 @@ public class StudyBegin extends FragmentActivity {
 		
 		class CPDFlipListener implements OnClickListener 
 		{ 
+			private boolean isCardBack = false;
 			public void onClick(View v)
 			{
 				
