@@ -88,7 +88,8 @@ public class RgRegisterEmail extends Activity {
 	public static boolean isEmailValid(String email) {
 	    boolean isValid = false;
 
-	    String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	    //String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	    String expression = "^([0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$";
 	    CharSequence inputStr = email;
 
 	    Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
