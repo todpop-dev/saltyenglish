@@ -285,7 +285,9 @@ public class HomeStore extends Activity {
 					if(json.getJSONObject("data").getInt("current_reward") >= 30000){
 						for (int i = 30000; (i <= 100000) && (i <= json.getJSONObject("data").getInt("current_reward")); i+=10000) {
 							String temp = String.valueOf(i);
-							list.add(temp.substring(temp.length()-3)+","+"000");
+							Log.i("STEVEN", "Value is = "+ temp);
+							list.add(temp.substring(0, temp.length()-3)+","+"000");
+							Log.i("STEVEN", "after Value is = "+ temp.substring(temp.length()-3)+","+"000");
 						}
 						list.add("금액을 선택해 주세요");
 						MySpinnerAdapter AmountHintSpinner = new MySpinnerAdapter(
