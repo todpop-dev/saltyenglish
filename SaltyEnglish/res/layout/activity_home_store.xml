@@ -147,7 +147,7 @@
             android:layout_marginLeft="311dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/homestore_drawable_btn_search"/>
-        <!-- 
+        
         <ListView 
             android:id="@+id/homestore_id_listiew"
             android:layout_width="match_parent"
@@ -160,7 +160,7 @@
             >
             
         </ListView>
-         -->
+        
     </RelativeLayout>
     
     
