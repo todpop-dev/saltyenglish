@@ -1,5 +1,13 @@
 package com.todpop.saltyenglish;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,16 +19,23 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 public class StudyTestFinish extends Activity {
+	
+	
+	SharedPreferences rgInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_finish);
+		 
+		rgInfo = getSharedPreferences("rgInfo",0);
+		new GetCPDM().execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="+rgInfo.getString("mem_id", "0"));
+
 		
-		VideoView video = (VideoView)findViewById(R.id.test_video_view);
-		video.setVideoPath("http://todpop.co.kr/uploads/cpdm_advertisement/video/4/CPDM_sample.mp4");
-		
-		final MediaController mc = new MediaController(StudyTestFinish.this);
+//		VideoView video = (VideoView)findViewById(R.id.test_video_view);
+//		video.setVideoPath("http://todpop.co.kr/uploads/cpdm_advertisement/video/4/CPDM_sample.mp4");
+//		
+//		final MediaController mc = new MediaController(StudyTestFinish.this);
 		//mc.hide();
 		//video.setMediaController(mc);
 //		video.postDelayed(new Runnable() {
@@ -29,8 +44,54 @@ public class StudyTestFinish extends Activity {
 //			}
 //		}, 100);
 		
-		video.start();
+//		video.start();
 	}
+	
+	//--- request class ---
+		private class GetCPDM extends AsyncTask<String, Void, JSONObject> 
+		{
+			@Override
+			protected JSONObject doInBackground(String... urls) 
+			{
+				JSONObject result = null;
+				try {
+					DefaultHttpClient httpClient = new DefaultHttpClient();
+					String getURL = urls[0];
+					HttpGet httpGet = new HttpGet(getURL);
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					HttpEntity resEntity = httpResponse.getEntity();
+
+					if (resEntity != null) {    
+						result = new JSONObject(EntityUtils.toString(resEntity)); 
+						Log.d("CPDM RESPONSE ---- ", result.toString());				        	
+					}
+					return result;
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+				return result;
+			}
+
+			@Override
+			protected void onPostExecute(JSONObject json) {
+
+				try {
+					if(json.getBoolean("status")==true) {
+						VideoView video = (VideoView)findViewById(R.id.test_video_view);
+						video.setVideoPath("http://todpop.co.kr/"+json.getJSONObject("data").getString("url"));
+						//final MediaController mc = new MediaController(LvTestFinish.this);
+						//mc.hide();
+						//video.setMediaController(mc);
+						video.start();
+					} else {		        
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

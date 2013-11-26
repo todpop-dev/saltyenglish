@@ -285,8 +285,7 @@ public class HomeWordList extends Activity {
 				v.setBackgroundResource(R.drawable.wordbook_1_image_separatebox_yellow);
 			}
 			
-			selectAllBtn.setEnabled(true);
-			selectAllBtn.setChecked(false);
+			//selectAllBtn.setChecked(false);
 			return v;
 		}
 	}
@@ -561,7 +560,7 @@ public class HomeWordList extends Activity {
 			e.printStackTrace();
 		}
 
-		
+		selectAllBtn.setChecked(false);
 		updateListView();
 	}
 	

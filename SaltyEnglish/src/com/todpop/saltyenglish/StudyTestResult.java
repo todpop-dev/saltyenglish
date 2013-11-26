@@ -404,8 +404,6 @@ public class StudyTestResult extends Activity {
 			
 			// Check if word is in word list
 			try {
-				
-			} catch (Exception e) {
 	    		SQLiteDatabase db = mHelper.getWritableDatabase();
 	    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
 	    		if (c.getCount() > 0) {
@@ -413,6 +411,8 @@ public class StudyTestResult extends Activity {
 	    		} else {
 	    			wordListCB.setChecked(false);
 	    		}
+			} catch (Exception e) {
+
 			}
 
     		
