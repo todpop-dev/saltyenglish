@@ -98,18 +98,24 @@ public class StudyHome extends Activity {
 		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
+				SharedPreferences pref = getSharedPreferences("rgInfo",0);
+				SharedPreferences.Editor editor = pref.edit();
 	        	switch(checkedId)
         		{
         			case R.id.studyhome_id_week:
         				period =1;
         				getInfo();
-        				Log.d("!!!!!!!!!!!!!!","1111111111111111");
+
+        				editor.putInt("period", 1);
+        				editor.commit();
         			break;
         			
         			case R.id.studyhome_id_moon:
         				period =2;
         				getInfo();
-        				Log.d("222222222222222","2222222222222");
+
+        				editor.putInt("period", 2);
+        				editor.commit();
         			break;
         			
         			default:
