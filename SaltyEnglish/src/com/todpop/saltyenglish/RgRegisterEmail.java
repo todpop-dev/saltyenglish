@@ -133,8 +133,12 @@ public class RgRegisterEmail extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(json.getJSONObject("data").getBoolean("result")&&nickname.getText().toString().length()>3)
-				{
+				if(nickname.getText().toString().length()<3){
+					edit.putString("nickname","NO");
+					popupText.setText(R.string.popup_nickname_null);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					popupWindow.showAsDropDown(checkNickname);
+				}else if(json.getJSONObject("data").getBoolean("result")){
 					edit.putString("nickname",nickname.getText().toString());
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
@@ -298,14 +302,6 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(doneBtn);
 		}
-		else if(nickname.getText().toString().length()<4)
-		{
-			isOk = false;
-
-			popupText.setText(R.string.popup_nickname_null);
-			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-			popupWindow.showAsDropDown(doneBtn);
-		} 
 		else if(!rgInfo.getString("nickname", "NO").equals(nickname.getText().toString()))
 		{
 			isOk = false;
