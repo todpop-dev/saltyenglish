@@ -2,6 +2,7 @@ package com.todpop.saltyenglish;
 
 
 import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -372,6 +373,12 @@ public class StudyTestB extends Activity {
 				}else{
 					isTestFinish = true;
 					wordCount = 0;
+					Log.d("funny result: -----", finalAnswerForRequest);
+					SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
+					SharedPreferences.Editor editor = sp.edit();
+					editor.putString("testResult", finalAnswerForRequest);
+					editor.commit();
+					
 					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 					startActivity(intent);
 					finish();
