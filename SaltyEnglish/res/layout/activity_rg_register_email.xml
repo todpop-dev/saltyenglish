@@ -133,7 +133,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="491.5dp"
         android:background="@drawable/rgregisteremail_drawable_btn_next_activity"
-        android:onClick="showRgRegisterEmailInfoActivity"/>
+        android:onClick="bridgeToEmailInfoActivity"/>
     
     <ImageView 
         android:layout_width="wrap_content"

@@ -133,7 +133,7 @@ public class RgRegisterEmail extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(json.getBoolean("status")==true&&nickname.getText().toString().length()>3)
+				if(json.getJSONObject("data").getBoolean("result")&&nickname.getText().toString().length()>3)
 				{
 					edit.putString("nickname",nickname.getText().toString());
 					popupText.setText(R.string.popup_nickname_yes);
@@ -151,7 +151,55 @@ public class RgRegisterEmail extends Activity {
 			}
 		}
 	}
+
+	//---check recommender nickname
 	
+	private class CheckRecommenderNickname extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("recommender nickname", result.getString("result"));				        	
+					return result;
+
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getJSONObject("data").getBoolean("result")){
+					edit.putString("recommend", nicknameRefre.getText().toString());
+					Log.i("STEVEN----", nicknameRefre.getText().toString());
+				}
+				else{
+					edit.putString("recommend","NO");
+					Log.i("STEVEN-----", "NO");
+				}
+				edit.commit();
+				showRgRegisterEmailInfoActivity();
+			} catch (Exception e) {
+
+			}
+		}
+	}
 	//---check email
 	
 		private class CheckEmail extends AsyncTask<String, Void, JSONObject> {
@@ -220,11 +268,11 @@ public class RgRegisterEmail extends Activity {
 	
 	public void checkDuplicatedNickname(View view)
 	{
+		Log.i("STEVEN----dupicated nickname", "right now nick is"+nickname.getText());
 		new CheckNickname().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickname.getText().toString());
 	}
 		
-	public void showRgRegisterEmailInfoActivity(View view)
-	{
+	public void showRgRegisterEmailInfoActivity(){
 		boolean isOk = true;
 
 		if(!isEmailValid(email.getText().toString()))
@@ -265,13 +313,30 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(doneBtn);
 		}
-		
+		else if(!nicknameRefre.getText().toString().isEmpty() && !rgInfo.getString("recommend", "NO").equals(nicknameRefre.getText().toString())){
+				Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", "NO")+"rightnow is = "+nicknameRefre.getText().toString());
+				isOk = false;
+				popupText.setText(R.string.popup_recom_no);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(checkNickname);
+		}
 		
 		if (isOk == true) {
-			edit.putString("recommend", nicknameRefre.getText().toString());
-			edit.commit();
 			new CheckEmail().execute("http://todpop.co.kr/api/users/check_email_exist.json?email="+email.getText().toString());
 		}
+	}
+	public void bridgeToEmailInfoActivity(View view)
+	{
+		if(!nicknameRefre.getText().toString().isEmpty()){
+			Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
+			new CheckRecommenderNickname().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
+		}
+		else{
+			edit.putString("recommend","NO");
+			edit.commit();
+			showRgRegisterEmailInfoActivity();
+		}
+		
 	}
 	
 		

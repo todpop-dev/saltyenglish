@@ -12,6 +12,7 @@
     <string name="title_activity_rg_register_email_info">RgRegisterEmailInfo</string>
     <string name="title_activity_rg_register_finish">RgRegisterFinish</string>
     <string name="popup_nickname_no">중복된 닉네임 있어요. </string>
+    <string name="popup_recom_no">추천인 닉네임이 잘못되었습니다.</string>
     <string name="popup_email_pwd_wrong">이메일 혹은 패스워드 확인해 주세요.</string>
     <string name="app_id">172060539634687</string>
     <string name="popup_email_format_wrong">잘못된 이메일 포멧 입니다.</string>
