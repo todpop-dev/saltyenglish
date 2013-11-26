@@ -11,17 +11,19 @@
         android:layout_marginTop="14dp"
         android:src="@drawable/common_bgimg_wordtest" />
     
+    <!--
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="194.5dp"
         android:src="@drawable/test_21_image_addbox" />
+    -->
     
     <VideoView 
         android:id="@+id/test_video_view"
-        android:layout_width="400dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
         android:layout_marginTop="200dp"
         />
     
