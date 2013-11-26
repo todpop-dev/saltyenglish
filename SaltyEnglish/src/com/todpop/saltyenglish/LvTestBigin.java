@@ -459,6 +459,8 @@ public class LvTestBigin extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+	    imageTimeBlindAni.start();
+	    imageTimeAni.start();
 	}
 	
 	@Override
