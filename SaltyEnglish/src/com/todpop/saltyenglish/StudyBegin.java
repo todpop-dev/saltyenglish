@@ -599,7 +599,7 @@ public class StudyBegin extends FragmentActivity {
 					if (jsonWords.length() < 10) {
 												
 						// Add additional 3 words
-						Cursor otherCursor = db.rawQuery("SELECT name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
+						Cursor otherCursor = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 								"xo=\'X\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
 								" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT 3" , null);
 						
@@ -632,12 +632,25 @@ public class StudyBegin extends FragmentActivity {
 								db.insert("dic", null, row);
 							}
 						}
-
+						
+						Cursor tmp = db.rawQuery("SELECT stage, name, xo FROM dic", null);
+						int c =1;
+						while(tmp.moveToNext()) {
+							Log.d("WordList "+(c++)+"----",tmp.getString(0)+", "+tmp.getString(1)+", "+tmp.getString(2));
+						}
 						
 						if (jsonWords.length()<10) {
-							Cursor otherCursor2 = db.rawQuery("SELECT name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
+							String overlap = "";
+							for(int i = jsonWords.length()-1; i >=7 ; i-- ) {
+								overlap += "'"+jsonWords.getJSONObject(i).getString("name")+"'";
+								if(i != 7) {
+									overlap += ",";
+								}
+							}
+							
+							Cursor otherCursor2 = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 									"xo=\'O\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
-									" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
+									" AND stage <> " + currentStage + " AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
 							if (otherCursor2.getCount()>0) {
 								while(otherCursor2.moveToNext()) {
 									JSONObject jsonObj= new JSONObject();
