@@ -19,7 +19,7 @@
     <string name="popup_pwd_check_wrong">비밀번호 일치하지않습니다</string>
     <string name="popup_pwd_length_wrong">비밀번호 6자리 이상 입력하세요</string>
     <string name="popup_nickname_yes">사용할수있습니다</string>
-    <string name="popup_nickname_null">닉네임 4자리 이상 입력하세요</string>
+    <string name="popup_nickname_length">닉네임은 3~8자리까지 가능합니다.</string>
     <string name="popup_nickname_needcheck">닉네임 중복체크를 하세요.</string>
     <string name="popup_interest_More_than_three">관심사 3개 이상 선택해줘세요</string>
     <string name="popup_send_info_error">이미가입된 이메일 입니다</string>

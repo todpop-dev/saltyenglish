@@ -204,6 +204,8 @@ public class FbNickname extends Activity {
 		return true;
 	}
 
+	//---check nickname
+	
 	private class CheckNickname extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
@@ -235,25 +237,74 @@ public class FbNickname extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(json.getBoolean("status")==true&&nickName.getText().toString().length()>3)
-				{
+				if(nickName.getText().toString().length() < 3 || nickName.getText().toString().length() > 8){
+					rgInfoEdit.putString("nickname","NO");
+					popupText.setText(R.string.popup_nickname_length);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				}else if(json.getJSONObject("data").getBoolean("result")){
 					rgInfoEdit.putString("nickname",nickName.getText().toString());
-					rgInfoEdit.commit();
-
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}else{
+					rgInfoEdit.putString("nickname","NO");
 					popupText.setText(R.string.popup_nickname_no);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					//popupWindow.showAsDropDown(checkNickname);
-
 				}
+				rgInfoEdit.commit();
 			} catch (Exception e) {
 
 			}
 		}
 	}
 
+	//---check recommender nickname
+	
+	private class CheckRecommenderNickname extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("recommender nickname", result.getString("result"));				        	
+					return result;
+
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getJSONObject("data").getBoolean("result")){
+					rgInfoEdit.putString("recommend", nicknamerefre.getText().toString());
+					Log.i("STEVEN----", nicknamerefre.getText().toString());
+				}
+				else{
+					rgInfoEdit.putString("recommend","NO");
+					Log.i("STEVEN-----", "NO");
+				}
+				rgInfoEdit.commit();
+				showLvtest();
+			} catch (Exception e) {
+
+			}
+		}
+	}
 	//----button onClick----
 	public void closePopup(View v)
 	{
@@ -270,21 +321,34 @@ public class FbNickname extends Activity {
 		new CheckNickname().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickName.getText().toString());
 	}
 
-	public void showLvtest(View v)
+	public void showLvtest()
 	{
-
-		
+		boolean isOk = true;
 		if(!rgInfo.getString("nickname", "NO").equals(nickName.getText().toString()))
 		{
+			isOk = false;
 			popupText.setText(R.string.popup_nickname_needcheck);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		}
-		else if(nickName.getText().toString().length()<3){
-			popupText.setText(R.string.popup_nickname_null);
+		}else if(!nicknamerefre.getText().toString().isEmpty() && !rgInfo.getString("recommend", "NO").equals(nicknamerefre.getText().toString())){
+			Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", "NO")+"rightnow is = "+nicknamerefre.getText().toString());
+			isOk = false;
+			popupText.setText(R.string.popup_recom_no);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		}else 
-		{
+		}
+		if(isOk == true){
 			new SendInfo().execute("http://todpop.co.kr/api/users/sign_up.json");
+		}
+	}
+	
+	public void bridgeToShowLvTest(View v){
+		if(!nicknamerefre.getText().toString().isEmpty()){
+			Log.i("STEVEN----not empty", "right now nick is"+nicknamerefre.getText().toString());
+			new CheckRecommenderNickname().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
+		}
+		else{
+			rgInfoEdit.putString("recommend","NO");
+			rgInfoEdit.commit();
+			showLvtest();
 		}
 	}
 
