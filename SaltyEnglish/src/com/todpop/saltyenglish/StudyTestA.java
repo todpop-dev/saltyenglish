@@ -5,7 +5,6 @@ package com.todpop.saltyenglish;
 
 import java.net.URL;
 import java.util.ArrayList;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,7 +15,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -25,11 +23,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -40,6 +40,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 
 
 public class StudyTestA extends Activity {
@@ -87,17 +88,22 @@ public class StudyTestA extends Activity {
 	
 	//blind and blind animation
 	ImageView blindView;
-	TranslateAnimation imageTimeBlindAni;
+	BlindAnim imageTimeBlindAni;
 	TranslateAnimation.AnimationListener MyAnimationListener;
 	
 	//crocodile Time animation
 	ImageView crocodileTime;
-	AnimationDrawable crocodileTimeAni ;
+	AnimationDrawable crocodileTimeAni;
+	AnimationDrawable crocodileCurrent;
+	Drawable currentFrame, checkFrame;
+	boolean crocoPause = false;
 	
 	// System pivot time
 	int pivotTime = 0;
 	CountDownTimer progressTimer;
-	int timeSpent = 0;
+	private long timeSpent = 0;
+	private long startTime = 10000;
+	private boolean isPause = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -190,29 +196,30 @@ public class StudyTestA extends Activity {
 		crocodileTime = (ImageView) findViewById(R.id.study_testa_id_crocodile_time);
 		crocodileTime.setBackgroundResource(R.drawable.lvtest_begin_drawable_time_img);
 		crocodileTimeAni = (AnimationDrawable)crocodileTime.getBackground();
-		
 		//blind time animation
 		blindView = (ImageView)findViewById(R.id.study_testa_id_image_timeblind);
-		imageTimeBlindAni = new TranslateAnimation(
+		imageTimeBlindAni = new BlindAnim(
 				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
 				TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
 				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
 				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
 				);
+		
 		imageTimeBlindAni.setDuration(10000);
 		imageTimeBlindAni.setRepeatCount(10);
+		
 		MyAnimationListener = new Animation.AnimationListener() {
 			public void onAnimationStart(Animation animation) {
 				// TODO Auto-generated method stub			
 			}		
 			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub	
 				// english word set next count
 				wordCount++;
 				
 				if(wordCount<10) {
 					crocodileTimeAni.stop();
-					crocodileTimeAni.start();
+					stopTimeCount();				
+					crocodileNewStart();
 					// string to drawable ID
 					String imageID = "test_9_image_number_"+(wordCount+1);
 					int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
@@ -223,41 +230,100 @@ public class StudyTestA extends Activity {
 					if (wordCount>1) {
 						finalAnswerForRequest+="0";
 					}
-
-					progressTimer.start();
+					startTime = 10000;
+					startTimeCount(startTime);
 				} else {
-					progressTimer.cancel();
+					stopTimeCount();
 					isTestFinish = true;
 					imageTimeBlindAni.cancel();
 					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 					startActivity(intent);
 					finish();
 				}
-				
 			}		
 			
 			public void onAnimationEnd(Animation animation) 
 			{
-				// TODO Auto-generated method stub
-
+				
 			}
 		};
 		
 		imageTimeBlindAni.setAnimationListener(MyAnimationListener);
 		blindView.setAnimation(imageTimeBlindAni);
 		crocodileTimeAni.start();
+		
+		startTimeCount(10000);
+
+	}
 	
-		 progressTimer =  new CountDownTimer(10000, 1000) {
-			 public void onTick(long millisUntilFinished) {
-				 timeSpent = (10000-(int)millisUntilFinished)/1000;
-				 Log.d("time spent --- xxxx --- ", Integer.toString(timeSpent));
-			 }
-			 
-			 public void onFinish() {
+	private class BlindAnim extends TranslateAnimation {
+		
+		public BlindAnim(int fromXType, float fromXValue, int toXType,
+				float toXValue, int fromYType, float fromYValue, int toYType,
+				float toYValue) {
+			super(fromXType, fromXValue, toXType, toXValue, fromYType, fromYValue, toYType,
+					toYValue);
+		}
 
-			 }
-		 };
-
+		private long mPauseTime =0;
+		private boolean mPaused = false;
+		@Override
+		public boolean getTransformation(long currentTime,
+				Transformation outTransformation) {
+			if(mPaused && mPauseTime == 0) {
+				mPauseTime = currentTime-getStartTime();
+			}
+			if(mPaused) {
+				setStartTime(currentTime-mPauseTime);
+			}
+			return super.getTransformation(currentTime, outTransformation);
+		}
+		
+		public void pause() {
+			mPauseTime = 0;
+			mPaused = true;
+		}
+		
+		public void resume() {
+			mPaused = false;
+		}
+	}
+	
+	@SuppressLint("NewApi")
+	public void crocodilePause() {
+		crocoPause = true;
+		currentFrame = crocodileTimeAni.getCurrent();
+		crocodileTimeAni.stop();
+		crocodileCurrent = new AnimationDrawable();
+		boolean flag = false;
+		int sync = 1;
+		for(int i =0; i < crocodileTimeAni.getNumberOfFrames();i++) {
+			checkFrame = crocodileTimeAni.getFrame(i);
+			
+			if(checkFrame == currentFrame || flag) {
+				flag = true;
+				crocodileCurrent.addFrame(checkFrame, 422);
+			}
+		}
+		crocodileTimeAni = crocodileCurrent;
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			crocodileTime.setBackgroundDrawable(crocodileTimeAni);
+		} else {
+			crocodileTime.setBackground(crocodileTimeAni);
+		}
+	}
+	
+	public void crocodileNewStart() {
+		crocoPause = false;
+		crocodileTime.setBackgroundResource(R.drawable.lvtest_begin_drawable_time_img);
+		crocodileTimeAni = (AnimationDrawable)crocodileTime.getBackground();
+		crocodileTimeAni.start();
+	}
+	
+	public void crocodileResume() {
+		crocoPause = false;
+		crocodileTimeAni.start();
 	}
 	
 	@Override
@@ -267,34 +333,35 @@ public class StudyTestA extends Activity {
 		isRunning = false;
 		if (isTestFinish == false) {
 			pauseView.setVisibility(View.VISIBLE);
-			try {
-				imageTimeBlindAni.wait();
-				crocodileTimeAni.stop();
-			} catch(Exception e) {
-				Log.d("Exception --------", e.toString());
+			imageTimeBlindAni.pause();
+			if(!isPause) {
+				stopTimeCount();
+			}
+			if(!crocoPause) {
+				crocodilePause();
 			}
 		}
-		
-		progressTimer.cancel();
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-		progressTimer.start();
+		if(isPause) {
+			startTimeCount(startTime);
+		}
+		if(crocoPause) {
+			crocodileResume();
+		}
 	}
 	
 	public void pauseTestCB(View v) 
 	{
 		pauseView.setVisibility(View.VISIBLE);
 		isRunning = false;
-		try {
-			imageTimeBlindAni.wait();
-			crocodileTimeAni.stop();
-		} catch(Exception e) {
-			Log.d("Exception --------", e.toString());
-		}
+		imageTimeBlindAni.pause();
+		crocodilePause();
+		stopTimeCount();
 	}
 	
 	// Pause view call back
@@ -302,8 +369,9 @@ public class StudyTestA extends Activity {
 	{
 		pauseView.setVisibility(View.GONE);
 		isRunning = true;
-		imageTimeBlindAni.start();
-		crocodileTimeAni.start();
+		imageTimeBlindAni.resume();
+		crocodileResume();
+		startTimeCount(startTime);
 	}
 	
 	public void pauseViewFinishTest(View v) 
@@ -312,6 +380,28 @@ public class StudyTestA extends Activity {
 		startActivity(intent);
 		finish();
 	}
+	
+	public void startTimeCount(long start) {
+		Log.d("start time----", Long.toString(start));
+		progressTimer =  new CountDownTimer(start, 1000) {
+			 public void onTick(long millisUntilFinished) {
+				 startTime = millisUntilFinished;
+				 timeSpent = (10000-(int)millisUntilFinished)/1000;
+				 Log.d("time spent --- xxxx --- ", Long.toString(timeSpent));
+			 }
+			 
+			 public void onFinish() {
+	
+			 }
+		};
+		isPause = false;
+		progressTimer.start();
+	}
+	public void stopTimeCount() {
+		isPause = true;
+		progressTimer.cancel();
+	}
+	
 	
 	private void getTestWords()
 	{
@@ -345,70 +435,72 @@ public class StudyTestA extends Activity {
 		public void onClick(View v)
 		{
 			//wordCount++;
-			progressTimer.cancel();
+			stopTimeCount();
 
 			// english word set next count
 			
-				//blind animation start
-				imageTimeBlindAni.startNow();
-				crocodileTimeAni.stop();
-				crocodileTimeAni.start();
-				// string to drawable ID
-				
-				// ------- Compare Answer First!! ---------------
-				SQLiteDatabase db = mHelper.getWritableDatabase();
+			//blind animation start
+			imageTimeBlindAni.cancel();
+			imageTimeBlindAni.start();
+			crocodileTimeAni.stop();
+			crocodileNewStart();
+			// string to drawable ID
+			
+			// ------- Compare Answer First!! ---------------
+			SQLiteDatabase db = mHelper.getWritableDatabase();
 
-				// Here we get correct answer, so save to database as 'O'
-				int buttonTag = (Integer)v.getTag();
-				Log.d("correct Option", Integer.toString(correctOption));
-				if (buttonTag == correctOption) {
-					try {
-						//Cursor cs = db.rawQuery("UPDATE dic SET xo='O' WHERE name='" + englishWords.get(wordCount) + "'", null);
-						ContentValues cv = new ContentValues();
-						cv.put("xo", "O");
-						db.update("dic", cv, "name='"+ englishWords.get(wordCount) +"'", null);
-						Log.d("------- save word o --------", englishWords.get(wordCount));
-						
-						if(timeSpent<=3) {
-							finalAnswerForRequest+="2";
-						} else {
-							finalAnswerForRequest+="1";
-						}
-
-						
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					finalAnswerForRequest+="0";
-				}
-				// ------- Compare Answer First!! ---------------
-
-				wordCount++;
-				
-				// Setup Label
-				String imageID = "test_9_image_number_"+(wordCount+1);
-				int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
-				pageNumber.setBackgroundResource(resID);
-
-				// Setup Words
-				if (wordCount <=9) {
-					setupTestWords(wordCount);
-					progressTimer.start();
-				} else if (wordCount == 10) {
-					// Send Final Request to Server
-					Log.d("funny result: -----", finalAnswerForRequest);
-					SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-					SharedPreferences.Editor editor = sp.edit();
-					editor.putString("testResult", finalAnswerForRequest);
-					editor.commit();
+			// Here we get correct answer, so save to database as 'O'
+			int buttonTag = (Integer)v.getTag();
+			Log.d("correct Option", Integer.toString(correctOption));
+			if (buttonTag == correctOption) {
+				try {
+					//Cursor cs = db.rawQuery("UPDATE dic SET xo='O' WHERE name='" + englishWords.get(wordCount) + "'", null);
+					ContentValues cv = new ContentValues();
+					cv.put("xo", "O");
+					db.update("dic", cv, "name='"+ englishWords.get(wordCount) +"'", null);
+					Log.d("------- save word o --------", englishWords.get(wordCount));
 					
-					progressTimer.cancel();
-					isTestFinish = true;
-					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
-					startActivity(intent);
-					finish();
+					if(timeSpent<=3) {
+						finalAnswerForRequest+="2";
+					} else {
+						finalAnswerForRequest+="1";
+					}
+
+					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			} else {
+				finalAnswerForRequest+="0";
+			}
+			// ------- Compare Answer First!! ---------------
+
+			wordCount++;
+			
+			// Setup Label
+			String imageID = "test_9_image_number_"+(wordCount+1);
+			int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
+			pageNumber.setBackgroundResource(resID);
+
+			// Setup Words
+			if (wordCount <=9) {
+				setupTestWords(wordCount);
+				startTime = 10000;
+				startTimeCount(startTime);
+			} else if (wordCount == 10) {
+				// Send Final Request to Server
+				Log.d("funny result: -----", finalAnswerForRequest);
+				SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putString("testResult", finalAnswerForRequest);
+				editor.commit();
+				
+				stopTimeCount();
+				isTestFinish = true;
+				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+				startActivity(intent);
+				finish();
+			}
 
 		}
 	}

@@ -87,8 +87,15 @@ public class StudyTestB extends Activity {
  	// Pause View
  	RelativeLayout pauseView;
  	
-	CountDownTimer progressTimer;
-	int timeSpent = 0;
+	private CountDownTimer progressTimer;
+	private long timeSpent = 0;
+	private long startTime = 10000;
+	private boolean isPause = false;
+	
+	private long pinkTime = 0;
+	private long yellowTime = 0;
+	private long blueTime = 0;
+	private long greenTime = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,18 +142,7 @@ public class StudyTestB extends Activity {
 		// Relative Layout for pausing
 		pauseView = (RelativeLayout)findViewById(R.id.study_test_b_id_pause_layout);
 		pauseView.setVisibility(View.GONE);
-		
-		 progressTimer =  new CountDownTimer(10000, 1000) {
-			 public void onTick(long millisUntilFinished) {
-				 timeSpent = (10000-(int)millisUntilFinished)/1000;
-				 Log.d("time spent --- xxxx --- ", Integer.toString(timeSpent));
-			 }
-			 
-			 public void onFinish() {
 
-			 }
-		 };
-		
 		// Intro 
 		introCount = 0;
 		introBtn = (ImageButton)findViewById(R.id.study_test_b_id_intro_button);
@@ -176,7 +172,9 @@ public class StudyTestB extends Activity {
 	{
 		
 		super.onPause();
-		progressTimer.cancel();
+		if(!isPause) {
+			stopTimeCount();
+		}
 
 		if (isTestFinish == false) {
 			isRunning = false;
@@ -189,15 +187,48 @@ public class StudyTestB extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-		progressTimer.start();
+		if(isPause) {
+			startTimeCount(startTime);
+		}
 	}
 	
 	public void pauseTestCB(View v) 
 	{
 		pauseView.setVisibility(View.VISIBLE);
 		isRunning = false;
+		pinkTime = pinkAni.getCurrentPlayTime();
+		yellowTime = yellowAni.getCurrentPlayTime();
+		blueTime = blueAni.getCurrentPlayTime();
+		greenTime = greenAni.getCurrentPlayTime();
+		stopTimeCount();
+		
+		pinkAni.cancel();
+		yellowAni.cancel();
+		blueAni.cancel();
+		greenAni.cancel();
+		
+		
+	}
+	
+	public void startTimeCount(long start) {
+		Log.d("start time----", Long.toString(start));
+		progressTimer =  new CountDownTimer(start, 1000) {
+			 public void onTick(long millisUntilFinished) {
+				 startTime = millisUntilFinished;
+				 timeSpent = (10000-(int)millisUntilFinished)/1000;
+				 Log.d("time spent --- xxxx --- ", Long.toString(timeSpent));
+			 }
+			 
+			 public void onFinish() {
+	
+			 }
+		};
+		isPause = false;
+		progressTimer.start();
+	}
+	public void stopTimeCount() {
+		isPause = true;
 		progressTimer.cancel();
-
 	}
 	
 	public void introClickCB(View v)
@@ -229,15 +260,40 @@ public class StudyTestB extends Activity {
 	{
 		pauseView.setVisibility(View.GONE);
 		isRunning = true;
+		
+		/*
 		pinkAni.end();
 		yellowAni.end();
 		blueAni.end();
 		greenAni.end();
 		greenAni.removeAllListeners();
+		*/
+		Log.d("spink pause time ---", Long.toString(pinkTime)+", "+pinkAni.getDuration());
 		
-		progressTimer.start();
+		pinkAni.start();
+		pinkAni.setCurrentPlayTime(pinkTime);
+		
+		
+		Log.d("syellow pause time ---", Long.toString(yellowTime));
 
-		setUpAnimation();
+		yellowAni.start();
+		yellowAni.setCurrentPlayTime(yellowTime);		
+		
+		
+		Log.d("sblue pause time ---", Long.toString(blueTime));
+		
+		blueAni.start();
+		blueAni.setCurrentPlayTime(blueTime);
+		
+		
+		Log.d("sgreen pause time ---", Long.toString(greenTime));
+		
+		greenAni.start();
+		greenAni.setCurrentPlayTime(greenTime);
+		
+		startTimeCount(startTime);
+
+		//setUpAnimation();
 	}
 	
 	public void pauseViewFinishTest(View v) 
@@ -349,7 +405,8 @@ public class StudyTestB extends Activity {
 		blueAni.start();
 		greenAni.start();
 		
-		progressTimer.start();
+		startTime = 10000;
+		startTimeCount(startTime);
 
 	}
 
@@ -371,7 +428,7 @@ public class StudyTestB extends Activity {
 			if (isRunning == true) {
 				wordCount++;
 				if(wordCount<10){
-					progressTimer.cancel();
+					stopTimeCount();
 					setUpAnimation();
 				}else{
 					isTestFinish = true;
@@ -395,7 +452,7 @@ public class StudyTestB extends Activity {
 
 	private class ButtonListener implements OnClickListener{
 		public void onClick(View v){
-			progressTimer.cancel();
+			stopTimeCount();
 
 			// english word set next count
 			if(wordCount<10){	
