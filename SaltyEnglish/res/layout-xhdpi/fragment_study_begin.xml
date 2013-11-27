@@ -4,13 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
      >
-
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
    
     
     <!-- bg  -->
@@ -96,9 +89,5 @@
          />
     <!--    android:background="@drawable/study_8_text_exsentence" -->
     
-
-
-
-     </RelativeLayout>
 
 </RelativeLayout>

@@ -3,13 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_yellowpattern" >
-
-     <RelativeLayout
-        android:layout_width="320dp"
-        android:layout_height="533dp"
-        android:layout_centerInParent="true" >
-
-
     
     <ImageView
        	android:id="@+id/studyfinish_id_pop"
@@ -49,9 +42,5 @@
         android:layout_marginLeft="237.78dp"
         android:layout_marginTop="454.3dp"
         android:src="@drawable/study_16_image_mananddog"/>
-
-
-
-     </RelativeLayout>
 
 </RelativeLayout>

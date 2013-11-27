@@ -9,13 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4.16dp"
         >
-
-     <RelativeLayout
-        android:layout_width="320dp"
-        android:layout_height="533dp"
-        android:layout_centerInParent="true" >
-
-
                 
         <TextView
         android:id="@+id/studylearn_id_level_text1"
@@ -367,9 +360,5 @@
             android:background="@drawable/studylearn_drawable_btn_level_1_10"
              />
     </GridLayout>
-
-
-
-     </RelativeLayout>
 
 </LinearLayout>
