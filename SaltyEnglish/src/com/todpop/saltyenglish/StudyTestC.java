@@ -114,7 +114,6 @@ public class StudyTestC extends Activity {
 	ImageView policeMan;
 	ProgressTask progressTask;
 	CountDownTimer progressTimer;
-	private long timeSpent = 0;
 	private long startTime = 180000;
 	private boolean isPause = false;
 	

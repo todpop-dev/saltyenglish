@@ -20,13 +20,13 @@ public class StudyCategory extends Activity {
 		if(intent.getBooleanExtra("from_home", false)) {
 			pref = getSharedPreferences("StudyLevelInfo", MODE_PRIVATE);
 			test_level = pref.getInt("totalStage", 1);
-			if(test_level >= 1 && test_level <= 15) {
+			if(test_level >= 1 && test_level <= 150) {
 				this.saveInfoGotoStudyLearn(1);
-			} else if(test_level >=16 && test_level <= 60) {
+			} else if(test_level >=151 && test_level <= 600) {
 				this.saveInfoGotoStudyLearn(16);
-			} else if(test_level >=61 && test_level <= 120) {
+			} else if(test_level >=601 && test_level <= 1200) {
 				this.saveInfoGotoStudyLearn(61);
-			} else if(test_level >=121 && test_level <= 180) {
+			} else if(test_level >=1201 && test_level <= 1800) {
 				this.saveInfoGotoStudyLearn(121);
 			}
 		}
