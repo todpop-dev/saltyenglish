@@ -633,12 +633,6 @@ public class StudyBegin extends FragmentActivity {
 							}
 						}
 						
-						Cursor tmp = db.rawQuery("SELECT stage, name, xo FROM dic", null);
-						int c =1;
-						while(tmp.moveToNext()) {
-							Log.d("WordList "+(c++)+"----",tmp.getString(0)+", "+tmp.getString(1)+", "+tmp.getString(2));
-						}
-						
 						if (jsonWords.length()<10) {
 							String overlap = "";
 							for(int i = jsonWords.length()-1; i >=7 ; i-- ) {
