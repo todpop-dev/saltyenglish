@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import org.json.JSONObject;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -35,6 +36,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -108,10 +110,13 @@ public class StudyTestC extends Activity {
 	int cardCheck = 0;
 	
 	Animation animation;
-	TranslateAnimation policeManAni;
+	PoliceAnim policeManAni;
 	ImageView policeMan;
 	ProgressTask progressTask;
 	CountDownTimer progressTimer;
+	private long timeSpent = 0;
+	private long startTime = 180000;
+	private boolean isPause = false;
 	
 	private ProgressBar progress;
 	
@@ -137,15 +142,17 @@ public class StudyTestC extends Activity {
 		
 		testSetCount = 0;
 		cardCount = 12;
-		
+		boolean introFlag = false;
 		// Show Introduction in first launch
 		introBtn = (ImageButton)findViewById(R.id.study_test_c_id_intro_button);
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String introOk = pref.getString("introTestCOk", "N");
 		if (introOk.equals("N")) {
 			introCount = 0;
+			introFlag = true;
 			introBtn.setVisibility(View.VISIBLE);
 		} else {
+			introFlag = false;
 			introBtn.setVisibility(View.GONE);
 		}
 		
@@ -212,44 +219,64 @@ public class StudyTestC extends Activity {
 		 cardText3_2 ="thursday";
 		 cardText3_3 ="friday";
 		 cardText3_4 ="saturday";
-		 
-		 policeMan = (ImageView)findViewById(R.id.study_testc_id_police);
-		 policeManAni = new TranslateAnimation(
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.7f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
-					);
-		 policeManAni.setDuration(180000);
-		 policeManAni.setRepeatCount(0);
-		 policeManAni.setAnimationListener(new Animation.AnimationListener() {
-             @Override
-             public void onAnimationStart(Animation animation) {
-             }
+		 if(!introFlag) {
+			 progress = (ProgressBar)findViewById(R.id.study_testc_id_progress_bar);
+			 progress.setMax(180000);;
+			 
+			 policeMan = (ImageView)findViewById(R.id.study_testc_id_police);
+			 policeManAni = new PoliceAnim(
+						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+						TranslateAnimation.RELATIVE_TO_PARENT, 0.7f,
+						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+						TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
+						);
+			 policeManAni.setDuration(180000);
+			 policeManAni.setRepeatCount(0);
+			 policeMan.setAnimation(policeManAni);
+			 
+			 startTimeCount(startTime);
+		 }	 
+	}
+	private class PoliceAnim extends TranslateAnimation {
+		
+		public PoliceAnim(int fromXType, float fromXValue, int toXType,
+				float toXValue, int fromYType, float fromYValue, int toYType,
+				float toYValue) {
+			super(fromXType, fromXValue, toXType, toXValue, fromYType, fromYValue, toYType,
+					toYValue);
+		}
 
-             @Override
-             public void onAnimationEnd(Animation animation) {
-            	 // Finish Test
-//     			Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
-//    			startActivity(intent);
-//    			finish();
-             }
-
-             @Override
-             public void onAnimationRepeat(Animation animation) {
-             }
-         });
-		 
-		 policeMan.setAnimation(policeManAni);
-		 progress = (ProgressBar)findViewById(R.id.study_testc_id_progress_bar);
-		 progress.setMax(180000);
-		 //progressTask=new ProgressTask();
-		 //progressTask.execute(0);
-		 
-		 progressTimer =  new CountDownTimer(180000, 1000) {
+		private long mPauseTime =0;
+		private boolean mPaused = false;
+		@Override
+		public boolean getTransformation(long currentTime,
+				Transformation outTransformation) {
+			if(mPaused && mPauseTime == 0) {
+				mPauseTime = currentTime-getStartTime();
+			}
+			if(mPaused) {
+				setStartTime(currentTime-mPauseTime);
+			}
+			return super.getTransformation(currentTime, outTransformation);
+		}
+		
+		public void pause() {
+			mPauseTime = 0;
+			mPaused = true;
+		}
+		
+		public void resume() {
+			mPaused = false;
+		}
+	}
+	public void startTimeCount(long start) {
+		Log.d("start time----", Long.toString(start));
+		progressTimer =  new CountDownTimer(start, 1000) {
 			 public void onTick(long millisUntilFinished) {
+				 startTime = millisUntilFinished;
 				 progressBarLength = 180000-(int)millisUntilFinished;
 				 progress.setProgress(progressBarLength);
+				 Log.d("time count --- xxxx --- ", Long.toString(startTime));
 			 }
 			 
 			 public void onFinish() {
@@ -257,74 +284,45 @@ public class StudyTestC extends Activity {
 				startActivity(intent);
 				finish();
 			 }
-		 }.start();
-		 
+		 };
+		isPause = false;
+		progressTimer.start();
 	}
-	
+	public void stopTimeCount() {
+		isPause = true;
+		progressTimer.cancel();
+	}
 	@Override
 	public void onPause()
 	{
 		super.onPause();
-		policeManAni.cancel();
-		progressTimer.cancel();
-		
-		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-		SharedPreferences.Editor editor = sp.edit();		
-
-		editor.putInt("test_c_progress_timer", (180000-progressBarLength));
-		editor.commit();
+		if(!isPause) {
+			stopTimeCount();
+		}
+		policeManAni.pause();
 	}
 	
 	@Override
 	public void onResume()
 	{
 		super.onResume();
-
-		
-		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-		try {
-			countDownTime = sp.getInt("test_c_progress_timer", 0);
-		} catch (Exception e) {
-			countDownTime = 180000;
-		}
-		
-		if (policeManAni != null && progressTimer != null) {
-			policeManAni.start();
-			progressTimer.start();
-			progress.setProgress(180000-countDownTime);
+		if(isPause) {
+			startTimeCount(startTime);
 		}
 	}
 	
 	public void pauseTestCB(View v) 
 	{
 		pauseView.setVisibility(View.VISIBLE);
-		
-		policeManAni.cancel();
-		progressTimer.cancel();
-		
-		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-		SharedPreferences.Editor editor = sp.edit();		
-
-		editor.putInt("test_c_progress_timer", (180000-progressBarLength));
-		editor.commit();
+		policeManAni.pause();
+		stopTimeCount();
 	}
 	
 	public void pauseViewContinueTest(View v)
 	{
 		pauseView.setVisibility(View.GONE);
-		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-		try {
-			countDownTime = sp.getInt("test_c_progress_timer", 0);
-		} catch (Exception e) {
-			countDownTime = 180000;
-		}
-		
-		if (policeManAni != null && progressTimer != null) {
-			policeManAni.start();
-			progressTimer.start();
-			progress.setProgress(180000-countDownTime);
-
-		}
+		startTimeCount(startTime);
+		policeManAni.resume();
 	}
 	
 	public void pauseViewFinishTest(View v) 
@@ -348,6 +346,22 @@ public class StudyTestC extends Activity {
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putString("introTestCOk", "Y");
 			editor.commit();
+			
+			progress = (ProgressBar)findViewById(R.id.study_testc_id_progress_bar);
+			progress.setMax(180000);;
+			 
+			policeMan = (ImageView)findViewById(R.id.study_testc_id_police);
+			policeManAni = new PoliceAnim(
+					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+					TranslateAnimation.RELATIVE_TO_PARENT, 0.7f,
+					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+					TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
+					);
+			policeManAni.setDuration(180000);
+			policeManAni.setRepeatCount(0);
+			policeMan.setAnimation(policeManAni);
+			
+			startTimeCount(startTime);
 		}
 	}
 	
