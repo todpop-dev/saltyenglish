@@ -338,21 +338,21 @@ public class StudyHome extends Activity {
 	{		
 		if(imageID.equals("1"))
 		{
-			mRankImage.setImageResource(R.drawable.store_44_btn_eric_off);
+			mRankImage.setImageResource(R.drawable.home_character_eric);
 		}else if(imageID.equals("2")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_selly_off);
+			mRankImage.setImageResource(R.drawable.home_character_selly);
 		}else if(imageID.equals("3")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_john_off);
+			mRankImage.setImageResource(R.drawable.home_character_john);
 		}else if(imageID.equals("4")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_amanda_off);
+			mRankImage.setImageResource(R.drawable.home_character_amanda);
 		}else if(imageID.equals("5")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_tom_off);
+			mRankImage.setImageResource(R.drawable.home_character_tom);
 		}else if(imageID.equals("6")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_jenny_off);
+			mRankImage.setImageResource(R.drawable.home_character_jenny);
 		}else if(imageID.equals("7")){
-			mRankImage.setImageResource(R.drawable.store_44_btn_monkey_off);
+			mRankImage.setImageResource(R.drawable.home_character_monkey);
 		}else{
-			mRankImage.setImageResource(R.drawable.store_44_btn_dino_off);
+			mRankImage.setImageResource(R.drawable.home_character_dino);
 		}
 	}
 
