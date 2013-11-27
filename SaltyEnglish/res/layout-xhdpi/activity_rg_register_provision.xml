@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_darkyellowpattern" >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/common_bgimg_register" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.5dp"
+        android:layout_marginTop="10.5dp"
+        android:background="@drawable/rg_drawable_btn_back"
+        android:onClick="onClickBack" />
+
+    <ImageView
+        android:layout_width="343dp"
+        android:layout_height="578dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="57.5dp"
+        android:src="@drawable/register_28_image_textbox" />
+
+    <ImageView
+        android:id="@+id/provisionImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="33.5dp"
+        android:layout_marginTop="76dp" />
+
+    <ScrollView
+        android:layout_width="294.5dp"
+        android:layout_height="493.5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="111.5dp"
+        android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
+        android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" >
+
+        <TextView
+            android:id="@+id/textViewField"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#000000" />
+    </ScrollView>
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

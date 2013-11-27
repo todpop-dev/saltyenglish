@@ -1,0 +1,359 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:src="@drawable/home_image_slidemenu" />
+    
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4.44dp"
+        android:layout_marginTop="97.02dp"
+        android:src="@drawable/home_image_slidemenu_bar" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="30.4dp"
+        android:background="@drawable/studyhome_drawable_btn_slid_mypage"
+        android:onClick="showHomeMyPage" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="99.1dp"
+        android:background="@drawable/studyhome_drawable_btn_invitefriend" 
+        android:onClick="kakaoInvitefriend"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="167.4dp"
+        android:background="@drawable/studyhome_drawable_btn_download"
+		android:onClick="showHomeDownload"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="235.69dp"
+        android:background="@drawable/studyhome_drawable__btn_slid_myvocabulary"
+        android:onClick="showHomeWordList" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="304.39dp"
+        android:background="@drawable/studyhome_drawable_btn_store"
+        android:onClick="showHomeStore" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="372.68dp"
+        android:background="@drawable/studyhome_drawable_btn_more"
+        android:onClick="showMore" />
+
+    <RelativeLayout
+        android:id="@+id/frag_home_rela_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_bg_pinkpattern"
+        android:clickable="true" >
+
+     
+
+        <!-- side bar menu button -->
+
+        <Button
+            android:id="@+id/studyhome_id_sidebar_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9.33dp"
+            android:layout_marginTop="8.74dp"
+            android:background="@drawable/studyhome_drawable_btn_menu"
+            android:onClick="slideMenuBtnCB" />
+
+        <!-- study button -->
+
+        <Button
+            android:id="@+id/studyhome_id_study_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="483.03dp"
+            android:background="@drawable/studyhome_drawable_btn_study"
+            android:onClick="showStudyCategory" />
+
+        <!-- my word list button -->
+
+        <Button
+            android:id="@+id/studyhome_id_wordlist_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="493.44dp"
+            android:background="@drawable/studyhome_drawable_btn_myvocabulary"
+            android:onClick="showHomeWordList" />
+
+        <!-- my page button -->
+
+        <Button
+            android:id="@+id/studyhome_id_mypage_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="218.22dp"
+            android:layout_marginTop="493.44dp"
+            android:background="@drawable/studyhome_drawable_btn_mypage"
+            android:onClick="showHomeMyPage" />
+        <!-- page bg -->
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="74.12dp"
+            android:src="@drawable/home_image_rankingbox" />
+        
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="9.99dp"
+            android:src="@drawable/home_bgimg_home" />
+        
+        
+        
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37.48dp"
+            android:background="@drawable/home_image_myrankingbox"/>
+        
+        <RadioGroup
+                    android:id="@+id/homestore_id_week_moon_rank_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="39.97dp"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal"
+                     >
+
+                    <RadioButton
+                        android:id="@+id/studyhome_id_week"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="44.44dp"
+                       	android:text="주간 순위"
+                        android:checked="true" 
+                       	/>
+       
+                    <RadioButton
+                        android:id="@+id/studyhome_id_moon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="62.22dp"
+                        android:text="월간 순위" 
+                        />
+                </RadioGroup>
+        
+
+      <!--<HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37.48dp"
+            android:background="@drawable/home_image_myrankingbox"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                
+                android:orientation="horizontal" >
+
+                <RadioGroup
+                    android:id="@+id/homestore_id_sexgroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/studyhome_id_basicweek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="120dp"
+                        android:background="@drawable/store_2_btn_carousel_education_off"
+                        android:button="@drawable/studyhome_drawable_ranklist_btn_basicweek"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/studyhome_id_middleweek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="120dp"
+                        android:layout_marginRight="120dp"
+                        android:background="@drawable/store_2_btn_carousel_education_off"
+                        android:button="@drawable/studyhome_drawable_ranklist_btn_middleweek" />
+                </RadioGroup>
+            </LinearLayout>
+        </HorizontalScrollView> -->
+
+        <ListView
+            android:id="@+id/studyhome_id_listview"
+            android:layout_width="288.89dp"
+            android:layout_height="279.83dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="84.11dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="30dp" />
+
+        <!-- bg -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="375.6dp"
+            android:src="@drawable/home_bgimg_whitebar" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="399.75dp"
+            android:src="@drawable/home_image_myrankingbox" />
+
+        <!-- my rank -->
+
+        <TextView
+            android:id="@+id/studyhome_id_my_rank"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="44.44dp"
+            android:layout_marginTop="412.24dp"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:gravity="center" />
+        	<!-- wrap, wrap, 60dp, 493dp, 19sp -->
+
+        <ImageView
+            android:id="@+id/studyhome_id_my_rank_image"
+            android:layout_width="35.56dp"
+            android:layout_height="33.31dp"
+            android:layout_marginLeft="78.22dp"
+            android:layout_marginTop="400.58dp" />
+        	<!-- 50dp, 50dp, 97dp, 481dp -->
+
+        <TextView
+            android:id="@+id/studyhome_id_my_rank_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="124.44dp"
+            android:layout_marginTop="410.58dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+        	<!-- 180dp, 493dp, 17sp -->
+
+        <TextView
+            android:id="@+id/studyhome_id_my_rank_fraction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50.67dp"
+            android:layout_marginTop="410.58dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+        	<!-- 57dp, 493dp, 17sp -->
+    </RelativeLayout>
+    
+    <RelativeLayout 
+        android:id="@+id/studyhome_cpi_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:visibility="gone"
+        android:background="@drawable/test_27_bg_opacity"
+        >
+        <!-- bg -->
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="174.67dp"
+            android:layout_marginTop="70.37dp"
+            android:src="@drawable/test_27_image_dogs"/>
+        
+          <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="289.4dp"
+            android:background="@drawable/test_27_image_infotitle"/>
+        
+        
+        <!-- ad image-->
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="89.94dp"
+            android:background="@drawable/test_27_image_frame"/>
+        
+        <TextView 
+            android:layout_width="188dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="329.79dp"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:text="INFO"/>
+        
+              
+        <Button 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="422.65dp"
+            android:background="@drawable/studytest_drawable_btn_saving"
+            android:onClick="goSaving"/>
+        
+        <Button 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="473.87dp"
+            android:background="@drawable/studytest_drawable_btn_later"
+            android:onClick="goHome"/>
+        
+        
+    </RelativeLayout>
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

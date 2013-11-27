@@ -1,0 +1,191 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_pinkpattern" >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12.5dp"
+        android:src="@drawable/common_bgimg_setting" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.5dp"
+        android:layout_marginTop="10.5dp"
+        android:background="@drawable/rg_drawable_btn_back"
+        android:onClick="onClickBack" />
+
+    <!-- set study alarm -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="84dp"
+        android:src="@drawable/store_52_image_alarmtext" />
+
+    <CheckBox
+        android:id="@+id/home_more_setting_id_alarm_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="186dp"
+        android:layout_marginTop="93dp"
+        android:background="@drawable/store_52_btn_setting_off"
+        android:button="@drawable/homemoresetting_drawable_checkbox" />
+
+    <Button
+        android:id="@+id/home_more_setting_btn_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="135dp"
+        android:background="@drawable/store_52_drop_time"
+        android:gravity="left"
+        android:paddingTop="7dp"
+        android:textSize="30dp"
+        android:onClick="setStudyAlarm" />
+
+    <!-- set study popup -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="218dp"
+        android:src="@drawable/store_52_image_popuptext" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="186dp"
+        android:layout_marginTop="220.5dp"
+        android:background="@drawable/store_52_btn_setting_off"
+        android:button="@drawable/homemoresetting_drawable_checkbox" />
+    <!-- set alarmbell -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="283dp"
+        android:src="@drawable/store_52_image_alarmbelltext" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="186dp"
+        android:layout_marginTop="285.5dp"
+        android:background="@drawable/store_52_btn_setting_off"
+        android:button="@drawable/homemoresetting_drawable_checkbox" />
+
+    <!-- set background music -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="348dp"
+        android:src="@drawable/store_52_image_bgmtext" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="186dp"
+        android:layout_marginTop="350dp"
+        android:background="@drawable/store_52_btn_setting_off"
+        android:button="@drawable/homemoresetting_drawable_checkbox" />
+
+    <!-- set sound -->
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="413dp"
+        android:src="@drawable/store_52_image_soundtext" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="186dp"
+        android:layout_marginTop="415.5dp"
+        android:background="@drawable/store_52_btn_setting_off"
+        android:button="@drawable/homemoresetting_drawable_checkbox" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16.5dp"
+        android:layout_marginTop="468.5dp"
+        android:src="@drawable/store_52_image_rankinggirl" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="46dp"
+        android:layout_marginTop="512.5dp"
+        android:src="@drawable/store_52_bgimg_ranking" />
+    <!-- link ccategory -->
+
+    <RadioGroup
+        android:id="@+id/home_more_radioGrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="543.5dp"
+        android:orientation="horizontal" >
+
+        <!-- basic -->
+
+        <RadioButton
+            android:id="@+id/home_more_radiobtn_basic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:background="@drawable/store_52_btn_toeic_off"
+            android:button="@drawable/homemoresetting_drawable_checkbox_basic"
+             />
+        <!-- middle -->
+
+        <RadioButton
+            android:id="@+id/home_more_radiobtn_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/store_52_btn_toeic_off"
+            android:button="@drawable/homemoresetting_drawable_checkbox_middle" />
+
+        <!-- high -->
+
+        <RadioButton
+            android:id="@+id/home_more_radiobtn_high"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/store_52_btn_toeic_off"
+            android:button="@drawable/homemoresetting_drawable_checkbox_high" />
+
+        <!-- toeic -->
+
+        <RadioButton
+            android:id="@+id/home_more_radiobtn_toeic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/store_52_btn_toeic_off"
+            android:button="@drawable/homemoresetting_drawable_checkbox_toeic" />
+    </RadioGroup>
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

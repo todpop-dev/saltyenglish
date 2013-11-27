@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/register_3_bg"
+    >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+    
+    <Button
+        android:id="@+id/rgloginandregister_id_register_btn"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="373dp"
+    	android:background="@drawable/rgloginandregister_drawable_btn_register"
+    	android:onClick="showRgRegisterActivity"  />
+    
+    <Button
+        android:id="@+id/rgloginandregister_id_login_btn"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_marginTop="440dp"
+    	android:background="@drawable/rgloginandregister_drawable_btn_login"
+    	android:onClick="showRgLoginActivity"  />
+    
+    
+    
+   
+    
+    
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

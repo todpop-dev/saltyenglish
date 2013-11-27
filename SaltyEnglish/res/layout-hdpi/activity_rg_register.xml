@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_rg_regster_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_darkyellowpattern" >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9.33dp"
+        android:layout_marginTop="8.74dp"
+        android:background="@drawable/rg_drawable_btn_back"
+        android:onClick="onClickBack" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="146.16dp"
+        android:background="@drawable/register_19_textbox_info" />
+
+    <ImageView
+        android:id="@+id/register_17_email_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="169.06dp"
+        android:textSize="14sp" />
+
+    <com.facebook.widget.LoginButton
+        xmlns:fb="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/register_id_facebook_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        fb:login_text=""
+        fb:logout_text="" />
+
+    <Button
+        android:id="@+id/register_id_facebook_btn_checkPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="246.93dp"
+        android:onClick="checkAgreementAndClickFB" />
+    
+    <Button
+        android:id="@+id/register_17_email_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="308.14dp"
+        android:background="@drawable/rgregister_drawable_btn_email"
+        android:onClick="showRgRegisterEmailActivity" />
+
+    <CheckBox
+        android:id="@+id/rg_register_id_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="62.67dp"
+        android:layout_marginTop="359.36dp"
+        android:button="@drawable/rgregister_drawable_checkbox"
+        android:checked="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="90.22dp"
+        android:layout_marginTop="370.19dp"
+        android:background="@drawable/register_19_btn_agreement"
+        android:onClick="showProvisionActivity_user" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="123.11dp"
+        android:layout_marginTop="370.19dp"
+        android:background="@drawable/register_19_btn_personalinfo"
+        android:onClick="showProvisionActivity_personal" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="184.44dp"
+        android:layout_marginTop="370.19dp"
+        android:background="@drawable/register_19_text_agree" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="256dp"
+        android:layout_marginTop="232.77dp"
+        android:src="@drawable/register_19_image_facebookman" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="35.11dp"
+        android:layout_marginTop="290.65dp"
+        android:src="@drawable/register_19_image_emailman" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="31.11dp"
+        android:src="@drawable/common_image_bgcharacter3" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="9.99dp"
+        android:src="@drawable/common_bgimg_register" />
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

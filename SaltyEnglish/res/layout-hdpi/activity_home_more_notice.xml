@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_pinkpattern" >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="10.41dp"
+        android:src="@drawable/common_bgimg_notice" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9.33dp"
+        android:layout_marginTop="8.74dp"
+        android:onClick="onClickBack"
+        android:background="@drawable/rg_drawable_btn_back"/>
+    
+    
+    
+    
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48.3dp"
+        android:src="@drawable/common_image_pinkbox_big"/>
+    
+    <!-- list view -->
+    <LinearLayout
+        android:id="@+id/homemorehelp_id_listview"
+        android:layout_width="297.78dp"
+        android:layout_height="391.42dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="108.27dp"
+        android:paddingTop="7dp"
+        android:orientation="vertical"
+         >
+        
+       
+
+        <ExpandableListView
+            android:id="@+id/homemorenotice_id_listview_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:groupIndicator="@drawable/homemorehelp_drawable_expandablelistview_navi"
+            
+            />
+           <!-- android:childIndicator="@drawable/icon"-->
+            
+    </LinearLayout>
+    
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="250.67dp"
+        android:layout_marginTop="466.38dp"
+        android:src="@drawable/store_55_image_noticeman" />
+    
+    
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="97.86dp"
+        android:src="@drawable/store_55_image_whitebar"/>
+    
+     <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="62.46dp"
+        android:src="@drawable/store_55_image_mainnotice"/>
+    
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

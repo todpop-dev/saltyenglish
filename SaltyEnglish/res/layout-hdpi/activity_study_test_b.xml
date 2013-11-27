@@ -1,0 +1,152 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_bluepattern" >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+    
+    
+
+    <!-- Title Image -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11.66dp"
+        android:src="@drawable/common_bgimg_test" />
+    
+    <!-- Top Right On Pause Button -->
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="284.44dp"
+        android:layout_marginTop="8.74dp"
+        android:background="@drawable/studytesta_drawable_btn_onpause"
+        android:onClick="pauseTestCB"
+        />
+    
+    <!-- Sky background image -->
+    <ImageView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37.48dp"
+        android:src="@drawable/test_9_bgimg_skypicture"
+        />
+    
+    <!-- Test Count Image -->
+    <ImageView 
+        android:id="@+id/study_testb_id_pagenumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23.56dp"
+        android:layout_marginTop="46.64dp"
+        android:background="@drawable/test_9_image_number_1"
+        />
+
+    <!-- word indicator -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="452.22dp"
+        android:src="@drawable/test_9_image_sign" />
+    
+    <!-- Test words inside indicator -->
+    <TextView 
+        android:id="@+id/study_testb_id_enword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="446.39dp"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/test_9_textbox_englishword"/>
+    
+    <Button
+        android:id="@+id/study_testb_id_pink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="35dp"
+	/>
+
+    <Button
+        android:id="@+id/study_testb_id_green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="35dp"
+	 />
+
+    <Button
+        android:id="@+id/study_testb_id_yellow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="35dp"
+     />
+
+    <Button
+        android:id="@+id/study_testb_id_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="35dp"
+    />
+    
+   	<ImageButton
+        android:id="@+id/study_test_b_id_intro_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/test_2_image_tutorial1"
+        android:onClick="introClickCB"
+   	/>
+   	
+   	<RelativeLayout 
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:background="@drawable/test_19_bg_fisherman"
+    	android:id="@+id/study_test_b_id_pause_layout"
+    	>
+    
+     	<ImageView
+       		android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="11.66dp"
+        	android:layout_centerHorizontal="true"
+        	android:src="@drawable/common_bgimg_test"
+        />
+    
+
+    	<Button
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="216.53dp"
+        	android:layout_centerHorizontal="true"
+        	android:onClick="pauseViewContinueTest"
+        	android:background="@drawable/lvtestpuse_btn_continue"
+        />
+    
+     	<Button
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="266.5dp"
+        	android:layout_centerHorizontal="true"
+        	android:onClick="pauseViewFinishTest"
+        	android:background="@drawable/lvtestpuse_btn_testfinish"
+        />
+
+	</RelativeLayout>
+    
+
+
+     </RelativeLayout>
+
+</RelativeLayout>
+
+
