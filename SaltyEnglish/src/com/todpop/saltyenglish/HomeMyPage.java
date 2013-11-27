@@ -163,7 +163,7 @@ public class HomeMyPage extends FragmentActivity {
 			ImageView indicatorR = (ImageView)rootView.findViewById(R.id.right);
 			
 			ImageView rankImage = (ImageView)rootView.findViewById(R.id.home_mypage_id_rankingid_img);
-			ImageView iamge = (ImageView)rootView.findViewById(R.id.home_mypage_id_ranking_img);
+			ImageView prizeImage = (ImageView)rootView.findViewById(R.id.home_mypage_id_ranking_img);
 			TextView nickName = (TextView)rootView.findViewById(R.id.home_mypage_id_ranking_nickName);
 
 			Bundle args = getArguments();
@@ -187,8 +187,8 @@ public class HomeMyPage extends FragmentActivity {
 			switch(args.getInt("page"))
 			{
 				case 0:
-					//rankImage.setImageResource(R.drawable.store_31_image_2nd);
-					rankImage.setImageBitmap(prizeImageArr.get(2));
+					rankImage.setImageResource(R.drawable.store_31_image_2nd);
+					prizeImage.setImageBitmap(prizeImageArr.get(2));
 					
 					nickName.setText(rankNickNameList.get(2));
 					Log.d("+++++++++++++++++++++","1");
@@ -197,8 +197,8 @@ public class HomeMyPage extends FragmentActivity {
 				break;
 				case 1:
 					Log.d("+++++++++++++++++++++","2");
-					//rankImage.setImageResource(R.drawable.store_31_image_1st);
-					rankImage.setImageBitmap(prizeImageArr.get(0));
+					rankImage.setImageResource(R.drawable.store_31_image_1st);
+					prizeImage.setImageBitmap(prizeImageArr.get(0));
 
 					nickName.setText(rankNickNameList.get(0));
 					indicatorL.setVisibility(View.VISIBLE);
@@ -206,8 +206,8 @@ public class HomeMyPage extends FragmentActivity {
 				break;
 				case 2:
 					Log.d("+++++++++++++++++++++","3");
-					//rankImage.setImageResource(R.drawable.store_31_image_3rd);
-					rankImage.setImageBitmap(prizeImageArr.get(1));
+					rankImage.setImageResource(R.drawable.store_31_image_3rd);
+					prizeImage.setImageBitmap(prizeImageArr.get(1));
 
 					nickName.setText(rankNickNameList.get(1));
 					indicatorL.setVisibility(View.GONE);
@@ -291,13 +291,7 @@ public class HomeMyPage extends FragmentActivity {
 					}	
 							
 					
-					pageView = (ViewPager)findViewById(R.id.pager);
-					pageView.setClipChildren(false);
-					pageView.setAdapter(pagerAdapter);
-					pageView.setOffscreenPageLimit(pagerAdapter.getCount());
-					pageView.setPageMargin(-210);
-					pageView.setClipChildren(false);
-					pageView.setCurrentItem(1);
+
 					
 				}
 			} catch (Exception e) {
@@ -326,6 +320,13 @@ public class HomeMyPage extends FragmentActivity {
 
 		    	if (prizeImageArr.size()==3) {
 					pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+					pageView = (ViewPager)findViewById(R.id.pager);
+					pageView.setClipChildren(false);
+					pageView.setAdapter(pagerAdapter);
+					pageView.setOffscreenPageLimit(pagerAdapter.getCount());
+					pageView.setPageMargin(-210);
+					pageView.setClipChildren(false);
+					pageView.setCurrentItem(1);
 		    	}
 
 		    }
