@@ -342,6 +342,7 @@ public class RgRegisterEmailInfo extends Activity {
 					params.add(new BasicNameValuePair("address", city.getSelectedItem().toString()+" "+contry.getSelectedItem().toString()));
 					params.add(new BasicNameValuePair("interest",Integer.toString(interest)));
 					params.add(new BasicNameValuePair("mem_no",rgInfo.getString("mem_id", "NO")));
+					Log.i("SETVEN", "INTEREST!!!-------"+interest);
 					
 					if(rgInfo.getString("password", "NO").equals("0"))
 					{
@@ -452,86 +453,88 @@ public class RgRegisterEmailInfo extends Activity {
 	public void showRgRegisterFinishActivity(View view)
 	{
 		checkCount = 0;
-
+		interest = 0;
 		if(sports.isChecked())
 		{
 			checkCount++;
 			interest = interest +1;
-		}else{
-			interest = interest -1;
+		//}else{
+		//	interest = interest +1;
 		}
 		if(love.isChecked()){
 			checkCount++;
 			interest = interest +2;
-		}else{
-			interest = interest +2;
+		//}else{
+		//	interest = interest +2;
 		}
 		if(electronic.isChecked()){
 			checkCount++;
 			interest = interest +4;
-		}else{
-			interest = interest +4;
+		//}else{
+		//	interest = interest +4;
 		}
 		if(music.isChecked()){
 			checkCount++;
 			interest = interest +2000;
-		}else{
-			interest = interest +2000;
+		//}else{
+		//	interest = interest +2000;
 		}
 		if(fashion.isChecked()){
 			checkCount++;
 			interest = interest +10;
-		}else{
-			interest = interest +10;
+		//}else{
+		//	interest = interest +10;
 		}
 		if(game.isChecked()){
 			checkCount++;
 			interest = interest +20;
-		}else{
-			interest = interest +20;
+		//}else{
+		//	interest = interest +20;
 		}
 		if(food.isChecked())
 		{
 			checkCount++;
 			interest = interest +40;
-		}else{
-			interest = interest +40;
+		//}else{
+		//	interest = interest +40;
 		}
 		if(language.isChecked()){
 			checkCount++;
 			interest = interest +200;
-		}else{
-			interest = interest +200;
+		//}else{
+		//	interest = interest +200;
 		}
 		if(travel.isChecked()){
 			checkCount++;
 			interest = interest +100;
-		}else{
-			interest = interest +100;
+		//}else{
+		//	interest = interest +100;
 		}
 		if(movie.isChecked()){
 			checkCount++;
 			interest = interest +400;
-		}else{
-			interest = interest +400;
+		//}else{
+		//	interest = interest +400;
 		}
 		if(haircut.isChecked())
 		{
 			checkCount++;
 			interest = interest +1000;
-		}else{
-			interest = interest +1000;
+		//}else{
+		//	interest = interest +1000;
 		}
 		if(money.isChecked())
 		{
 			checkCount++;
 			interest = interest +4000;
-		}else{
-			interest = interest +4000;
+		//}else{
+		//	interest = interest +4000;
 		}
 
 		if(checkCount>2)
 		{
+
+			Log.i("SETVEN", "INTEREST!!!-------"+interest);
 			new SendUserFaverateInfo().execute("http://todpop.co.kr/api/users/sign_up.json");
 		}else{
 			popupText.setText(R.string.popup_interest_More_than_three);
