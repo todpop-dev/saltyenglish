@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   	android:background="@drawable/common_bg_yellowpattern"
+   	android:id="@+id/studyfinish_id_main_activity" >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+   	
+     <Button
+       	android:id="@+id/studyfinish_"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50.5dp"
+        android:background="@drawable/toeic"
+        />
+    
+    
+
+    <!-- Get Coupon Button -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="507.5dp"
+        android:background="@drawable/studyfinish_drawable_btn_coupon"
+        android:onClick="showPopView"
+        />
+    
+    <!-- Start Test Button -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="568dp"
+        android:background="@drawable/studyfinish_drawable_btn_test"
+        />
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

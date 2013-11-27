@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_pinkpattern"
+    android:id="@+id/home_more_acount_info_id_main_fb_activity" >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="10.41dp"
+        android:src="@drawable/common_bgimg_accountinfo" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9.33dp"
+        android:layout_marginTop="8.74dp"
+        android:onClick="onClickBack"
+        android:background="@drawable/rg_drawable_btn_back"/>
+    
+    <!--set PW -->
+    <Button
+        android:id="@+id/home_more_accoun_setpw_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="172.39dp"
+        android:onClick="setPassword"
+        android:background="@drawable/homemoreaountinfo_drawable_btn_set_pw"/>
+    <!-- change PW -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="230.69dp"
+        android:onClick="showChangePwActivity"
+        android:background="@drawable/homemoreaountinfo_drawable_btn_change_pw"/>
+    <!-- logout-->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="288.99dp"
+        android:onClick="logout"
+        android:background="@drawable/homemoreaountinfo_drawable_btn_logout"
+        />
+    <!-- delete acount -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="347.28dp"
+        android:onClick="deleteAcount"
+        android:background="@drawable/homemoreaountinfo_drawable_btn_delete_acount"
+        />
+    
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="51.11dp"
+        android:layout_marginTop="134.08dp"
+        android:src="@drawable/store_59_image_pwman" />
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

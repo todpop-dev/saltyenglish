@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4.16dp"
+        >
+
+     <RelativeLayout
+        android:layout_width="320dp"
+        android:layout_height="533dp"
+        android:layout_centerInParent="true" >
+
+
+                
+        <TextView
+        android:id="@+id/studylearn_id_level_text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp" />
+        
+        <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/study_6_image_page1_01"
+         />
+        
+    </RelativeLayout>
+
+    
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="5"
+        android:rowCount="5" >
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+            />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_2"
+            android:onClick="showLearn" />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+            />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+           />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+            />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_1_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+             />
+    </GridLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4.16dp"
+        >
+                
+        <TextView
+        android:id="@+id/studylearn_id_level_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp" />
+        
+        <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/study_6_image_page1_02"
+         />
+        
+    </RelativeLayout>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="5"
+        android:rowCount="5" >
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_2"
+            android:onClick="showLearn" />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+            android:onClick="showLearn" />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+		 />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_2_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+             />
+    </GridLayout>
+
+    <RelativeLayout
+        android:layout_marginTop="4.16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+                
+        <TextView
+        android:id="@+id/studylearn_id_level_text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp" />
+        
+        <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/study_6_image_page1_03"
+         />
+        
+    </RelativeLayout>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="5"
+        android:rowCount="5" >
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+            
+            />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_2"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+             />
+
+        <Button
+            android:id="@+id/studylearn_id_levelbtn_3_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8.89dp"
+            android:enabled="false"
+            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+             />
+    </GridLayout>
+
+
+
+     </RelativeLayout>
+
+</LinearLayout>

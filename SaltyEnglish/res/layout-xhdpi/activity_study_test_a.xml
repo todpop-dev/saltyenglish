@@ -1,0 +1,185 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_blue" >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:id="@+id/study_testa_id_image_timeblind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-360dp"
+        android:layout_marginTop="45dp"
+        android:src="@drawable/common_image_timeblind" />
+    
+    <Button 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="320dp"
+        android:layout_marginTop="10.5dp"
+        android:background="@drawable/studytesta_drawable_btn_onpause"
+        android:onClick="pauseTestCB"
+        />
+
+    
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="180.5dp"
+        android:src="@drawable/lvtest_3_image_wordbar" />
+
+    <ImageView
+        android:id="@+id/study_testa_id_view_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+        android:layout_marginTop="10.5dp"
+         />
+
+    <TextView
+        android:id="@+id/study_testa_id_enword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="143dp"
+        android:textColor="#000000"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/study_testa_id_select1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="253dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn" 
+        android:text="자동차"
+        />
+
+    <Button
+        android:id="@+id/study_testa_id_select2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="320dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn" 
+                android:text="자동차"
+        />
+
+    <Button
+        android:id="@+id/study_testa_id_select3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="387dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn" 
+                android:text="자동차"
+        />
+
+    <Button
+        android:id="@+id/study_testa_id_select4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="454dp"
+        android:background="@drawable/lvtest_begin_drawable_select_btn" 
+                android:text="자동차"
+        />
+
+    <ImageView
+        android:id="@+id/study_testa_id_crocodile_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="554.5dp" />
+<!--  
+    <RelativeLayout
+        android:id="@+id/study_testa_id_introView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/lvtest_2_image_blind"
+        android:clickable="true" >
+
+        <ImageView
+            android:id="@+id/study_testa_id_2_image_teststart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="26dp"
+            android:layout_marginTop="74.5dp" />
+
+        <ImageView
+            android:id="@+id/study_testa_id_2_text_ready"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="511dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/study_testa_id_7_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/lvtest_7_bg"
+        android:clickable="true"
+        android:visibility="gone" >
+
+        <ImageView
+            
+            android:id="@+id/study_testa_id_7_image_testend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="74.5dp"
+            />
+        
+    </RelativeLayout>-->
+    
+    <RelativeLayout 
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:background="@drawable/test_19_bg_fisherman"
+    	android:id="@+id/study_test_a_id_pause_layout"
+    	>
+    
+     	<ImageView
+       		android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="14dp"
+        	android:layout_centerHorizontal="true"
+        	android:src="@drawable/common_bgimg_test"
+        />
+    
+
+    	<Button
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="260dp"
+        	android:layout_centerHorizontal="true"
+        	android:onClick="pauseViewContinueTest"
+        	android:background="@drawable/lvtestpuse_btn_continue"
+        />
+    
+     	<Button
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:layout_marginTop="320dp"
+        	android:layout_centerHorizontal="true"
+        	android:onClick="pauseViewFinishTest"
+        	android:background="@drawable/lvtestpuse_btn_testfinish"
+        />
+
+	</RelativeLayout>
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>

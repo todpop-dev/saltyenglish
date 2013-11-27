@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_pinkpattern" >
+
+     <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal = "true"
+        android:layout_marginTop="12.5dp"
+        android:src="@drawable/common_bgimg_help" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10.5dp"
+        android:layout_marginTop="10.5dp"
+        android:onClick="onClickBack"
+        android:background="@drawable/rg_drawable_btn_back"/>
+    
+    
+    <!-- list view -->
+    <LinearLayout
+        android:id="@+id/homemorehelp_id_listview"
+        android:layout_width="335dp"
+        android:layout_height="470dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp"
+        android:paddingTop="7dp"
+        android:background="@drawable/common_image_pinkbox_medium"
+        android:orientation="vertical"
+         >
+        
+       
+
+        <ExpandableListView
+            android:id="@+id/homemorehelp_id_listview_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:groupIndicator="@drawable/homemorehelp_drawable_expandablelistview_navi"
+            
+            />
+           <!-- android:childIndicator="@drawable/icon"-->
+            
+    </LinearLayout>
+    
+    
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="282dp"
+        android:layout_marginTop="465dp"
+        android:src="@drawable/store_57_image_helpman" />
+    
+    
+    <!-- //counsel  btn -->
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="569dp"
+        android:background="@drawable/homemorehelp_drawable_btn_counsel"/>
+        
+
+
+
+     </RelativeLayout>
+
+</RelativeLayout>
