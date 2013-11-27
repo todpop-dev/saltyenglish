@@ -141,6 +141,11 @@ public class StudyTestResult extends Activity {
 			Log.d("-------- result url ------- ", resultUrl);
 			new GetTestResult().execute(resultUrl);
 			// ----------- End of  Request Result -------------
+			
+			SharedPreferences.Editor rgInfoEdit = pref.edit();
+			rgInfoEdit.putInt("settingStage", category);
+			rgInfoEdit.commit();
+
 		} else {
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
@@ -155,6 +160,11 @@ public class StudyTestResult extends Activity {
 			Log.d("-------- result url ------- ", resultUrl);
 			new GetTestResult().execute(resultUrl);
 			// ----------- End of  Request Result -------------
+			
+			SharedPreferences.Editor rgInfoEdit = pref.edit();
+			rgInfoEdit.putInt("settingStage", category);
+			rgInfoEdit.commit();
+
 		}
 
 
