@@ -233,7 +233,7 @@ public class RgRegister extends Activity {
 		    
 		    userInfo.append(String.format("Email: %s\n\n", user.getProperty("email")));
 		    fbEmail = String.format("%s", user.getProperty("email"));
-
+		    Log.i("STEVEN", "facebook email works fine "+ fbEmail);
 		    return userInfo.toString();
 		}
 		return null;
@@ -259,6 +259,8 @@ public class RgRegister extends Activity {
 		            	Log.d("facebook -------------------------%s", userInfo);
 		            	
 		            	// Check if facebook id exist
+
+		    		    Log.i("STEVEN", "Check facebook id exist "+ fbEmail);
 		        		new CheckFacebookEmail().execute("http://todpop.co.kr/api/users/check_facebook_exist.json?facebook="+fbEmail);
 		            	
 		            }
@@ -320,12 +322,14 @@ public class RgRegister extends Activity {
 				if(json.getBoolean("status")==true) {
 					boolean result = json.getJSONObject("data").getBoolean("result");
 					if (result == true) {
-						
+
+					    Log.i("STEVEN", "change activity to FbNickname "+ fbEmail);
 						Intent intent = new Intent(getApplicationContext(), FbNickname.class);
 						intent.putExtra("fbEmail",fbEmail);
 						startActivity(intent);
 		    			finish();
 					} else {
+					    Log.i("STEVEN", "Facebook Email duplication"+ fbEmail);
 						// Popup duplication
 						//popupview
 						relative = (RelativeLayout)findViewById(R.id.id_rg_regster_relative_layout);

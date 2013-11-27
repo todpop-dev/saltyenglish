@@ -93,7 +93,8 @@ public class LvTestBigin extends Activity {
 		setContentView(R.layout.activity_lv_test_bigin);
 		
 		density = (int) getResources().getDisplayMetrics().density;
-		
+
+		Log.d("density","    density = "+density);
 		randomP.add(506/2*density);
 		randomP.add(640/2*density);
 		randomP.add(774/2*density);
