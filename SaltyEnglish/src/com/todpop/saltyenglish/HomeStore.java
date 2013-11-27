@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -49,6 +52,9 @@ public class HomeStore extends Activity {
 	TextView store_main_curReward;
 	TextView refund_curReward;
 	TextView refund_notice;
+	EditText refund_name;
+	EditText refund_account_no;
+	EditText refund_password;
 	
 	
 	StoreListViewAdapter storeListViewAdapter;
@@ -86,12 +92,12 @@ public class HomeStore extends Activity {
 		beautyBtn.setOnClickListener(radio_listener);
 		reFundBtn.setOnClickListener(radio_listener);
 
+		//Refund
 		refund_curReward = (TextView)findViewById(R.id.home_store_refund_curReward);
 		refund_notice = (TextView)findViewById(R.id.home_store_refund_notice);
 		
 		bank = (Spinner) findViewById(R.id.home_store_refund_bank);
 		amount = (Spinner) findViewById(R.id.home_store_refund_amount);
-		// TODO amount spinner
 		
 		itemArray = new ArrayList<StoreListViewItem>();
 		storeListView = (ListView) findViewById(R.id.homestore_id_listiew);
@@ -278,16 +284,15 @@ public class HomeStore extends Activity {
 
 			try {
 				if (json.getBoolean("status") == true) {
-					store_main_curReward.setText(json.getJSONObject("data").getString("current_reward"));
-					refund_curReward.setText(json.getJSONObject("data").getString("current_reward"));
+					String curReward = json.getJSONObject("data").getString("current_reward");
+					store_main_curReward.setText(curReward);
+					refund_curReward.setText(curReward);
 					refund_notice.setText(json.getJSONObject("data").getString("content"));
 					List<String> list = new ArrayList<String>();
 					if(json.getJSONObject("data").getInt("current_reward") >= 30000){
-						for (int i = 30000; (i <= 100000) && (i <= json.getJSONObject("data").getInt("current_reward")); i+=10000) {
-							String temp = String.valueOf(i);
-							Log.i("STEVEN", "Value is = "+ temp);
-							list.add(temp.substring(0, temp.length()-3)+","+"000");
-							Log.i("STEVEN", "after Value is = "+ temp.substring(temp.length()-3)+","+"000");
+						String tempStr = curReward.substring(0, curReward.length()-3);
+						for (int i = 3; (i <= 10) && (i <= Integer.parseInt(tempStr)); i++) {
+							list.add(String.valueOf(i)+"0,000");
 						}
 						list.add("금액을 선택해 주세요");
 						MySpinnerAdapter AmountHintSpinner = new MySpinnerAdapter(
@@ -401,4 +406,29 @@ public class HomeStore extends Activity {
 			return super.getCount() - 1;
 		}
 	}
+	
+	public void onClickOk(View view){
+		//if(true);
+	}
+
+	public String returnSHA512(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(password.getBytes());
+        byte byteData[] = md.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+ 
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            String hex = Integer.toHexString(0xff & byteData[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+      //  System.out.println("SHA512: " + hexString.toString());
+        return hexString.toString();
+    }
 }

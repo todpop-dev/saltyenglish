@@ -261,7 +261,6 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:singleLine="true"
-                android:prompt="@string/home_store_refund_amount"
                 android:textSize="16sp" />
 
             <EditText
@@ -336,7 +335,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="690dp"
-                android:background="@drawable/homestore_drawable_refund_btn_ok" />
+                android:background="@drawable/homestore_drawable_refund_btn_ok" 
+                android:onClick="onClickOk"/>
 
             <Button
                 android:layout_width="wrap_content"
