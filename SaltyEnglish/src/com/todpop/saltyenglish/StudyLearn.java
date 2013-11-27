@@ -77,7 +77,15 @@ public class StudyLearn extends FragmentActivity {
 		// Get level 
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
-		levelCount = pref.getInt("categoryStage", 1);
+		int category = pref.getInt("categoryStage", 1);
+		if (category == 1)
+			{levelCount = 1;}
+		else if (category == 2)
+			{levelCount = 16;}
+		else if (category == 3)
+			{levelCount = 61;}
+		else						// category 4
+			{levelCount = 121;}
 		
 		// Preference Study Level Info save all dynamic level info
 		prefs = getSharedPreferences("StudyLevelInfo", MODE_PRIVATE);

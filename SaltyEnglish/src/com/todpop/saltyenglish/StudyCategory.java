@@ -23,11 +23,11 @@ public class StudyCategory extends Activity {
 			if(test_level >= 1 && test_level <= 150) {
 				this.saveInfoGotoStudyLearn(1);
 			} else if(test_level >=151 && test_level <= 600) {
-				this.saveInfoGotoStudyLearn(16);
+				this.saveInfoGotoStudyLearn(2);
 			} else if(test_level >=601 && test_level <= 1200) {
-				this.saveInfoGotoStudyLearn(61);
+				this.saveInfoGotoStudyLearn(3);
 			} else if(test_level >=1201 && test_level <= 1800) {
-				this.saveInfoGotoStudyLearn(121);
+				this.saveInfoGotoStudyLearn(4);
 			}
 		}
 	}
@@ -52,17 +52,17 @@ public class StudyCategory extends Activity {
 	
 	public void studyCategoryTwoCB(View view)
 	{
-		this.saveInfoGotoStudyLearn(16);
+		this.saveInfoGotoStudyLearn(2);
 	}
 	
 	public void studyCategoryThreeCB(View view)
 	{
-		this.saveInfoGotoStudyLearn(61);
+		this.saveInfoGotoStudyLearn(3);
 	}
 	
 	public void studyCategoryFourCB(View view)
 	{
-		this.saveInfoGotoStudyLearn(121);
+		this.saveInfoGotoStudyLearn(4);
 	}
 	
 	private void saveInfoGotoStudyLearn(int categoryCount)
