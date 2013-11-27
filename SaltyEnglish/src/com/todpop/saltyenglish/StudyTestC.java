@@ -272,14 +272,19 @@ public class StudyTestC extends Activity {
 	public void startTimeCount(long start) {
 		Log.d("start time----", Long.toString(start));
 		progressTimer =  new CountDownTimer(start, 1000) {
-			 public void onTick(long millisUntilFinished) {
-				 startTime = millisUntilFinished;
-				 progressBarLength = 180000-(int)millisUntilFinished;
-				 progress.setProgress(progressBarLength);
-				 Log.d("time count --- xxxx --- ", Long.toString(startTime));
-			 }
+			public void onTick(long millisUntilFinished) {
+				startTime = millisUntilFinished;
+				progressBarLength = 180000-(int)millisUntilFinished;
+				progress.setProgress(progressBarLength);
+				Log.d("time count --- xxxx --- ", Long.toString(startTime));
+			}
 			 
-			 public void onFinish() {
+			public void onFinish() {
+				SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
+				SharedPreferences.Editor editor = levelPref.edit();
+				editor.putString("testResult", Integer.toString(finalAnswerForRequest));
+				editor.commit();
+				
 				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 				startActivity(intent);
 				finish();
