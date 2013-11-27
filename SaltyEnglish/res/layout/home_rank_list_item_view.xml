@@ -25,11 +25,12 @@
         
     <ImageView 
         android:id="@+id/home_list_id_rank_user_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="30dp"
         />
+    	<!--  50, 50, 50 -->
         
     <TextView 
         android:id="@+id/home_list_id_rank_name_text"
@@ -37,9 +38,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textSize="17sp"
-        android:layout_marginLeft="130dp"
+        android:layout_marginLeft="90dp"
         android:textColor="#000000"
         />
+        <!--  120dp -->
     
     <TextView
         android:id="@+id/home_list_rank_id_user_fraction"
