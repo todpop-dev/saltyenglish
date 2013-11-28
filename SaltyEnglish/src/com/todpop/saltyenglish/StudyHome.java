@@ -138,14 +138,12 @@ public class StudyHome extends Activity {
         		}
 	        }
 	    });
-		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
 		float density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
-		
 		//TODO 
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
@@ -514,10 +512,15 @@ public class StudyHome extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(getPackageManager().getPackageInfo(getPackageName(), 0).versionName != json.getJSONObject("data").getString("ment")){
+				
+				String curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+				String newVersion = json.getJSONObject("data").getString("android_version");
+
+				if(!curVersion.equals(newVersion)){
 					popupText.setText(R.string.study_home_popup_version_check);
-					if(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.substring(0, 3) != json.getJSONObject("data").getString("ment").substring(0, 3))
+					if(!curVersion.substring(0, 3).equals(newVersion.substring(0, 3))){
 						majorVersionUpdate = true;
+					}
 				}
 				else if(json.getJSONObject("data").getString("ment")!=""){
 					popupText.setText(json.getJSONObject("data").getString("ment"));
@@ -526,6 +529,7 @@ public class StudyHome extends Activity {
 				popupWindow.showAsDropDown(rankingList);
 			} catch (Exception e) {
 
+				Log.i("STEVEN", "app version check something wrong");
 			}
 		}
 	}
