@@ -30,6 +30,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,6 +39,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -63,7 +65,11 @@ public class StudyHome extends Activity {
 	TextView myName;
 	TextView myScore;
 	
-	
+	//declare define popup view
+	PopupWindow popupWindow;
+	View popupview;
+	RelativeLayout relative;
+	TextView popupText;
 	
 	String kakaoMent = "";
 	String kaokaoAndroidUrl = "";
@@ -124,8 +130,15 @@ public class StudyHome extends Activity {
 	        }
 	    });
 		
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
+		popupview = View.inflate(this, R.layout.popup_view_notice, null);
+		float density = getResources().getDisplayMetrics().density;
+		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
 		
-		
+		//TODO 
+		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}
 	
@@ -449,7 +462,52 @@ public class StudyHome extends Activity {
 			}
 		}
 	}
+	
+	
+	private class GetNotice extends AsyncTask<String, Void, JSONObject> 
+	{
+		DefaultHttpClient httpClient ;
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
 
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE JSON CHECK GET NOTICE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getJSONObject("data").getString("ment")!=null){
+					Log.i("STEVEN-----", "it has content!!!!!!!!!!!!!!!!!");
+					popupText.setText(json.getJSONObject("data").getString("ment"));
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					popupWindow.showAsDropDown(rankingList);
+				}
+			} catch (Exception e) {
+
+			}
+		}
+	}
 
 
 	// on click
@@ -510,6 +568,7 @@ public class StudyHome extends Activity {
 			//alert("Not installed KakaoTalk.");			
 			return;
 		}
+		//TODO -- need to rearrange
 		kakaoLink.openKakaoLink(this, 
 				kaokaoAndroidUrl, 
 				iosUrl, 
@@ -557,5 +616,10 @@ public class StudyHome extends Activity {
 			return false;
 		}
 		return false;
+	}
+	//----button onClick----
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
 	}
 }
