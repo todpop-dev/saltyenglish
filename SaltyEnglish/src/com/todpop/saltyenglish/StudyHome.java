@@ -76,6 +76,8 @@ public class StudyHome extends Activity {
 	String kaokaoAndroidUrl = "";
 	String iosUrl = "";
 	
+	boolean majorVersionUpdate = false;
+	
 	SharedPreferences pref;
 	SharedPreferences.Editor perfEdit;
 	
@@ -514,7 +516,8 @@ public class StudyHome extends Activity {
 			try {
 				if(getPackageManager().getPackageInfo(getPackageName(), 0).versionName != json.getJSONObject("data").getString("ment")){
 					popupText.setText(R.string.study_home_popup_version_check);
-					
+					if(getPackageManager().getPackageInfo(getPackageName(), 0).versionName.substring(0, 3) != json.getJSONObject("data").getString("ment").substring(0, 3))
+						majorVersionUpdate = true;
 				}
 				else if(json.getJSONObject("data").getString("ment")!=""){
 					popupText.setText(json.getJSONObject("data").getString("ment"));
@@ -638,6 +641,11 @@ public class StudyHome extends Activity {
 	//----button onClick----
 	public void closePopup(View v)
 	{
-		popupWindow.dismiss();
+		if(majorVersionUpdate){
+			moveTaskToBack(true);
+			finish();
+		}
+		else
+			popupWindow.dismiss();
 	}
 }
