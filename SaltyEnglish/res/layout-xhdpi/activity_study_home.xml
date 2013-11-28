@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+﻿<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -164,8 +164,8 @@
                         android:id="@+id/studyhome_id_week"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="50dp"
-                       	android:text="주간 순위"
+                        android:layout_marginLeft="40dp"
+                       	android:text="기초 주간순위"
                         android:checked="true" 
                        	/>
        
@@ -173,8 +173,8 @@
                         android:id="@+id/studyhome_id_moon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="70dp"
-                        android:text="월간 순위" 
+                        android:layout_marginLeft="20dp"
+                        android:text="기초 월간순위" 
                         />
                 </RadioGroup>
         

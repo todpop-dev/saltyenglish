@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -73,6 +74,7 @@ public class StudyHome extends Activity {
 	SharedPreferences.Editor perfEdit;
 	
 	RadioGroup weekMoonBtn;
+	RadioButton weekBtn, monthBtn;
 	
 	int category = 0;
 	int period = 1;
@@ -95,6 +97,8 @@ public class StudyHome extends Activity {
 		rankingItemArray = new ArrayList<RankingListItem>();
 		
 		weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_week_moon_rank_group);
+		weekBtn = (RadioButton)findViewById(R.id.studyhome_id_week);
+		monthBtn = (RadioButton)findViewById(R.id.studyhome_id_moon);
 		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -104,18 +108,22 @@ public class StudyHome extends Activity {
         		{
         			case R.id.studyhome_id_week:
         				period =1;
+        				Log.i("TESTING", "id_week getInfo() called");
         				getInfo();
 
         				editor.putInt("period", 1);
         				editor.commit();
+
         			break;
         			
         			case R.id.studyhome_id_moon:
         				period =2;
+        				Log.i("TESTING", "id_moon getInfo() called");
         				getInfo();
 
         				editor.putInt("period", 2);
         				editor.commit();
+
         			break;
         			
         			default:
@@ -123,8 +131,6 @@ public class StudyHome extends Activity {
         		}
 	        }
 	    });
-		
-		
 		
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}
@@ -148,16 +154,24 @@ public class StudyHome extends Activity {
 			session.closeAndClearTokenInformation();
 			//clear your preferences if saved
 		}
-		
+
 		getInfo();
+
+		if      (category==1) { weekBtn.setText("기초 주간순위"); 	monthBtn.setText("기초 월간순위"); }
+		else if (category==2) { weekBtn.setText("중등 주간순위");    monthBtn.setText("중등 월간순위"); }
+		else if (category==3) {	weekBtn.setText("수능 주간순위");	monthBtn.setText("수능 월간순위"); }
+		else if (category==4) {	weekBtn.setText("토익 주간순위");	monthBtn.setText("토익 월간순위"); }
+		else                  {	weekBtn.setText("주간순위");	    monthBtn.setText("월간순위");    }
+
 	}
 	
 	public void getInfo()
 	{
 		pref = getSharedPreferences("rgInfo",0);
 		perfEdit = pref.edit();
-		
-		if(pref.getInt("settingStage", 0)==0)
+
+		category = pref.getInt("settingStage", 0);
+		if(category==0)
 		{
 			int savedLevel = Integer.parseInt(pref.getString("level", "1"));
 			if(savedLevel<15)
@@ -174,7 +188,7 @@ public class StudyHome extends Activity {
 			perfEdit.putInt("settingStage",category);
 			perfEdit.commit();
 		}else{
-			
+
 		}
 	
 		
