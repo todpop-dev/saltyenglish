@@ -165,9 +165,6 @@ public class StudyTestFinish extends Activity {
 			skipBtn.setEnabled(false);
 			Log.d("cpdm view_time----", String.valueOf(video_length));
 			new SetCPDMlog().execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="+ad_id+"&ad_type="+ad_type+"&user_id="+rgInfo.getString("mem_id", "0")+"&view_time="+video_length);
-			Intent intent = new Intent(getApplicationContext(), StudyTestResult.class);
-			startActivity(intent);
-			finish();
 		}
 	};
 	
