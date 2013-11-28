@@ -84,7 +84,6 @@ public class StudyHome extends Activity {
 	
 	int category = 0;
 	int period = 1;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -513,12 +512,15 @@ public class StudyHome extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				if(json.getJSONObject("data").getString("ment")!=null){
-					Log.i("STEVEN-----", "it has content!!!!!!!!!!!!!!!!!");
-					popupText.setText(json.getJSONObject("data").getString("ment"));
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					popupWindow.showAsDropDown(rankingList);
+				if(getPackageManager().getPackageInfo(getPackageName(), 0).versionName != json.getJSONObject("data").getString("ment")){
+					popupText.setText(R.string.study_home_popup_version_check);
+					
 				}
+				else if(json.getJSONObject("data").getString("ment")!=""){
+					popupText.setText(json.getJSONObject("data").getString("ment"));
+				}
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(rankingList);
 			} catch (Exception e) {
 
 			}
