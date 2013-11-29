@@ -60,12 +60,12 @@ public class MainActivity extends Activity
 	
 		mHelper = new WordDBHelper(this);
 		
-		//popupview
+		/*//popupview
 		relative = (RelativeLayout)findViewById(R.id.main_activity_id_main);
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		float density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(200*density),true);
-		popupText = (TextView)popupview.findViewById(R.id.http_popup_id_text);
+		popupText = (TextView)popupview.findViewById(R.id.http_popup_id_text);*/
 
 		//loading animation
 		ImageView rocketImage = (ImageView) findViewById(R.id.main_id_loading);
@@ -82,7 +82,7 @@ public class MainActivity extends Activity
 			mobile = "01000001001";
 		}
 
-		SharedPreferences settings = getSharedPreferences("setting", 0);
+		//SharedPreferences settings = getSharedPreferences("setting", 0);
 		if(settings.getString("check","NO").equals("YES"))
 		{
 			
@@ -278,12 +278,12 @@ public class MainActivity extends Activity
 	}
 
 
-	//onClick
+	/*//onClick
 	public void closePopup(View v)
 	{
 		popupWindow.dismiss();
 		new CheckLogin().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
-	}
+	}*/
 
 	//---disable back btn---
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
