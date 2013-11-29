@@ -79,13 +79,14 @@ public class StudyHome extends Activity {
 	boolean majorVersionUpdate = false;
 	
 	SharedPreferences pref;
-	SharedPreferences.Editor perfEdit;
+	
+	SharedPreferences stdInfo;
 	
 	RadioGroup weekMoonBtn;
 	RadioButton weekBtn, monthBtn;
 	
-	int category = 0;
-	int period = 1;
+	int category, period;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -109,28 +110,24 @@ public class StudyHome extends Activity {
 		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
-				SharedPreferences pref = getSharedPreferences("rgInfo",0);
-				SharedPreferences.Editor editor = pref.edit();
+				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
+				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
 	        	switch(checkedId)
         		{
         			case R.id.studyhome_id_week:
         				period =1;
+        				stdInfoEdit.putInt("currentPeriod", 1);
+        				stdInfoEdit.commit();
         				Log.i("TESTING", "id_week getInfo() called");
         				getInfo();
-
-        				editor.putInt("period", 1);
-        				editor.commit();
-
         			break;
         			
         			case R.id.studyhome_id_moon:
         				period =2;
+        				stdInfoEdit.putInt("currentPeriod", 2);
+        				stdInfoEdit.commit();
         				Log.i("TESTING", "id_moon getInfo() called");
         				getInfo();
-
-        				editor.putInt("period", 2);
-        				editor.commit();
-
         			break;
         			
         			default:
@@ -182,31 +179,12 @@ public class StudyHome extends Activity {
 	public void getInfo()
 	{
 		pref = getSharedPreferences("rgInfo",0);
-		perfEdit = pref.edit();
+		stdInfo = getSharedPreferences("studyInfo",0);
 
-		category = pref.getInt("settingStage", 0);
-		if(category==0)
-		{
-			int savedLevel = Integer.parseInt(pref.getString("level", "1"));
-			if(savedLevel<15)
-			{
-				category = 1;
-			}else if(savedLevel>15&&savedLevel<61){
-				category = 2;
-			}else if(savedLevel>60&&savedLevel<121){
-				category = 3;
-			}else if(savedLevel>120)
-			{
-				category = 4;
-			}
-			perfEdit.putInt("settingStage",category);
-			perfEdit.commit();
-		}else{
-
-		}
-	
+		category = stdInfo.getInt("currentCategory", 1);
+		period = stdInfo.getInt("currentPeriod", 1);
 		
-		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+pref.getInt("settingStage", 0)+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
+		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+category+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
 		
 	}
 
@@ -515,6 +493,9 @@ public class StudyHome extends Activity {
 				
 				String curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 				String newVersion = json.getJSONObject("data").getString("android_version");
+				
+				Log.i("cys c=",curVersion);
+				Log.i("cys n=",newVersion);
 
 				if(!curVersion.equals(newVersion)){
 					popupText.setText(R.string.study_home_popup_version_check);

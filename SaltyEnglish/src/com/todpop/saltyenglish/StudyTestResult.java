@@ -120,54 +120,41 @@ public class StudyTestResult extends Activity {
 //			mi = new MyItem("oh",R.string.kr10,"Y");
 //			arItem.add(mi);
 //		
-		// Get Test result from database
-		
-		SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-		currentStage = levelInfoSp.getInt("currentStage", 1);
-		getTestWords();
-		
-		
-		if (currentStage%10 != 0) {
+
+		{
+			// Get Test result from database
+			SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
+			currentStage = levelInfoSp.getInt("currentStage", 1);
+			getTestWords();
+			
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);
+			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.ja
 			String userId = pref.getString("mem_id", "1");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
+			String resultUrl;
 			
-			String resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
-					"&stage=" + currentStage%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
-			Log.d("-------- result url ------- ", resultUrl);
+			if (currentStage%10 != 0) {
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
+						"&stage=" + currentStage%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
+			} else {
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
+						"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
+			}
 			new GetTestResult().execute(resultUrl);
+			Log.d("-------- result url ------- ", resultUrl);
 			// ----------- End of  Request Result -------------
 			
-			SharedPreferences.Editor rgInfoEdit = pref.edit();
-			rgInfoEdit.putInt("settingStage", category);
-			rgInfoEdit.commit();
-
-		} else {
-			// ----------- Request Result -------------
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);
-			String userId = pref.getString("mem_id", "1");
-			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
-			String finalAnswerForRequest = levelPref.getString("testResult", "");
-			
-			String resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
-					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
-			Log.d("-------- result url ------- ", resultUrl);
-			new GetTestResult().execute(resultUrl);
-			// ----------- End of  Request Result -------------
-			
-			SharedPreferences.Editor rgInfoEdit = pref.edit();
-			rgInfoEdit.putInt("settingStage", category);
-			rgInfoEdit.commit();
-
+			// ------- cys added -----------
+			SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
+			SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+			stdInfoEdit.putInt("currentCategory", category);					// will be modified later with tmpCategory obtained from StudyLearn.java
+			stdInfoEdit.putInt("currentStageAccumulated", currentStage);		// will be modified later with tmpStageAccumulated obtained from StudyLearn.java
+			stdInfoEdit.commit();
+			// ----------------------------
 		}
-
-
 		
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 		

@@ -66,6 +66,22 @@ public class LvTestResult extends Activity {
 		ed.commit();
 		// ---- 
 		
+		// Save category & stage_acc info to StudyInfo by cys ------------------------
+		SharedPreferences stdInfo = getSharedPreferences("studyInfo", MODE_PRIVATE);
+		SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+		int currentCategory = 1;
+		int tmpLevel = Integer.parseInt(rgInfo.getString("level", "1"));
+
+		if (tmpLevel > 120)     {currentCategory = 4;}
+		else if (tmpLevel > 60) {currentCategory = 3;}
+		else if (tmpLevel > 15) {currentCategory = 2;}
+		else                    {currentCategory = 1;}
+
+		stdInfoEdit.putInt("currentCategory", currentCategory);
+		stdInfoEdit.putInt("currentStageAccumulated", tmpLevel*10-9);
+		stdInfoEdit.commit();
+		// ----------------------------------------------------------------------------
+		
 		for(int i=0;i<20;i++) {
 			mi = new MyItem(lvTextWord.getString("enWord"+i, "N"),lvTextWord.getString("krWord"+i, "N"),lvTextWord.getString("check"+i, "N"));
 			arItem.add(mi);
