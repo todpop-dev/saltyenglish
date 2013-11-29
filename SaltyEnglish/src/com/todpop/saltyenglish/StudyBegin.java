@@ -460,7 +460,7 @@ public class StudyBegin extends FragmentActivity {
 
 						// Setup word textview
 						word.setText(jsonWords.getJSONObject(i).get("name").toString());
-						pron.setText(jsonWords.getJSONObject(i).get("phonetics").toString());
+						pron.setText("["+jsonWords.getJSONObject(i).get("phonetics").toString()+"]");		// [+phonetics+]
 						example.setText(jsonWords.getJSONObject(i).get("example_en").toString());
 					}
 
