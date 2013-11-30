@@ -262,6 +262,8 @@ public class StudyHome extends Activity {
 				e.printStackTrace();
 			}
 
+		} if (cpxAdType == 305) {
+			
 		} else {
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
@@ -289,7 +291,7 @@ public class StudyHome extends Activity {
 					// Send CPX act=3 to Server
 					SharedPreferences pref = getSharedPreferences("rgInfo",0);
 					String userId = pref.getString("mem_id", "0");
-					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
 							"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
 				}
 				
@@ -308,27 +310,23 @@ public class StudyHome extends Activity {
 		protected JSONObject doInBackground(String... urls) 
 		{
 			JSONObject result = null;
-			try
-			{
+			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
-				if (resEntity != null)
-				{    
+				if (resEntity != null) {    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
 					Log.d("RESPONSE ---- ", result.toString());				        	
 				}
 				return result;
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			return result;
-
 		}
 
 		@Override
@@ -338,6 +336,8 @@ public class StudyHome extends Activity {
 			try {
 				if	(result.getBoolean("status")==true) {
 					Log.d("CPX LOG:  ---- ", "Send CPX Log OK!");
+				} else {
+					Log.d("CPX LOG:  ---- ", "Send CPX Log Failed!");
 				}
 
 			} catch (Exception e) {
