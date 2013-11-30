@@ -1,6 +1,7 @@
 package com.todpop.saltyenglish;
 
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -24,12 +25,17 @@ import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
@@ -54,6 +60,8 @@ public class StudyHome extends Activity {
 
 	// CPI View show in return from study test
 	RelativeLayout cpiView;
+	ImageView cpiAdImageView;
+	TextView cpiAdTextView;
 
 	// Home Ranking List
 	ListView rankingList;
@@ -106,6 +114,8 @@ public class StudyHome extends Activity {
 	RelativeLayout cpxPopupRelative;
 	TextView cpxPopupText;
 	
+ 	// Database
+ 	WordDBHelper mHelper;
 	
 	
 	@Override
@@ -113,6 +123,7 @@ public class StudyHome extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_home);
 		
+		mHelper = new WordDBHelper(this);
 
 		myRank = (TextView)findViewById(R.id.studyhome_id_my_rank);
 		myImage = (ImageView)findViewById(R.id.studyhome_id_my_rank_image);
@@ -153,6 +164,12 @@ public class StudyHome extends Activity {
         		}
 	        }
 	    });
+		
+		// CPX View
+		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
+		cpiAdImageView = (ImageView)findViewById(R.id.study_home_id_cpi_ad_image);
+		cpiAdTextView = (TextView)findViewById(R.id.study_home_id_cpi_ad_text);
+		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
@@ -164,13 +181,14 @@ public class StudyHome extends Activity {
 		// CPX Popup view
 		cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);;
 		cpxPopupView = View.inflate(this, R.layout.popup_view, null);
-		cpxPopupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
-		cpxPopupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		cpxPopupWindow = new PopupWindow(cpxPopupView,(int)(300*density),(int)(100*density),true);
+		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
 		//TODO 
 		//new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}
+	
 	
 	@Override
 	public void onResume()
@@ -200,46 +218,91 @@ public class StudyHome extends Activity {
 		else if (category==4) {	weekBtn.setText(R.string.toeic_week_ranking);	   monthBtn.setText(R.string.toeic_month_ranking);  }
 		else                  {	weekBtn.setText(R.string.basic_week_ranking);	   monthBtn.setText(R.string.basic_month_ranking);  }
 		
+		
 		// Get CPX Info onResume
-		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
-		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
-		boolean isCpxInstalling = cpxInfo.getBoolean("isCpxInstalling", false);
 
-		int adType = cpxInfo.getInt("adType", 0);
-		if (adType == 301) {
+		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+
+		cpxAdId = cpxInfo.getInt("adId", 0);
+		cpxAdType = cpxInfo.getInt("adType", 0);	
+		cpxAdImageUrl = cpxInfo.getString("adImageUrl", "");
+		cpxAdText = cpxInfo.getString("adText", "");
+		cpxTargetUrl = cpxInfo.getString("targetUrl", "");
+		cpxPackageName = cpxInfo.getString("packageName", "");
+		cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
+		cpxReward = cpxInfo.getInt("reward", 0);
+		cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
+		
+		// Download CPX Image and update UI
+		new DownloadImageTask().execute(cpxAdImageUrl);
+		
+		cpxInfo.edit().clear().commit();
+		if (cpxAdType == 301) {
 			cpiView.setVisibility(View.VISIBLE);
-			
-			cpxAdId = cpxInfo.getInt("adId", 0);
-			cpxAdType = cpxInfo.getInt("adType", 0);	
-			cpxAdImageUrl = cpxInfo.getString("adImageUrl", "");
-			cpxAdText = cpxInfo.getString("adText", "");
-			cpxTargetUrl = cpxInfo.getString("targetUrl", "");
-			cpxPackageName = cpxInfo.getString("packageName", "");
-			cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
-			cpxReward = cpxInfo.getInt("reward", 0);
-			cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
-			
-			cpxInfo.edit().clear().commit();
 			
 			// Send CPX Log
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			String userId = pref.getString("mem_id", "0");
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+			
+			// Insert into DB
+			try {
+			    SQLiteDatabase db = mHelper.getWritableDatabase();
+
+				ContentValues insertValues = new ContentValues();
+				insertValues.put("name", cpxPackageName);
+				insertValues.put("ad_id", cpxAdId);
+				insertValues.put("ad_type", cpxAdType);
+				insertValues.put("reward", cpxReward);
+				insertValues.put("installed", "N");
+				
+				db.insert("cpxInfo", null, insertValues);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		} else {
-			cpiView.setVisibility(View.GONE);
-			cpxInfo.edit().clear().commit();
+			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
+			int adType = cpxInstallInfo.getInt("cpxAdType", 0);
+			int adId = cpxInstallInfo.getInt("cpxAdId", 0);
+			String adPackgeName = cpxInstallInfo.getString("cpxPackageName", "");
+			
+			cpiView.setVisibility(View.GONE);			
 			
 			if (isCpxInstalling == true) {
+				// Save to DB and JUMP to HomwDownload activity
+				if (this.checkIsAppInstalled(adPackgeName)) {
+					// Update DB
+					try {
+					    SQLiteDatabase db = mHelper.getWritableDatabase();
+
+						String strFilter = "ad_id=" + adId;
+						ContentValues args = new ContentValues();
+						args.put("installed", "Y");
+						db.update("cpxInfo", args, strFilter, null);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				
+					// Send CPX act=3 to Server
+					SharedPreferences pref = getSharedPreferences("rgInfo",0);
+					String userId = pref.getString("mem_id", "0");
+					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+							"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
+				}
+				
+				cpxInstallInfo.edit().clear().commit();
+				
 				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
 				startActivity(intent);
 			} 
 		}
-		
-
 	}
 	
+	
+	// ******************** CPX UTILITY CLASS *************************
 	private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
@@ -283,6 +346,32 @@ public class StudyHome extends Activity {
 		}
 	}
 	
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+	    protected Bitmap doInBackground(String... urls) {
+	        String urldisplay = urls[0];
+	        Bitmap mIcon11 = null;
+	        try {
+	            InputStream in = new java.net.URL(urldisplay).openStream();
+	            mIcon11 = BitmapFactory.decodeStream(in);
+	        } catch (Exception e) {
+	            Log.e("Error", e.getMessage());
+	            e.printStackTrace();
+	        }
+	        return mIcon11;
+	    }
+
+	    protected void onPostExecute(Bitmap result) 
+	    {	        
+	    	// Update UI
+	    	cpiAdImageView.setImageBitmap(result);
+	    	cpiAdTextView.setText(cpxAdText);
+	    }
+	}
+	// ******************** End of CPX UTILITY CLASS *************************
+
+	
+	
+	
 	public void getInfo()
 	{
 		pref = getSharedPreferences("rgInfo",0);
@@ -291,7 +380,8 @@ public class StudyHome extends Activity {
 		category = stdInfo.getInt("currentCategory", 1);
 		period = stdInfo.getInt("currentPeriod", 1);
 		
-		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+category+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
+		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+					category+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
 		
 	}
 
@@ -526,8 +616,7 @@ public class StudyHome extends Activity {
 		protected JSONObject doInBackground(String... urls) 
 		{
 			JSONObject result = null;
-			try
-			{
+			try {
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL); 
 				HttpParams httpParameters = new BasicHttpParams(); 
@@ -535,15 +624,12 @@ public class StudyHome extends Activity {
 				HttpResponse response = httpClient.execute(httpGet); 
 				HttpEntity resEntity = response.getEntity();
 
-				if (resEntity != null)
-				{    
+				if (resEntity != null) {    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
 					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
 				}
 				return result;
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return result;
@@ -559,7 +645,7 @@ public class StudyHome extends Activity {
 				kaokaoAndroidUrl = json.getJSONObject("data").getString("android_url");
 				iosUrl = json.getJSONObject("data").getString("ios_url");
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
@@ -667,6 +753,10 @@ public class StudyHome extends Activity {
 	// CPI Button CB
 	public void cpiGoHome(View v)
 	{
+		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+		SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+		cpxInfo.edit().clear().commit();
+		cpxSInstallInfo.edit().clear().commit();
 		cpiView.setVisibility(View.GONE);
 	}
 	public void cpiGoSaving(View v)
@@ -695,10 +785,14 @@ public class StudyHome extends Activity {
 			}
 			
 			// Save status and Jump to HomeDownload Activity
-			SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
-			SharedPreferences.Editor cpxInfoEditor = cpxInfo.edit();
-			cpxInfoEditor.putBoolean("isCpxInstalling", true);
-			cpxInfoEditor.commit();			
+			SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+			SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
+			
+			cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
+			cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
+			cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
+			cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
+			cpxInstallInfoEditor.commit();			
 		}
 		
 
@@ -787,7 +881,35 @@ public class StudyHome extends Activity {
 			moveTaskToBack(true);
 			finish();
 		}
-		else
+		else {
 			popupWindow.dismiss();
+			cpxPopupWindow.dismiss();
+			cpiView.setVisibility(View.GONE);
+		}
+	}
+	
+	//------- Database Operation ------------------
+	private class WordDBHelper extends SQLiteOpenHelper {
+		public WordDBHelper(Context context) {
+			super(context, "EngWord.db", null, 1);
+		}
+		
+		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+		}
+		
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
+			onCreate(db);
+		}
+	}
+
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		mHelper.close();
 	}
 }

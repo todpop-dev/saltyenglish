@@ -106,6 +106,8 @@ public class MainActivity extends Activity
 					"name TEXT NOT NULL UNIQUE, mean TEXT);");
 			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 						"name TEXT, mean TEXT, xo TEXT);");
+			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -308,12 +310,15 @@ public class MainActivity extends Activity
 		"name TEXT NOT NULL UNIQUE, mean TEXT);");
 			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 		"name TEXT, mean TEXT, xo TEXT);");
+			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
 		}
 		
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS dic");
 			db.execSQL("DROP TABLE IF EXISTS flip");
 			db.execSQL("DROP TABLE IF EXISTS mywords");
+			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
 			onCreate(db);
 		}
 	}
