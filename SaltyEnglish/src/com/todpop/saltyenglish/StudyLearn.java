@@ -464,29 +464,34 @@ public class StudyLearn extends FragmentActivity {
 					public void onClick(View v) {
 						
 						int currentBtnClickStage = (Integer)(v.getTag());
-						
-						String stageNew = checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW");
-						if (stageNew.equals("OLD")) {
-							ed.putInt("currentStage", currentBtnClickStage);
-							ed.commit();
-								
-							if (currentBtnClickStage%10 ==0) {
-								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-								getActivity().startActivity(myIntent);
+						try{
+							String stageStr = Integer.toString(currentBtnClickStage);
+							String stageNew = checkStageIsNew.getString(stageStr, "NEW");
+							if (stageNew.equals("OLD")) {
+								ed.putInt("currentStage", currentBtnClickStage);
+								ed.commit();
+									
+								if (currentBtnClickStage%10 ==0) {
+									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+									getActivity().startActivity(myIntent);
+								} else {
+									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									getActivity().startActivity(myIntent);
+								}
 							} else {
-								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-								getActivity().startActivity(myIntent);
+								// New Stage! So check if it is OK to open-up
+								Log.d("usrid : ", userId);
+								Log.d("level : ", Integer.toString(firstLabel+1));
+								Log.d("stage : ", Integer.toString(currentBtnClickStage%10));
+								
+								String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+1) + 
+										"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
+								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} else {
-							// New Stage! So check if it is OK to open-up
-							Log.d("usrid : ", userId);
-							Log.d("level : ", Integer.toString(firstLabel+1));
-							Log.d("stage : ", Integer.toString(currentBtnClickStage%10));
-							
-							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+1) + 
-									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
-							new CheckStageClear(currentBtnClickStage).execute(url);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
+
 					}
 				};
 
