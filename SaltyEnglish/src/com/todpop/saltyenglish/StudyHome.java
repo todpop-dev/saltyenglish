@@ -247,20 +247,20 @@ public class StudyHome extends Activity {
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
 			
 			// Insert into DB
-			try {
-			    SQLiteDatabase db = mHelper.getWritableDatabase();
-
-				ContentValues insertValues = new ContentValues();
-				insertValues.put("name", cpxPackageName);
-				insertValues.put("ad_id", cpxAdId);
-				insertValues.put("ad_type", cpxAdType);
-				insertValues.put("reward", cpxReward);
-				insertValues.put("installed", "N");
+//			try {
+//			    SQLiteDatabase db = mHelper.getWritableDatabase();
+//
+//				ContentValues insertValues = new ContentValues();
+//				insertValues.put("name", cpxPackageName);
+//				insertValues.put("ad_id", cpxAdId);
+//				insertValues.put("ad_type", cpxAdType);
+//				insertValues.put("reward", cpxReward);
+//				insertValues.put("installed", "N");
 				
-				db.insert("cpxInfo", null, insertValues);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//				db.insert("cpxInfo", null, insertValues);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 
 		} if (cpxAdType == 305) {
 			
@@ -277,16 +277,16 @@ public class StudyHome extends Activity {
 				// Save to DB and JUMP to HomwDownload activity
 				if (this.checkIsAppInstalled(adPackgeName)) {
 					// Update DB
-					try {
-					    SQLiteDatabase db = mHelper.getWritableDatabase();
-
-						String strFilter = "ad_id=" + adId;
-						ContentValues args = new ContentValues();
-						args.put("installed", "Y");
-						db.update("cpxInfo", args, strFilter, null);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+//					try {
+//					    SQLiteDatabase db = mHelper.getWritableDatabase();
+//
+//						String strFilter = "ad_id=" + adId;
+//						ContentValues args = new ContentValues();
+//						args.put("installed", "Y");
+//						db.update("cpxInfo", args, strFilter, null);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
 				
 					// Send CPX act=3 to Server
 					SharedPreferences pref = getSharedPreferences("rgInfo",0);
