@@ -45,6 +45,7 @@ public class HomeMoreAccountDelete extends Activity {
 	SharedPreferences rgInfo;
 	SharedPreferences studyLevelInfo;
 	SharedPreferences settings;
+	SharedPreferences checkStageNew;
 	SharedPreferences.Editor settingsEditor;
 	
 	@Override
@@ -56,6 +57,8 @@ public class HomeMoreAccountDelete extends Activity {
 		
 		settings = getSharedPreferences("setting", 0);
 		settingsEditor = settings.edit();
+		
+		checkStageNew = getSharedPreferences("CheckStageIsNew", 0);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		inputPw = (EditText)findViewById(R.id.home_more_account_delete_input_pw);
@@ -125,6 +128,7 @@ public class HomeMoreAccountDelete extends Activity {
 					startActivity(intent);
 					rgInfo.edit().clear().commit(); 
 					settings.edit().clear().commit();
+					checkStageNew.edit().clear().commit();
 					studyLevelInfo.edit().clear().commit();
 					
 					// Delete DB

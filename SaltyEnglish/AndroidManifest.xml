@@ -220,6 +220,11 @@
             android:label="@string/title_activity_home_more_account_delete"
             android:screenOrientation="portrait" >
         </activity>
+       	<activity
+            android:name="com.todpop.saltyenglish.SurveyView"
+            android:label="@string/survey_view_title"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name="com.todpop.saltyenglish.CPLView"
             android:label="@string/title_activity_cplview" >

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -120,54 +121,41 @@ public class StudyTestResult extends Activity {
 //			mi = new MyItem("oh",R.string.kr10,"Y");
 //			arItem.add(mi);
 //		
-		// Get Test result from database
-		
-		SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-		currentStage = levelInfoSp.getInt("currentStage", 1);
-		getTestWords();
-		
-		
-		if (currentStage%10 != 0) {
+
+		{
+			// Get Test result from database
+			SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
+			currentStage = levelInfoSp.getInt("currentStage", 1);
+			getTestWords();
+			
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);
-			String userId = pref.getString("mem_id", "1");
+			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.ja
+			String userId = pref.getString("mem_id", "0");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
+			String resultUrl;
 			
-			String resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
-					"&stage=" + currentStage%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
-			Log.d("-------- result url ------- ", resultUrl);
+			if (currentStage%10 != 0) {
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
+						"&stage=" + currentStage%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
+			} else {
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
+						"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
+			}
 			new GetTestResult().execute(resultUrl);
+			Log.d("-------- result url ------- ", resultUrl);
 			// ----------- End of  Request Result -------------
 			
-			SharedPreferences.Editor rgInfoEdit = pref.edit();
-			rgInfoEdit.putInt("settingStage", category);
-			rgInfoEdit.commit();
-
-		} else {
-			// ----------- Request Result -------------
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);
-			String userId = pref.getString("mem_id", "1");
-			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
-			String finalAnswerForRequest = levelPref.getString("testResult", "");
-			
-			String resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
-					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
-			Log.d("-------- result url ------- ", resultUrl);
-			new GetTestResult().execute(resultUrl);
-			// ----------- End of  Request Result -------------
-			
-			SharedPreferences.Editor rgInfoEdit = pref.edit();
-			rgInfoEdit.putInt("settingStage", category);
-			rgInfoEdit.commit();
-
+			// ------- cys added -----------
+			SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
+			SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+			stdInfoEdit.putInt("currentCategory", category);					// will be modified later with tmpCategory obtained from StudyLearn.java
+			stdInfoEdit.putInt("currentStageAccumulated", currentStage);		// will be modified later with tmpStageAccumulated obtained from StudyLearn.java
+			stdInfoEdit.commit();
+			// ----------------------------
 		}
-
-
 		
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 		
@@ -513,9 +501,88 @@ public class StudyTestResult extends Activity {
 	
 	public void showHomeActivity(View v)
 	{
-		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-		startActivity(intent);
-		finish();
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "1");
+		String cpxRequestUrl = "http://todpop.co.kr/api/advertises/get_cpx_ad.json?user_id="+userId;
+		Log.d("CPX URL ---- ", cpxRequestUrl);
+		new GetCPX().execute(cpxRequestUrl);
+	}
+	
+	// Get CPX - here we get CPI first
+	private class GetCPX extends AsyncTask<String, Void, JSONObject> 
+	{
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("CPX RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+
+			try {
+				if(json.getBoolean("status")==true) {
+					JSONObject adDetails = json.getJSONObject("data");
+					int adId = adDetails.getInt("ad_id");
+					int adType = adDetails.getInt("ad_type");
+					Log.d("CPX Type: ---------- ", Integer.toString(adType));
+					
+					String adImageUrl = "http://todpop.co.kr/" + adDetails.getString("ad_image");
+					String adText = adDetails.getString("ad_text");
+					String targetUrl = adDetails.getString("target_url");
+					String packageName = adDetails.getString("package_name");
+					String confirmUrl = adDetails.getString("confirm_url");
+					int reward = adDetails.getInt("reward");
+					int questionCount = adDetails.getInt("n_question");
+
+					SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+					SharedPreferences.Editor cpxInfoEditor = cpxInfo.edit();
+					cpxInfoEditor.putInt("adId", adId);					
+					cpxInfoEditor.putInt("adType", adType);		
+					cpxInfoEditor.putString("adImageUrl", adImageUrl);
+					cpxInfoEditor.putString("adText", adText);
+					cpxInfoEditor.putString("targetUrl", targetUrl);
+					cpxInfoEditor.putString("packageName", packageName);
+					cpxInfoEditor.putString("confirmUrl", confirmUrl);
+					cpxInfoEditor.putInt("reward", reward);
+					cpxInfoEditor.putInt("questionCount", questionCount);
+					
+					cpxInfoEditor.commit();
+					
+					// TODO: Add more CPX Support. Now only support CPI and CPS
+
+						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+						startActivity(intent);
+						finish();
+					
+				} else {		   
+					// In the case CPX Request Failed
+					Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+					startActivity(intent);
+					finish();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 	
 	

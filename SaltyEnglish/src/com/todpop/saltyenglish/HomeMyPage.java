@@ -70,10 +70,12 @@ public class HomeMyPage extends FragmentActivity {
 	static ArrayList<Bitmap> prizeImageArr;
 	
 	ImageView characterBtn;
+	ImageView myrankCategory;
 	
 	static int prizeImageCount = 0;
 
 	SharedPreferences rgInfo;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,18 +105,25 @@ public class HomeMyPage extends FragmentActivity {
 		}	
 		
 		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-		int level = Integer.parseInt(rgInfo.getString("level", "0"));
-		int period = rgInfo.getInt("period", 1);
-		int category = 0;
-			if(level >= 1 && level <= 15) {
-				category = 1;
-			} else if(level >=16 && level <= 60) {
-				category = 2;
-			} else if(level >=61 && level <= 120) {
-				category = 3;
-			} else if(level >=121 && level <= 180) {
-				category = 4;
-			}
+		SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
+		int category = stdInfo.getInt("currentCategory",1);
+		int period = stdInfo.getInt("currentPeriod", 1);
+		
+		// image here cys !!!!!!!!!!
+		Log.i("cys category", String.valueOf(category));
+		Log.i("cys period", String.valueOf(period));
+		myrankCategory = (ImageView)findViewById(R.id.home_mypage_id_myrank_category);
+		if      (category==1 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
+		else if (category==1 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_month_ranking);}
+		else if (category==2 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_week_ranking);}
+		else if (category==2 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_month_ranking);}
+		else if (category==3 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_high_week_ranking);}
+		else if (category==3 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_high_month_ranking);}
+		else if (category==4 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_week_ranking);}
+		else if (category==4 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_month_ranking);}
+		else                               {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
+		
+		
 		
 		new GetRankInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/my_home.json?category=" + category + "&period=" + period);
 	}

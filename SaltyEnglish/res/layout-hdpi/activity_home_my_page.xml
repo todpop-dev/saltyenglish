@@ -111,13 +111,13 @@
         android:textColor="#000000"
         />
     
-    <ImageView 
+    <ImageView
+	android:id="@+id/home_mypage_id_myrank_category" 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="113.33dp"
-        android:layout_marginTop="293.57dp"
-        android:src="@drawable/store_31_text_middleranking"/>
-    
+        android:layout_marginTop="293.57dp" />
+        <!--  android:src="@drawable/store_31_text_middleranking" -->
     
     <TextView 
         android:id="@+id/home_mypage_id_myrank_text"

@@ -39,16 +39,16 @@ public class HomeMoreSetting extends Activity {
 	
 	NotificationManager notificationManager;
 	
-	SharedPreferences rgInfo;
-	SharedPreferences.Editor rgInfoEdit;
+	SharedPreferences stdInfo;
+	SharedPreferences.Editor stdInfoEdit;
+	
+	
+	
 
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_more_setting);
-		
-		rgInfo = getSharedPreferences("rgInfo",0);
-		rgInfoEdit = rgInfo.edit();
 		
 		setAlarm = (Button)findViewById(R.id.home_more_setting_btn_alarm);
 		final Calendar c = Calendar.getInstance();
@@ -63,7 +63,6 @@ public class HomeMoreSetting extends Activity {
 		setAlarm.setText("      "+hour+"         "+minute);
 		
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
-
 		
 		alarmCheckBox.setOnCheckedChangeListener(
 				new CompoundButton.OnCheckedChangeListener() {
@@ -115,14 +114,15 @@ public class HomeMoreSetting extends Activity {
 					}
 				});
 		
-		
 		RadioGroup rb1 = (RadioGroup)findViewById(R.id.home_more_radioGrop);
         RadioButton rbBasic =(RadioButton)findViewById(R.id.home_more_radiobtn_basic);
         RadioButton rbMiddle =(RadioButton)findViewById(R.id.home_more_radiobtn_middle);
         RadioButton rbHigh =(RadioButton)findViewById(R.id.home_more_radiobtn_high);
         RadioButton rbToeic =(RadioButton)findViewById(R.id.home_more_radiobtn_toeic);
 
-        switch(rgInfo.getInt("settingStage", 0))
+        stdInfo = getSharedPreferences("studyInfo",0);
+        stdInfoEdit = stdInfo.edit();
+        switch(stdInfo.getInt("currentCategory", 1))
         {
         case 1:
         	rbBasic.setChecked(true);
@@ -144,29 +144,29 @@ public class HomeMoreSetting extends Activity {
 	        	switch(checkedId)
         		{
         			case R.id.home_more_radiobtn_basic:
-        				rgInfoEdit.putInt("settingStage", 1);
+        				stdInfoEdit.putInt("currentCategory", 1);
         				Log.d("!!!!!!!!!!!!!!","1111111111111111");
         			break;
         			
         			case R.id.home_more_radiobtn_middle:
-        				rgInfoEdit.putInt("settingStage", 2);
+        				stdInfoEdit.putInt("currentCategory", 2);        				
         				Log.d("222222222222222","2222222222222");
         			break;
         			
         			case R.id.home_more_radiobtn_high:
-        				rgInfoEdit.putInt("settingStage", 3);
+        				stdInfoEdit.putInt("currentCategory", 3);
         				Log.d("222222222222222","2222222222222");
         			break;
         			
         			case R.id.home_more_radiobtn_toeic:
-        				rgInfoEdit.putInt("settingStage", 4);
+        				stdInfoEdit.putInt("currentCategory", 4);
         				Log.d("222222222222222","2222222222222");
         			break;
         			
         			default:
         			break;
         		}
-	        	rgInfoEdit.commit();
+	        	stdInfoEdit.commit();
 	        }
 	    });
 

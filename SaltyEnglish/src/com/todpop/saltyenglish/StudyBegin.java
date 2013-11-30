@@ -136,6 +136,16 @@ public class StudyBegin extends FragmentActivity {
 		currentStage = levelInfo.getInt("currentStage", 1);
 		Log.d("current stage ------------ ", Integer.toString(currentStage));
 		
+		// Current Stage is Open, therefore setup current stage as OLD
+		String stageStr = Integer.toString(currentStage);
+		SharedPreferences checkStageIsNew = getSharedPreferences("CheckStageIsNew",0);
+		SharedPreferences.Editor checkStageIsNewEditor = checkStageIsNew.edit();
+		checkStageIsNewEditor.putString(stageStr, "OLD");
+		checkStageIsNewEditor.commit();
+		
+		String tmp = checkStageIsNew.getString(stageStr, "1");
+		Log.d(" tmp --- ", tmp);
+		
 		level = (currentStage-1)/10+1;
 		stage = currentStage%10;
 		
@@ -460,7 +470,7 @@ public class StudyBegin extends FragmentActivity {
 
 						// Setup word textview
 						word.setText(jsonWords.getJSONObject(i).get("name").toString());
-						pron.setText(jsonWords.getJSONObject(i).get("phonetics").toString());
+						pron.setText("["+jsonWords.getJSONObject(i).get("phonetics").toString()+"]");		// [+phonetics+]
 						example.setText(jsonWords.getJSONObject(i).get("example_en").toString());
 					}
 
