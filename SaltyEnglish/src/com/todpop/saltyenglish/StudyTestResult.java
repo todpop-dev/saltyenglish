@@ -567,13 +567,10 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.commit();
 					
 					// TODO: Add more CPX Support. Now only support CPI and CPS
-					if (adType == 305) {
-						
-					} else {
+
 						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 						startActivity(intent);
 						finish();
-					}
 					
 				} else {		   
 					// In the case CPX Request Failed
