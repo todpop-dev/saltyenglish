@@ -92,9 +92,6 @@ public class StudyHome extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_home);
 		
-		
-		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
-		cpiView.setVisibility(View.GONE);
 
 		myRank = (TextView)findViewById(R.id.studyhome_id_my_rank);
 		myImage = (ImageView)findViewById(R.id.studyhome_id_my_rank_image);
@@ -141,6 +138,7 @@ public class StudyHome extends Activity {
 		float density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
+		
 		//TODO 
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
