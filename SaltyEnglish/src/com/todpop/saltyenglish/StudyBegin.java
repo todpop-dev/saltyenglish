@@ -136,6 +136,11 @@ public class StudyBegin extends FragmentActivity {
 		currentStage = levelInfo.getInt("currentStage", 1);
 		Log.d("current stage ------------ ", Integer.toString(currentStage));
 		
+		// Current Stage is Open, therefore setup current stage as OLD
+		SharedPreferences checkStageIsNew = getSharedPreferences("CheckStageIsNew",0);
+		checkStageIsNew.edit().putString(Integer.toString(currentStage), "OLD");
+		checkStageIsNew.edit().commit();
+		
 		level = (currentStage-1)/10+1;
 		stage = currentStage%10;
 		

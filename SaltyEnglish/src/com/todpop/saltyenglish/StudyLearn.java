@@ -5,6 +5,7 @@ package com.todpop.saltyenglish;
 
 
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -32,6 +35,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -40,6 +44,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class StudyLearn extends FragmentActivity {
@@ -68,16 +74,31 @@ public class StudyLearn extends FragmentActivity {
 	ImageView[] pointView;
 	int fregmentCount = 1;
 	
+	static SharedPreferences checkStageIsNew;
+	
+	static String userId = "0";
+	static int category = 0;
+	
+	// Stage Open Popup
+	static PopupWindow popupWindow;
+	static View popupview;
+	static RelativeLayout relative;
+	static TextView popupText;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_learn);
 		
+		// User ID
+		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+		userId = rgInfo.getString("mem_id", "0");
+		
+		
 		// Get level 
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
-		int category = pref.getInt("categoryStage", 1);
+		category = pref.getInt("categoryStage", 1);
 		if (category == 1)
 			{levelCount = 1;}
 		else if (category == 2)
@@ -105,6 +126,10 @@ public class StudyLearn extends FragmentActivity {
 		}
 		ed.commit();
 		// ---- 
+
+		// stage old and new info
+		checkStageIsNew = getSharedPreferences("CheckStageIsNew",0);
+
 		
 		pageView = (ViewPager)findViewById(R.id.studylearn_id_pager);
 		pagerAdapter = new PagerAdapter(getSupportFragmentManager());	
@@ -162,6 +187,12 @@ public class StudyLearn extends FragmentActivity {
 			pointViewLayout.addView(pointView[i]);
 		}
 		
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.study_learn_activity_id_relative);;
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		float density = getResources().getDisplayMetrics().density;
+		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
  		
 		new SendPivotTime().execute("http://todpop.co.kr/api/app_infos/get_fast_pivot_time.json");
 		
@@ -322,27 +353,31 @@ public class StudyLearn extends FragmentActivity {
 				button7.setTag((firstLabel-1)*10+7);
 				button8.setTag((firstLabel-1)*10+8);
 				button9.setTag((firstLabel-1)*10+9);
-				button10.setTag(firstLabel);
+				button10.setTag(firstLabel*10);
 
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Bundle bundle = new Bundle(); 
-						int id = v.getId();
+						int currentBtnClickStage = (Integer)(v.getTag());
 						
-						if(id ==R.id.studylearn_id_levelbtn_1_10 ){
-							ed.putInt("currentStage", (Integer)(v.getTag())*10);
+						if (checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW").equals("OLD")) {
+							ed.putInt("currentStage", currentBtnClickStage);
 							ed.commit();
-							Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-							bundle.putInt("level", firstLabel);
-			                getActivity().startActivity(myIntent);
-						}else{
-							ed.putInt("currentStage", (Integer)(v.getTag()));
-							ed.commit();
-							
-							Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-			                getActivity().startActivity(myIntent);
-						}	
+								
+							if (currentBtnClickStage%10 ==0) {
+								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+								getActivity().startActivity(myIntent);
+							} else {
+								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+								getActivity().startActivity(myIntent);
+							}
+
+						} else {
+							// New Stage! So check if it is OK to open-up
+							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + firstLabel + 
+									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
+							new CheckStageClear(currentBtnClickStage).execute(url);
+						}
 					}
 				};
 
@@ -422,28 +457,36 @@ public class StudyLearn extends FragmentActivity {
 				button7.setTag((firstLabel+1-1)*10+7);
 				button8.setTag((firstLabel+1-1)*10+8);
 				button9.setTag((firstLabel+1-1)*10+9);
-				button10.setTag(firstLabel+1);
+				button10.setTag((firstLabel+1)*10);
 				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Bundle bundle = new Bundle(); 
-						int id = v.getId();
-						if(id ==R.id.studylearn_id_levelbtn_2_10 ) {
-							ed.putInt("currentStage", (Integer)(v.getTag())*10);
-							ed.commit();
-							bundle.putInt("level", firstLabel+1);
-							Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-			                getActivity().startActivity(myIntent);
-						} else {
-
-							ed.putInt("currentStage", (Integer)(v.getTag()));
-							ed.commit();
-							
-							Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-			                getActivity().startActivity(myIntent);
-						}
 						
+						int currentBtnClickStage = (Integer)(v.getTag());
+						
+						String stageNew = checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW");
+						if (stageNew.equals("OLD")) {
+							ed.putInt("currentStage", currentBtnClickStage);
+							ed.commit();
+								
+							if (currentBtnClickStage%10 ==0) {
+								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+								getActivity().startActivity(myIntent);
+							} else {
+								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+								getActivity().startActivity(myIntent);
+							}
+						} else {
+							// New Stage! So check if it is OK to open-up
+							Log.d("usrid : ", userId);
+							Log.d("level : ", Integer.toString(firstLabel+1));
+							Log.d("stage : ", Integer.toString(currentBtnClickStage%10));
+							
+							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+1) + 
+									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
+							new CheckStageClear(currentBtnClickStage).execute(url);
+						}
 					}
 				};
 
@@ -520,27 +563,31 @@ public class StudyLearn extends FragmentActivity {
 				button7.setTag((firstLabel+2-1)*10+7);
 				button8.setTag((firstLabel+2-1)*10+8);
 				button9.setTag((firstLabel+2-1)*10+9);
-				button10.setTag(firstLabel+2);
+				button10.setTag((firstLabel+2)*10);
 				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Bundle bundle = new Bundle(); 
-						int id = v.getId();
-						if(id ==R.id.studylearn_id_levelbtn_3_10 ) {
-							ed.putInt("currentStage", (Integer)(v.getTag())*10);
-							ed.commit();
-							bundle.putInt("level", firstLabel+2);
-							Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-			                getActivity().startActivity(myIntent);
-						} else {
-							ed.putInt("currentStage", (Integer)(v.getTag()));
-							ed.commit();
-							
-							Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-			                getActivity().startActivity(myIntent);
-						}
 						
+						int currentBtnClickStage = (Integer)(v.getTag());
+						
+						if (checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW").equals("OLD")) {
+							ed.putInt("currentStage", currentBtnClickStage);
+							ed.commit();
+								
+							if (currentBtnClickStage%10 ==0) {
+								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+								getActivity().startActivity(myIntent);
+							} else {
+								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+								getActivity().startActivity(myIntent);
+							}
+						} else {
+							// New Stage! So check if it is OK to open-up
+							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+2) + 
+									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
+							new CheckStageClear(currentBtnClickStage).execute(url);
+						}
 					}
 				};
 
@@ -594,6 +641,95 @@ public class StudyLearn extends FragmentActivity {
 				}
 			}
 		}
+		
+		private class CheckStageClear extends AsyncTask<String, Void, JSONObject> 
+		{
+			DefaultHttpClient httpClient ;
+			int currentBtnStage;
+			
+			public CheckStageClear(int stageCount)
+			{
+				currentBtnStage = stageCount;
+			}
+			
+			@Override
+			protected JSONObject doInBackground(String... urls) 
+			{
+				JSONObject result = null;
+				try
+				{
+					String getURL = urls[0];
+					HttpGet httpGet = new HttpGet(getURL); 
+					HttpParams httpParameters = new BasicHttpParams(); 
+					int timeoutConnection = 5000; 
+					HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+					int timeoutSocket = 5000; 
+					HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+					httpClient = new DefaultHttpClient(httpParameters); 
+					HttpResponse response = httpClient.execute(httpGet); 
+					HttpEntity resEntity = response.getEntity();
+
+					if (resEntity != null)
+					{    
+						result = new JSONObject(EntityUtils.toString(resEntity)); 
+						//Log.d("RESPONSE ---- ", result.toString());				        	
+					}
+					return result;
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				return result;
+			}
+
+			@Override
+			protected void onPostExecute(JSONObject json) {
+				try {
+					Log.d("CHECK STAGE CLEAR JSON RESPONSE ---- ", json.toString());				        	
+
+					if(json.getBoolean("status")==true) {
+						JSONObject checkClearJsonObj = json.getJSONObject("data");
+						boolean isPossible = checkClearJsonObj.getBoolean("possible");
+						
+						if (isPossible==true) {
+							Log.d("Insert Current Stage -----", Integer.toString(currentBtnStage));
+							ed.putInt("currentStage", currentBtnStage);
+							ed.commit();
+								
+							if (currentBtnStage%10 ==0) {
+								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+								getActivity().startActivity(myIntent);
+							} else {
+								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+								getActivity().startActivity(myIntent);
+							}
+						} else {
+							// POP UP ALERT
+
+							showPopup();
+						}
+					}else{		    
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}		
+		}
+		
+	}
+	
+	public static void showPopup()
+	{
+		popupText.setText(R.string.check_new_stage_popup_string);
+		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	}
+	
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
 	}
 
 	class StageListener implements View.OnClickListener {
