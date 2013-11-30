@@ -150,8 +150,8 @@ public class RgLogin extends Activity {
 	        			editor.putString("isLogin","YES");
 	        			editor.putString("loginType", "email");
 	        			//editor.putString("password", returnSHA512(emailPassword.getText().toString()));
-	        			rgInfoEdit.putString("mem_id", result.getJSONObject("user").getString("id"));
-	        			rgInfoEdit.putString("nickname", result.getJSONObject("user").getString("nickname"));
+	        			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
+	        			rgInfoEdit.putString("nickname", result.getJSONObject("data").getJSONObject("user").getString("nickname"));
 	        			rgInfoEdit.commit();
 	        			editor.commit();
 	        			
@@ -164,7 +164,6 @@ public class RgLogin extends Activity {
 	        			popupWindow.showAsDropDown(loginBtn);
 	        		}
 	        	}catch (Exception e) {
-
 	        	}
 
 	        }

@@ -93,8 +93,7 @@ public class MainActivity extends Activity
 		} else {
 			Log.d("Phone No............. ", mobile);
 
-			new CheckLogin().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
-			//new RgInfo().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
+			new RgInfo().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
 		}
 
 		
@@ -176,8 +175,6 @@ public class MainActivity extends Activity
 					startActivity(intent);
 				} else {	
 					
-					new RgInfo().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
-						      
 					rgInfoEdit.putString("mobile",json.getJSONObject("data").getString("mobile"));
 					rgInfoEdit.putString("level", json.getJSONObject("data").getString("level_test"));
 					if(settings.getString("isLogin","NO").equals("YES")) {
@@ -200,7 +197,7 @@ public class MainActivity extends Activity
 						} else {
 							rgInfoEdit.putString("facebookEmail",json.getJSONObject("data").getString("facebook"));
 						}
-						
+
 						Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
 						startActivity(intent);
 					}
@@ -277,7 +274,7 @@ public class MainActivity extends Activity
 				}
 				rgInfoEdit.commit();
 				
-				//new CheckLogin().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
+				new CheckLogin().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
 			} catch (Exception e) {
 
 			}
