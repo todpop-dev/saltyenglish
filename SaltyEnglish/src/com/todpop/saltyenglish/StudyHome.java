@@ -166,11 +166,11 @@ public class StudyHome extends Activity {
 
 		getInfo();
 
-		if      (category==1) { weekBtn.setText("기초 주간순위"); 	monthBtn.setText("기초 월간순위"); }
-		else if (category==2) { weekBtn.setText("중등 주간순위");    monthBtn.setText("중등 월간순위"); }
-		else if (category==3) {	weekBtn.setText("수능 주간순위");	monthBtn.setText("수능 월간순위"); }
-		else if (category==4) {	weekBtn.setText("토익 주간순위");	monthBtn.setText("토익 월간순위"); }
-		else                  {	weekBtn.setText("주간순위");	    monthBtn.setText("월간순위");    }
+		if      (category==1) { weekBtn.setText(R.string.basic_week_ranking); 	   monthBtn.setText(R.string.basic_month_ranking);  }
+		else if (category==2) { weekBtn.setText(R.string.middle_week_ranking);     monthBtn.setText(R.string.middle_month_ranking); }
+		else if (category==3) {	weekBtn.setText(R.string.high_week_ranking);	   monthBtn.setText(R.string.high_month_ranking);   }
+		else if (category==4) {	weekBtn.setText(R.string.toeic_week_ranking);	   monthBtn.setText(R.string.toeic_month_ranking);  }
+		else                  {	weekBtn.setText(R.string.basic_week_ranking);	   monthBtn.setText(R.string.basic_month_ranking);  }
 
 	}
 	

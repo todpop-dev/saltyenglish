@@ -113,15 +113,15 @@ public class HomeMyPage extends FragmentActivity {
 		Log.i("cys category", String.valueOf(category));
 		Log.i("cys period", String.valueOf(period));
 		myrankCategory = (ImageView)findViewById(R.id.home_mypage_id_myrank_category);
-		if      (category==1 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_basicranking);}
-		else if (category==1 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_basicranking);}
-		else if (category==2 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_middleranking);}
-		else if (category==2 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_middleranking);}
-		else if (category==3 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_highranking);}
-		else if (category==3 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_highranking);}
-		else if (category==4 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_toeicranking);}
-		else if (category==4 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_toeicranking);}
-		else                               {myrankCategory.setImageResource(R.drawable.store_31_text_basicranking);}
+		if      (category==1 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
+		else if (category==1 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_month_ranking);}
+		else if (category==2 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_week_ranking);}
+		else if (category==2 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_month_ranking);}
+		else if (category==3 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_high_week_ranking);}
+		else if (category==3 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_high_month_ranking);}
+		else if (category==4 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_week_ranking);}
+		else if (category==4 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_month_ranking);}
+		else                               {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
 		
 		
 		
