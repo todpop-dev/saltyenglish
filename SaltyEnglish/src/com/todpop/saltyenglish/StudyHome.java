@@ -263,7 +263,8 @@ public class StudyHome extends Activity {
 //			}
 
 		} if (cpxAdType == 305) {
-			
+			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
+			startActivity(intent);
 		} else {
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);

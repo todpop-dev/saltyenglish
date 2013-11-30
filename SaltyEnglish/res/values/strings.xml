@@ -218,5 +218,6 @@
 	<string name="toeic_month_ranking">토익 월간순위</string>
 	<string name="cpx_popup_text">이미 설치되어 있습니다. </string>
 	<string name="check_new_stage_popup_string">오늘의 스테이지를 소진하셨습니다. </string>
+	<string name="survey_view_title">설문조사</string>
 	
 </resources>
