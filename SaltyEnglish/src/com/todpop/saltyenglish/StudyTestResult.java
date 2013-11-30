@@ -132,7 +132,7 @@ public class StudyTestResult extends Activity {
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
 			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.ja
-			String userId = pref.getString("mem_id", "1");
+			String userId = pref.getString("mem_id", "0");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
 			String resultUrl;
@@ -561,7 +561,7 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.putString("targetUrl", targetUrl);
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);
-					cpxInfoEditor.putInt("rewar", reward);
+					cpxInfoEditor.putInt("reward", reward);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 					
 					cpxInfoEditor.commit();

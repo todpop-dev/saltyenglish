@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.facebook.Session;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.animation.Animator;
@@ -27,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Color;
 import android.util.Log;
@@ -87,6 +89,25 @@ public class StudyHome extends Activity {
 	
 	int category, period;
 	
+	//CPX Info
+	int cpxAdId;
+	int cpxAdType;	
+	String cpxAdImageUrl;
+	String cpxAdText;
+	String cpxTargetUrl;
+	String cpxPackageName;
+	String cpxConfirmUrl;
+	int cpxReward;
+	int cpxQuestionCount;
+	
+	//CPX Popup
+	PopupWindow cpxPopupWindow;
+	View cpxPopupView;
+	RelativeLayout cpxPopupRelative;
+	TextView cpxPopupText;
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -139,8 +160,15 @@ public class StudyHome extends Activity {
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
 		
+		
+		// CPX Popup view
+		cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);;
+		cpxPopupView = View.inflate(this, R.layout.popup_view, null);
+		cpxPopupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
+		cpxPopupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
 		//TODO 
-		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
+		//new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}
 	
@@ -171,7 +199,88 @@ public class StudyHome extends Activity {
 		else if (category==3) {	weekBtn.setText(R.string.high_week_ranking);	   monthBtn.setText(R.string.high_month_ranking);   }
 		else if (category==4) {	weekBtn.setText(R.string.toeic_week_ranking);	   monthBtn.setText(R.string.toeic_month_ranking);  }
 		else                  {	weekBtn.setText(R.string.basic_week_ranking);	   monthBtn.setText(R.string.basic_month_ranking);  }
+		
+		// Get CPX Info onResume
+		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
+		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+		boolean isCpxInstalling = cpxInfo.getBoolean("isCpxInstalling", false);
 
+		int adType = cpxInfo.getInt("adType", 0);
+		if (adType == 301) {
+			cpiView.setVisibility(View.VISIBLE);
+			
+			cpxAdId = cpxInfo.getInt("adId", 0);
+			cpxAdType = cpxInfo.getInt("adType", 0);	
+			cpxAdImageUrl = cpxInfo.getString("adImageUrl", "");
+			cpxAdText = cpxInfo.getString("adText", "");
+			cpxTargetUrl = cpxInfo.getString("targetUrl", "");
+			cpxPackageName = cpxInfo.getString("packageName", "");
+			cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
+			cpxReward = cpxInfo.getInt("reward", 0);
+			cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
+			
+			cpxInfo.edit().clear().commit();
+			
+			// Send CPX Log
+			SharedPreferences pref = getSharedPreferences("rgInfo",0);
+			String userId = pref.getString("mem_id", "0");
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+
+		} else {
+			cpiView.setVisibility(View.GONE);
+			cpxInfo.edit().clear().commit();
+			
+			if (isCpxInstalling == true) {
+				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
+				startActivity(intent);
+			} 
+		}
+		
+
+	}
+	
+	private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) 
+		{
+
+			try {
+				if	(result.getBoolean("status")==true) {
+					Log.d("CPX LOG:  ---- ", "Send CPX Log OK!");
+				}
+
+			} catch (Exception e) {
+
+			}
+		}
 	}
 	
 	public void getInfo()
@@ -318,7 +427,8 @@ public class StudyHome extends Activity {
 				if	(result.getBoolean("status")==true) {
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
 					for(int i=0;i<6;i++) {
-						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
 						rankingItemArray.add(rankingItem);
 					}	
 
@@ -340,8 +450,7 @@ public class StudyHome extends Activity {
 	}
 	public void setRankImage(String imageID,ImageView mRankImage)
 	{		
-		if(imageID.equals("1"))
-		{
+		if(imageID.equals("1")){
 			mRankImage.setImageResource(R.drawable.home_character_eric);
 		}else if(imageID.equals("2")){
 			mRankImage.setImageResource(R.drawable.home_character_selly);
@@ -368,7 +477,8 @@ public class StudyHome extends Activity {
 	};
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) 
+	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.study_home, menu);
 		return true;
@@ -553,15 +663,64 @@ public class StudyHome extends Activity {
 		startActivity(intent);
 	}
 	
-	public void goHome(View v)
+	
+	// CPI Button CB
+	public void cpiGoHome(View v)
 	{
 		cpiView.setVisibility(View.GONE);
 	}
-	public void goSaving(View v)
+	public void cpiGoSaving(View v)
 	{
-		Intent intent = new Intent(getApplicationContext(), HomeMyPageSaving.class);
-		startActivity(intent);
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "0");
+		
+		if (this.checkIsAppInstalled(cpxPackageName)) {
+			// App Installed Send act=4 to server
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+			
+			// TODO: Popup notification
+			cpxPopupText.setText(R.string.cpx_popup_text);
+			cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			cpxPopupWindow.showAsDropDown(rankingList);
+		} else {
+			// Process CPI
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+			
+			try {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
+			} catch (android.content.ActivityNotFoundException anfe) {
+			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+cpxPackageName)));
+			}
+			
+			// Save status and Jump to HomeDownload Activity
+			SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+			SharedPreferences.Editor cpxInfoEditor = cpxInfo.edit();
+			cpxInfoEditor.putBoolean("isCpxInstalling", true);
+			cpxInfoEditor.commit();			
+		}
+		
+
+
 	}
+	
+	// Check if Application is installed
+    private boolean checkIsAppInstalled (String uri)
+    {
+        PackageManager pm = getPackageManager();
+        boolean app_installed = false;
+        try
+        {
+               pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+               app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+               app_installed = false;
+        }
+        return app_installed ;
+    }
 
 	public void kakaoInvitefriend(View v)throws NameNotFoundException
 	{

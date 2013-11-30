@@ -216,5 +216,6 @@
 	<string name="middle_month_ranking">중학 월간순위</string>
 	<string name="high_month_ranking">수능 월간순위</string>
 	<string name="toeic_month_ranking">토익 월간순위</string>
+	<string name="cpx_popup_text">이미 설치되어 있습니다. </string>
 	
 </resources>
