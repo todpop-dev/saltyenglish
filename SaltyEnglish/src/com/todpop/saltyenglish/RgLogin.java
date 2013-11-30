@@ -68,6 +68,7 @@ public class RgLogin extends Activity {
     String fbEmail = null;
     String fbId = null;
     SharedPreferences rgInfo;
+    SharedPreferences.Editor rgInfoEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class RgLogin extends Activity {
 		setContentView(R.layout.activity_rg_login);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
+		rgInfoEdit = rgInfo.edit();
 		email = (EditText)findViewById(R.id.rglogin_id_email);
 		emailPassword = (EditText)findViewById(R.id.rglogin_id_emailpassword);
 		loginBtn = (Button)findViewById(R.id.rglogin_id_loginbtn);
@@ -147,7 +149,10 @@ public class RgLogin extends Activity {
 	        			SharedPreferences.Editor editor = settings.edit();
 	        			editor.putString("isLogin","YES");
 	        			editor.putString("loginType", "email");
-	        			editor.putString("password", emailPassword.getText().toString());
+	        			//editor.putString("password", returnSHA512(emailPassword.getText().toString()));
+	        			rgInfoEdit.putString("mem_id", result.getJSONObject("user").getString("id"));
+	        			rgInfoEdit.putString("nickname", result.getJSONObject("user").getString("nickname"));
+	        			rgInfoEdit.commit();
 	        			editor.commit();
 	        			
 	        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);

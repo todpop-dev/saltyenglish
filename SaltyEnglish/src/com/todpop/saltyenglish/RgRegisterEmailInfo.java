@@ -321,7 +321,7 @@ public class RgRegisterEmailInfo extends Activity {
 		return null;   
 	}   
 	//---- send info -----
-	private class SendUserFaverateInfo extends AsyncTask<String, Void, JSONObject> {
+	private class SignUp extends AsyncTask<String, Void, JSONObject> {
 
 		JSONObject result = null;
 		@Override
@@ -346,13 +346,13 @@ public class RgRegisterEmailInfo extends Activity {
 					
 					if(rgInfo.getString("password", "NO").equals("0"))
 					{
-						params.add(new BasicNameValuePair("password", returnSHA512(rgInfo.getString("Password", "NO"))));
+						params.add(new BasicNameValuePair("password", rgInfo.getString("tempPassword", "NO")));
 					}
 
 				}else
 				{
 					params.add(new BasicNameValuePair("email", rgInfo.getString("email", "NO")));
-					params.add(new BasicNameValuePair("password", returnSHA512(rgInfo.getString("Password", "NO"))));
+					params.add(new BasicNameValuePair("password", rgInfo.getString("tempPassword", "NO")));
 					params.add(new BasicNameValuePair("nickname", rgInfo.getString("nickname", "NO")));
 					params.add(new BasicNameValuePair("mobile", rgInfo.getString("mobile", "NO")));
 					params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", "NO")));
@@ -395,6 +395,7 @@ public class RgRegisterEmailInfo extends Activity {
 					settingsEdit.putString("isLogin", "YES");
 					settingsEdit.putString("loginType", "email");
 					rgInfoEdit.putString("mem_id", result.getJSONObject("data").getString("mem_id"));
+					rgInfoEdit.putString("tempPassword", "NO");
 					rgInfoEdit.commit();
 					settingsEdit.commit();
 					
@@ -418,7 +419,7 @@ public class RgRegisterEmailInfo extends Activity {
 		}
 
 	}
-	
+	/*
 	public String returnSHA512(String password) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-512");
         md.update(password.getBytes());
@@ -438,7 +439,7 @@ public class RgRegisterEmailInfo extends Activity {
         }
       //  System.out.println("SHA512: " + hexString.toString());
         return hexString.toString();
-    }
+    }*/
 
 
 
@@ -535,7 +536,7 @@ public class RgRegisterEmailInfo extends Activity {
 		{
 
 			Log.i("SETVEN", "INTEREST!!!-------"+interest);
-			new SendUserFaverateInfo().execute("http://todpop.co.kr/api/users/sign_up.json");
+			new SignUp().execute("http://todpop.co.kr/api/users/sign_up.json");
 		}else{
 			popupText.setText(R.string.popup_interest_More_than_three);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);

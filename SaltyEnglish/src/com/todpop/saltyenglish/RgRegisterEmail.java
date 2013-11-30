@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.http.HttpEntity;
@@ -41,7 +43,7 @@ public class RgRegisterEmail extends Activity {
 	TextView popupText;
 	//nickname value
 	SharedPreferences rgInfo;
-	SharedPreferences.Editor edit;
+	SharedPreferences.Editor rgInfoEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class RgRegisterEmail extends Activity {
 		setContentView(R.layout.activity_rg_register_email);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
-		edit = rgInfo.edit();
+		rgInfoEdit = rgInfo.edit();
 		email = (EditText)findViewById(R.id.rgregisteremail_id_email);
 		emailPassword = (EditText)findViewById(R.id.rgregisteremail_id_emailpwd);
 		emailPasswordCheck = (EditText)findViewById(R.id.rgregisteremail_id_emailpwdcheck);
@@ -70,8 +72,8 @@ public class RgRegisterEmail extends Activity {
 			{
 				emailPassword.setEnabled(false);
 				emailPasswordCheck.setEnabled(false);
-				emailPassword.setText("password is ok");
-				emailPasswordCheck.setText("password is ok");
+				emailPassword.setText(getString(R.string.rg_register_have_password));
+				emailPasswordCheck.setText(getString(R.string.rg_register_have_password));
 			}
 			
 		}
@@ -134,22 +136,22 @@ public class RgRegisterEmail extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if(nickname.getText().toString().length()<3||nickname.getText().toString().length()>8){
-					edit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","NO");
 					popupText.setText(R.string.popup_nickname_length);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}else if(json.getJSONObject("data").getBoolean("result")){
-					edit.putString("nickname",nickname.getText().toString());
+					rgInfoEdit.putString("nickname",nickname.getText().toString());
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}else{
-					edit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","NO");
 					popupText.setText(R.string.popup_nickname_no);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}
-				edit.commit();
+				rgInfoEdit.commit();
 			} catch (Exception e) {
 
 			}
@@ -190,14 +192,14 @@ public class RgRegisterEmail extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if(json.getJSONObject("data").getBoolean("result")){
-					edit.putString("recommend", nicknameRefre.getText().toString());
+					rgInfoEdit.putString("recommend", nicknameRefre.getText().toString());
 					Log.i("STEVEN----", nicknameRefre.getText().toString());
 				}
 				else{
-					edit.putString("recommend","NO");
+					rgInfoEdit.putString("recommend","NO");
 					Log.i("STEVEN-----", "NO");
 				}
-				edit.commit();
+				rgInfoEdit.commit();
 				showRgRegisterEmailInfoActivity();
 			} catch (Exception e) {
 
@@ -238,21 +240,21 @@ public class RgRegisterEmail extends Activity {
 				try {
 					if(json.getJSONObject("data").getBoolean("result"))
 					{
-						edit.putString("email", email.getText().toString());
-						edit.putString("Password", emailPassword.getText().toString());
+						rgInfoEdit.putString("email", email.getText().toString());
+						rgInfoEdit.putString("tempPassword", returnSHA512(emailPassword.getText().toString()));
 						
 						Intent intent = new Intent(getApplicationContext(), RgRegisterEmailInfo.class);
 						startActivity(intent);
 					}else{
-						edit.putString("email","NO");
-						edit.putString("Password", "NO");
+						rgInfoEdit.putString("email","NO");
+						rgInfoEdit.putString("tempPassword", "NO");
 						
 						popupText.setText(R.string.popup_send_info_error);
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						popupWindow.showAsDropDown(doneBtn);
 
 					}
-					edit.commit();
+					rgInfoEdit.commit();
 				} catch (Exception e) {
 
 				}
@@ -328,8 +330,8 @@ public class RgRegisterEmail extends Activity {
 			new CheckRecommenderNickname().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
 		}
 		else{
-			edit.putString("recommend","NO");
-			edit.commit();
+			rgInfoEdit.putString("recommend","NO");
+			rgInfoEdit.commit();
 			showRgRegisterEmailInfoActivity();
 		}
 		
@@ -343,4 +345,24 @@ public class RgRegisterEmail extends Activity {
 		return true;
 	}
 
+	public String returnSHA512(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(password.getBytes());
+        byte byteData[] = md.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+ 
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            String hex = Integer.toHexString(0xff & byteData[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+      //  System.out.println("SHA512: " + hexString.toString());
+        return hexString.toString();
+    }
 }

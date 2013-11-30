@@ -79,7 +79,7 @@ public class StudyHome extends Activity {
 	boolean majorVersionUpdate = false;
 	
 	SharedPreferences pref;
-	SharedPreferences.Editor perfEdit;
+	SharedPreferences.Editor prefEdit;
 	
 	RadioGroup weekMoonBtn;
 	RadioButton weekBtn, monthBtn;
@@ -182,30 +182,41 @@ public class StudyHome extends Activity {
 	public void getInfo()
 	{
 		pref = getSharedPreferences("rgInfo",0);
-		perfEdit = pref.edit();
+		prefEdit = pref.edit();
 
+		Log.i("STEVEN", "category = pref.getInt(settingStage, 0);");
 		category = pref.getInt("settingStage", 0);
+		Log.i("STEVEN", "DONE? category = " + category);
 		if(category==0)
 		{
-			int savedLevel = Integer.parseInt(pref.getString("level", "1"));
-			if(savedLevel<15)
-			{
+			try{
+				int savedLevel = Integer.parseInt(pref.getString("level", "1"));
+
+			
+				Log.i("STEVEN", "savedLevel error?");
+				if(savedLevel<15)
+				{
+					category = 1;
+				}else if(savedLevel>15&&savedLevel<61){
+					category = 2;
+				}else if(savedLevel>60&&savedLevel<121){
+					category = 3;
+				}else if(savedLevel>120)
+				{
+					category = 4;
+				}
+			}catch(Exception e){
+				prefEdit.putString("level", "1");
 				category = 1;
-			}else if(savedLevel>15&&savedLevel<61){
-				category = 2;
-			}else if(savedLevel>60&&savedLevel<121){
-				category = 3;
-			}else if(savedLevel>120)
-			{
-				category = 4;
 			}
-			perfEdit.putInt("settingStage",category);
-			perfEdit.commit();
+			prefEdit.putInt("settingStage",category);
+			Log.i("STEVEN", "settingStage putInt error?");
+			prefEdit.commit();
 		}else{
 
 		}
 	
-		
+		Log.i("TESTING", "http://todpop.co.kr/api/users/get_users_score.json?category="+pref.getInt("settingStage", 0)+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
 		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+pref.getInt("settingStage", 0)+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
 		
 	}
