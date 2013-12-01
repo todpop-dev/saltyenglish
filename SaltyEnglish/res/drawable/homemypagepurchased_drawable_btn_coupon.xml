@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
  
-     <item android:state_checked="false"
+    <item android:state_checked="false"
           android:state_enabled="true"
-          android:drawable="@drawable/store_36_btn_carousel_cpi_off" />
+          android:drawable="@drawable/store_34_btn_freecoupon_off" />
     <item android:state_checked="true"
           android:state_enabled="true"
-          android:drawable="@drawable/store_36_btn_carousel_cpi_on" />
+          android:drawable="@drawable/store_34_btn_freecoupon_on" />
  
 </selector>

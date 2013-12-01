@@ -81,7 +81,7 @@
             android:background="@drawable/homestore_drawable_btn_search"/>
     
     
-    
+<!--     
     <RadioGroup
         android:id="@+id/homestore_id_sexgroup"
         android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
         
         
     </RadioGroup>
-    
+ -->    
     <!--
     <ListView 
             android:id="@+id/homedownload_id_listiew_cpi"
