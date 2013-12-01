@@ -79,7 +79,7 @@ public class MainActivity extends Activity
 			mobile =phoneMgr.getLine1Number().toString();
 			mobile = mobile.replace("+82", "0");
 		} catch(Exception e) {
-			mobile = "01000001001";
+			mobile = "01000001002";
 		}
 
 		//SharedPreferences settings = getSharedPreferences("setting", 0);
