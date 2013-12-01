@@ -788,6 +788,9 @@ public class StudyHome extends Activity {
 				cpxInstallInfoEditor.commit();			
 			}
 		} else if (cpxAdType == 305) {
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+			
 			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
 			startActivity(intent);
 		}
