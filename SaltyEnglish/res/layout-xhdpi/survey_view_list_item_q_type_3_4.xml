@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    
+    <TextView 
+        android:id="@+id/survey_id_point"
+        android:layout_width="15dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:text="1."/>
+    
+    <TextView 
+        android:id="@+id/survey_id_question"
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:text="본 설문조사는 토드팝이 의뢰한 것이며 짭짤한 영어가 제공하는 것입니다. 설문조사에 응할시 장학금 200원이 적립됩니다. 본 설문의
+결과는 안전하게 제공됩니다"
+        />
+    
+    <EditText 
+        android:id="@+id/survey_id_edit_text"
+        android:layout_width="245dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/survey_id_question"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:background="@drawable/que_body_inputtext"/>
+    
+    <ImageView 
+        android:id = "@+id/survey_id_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/survey_id_edit_text"
+        />
+    
+    <RadioGroup
+        android:id="@+id/survey_id_radioGrop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/survey_id_image"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/survey_id_btn_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button = "@null"
+            android:textColor="#000000"
+            android:textSize="18sp"
+             />
+
+        <RadioButton
+            android:id="@+id/survey_id_btn_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button = "@null"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+
+        <RadioButton
+            android:id="@+id/survey_id_btn_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button = "@null"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+
+        <RadioButton
+            android:id="@+id/survey_id_btn_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button = "@null"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+        
+        <RadioButton
+            android:id="@+id/survey_id_btn_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+          	android:gravity="center"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button = "@null"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </RadioGroup>
+    
+  
+
+    
+
+</RelativeLayout>

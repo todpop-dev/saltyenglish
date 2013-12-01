@@ -23,10 +23,12 @@
   <ListView 
       android:id="@+id/survey_id_list_view"
       android:layout_width="350dp"
-      android:layout_height="500dp"
+      android:layout_height="570dp"
       android:layout_centerHorizontal="true"
-      android:layout_marginTop="80dp"
+      android:layout_marginTop="62dp"
       android:fadeScrollbars="false"
+      android:paddingTop="15dp"
+      android:paddingBottom="15dp"
 	  android:scrollbarTrackVertical="@drawable/register_28_drop_underbar"
 	  android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
       android:background="@drawable/common_yellowbox"/>
