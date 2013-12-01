@@ -266,6 +266,12 @@ public class StudyHome extends Activity {
 		} if (cpxAdType == 305) {
 			cpiView.setVisibility(View.VISIBLE);
 			
+			SharedPreferences.Editor cpxInfoEditor;
+			cpxInfoEditor = cpxInfo.edit();
+
+			cpxInfoEditor.putInt("adId", cpxAdId);
+			cpxInfoEditor.commit();
+			
 			// Send CPX Log
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			String userId = pref.getString("mem_id", "0");
@@ -695,8 +701,7 @@ public class StudyHome extends Activity {
 
 	public void showHomeStore(View view)
 	{
-		//Intent intent = new Intent(getApplicationContext(),HomeStore.class);
-		Intent intent = new Intent(getApplicationContext(),SurveyView.class);
+		Intent intent = new Intent(getApplicationContext(),HomeStore.class);
 		startActivity(intent);
 	}
 
