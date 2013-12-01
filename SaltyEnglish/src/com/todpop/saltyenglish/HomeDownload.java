@@ -78,7 +78,7 @@ public class HomeDownload extends Activity {
 
 		SharedPreferences pref = getSharedPreferences("setting",0);
 
-		new GetCPX().execute("http://todpop.co.kr/api/etc/1/show_cpx_list.json&user_id="+pref.getString("id", "N"));
+		new GetCPX().execute("http://todpop.co.kr/api/etc/" + 1 + "/show_cpx_list.json");
 	}
 
 

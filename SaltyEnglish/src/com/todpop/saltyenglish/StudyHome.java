@@ -279,7 +279,17 @@ public class StudyHome extends Activity {
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
 		} else {
 			
+			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
+			
 			cpiView.setVisibility(View.GONE);			
+			
+			if (isCpxInstalling == true) {
+				// Save to DB and JUMP to HomwDownload activity
+				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
+				startActivity(intent);
+			} 
+		
 		}
 		
 		
@@ -740,50 +750,47 @@ public class StudyHome extends Activity {
 		cpiView.setVisibility(View.GONE);
 	}
 	public void cpxGoReward(View v)
-	{
-		Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
-		startActivity(intent);
+	{	
 		
-		
-//		SharedPreferences pref = getSharedPreferences("rgInfo",0);
-//		String userId = pref.getString("mem_id", "0");
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "0");
 	
 		
-//		if (cpxAdType == 301) {
-//			if (this.checkIsAppInstalled(cpxPackageName)) {
-//				// App Installed Send act=4 to server
-//				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-//						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
-//				
-//				// TODO: Popup notification
-//				cpxPopupText.setText(R.string.cpx_popup_text);
-//				cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-//				cpxPopupWindow.showAsDropDown(rankingList);
-//			} else {
-//				// Process CPI
-//				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-//						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
-//				
-//				try {
-//				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
-//				} catch (android.content.ActivityNotFoundException anfe) {
-//				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+cpxPackageName)));
-//				}
-//				
-//				// Save status and Jump to HomeDownload Activity
-//				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
-//				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
-//				
-//				cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
-//				cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
-//				cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
-//				cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
-//				cpxInstallInfoEditor.commit();			
-//			}
-//		} else if (cpxAdType == 305) {
-//			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
-//			startActivity(intent);
-//		}
+		if (cpxAdType == 301) {
+			if (this.checkIsAppInstalled(cpxPackageName)) {
+				// App Installed Send act=4 to server
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+				
+				// TODO: Popup notification
+				cpxPopupText.setText(R.string.cpx_popup_text);
+				cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				cpxPopupWindow.showAsDropDown(rankingList);
+			} else {
+				// Process CPI
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+				
+				try {
+				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
+				} catch (android.content.ActivityNotFoundException anfe) {
+				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+cpxPackageName)));
+				}
+				
+				// Save status and Jump to HomeDownload Activity
+				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
+				
+				cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
+				cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
+				cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
+				cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
+				cpxInstallInfoEditor.commit();			
+			}
+		} else if (cpxAdType == 305) {
+			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
+			startActivity(intent);
+		}
 
 
 	}
