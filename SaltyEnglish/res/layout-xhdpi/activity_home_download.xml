@@ -112,7 +112,6 @@
         
     </RadioGroup>
     
-    <!--
     <ListView 
             android:id="@+id/homedownload_id_listiew_cpi"
             android:layout_width="match_parent"
@@ -139,7 +138,6 @@
             >
             
         </ListView>
-       -->
     
     <ImageView
         android:id="@+id/homedownloal_id_nopci"
