@@ -165,53 +165,7 @@ public class StudyTestResult extends Activity {
 		MyList.setAdapter(MyAdapter);
 		
 		
-		// Update Counts
-		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-		SharedPreferences.Editor editor = sp.edit();
-		int totalStage = sp.getInt("totalStage", 1);
-		int currentStage = sp.getInt("currentStage", 1);
 
-
-		
-		if ((currentStage+1) > totalStage) {
-			
-			editor.putInt("currentStage", (currentStage+1));			
-			editor.putInt("totalStage", (currentStage+1));
-			editor.commit();
-			
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			SharedPreferences.Editor editor2 = pref.edit();
-			
-			int testLevel = currentStage/10+1;
-			int savedLevel = Integer.parseInt(pref.getString("level", "1"));
-			
-			if (testLevel > savedLevel) {
-				editor2.putString("level", Integer.toString(testLevel));
-				String levelLabel = "Level"+testLevel;
-				editor.putInt(levelLabel, 1);
-			} else {
-				String levelLabel = "Level"+(testLevel);
-				int levelInt = sp.getInt(levelLabel, 1)+1;
-				editor.putInt(levelLabel, levelInt);
-			}
-			
-			editor.commit();
-			editor2.commit();
-		} else {
-			int nextStage = currentStage+1;
-			int testLevel = (nextStage-1)/10+1;
-			int stageCount = nextStage%10;
-			if (stageCount ==0){
-				stageCount = 10;
-			}
-			
-			String levelLabel = "Level"+(testLevel);
-			int levelInt = sp.getInt(levelLabel, 1);
-			if (stageCount > levelInt) {
-				editor.putInt(levelLabel, stageCount);
-				editor.commit();
-			}
-		}
 	}
 	
 	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
@@ -259,6 +213,56 @@ public class StudyTestResult extends Activity {
 					
 						rewardView.setText(resultReward);
 						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
+						
+						if (Integer.parseInt(resultMedal) > 0) {
+							// Update Counts
+							SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
+							SharedPreferences.Editor editor = sp.edit();
+							int totalStage = sp.getInt("totalStage", 1);
+							int currentStage = sp.getInt("currentStage", 1);
+
+
+							
+							if ((currentStage+1) > totalStage) {
+								
+								editor.putInt("currentStage", (currentStage+1));			
+								editor.putInt("totalStage", (currentStage+1));
+								editor.commit();
+								
+								SharedPreferences pref = getSharedPreferences("rgInfo",0);
+								SharedPreferences.Editor editor2 = pref.edit();
+								
+								int testLevel = currentStage/10+1;
+								int savedLevel = Integer.parseInt(pref.getString("level", "1"));
+								
+								if (testLevel > savedLevel) {
+									editor2.putString("level", Integer.toString(testLevel));
+									String levelLabel = "Level"+testLevel;
+									editor.putInt(levelLabel, 1);
+								} else {
+									String levelLabel = "Level"+(testLevel);
+									int levelInt = sp.getInt(levelLabel, 1)+1;
+									editor.putInt(levelLabel, levelInt);
+								}
+								
+								editor.commit();
+								editor2.commit();
+							} else {
+								int nextStage = currentStage+1;
+								int testLevel = (nextStage-1)/10+1;
+								int stageCount = nextStage%10;
+								if (stageCount ==0){
+									stageCount = 10;
+								}
+								
+								String levelLabel = "Level"+(testLevel);
+								int levelInt = sp.getInt(levelLabel, 1);
+								if (stageCount > levelInt) {
+									editor.putInt(levelLabel, stageCount);
+									editor.commit();
+								}
+							}
+						}
 						
 					} catch (Exception e) {
 						e.printStackTrace();
