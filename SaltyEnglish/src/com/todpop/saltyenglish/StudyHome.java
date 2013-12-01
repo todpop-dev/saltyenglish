@@ -725,7 +725,8 @@ public class StudyHome extends Activity {
 
 	public void showHomeStore(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(),HomeStore.class);
+		//Intent intent = new Intent(getApplicationContext(),HomeStore.class);
+		Intent intent = new Intent(getApplicationContext(),SurveyView.class);
 		startActivity(intent);
 	}
 
