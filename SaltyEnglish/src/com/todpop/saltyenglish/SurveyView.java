@@ -21,6 +21,8 @@ public class SurveyView extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_survey_view);
+		
+		// Send act 1
 	}
 	
 	// on click

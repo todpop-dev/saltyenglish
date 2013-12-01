@@ -262,8 +262,13 @@ public class StudyHome extends Activity {
 //			}
 
 		} if (cpxAdType == 305) {
-			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
-			startActivity(intent);
+			cpiView.setVisibility(View.VISIBLE);
+			
+			// Send CPX Log
+			SharedPreferences pref = getSharedPreferences("rgInfo",0);
+			String userId = pref.getString("mem_id", "0");
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
 		} else {
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
@@ -750,7 +755,7 @@ public class StudyHome extends Activity {
 	
 	
 	// CPI Button CB
-	public void cpiGoHome(View v)
+	public void cpxGoHome(View v)
 	{
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
 		SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
@@ -758,42 +763,47 @@ public class StudyHome extends Activity {
 		cpxSInstallInfo.edit().clear().commit();
 		cpiView.setVisibility(View.GONE);
 	}
-	public void cpiGoSaving(View v)
+	public void cpxGoReward(View v)
 	{
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
+	
 		
-		if (this.checkIsAppInstalled(cpxPackageName)) {
-			// App Installed Send act=4 to server
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
-			
-			// TODO: Popup notification
-			cpxPopupText.setText(R.string.cpx_popup_text);
-			cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-			cpxPopupWindow.showAsDropDown(rankingList);
-		} else {
-			// Process CPI
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
-			
-			try {
-			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
-			} catch (android.content.ActivityNotFoundException anfe) {
-			    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+cpxPackageName)));
+		if (cpxAdType == 301) {
+			if (this.checkIsAppInstalled(cpxPackageName)) {
+				// App Installed Send act=4 to server
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+				
+				// TODO: Popup notification
+				cpxPopupText.setText(R.string.cpx_popup_text);
+				cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				cpxPopupWindow.showAsDropDown(rankingList);
+			} else {
+				// Process CPI
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+				
+				try {
+				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
+				} catch (android.content.ActivityNotFoundException anfe) {
+				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id="+cpxPackageName)));
+				}
+				
+				// Save status and Jump to HomeDownload Activity
+				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
+				
+				cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
+				cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
+				cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
+				cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
+				cpxInstallInfoEditor.commit();			
 			}
-			
-			// Save status and Jump to HomeDownload Activity
-			SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
-			SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
-			
-			cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
-			cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
-			cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
-			cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
-			cpxInstallInfoEditor.commit();			
+		} else if (cpxAdType == 305) {
+			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
+			startActivity(intent);
 		}
-		
 
 
 	}

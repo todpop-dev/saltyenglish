@@ -341,7 +341,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="507.5dp"
             android:background="@drawable/studytest_drawable_btn_saving"
-            android:onClick="cpiGoSaving"/>
+            android:onClick="cpxGoReward"/>
         
         <Button 
             android:layout_width="wrap_content"
@@ -349,7 +349,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="569dp"
             android:background="@drawable/studytest_drawable_btn_later"
-            android:onClick="cpiGoHome"/>
+            android:onClick="cpxGoHome"/>
         
         
     </RelativeLayout>
