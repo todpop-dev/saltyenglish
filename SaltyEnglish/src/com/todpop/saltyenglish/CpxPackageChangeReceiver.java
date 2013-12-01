@@ -33,9 +33,9 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
 			String userId = pref.getString("mem_id", "0");
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
 					"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
+			cpxInstallInfo.edit().clear().commit();
 		}
 			
-		cpxInstallInfo.edit().clear().commit();
     }
     
  	private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {
