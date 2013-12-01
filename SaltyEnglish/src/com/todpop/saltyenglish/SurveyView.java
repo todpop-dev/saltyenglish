@@ -1,26 +1,44 @@
 package com.todpop.saltyenglish;
 
+import java.net.URL;
+import java.util.ArrayList;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+
 
 public class SurveyView extends Activity {
+	
+	ListView listView;
+	ContentItem contentItem;
+	ArrayList<ContentItem> listArray;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_survey_view);
+		
+		listView = (ListView)findViewById(R.id.survey_id_list_view);
+		listArray = new ArrayList<ContentItem>();
 		
 		// Send act 1
 	}
@@ -106,6 +124,74 @@ public class SurveyView extends Activity {
 
 		}
 	}
+	
+	
+	class ContentItem 
+	{
+		ContentItem(String aPoint,String aQuestion,String aImage,boolean aSelect)
+		{
+			point = aPoint;
+			question = aQuestion;
+			image = aImage;
+			select = aSelect;
+		}
+		String point;
+		String question;
+		String image;
+		boolean select;
+	}
+
+	class CpiListViewAdapter extends BaseAdapter
+	{
+		Context maincon;
+		LayoutInflater Inflater;
+		ArrayList<ContentItem> arSrc;
+		int layout;
+
+		public CpiListViewAdapter(Context context,int alayout,ArrayList<ContentItem> aarSrc)
+		{
+			maincon = context;
+			Inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			arSrc = aarSrc;
+			layout = alayout;
+		}
+		public int getCount()
+		{
+			return arSrc.size();
+		}
+
+		public String getItem(int position)
+		{
+			return arSrc.get(position).point;
+		}
+
+		public long getItemId(int position)
+		{
+			return position;
+		}
+
+		public View getView(int position,View convertView,ViewGroup parent)
+		{
+			if(convertView == null)
+			{
+				convertView = Inflater.inflate(layout, parent,false);
+			}
+			ImageView itemImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_image);
+			TextView name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_name);
+			name1Text.setText(arSrc.get(position).name);
+
+			TextView name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
+			name2Text.setText(arSrc.get(position).coin);
+			
+			try {
+				
+			} catch (Exception e) {
+
+			} 
+			return convertView;
+		}
+	}
+
 	
 }
 
