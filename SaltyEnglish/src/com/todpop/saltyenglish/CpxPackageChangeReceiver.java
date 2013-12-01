@@ -1,8 +1,5 @@
 package com.todpop.saltyenglish;
 
-
-import java.io.InputStream;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -11,12 +8,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.content.*;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 
 public class CpxPackageChangeReceiver extends BroadcastReceiver {
     @Override
@@ -33,7 +27,7 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
 		int adId = cpxInstallInfo.getInt("cpxAdId", 0);
 		String adPackageName = cpxInstallInfo.getString("cpxPackageName", "");
 				
-		if (packageName.equals(adPackageName)) {
+		if (isCpxInstalling==true && packageName.equals(adPackageName)) {
 			// Send CPX act=3 to Server
 			SharedPreferences pref = ctx.getSharedPreferences("rgInfo",0);
 			String userId = pref.getString("mem_id", "0");
