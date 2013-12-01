@@ -25,10 +25,12 @@ import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -272,42 +274,18 @@ public class StudyHome extends Activity {
 		} else {
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
-			int adType = cpxInstallInfo.getInt("cpxAdType", 0);
-			int adId = cpxInstallInfo.getInt("cpxAdId", 0);
-			String adPackgeName = cpxInstallInfo.getString("cpxPackageName", "");
 			
 			cpiView.setVisibility(View.GONE);			
 			
 			if (isCpxInstalling == true) {
 				// Save to DB and JUMP to HomwDownload activity
-				if (this.checkIsAppInstalled(adPackgeName)) {
-					// Update DB
-//					try {
-//					    SQLiteDatabase db = mHelper.getWritableDatabase();
-//
-//						String strFilter = "ad_id=" + adId;
-//						ContentValues args = new ContentValues();
-//						args.put("installed", "Y");
-//						db.update("cpxInfo", args, strFilter, null);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-				
-					// Send CPX act=3 to Server
-					SharedPreferences pref = getSharedPreferences("rgInfo",0);
-					String userId = pref.getString("mem_id", "0");
-					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
-							"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
-				}
-				
-				cpxInstallInfo.edit().clear().commit();
-				
 				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
 				startActivity(intent);
 			} 
 		}
+		
+		
 	}
-
 	
 	// ******************** CPX UTILITY CLASS *************************
 	private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {

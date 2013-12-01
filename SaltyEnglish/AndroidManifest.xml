@@ -237,6 +237,16 @@
             android:name="com.todpop.saltyenglish.LvTestPause"
             android:label="@string/title_activity_lv_test_pause" >
         </activity>
+        
+       <receiver android:name="CpxPackageChangeReceiver">
+    	<intent-filter>
+			<action android:name="android.intent.action.PACKAGE_ADDED"/>
+			<action android:name="android.intent.action.PACKAGE_REPLACED"/>
+			<action android:name="android.intent.action.PACKAGE_REMOVED"/>
+			<data android:scheme="package"/>
+    	</intent-filter>
+	</receiver>
     </application>
+
 
 </manifest>
