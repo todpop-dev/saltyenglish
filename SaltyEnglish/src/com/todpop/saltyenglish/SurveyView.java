@@ -374,18 +374,18 @@ public class SurveyView extends Activity {
 				        public void onFocusChange(View v, boolean hasFocus) {
 				            if(!hasFocus) {
 				            	EditText tmpEt = (EditText)v;
-				            	
-				            	if (answerMap.get(position-1)==null && tmpEt.getText().toString().length()>0) {
+				            
+				        		String tmpAnswer = "&ans[]=" + tmpEt.getText().toString();
+						        answerMap.put(position-1, tmpAnswer);
+
+				            } else {
+				            	if (answerMap.get(position-1)==null) {
 							        surveySelectionChecker++;
 					        		Log.d("how many selected? ---- ", Integer.toString(surveySelectionChecker));
 							        if (surveySelectionChecker == surveyCount) {
 							        	submitBtn.setEnabled(true);
 							        }
-							        
-					        		String tmpAnswer = "&ans[]=" + tmpEt.getText().toString();
-							        answerMap.put(position-1, tmpAnswer);
 				            	}
-
 				            }
 				        }
 				    });
