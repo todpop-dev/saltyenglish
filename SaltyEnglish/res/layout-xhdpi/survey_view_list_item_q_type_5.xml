@@ -6,11 +6,13 @@
     
     
     <Button 
+        android:id="@+id/survye_submit_id_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/survey_drawable_btn_submit"/>
+        android:background="@drawable/survey_drawable_btn_submit"
+        android:onClick="submitSurvey"/>
 
 </RelativeLayout>

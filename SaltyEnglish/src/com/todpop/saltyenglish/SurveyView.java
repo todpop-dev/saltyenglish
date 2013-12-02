@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,7 +13,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,14 +21,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -41,6 +46,15 @@ public class SurveyView extends Activity {
 	
 	ListViewAdapter listViewAdapter;
 	
+	static int surveySelectionChecker;
+	int surveyCount = 0;
+	Button submitBtn = null;
+	String submitStr = "";
+	
+	HashMap<Integer, String> answerMap;
+	
+	int adId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,7 +66,14 @@ public class SurveyView extends Activity {
 		listView.setDividerHeight(0);
 		listArray = new ArrayList<ContentItem>();
 		
+		surveySelectionChecker = 0;
+		answerMap = new HashMap<Integer, String>();
 		
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "0");
+		adId = cpxInfo.getInt("adId", 0);
+		submitStr =  "http://todpop.co.kr/api/advertises/set_survey_result.json?ad_id="+ 
+					cpxInfo.getInt("adId", 0) + "user_id=" + userId;
 		
 		new GetInfo().execute("http://todpop.co.kr/api/advertises/get_cps_questions.json?ad_id="+cpxInfo.getInt("adId", 0));
 	}
@@ -94,9 +115,8 @@ public class SurveyView extends Activity {
 			try {
 				if(json.getBoolean("status")==true) {
 					JSONArray jsonArray = json.getJSONArray("data");
-					
-					for(int i=0;i<jsonArray.length();i++)
-					{
+					surveyCount = jsonArray.length() - 1;
+					for(int i=0;i<jsonArray.length();i++) {
 						contentItem = new ContentItem(jsonArray.getJSONObject(i).getString("q_no"),
 								       			      jsonArray.getJSONObject(i).getString("q_type"),
 								       			      jsonArray.getJSONObject(i).getString("q_text"),
@@ -212,12 +232,12 @@ public class SurveyView extends Activity {
 			return position;
 		}
 
-		public View getView(int position,View convertView,ViewGroup parent)
+		public View getView(final int position,View convertView,ViewGroup parent)
 		{
-			if(arSrc.size()==position)
-			{
+			if(arSrc.size()==position) {
 				convertView = Inflater.inflate(layout5, parent,false);
-				
+				submitBtn = (Button)convertView.findViewById(R.id.survye_submit_id_btn);
+				submitBtn.setEnabled(false);
 				return convertView;
 			}
 			
@@ -226,19 +246,55 @@ public class SurveyView extends Activity {
 				TextView topText = (TextView)convertView.findViewById(R.id.survey_id_top_text);
 				topText.setText(arSrc.get(position).question);
 				return convertView;
-			}else if(arSrc.get(position).type.equals("1")||arSrc.get(position).type.equals("2")){
+			} else if (arSrc.get(position).type.equals("1")||arSrc.get(position).type.equals("2")){
 				convertView = Inflater.inflate(layout1_2, parent,false);
 				TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
 				point.setText(arSrc.get(position).point);
+				
 				TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
 				question.setText(arSrc.get(position).question);
 				
 				
-				if(!arSrc.get(position).image.equals("null")){
-					Log.d("!!!!!!!!!!!!!!!!!!", arSrc.get(position).image);
+				if(!arSrc.get(position).image.equals("null")) {
 					ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
 					new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
 				}
+				
+				RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
+				
+				rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() 
+			    {
+			        @Override
+			        public void onCheckedChanged(RadioGroup group, int checkedId) 
+			        {
+			        	String tmpAnswer = "";
+			        	switch (checkedId) {
+			        	case R.id.survey_id_btn_1:
+			        		tmpAnswer="&ans[]=" + 1;
+			        		break;
+			        	case R.id.survey_id_btn_2:
+			        		tmpAnswer="&ans[]=" + 2;
+			        		break;
+			        	case R.id.survey_id_btn_3:
+			        		tmpAnswer="&ans[]=" + 3;
+			        		break;
+			        	case R.id.survey_id_btn_4:
+			        		tmpAnswer="&ans[]=" + 4;
+			        		break;
+			        	case R.id.survey_id_btn_5:
+			        		tmpAnswer="&ans[]=" + 5;
+			        		break;
+			        	default:
+			        		break;
+			        	}
+			        	answerMap.put(position, tmpAnswer);
+			        	
+			        		surveySelectionChecker++;
+			        	  if (surveySelectionChecker == surveyCount) {
+			        		  submitBtn.setEnabled(true);
+			        	  }
+			        }
+			    });
 				
 				RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
 				RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
@@ -272,23 +328,47 @@ public class SurveyView extends Activity {
 					btn5.setVisibility(View.GONE);
 				}
 				
+				
 				return convertView;
 				
-			}else {
+			} else { // Type 3, 4
 				convertView = Inflater.inflate(layout3_4, parent,false);
 				
 				TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
 				point.setText(arSrc.get(position).point);
+				
 				TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
 				question.setText(arSrc.get(position).question);
 				
+				EditText et = (EditText)convertView.findViewById(R.id.survey_id_edit_text);
+				et.addTextChangedListener(new TextWatcher() {
+
+			          public void afterTextChanged(Editable s) {
+			            // you can call or do what you want with your EditText here
+			        	  
+			        	  if (s.length() > 0) {
+			        		  String tmpAnswer = "&ans[]=" + s.toString();
+					        	answerMap.put(position, tmpAnswer);
+
+					        	  
+					        	 surveySelectionChecker++;
+					        	 if (surveySelectionChecker == surveyCount) {
+					        		 submitBtn.setEnabled(true);
+					        	 }
+			        	  }
+			          }
+
+			          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			          public void onTextChanged(CharSequence s, int start, int before, int count) {}
+			       });
 				
 				if(!arSrc.get(position).image.equals("null")){
-					Log.d("!!!!!!!!!!!!!!!!!!", arSrc.get(position).image);
 					ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
 					new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
 				}
 				
+				RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
 				RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
 				RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
 				RadioButton btn3 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_3);
@@ -325,7 +405,100 @@ public class SurveyView extends Activity {
 		}
 	}
 
+	public void submitSurvey(View v) 
+	{
+		for (int i=0; i<surveyCount; i++) {
+			submitStr+=answerMap.get(i);
+		}
+		Log.d("CPS URL: ----- ", submitStr);
+		
+	}
 	
+	private class SubmitCPS extends AsyncTask<String, Void, JSONObject> 
+	{
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("CPX RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+
+			try {
+				if(json.getBoolean("status")==true) {
+					// Send Result OK! Send act=3 to server
+					SharedPreferences pref = getSharedPreferences("rgInfo",0);
+					String userId = pref.getString("mem_id", "0");
+					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
+							"&ad_type=" + "305" +"&user_id=" + userId + "&act=3");
+				} else {		   
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {
+	 		@Override
+	 		protected JSONObject doInBackground(String... urls) 
+	 		{
+	 			JSONObject result = null;
+	 			try {
+	 				DefaultHttpClient httpClient = new DefaultHttpClient();
+	 				String getURL = urls[0];
+	 				HttpGet httpGet = new HttpGet(getURL);
+	 				HttpResponse httpResponse = httpClient.execute(httpGet);
+	 				HttpEntity resEntity = httpResponse.getEntity();
+
+	 				if (resEntity != null) {    
+	 					result = new JSONObject(EntityUtils.toString(resEntity)); 
+	 					Log.d("RESPONSE ---- ", result.toString());				        	
+	 				}
+	 				return result;
+	 			} catch (Exception e) {
+	 				e.printStackTrace();
+	 			}
+	 			
+	 			return result;
+	 		}
+
+	 		@Override
+	 		protected void onPostExecute(JSONObject result) 
+	 		{
+
+	 			try {
+	 				if	(result.getBoolean("status")==true) {
+	 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
+	 				} else {
+	 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
+	 				}
+
+	 			} catch (Exception e) {
+
+	 			}
+	 		}
+	 	}
+	}
 }
 
 
