@@ -263,7 +263,7 @@ public class StudyHome extends Activity {
 //				e.printStackTrace();
 //			}
 
-		} if (cpxAdType == 305) {
+		} else if (cpxAdType == 305) {
 			cpiView.setVisibility(View.VISIBLE);
 			
 			SharedPreferences.Editor cpxInfoEditor;
