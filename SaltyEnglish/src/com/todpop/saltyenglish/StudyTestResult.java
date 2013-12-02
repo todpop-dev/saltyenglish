@@ -542,9 +542,8 @@ public class StudyTestResult extends Activity {
 		protected void onPostExecute(JSONObject json) {
 
 			try {
-				//TODO cpx function remove
-				//if(json.getBoolean("status")==true) {
-				if(false) {
+				//TODO cpx function to be remove
+				if(json.getBoolean("status")==true) {
 					JSONObject adDetails = json.getJSONObject("data");
 					int adId = adDetails.getInt("ad_id");
 					int adType = adDetails.getInt("ad_type");
