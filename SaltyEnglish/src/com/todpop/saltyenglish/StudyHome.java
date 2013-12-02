@@ -186,7 +186,7 @@ public class StudyHome extends Activity {
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
 		//TODO 
-		//new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
+		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}
 	
