@@ -26,6 +26,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -52,6 +53,7 @@ public class SurveyView extends Activity {
 	String submitStr = "";
 	
 	HashMap<Integer, String> answerMap;
+	HashMap<Integer, View> listViewHolder;
 	
 	int adId;
 	
@@ -68,12 +70,13 @@ public class SurveyView extends Activity {
 		
 		surveySelectionChecker = 0;
 		answerMap = new HashMap<Integer, String>();
+		listViewHolder = new HashMap<Integer, View>();
 		
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
 		adId = cpxInfo.getInt("adId", 0);
 		submitStr =  "http://todpop.co.kr/api/advertises/set_survey_result.json?ad_id="+ 
-					cpxInfo.getInt("adId", 0) + "user_id=" + userId;
+					cpxInfo.getInt("adId", 0) + "&user_id=" + userId;
 		
 		new GetInfo().execute("http://todpop.co.kr/api/advertises/get_cps_questions.json?ad_id="+cpxInfo.getInt("adId", 0));
 	}
@@ -235,172 +238,209 @@ public class SurveyView extends Activity {
 		public View getView(final int position,View convertView,ViewGroup parent)
 		{
 			if(arSrc.size()==position) {
-				convertView = Inflater.inflate(layout5, parent,false);
-				submitBtn = (Button)convertView.findViewById(R.id.survye_submit_id_btn);
-				submitBtn.setEnabled(false);
-				return convertView;
+				if (listViewHolder.get(position) == null) {
+					convertView = Inflater.inflate(layout5, parent,false);
+					submitBtn = (Button)convertView.findViewById(R.id.survye_submit_id_btn);
+					submitBtn.setEnabled(false);
+					
+					listViewHolder.put(position, convertView);
+					return convertView;
+				} else {
+					return (View)listViewHolder.get(position);
+				}
 			}
 			
 			if(arSrc.get(position).type.equals("0")) {
-				convertView = Inflater.inflate(layout0, parent,false);
-				TextView topText = (TextView)convertView.findViewById(R.id.survey_id_top_text);
-				topText.setText(arSrc.get(position).question);
-				return convertView;
+				if (listViewHolder.get(position) == null) {
+					convertView = Inflater.inflate(layout0, parent,false);
+					TextView topText = (TextView)convertView.findViewById(R.id.survey_id_top_text);
+					topText.setText(arSrc.get(position).question);
+					
+					listViewHolder.put(position, convertView);
+					return convertView;
+				} else {
+					return (View)listViewHolder.get(position);
+				}
+				
 			} else if (arSrc.get(position).type.equals("1")||arSrc.get(position).type.equals("2")){
-				convertView = Inflater.inflate(layout1_2, parent,false);
-				TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
-				point.setText(arSrc.get(position).point);
-				
-				TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
-				question.setText(arSrc.get(position).question);
-				
-				
-				if(!arSrc.get(position).image.equals("null")) {
-					ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
-					new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
+				if (listViewHolder.get(position) == null) {
+					convertView = Inflater.inflate(layout1_2, parent,false);
+					TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
+					point.setText(arSrc.get(position).point);
+					
+					TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
+					question.setText(arSrc.get(position).question);
+					
+					
+					if(!arSrc.get(position).image.equals("null")) {
+						ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
+						new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
+					}
+					
+					RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
+					RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
+					RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
+					RadioButton btn3 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_3);
+					RadioButton btn4 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_4);
+					RadioButton btn5 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_5);
+					
+					rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() 
+				    {
+				        @Override
+				        public void onCheckedChanged(RadioGroup group, int checkedId) 
+				        {
+				        	String tmpAnswer = "";
+				        	switch (checkedId) {
+				        	case R.id.survey_id_btn_1:
+				        		tmpAnswer="&ans[]=" + 1;
+				        		break;
+				        	case R.id.survey_id_btn_2:
+				        		tmpAnswer="&ans[]=" + 2;
+				        		break;
+				        	case R.id.survey_id_btn_3:
+				        		tmpAnswer="&ans[]=" + 3;
+				        		break;
+				        	case R.id.survey_id_btn_4:
+				        		tmpAnswer="&ans[]=" + 4;
+				        		break;
+				        	case R.id.survey_id_btn_5:
+				        		tmpAnswer="&ans[]=" + 5;
+				        		break;
+				        	default:
+				        		break;
+				        	}
+				        	
+				        	if (answerMap.get(position-1) == null) {
+				        		surveySelectionChecker++;
+				        		Log.d("how many selected? ---- ", Integer.toString(surveySelectionChecker));
+					        	  if (surveySelectionChecker == surveyCount) {
+					        		  submitBtn.setEnabled(true);
+					        	  }
+				        	}
+				        	
+				        	answerMap.put(position-1, tmpAnswer);
+				        	
+
+				        }
+				    });
+					
+					if(!arSrc.get(position).answer1.equals("")){
+						btn1.setText(arSrc.get(position).answer1);
+					}else{
+						btn1.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer2.equals("")){
+						btn2.setText(arSrc.get(position).answer2);
+					}else{
+						btn2.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer3.equals("")){
+						btn3.setText(arSrc.get(position).answer3);
+					}else{
+						btn3.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer4.equals("")){
+						btn4.setText(arSrc.get(position).answer4);
+					}else{
+						btn4.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer5.equals("")){
+						btn5.setText(arSrc.get(position).answer5);
+					}else{
+						btn5.setVisibility(View.GONE);
+					}
+					
+					listViewHolder.put(position, convertView);
+					return convertView;
+				} else {
+					return (View)listViewHolder.get(position);
 				}
-				
-				RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
-				
-				rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() 
-			    {
-			        @Override
-			        public void onCheckedChanged(RadioGroup group, int checkedId) 
-			        {
-			        	String tmpAnswer = "";
-			        	switch (checkedId) {
-			        	case R.id.survey_id_btn_1:
-			        		tmpAnswer="&ans[]=" + 1;
-			        		break;
-			        	case R.id.survey_id_btn_2:
-			        		tmpAnswer="&ans[]=" + 2;
-			        		break;
-			        	case R.id.survey_id_btn_3:
-			        		tmpAnswer="&ans[]=" + 3;
-			        		break;
-			        	case R.id.survey_id_btn_4:
-			        		tmpAnswer="&ans[]=" + 4;
-			        		break;
-			        	case R.id.survey_id_btn_5:
-			        		tmpAnswer="&ans[]=" + 5;
-			        		break;
-			        	default:
-			        		break;
-			        	}
-			        	answerMap.put(position, tmpAnswer);
-			        	
-			        		surveySelectionChecker++;
-			        	  if (surveySelectionChecker == surveyCount) {
-			        		  submitBtn.setEnabled(true);
-			        	  }
-			        }
-			    });
-				
-				RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
-				RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
-				RadioButton btn3 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_3);
-				RadioButton btn4 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_4);
-				RadioButton btn5 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_5);
-				
-				if(!arSrc.get(position).answer1.equals("")){
-					btn1.setText(arSrc.get(position).answer1);
-				}else{
-					btn1.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer2.equals("")){
-					btn2.setText(arSrc.get(position).answer2);
-				}else{
-					btn2.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer3.equals("")){
-					btn3.setText(arSrc.get(position).answer3);
-				}else{
-					btn3.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer4.equals("")){
-					btn4.setText(arSrc.get(position).answer4);
-				}else{
-					btn4.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer5.equals("")){
-					btn5.setText(arSrc.get(position).answer5);
-				}else{
-					btn5.setVisibility(View.GONE);
-				}
-				
-				
-				return convertView;
 				
 			} else { // Type 3, 4
-				convertView = Inflater.inflate(layout3_4, parent,false);
-				
-				TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
-				point.setText(arSrc.get(position).point);
-				
-				TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
-				question.setText(arSrc.get(position).question);
-				
-				EditText et = (EditText)convertView.findViewById(R.id.survey_id_edit_text);
-				et.addTextChangedListener(new TextWatcher() {
+				if (listViewHolder.get(position) == null) {
+					convertView = Inflater.inflate(layout3_4, parent,false);
+					
+					TextView point = (TextView)convertView.findViewById(R.id.survey_id_point);
+					point.setText(arSrc.get(position).point);
+					
+					TextView question = (TextView)convertView.findViewById(R.id.survey_id_question);
+					question.setText(arSrc.get(position).question);
+					
+					EditText et = (EditText)convertView.findViewById(R.id.survey_id_edit_text);
+					et.setOnFocusChangeListener(new OnFocusChangeListener() {          
 
-			          public void afterTextChanged(Editable s) {
-			            // you can call or do what you want with your EditText here
-			        	  
-			        	  if (s.length() > 0) {
-			        		  String tmpAnswer = "&ans[]=" + s.toString();
-					        	answerMap.put(position, tmpAnswer);
+				        public void onFocusChange(View v, boolean hasFocus) {
+				            if(!hasFocus) {
+				            	EditText tmpEt = (EditText)v;
 
-					        	  
-					        	 surveySelectionChecker++;
-					        	 if (surveySelectionChecker == surveyCount) {
-					        		 submitBtn.setEnabled(true);
-					        	 }
-			        	  }
-			          }
+						        Log.d("surver text --- ", "lose focues -----------");
+						        Log.d("position: ", Integer.toString(position));
+						        Log.d("text : ", tmpEt.getText().toString());
+						        Log.d("length: ", Integer.toString(tmpEt.getText().toString().length()));
+						        if (answerMap.get(position-1)!=null) {
+							        Log.d("length2: ", Integer.toString(answerMap.get(position-1).toString().length()));
+						        }
+				            	
+				            	if (answerMap.get(position-1)!=null && answerMap.get(position-1).toString().length() == 7 && tmpEt.getText().toString().length()>0) {
+							        surveySelectionChecker++;
+					        		Log.d("how many selected? ---- ", Integer.toString(surveySelectionChecker));
+							        if (surveySelectionChecker == surveyCount) {
+							        	submitBtn.setEnabled(true);
+							        }
+				            	}
+				            	
+				        		String tmpAnswer = "&ans[]=" + tmpEt.getText().toString();
+						        answerMap.put(position-1, tmpAnswer);
 
-			          public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+						        	  
 
-			          public void onTextChanged(CharSequence s, int start, int before, int count) {}
-			       });
-				
-				if(!arSrc.get(position).image.equals("null")){
-					ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
-					new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
-				}
-				
-				RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
-				RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
-				RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
-				RadioButton btn3 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_3);
-				RadioButton btn4 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_4);
-				RadioButton btn5 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_5);
-				
-				if(!arSrc.get(position).answer1.equals("")){
-					btn1.setText(arSrc.get(position).answer1);
-				}else{
-					btn1.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer2.equals("")){
-					btn2.setText(arSrc.get(position).answer2);
-				}else{
-					btn2.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer3.equals("")){
-					btn3.setText(arSrc.get(position).answer3);
-				}else{
-					btn3.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer4.equals("")){
-					btn4.setText(arSrc.get(position).answer4);
-				}else{
-					btn4.setVisibility(View.GONE);
-				}
-				if(!arSrc.get(position).answer5.equals("")){
-					btn5.setText(arSrc.get(position).answer5);
-				}else{
-					btn5.setVisibility(View.GONE);
-				}
-				return convertView;
+				            }
+				        }
+				    });
+					
+					if(!arSrc.get(position).image.equals("null")){
+						ImageView image = (ImageView)convertView.findViewById(R.id.survey_id_image);
+						new DownloadImageTask(image).execute("http://todpop.co.kr"+arSrc.get(position).image);
+					}
+					
+					RadioGroup rg = (RadioGroup)convertView.findViewById(R.id.survey_id_radioGrop);
+					RadioButton btn1 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_1);
+					RadioButton btn2 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_2);
+					RadioButton btn3 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_3);
+					RadioButton btn4 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_4);
+					RadioButton btn5 = (RadioButton)convertView.findViewById(R.id.survey_id_btn_5);
+					
+					if(!arSrc.get(position).answer1.equals("")){
+						btn1.setText(arSrc.get(position).answer1);
+					}else{
+						btn1.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer2.equals("")){
+						btn2.setText(arSrc.get(position).answer2);
+					}else{
+						btn2.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer3.equals("")){
+						btn3.setText(arSrc.get(position).answer3);
+					}else{
+						btn3.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer4.equals("")){
+						btn4.setText(arSrc.get(position).answer4);
+					}else{
+						btn4.setVisibility(View.GONE);
+					}
+					if(!arSrc.get(position).answer5.equals("")){
+						btn5.setText(arSrc.get(position).answer5);
+					}else{
+						btn5.setVisibility(View.GONE);
+					}
+					
+					listViewHolder.put(position, convertView);
+					return convertView;
+				} else {
+					return listViewHolder.get(position);
+				}				
 			}
 		}
 	}
@@ -412,6 +452,7 @@ public class SurveyView extends Activity {
 		}
 		Log.d("CPS URL: ----- ", submitStr);
 		
+		new SubmitCPS().execute(submitStr);
 	}
 	
 	private class SubmitCPS extends AsyncTask<String, Void, JSONObject> 
@@ -450,7 +491,7 @@ public class SurveyView extends Activity {
 					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
 							"&ad_type=" + "305" +"&user_id=" + userId + "&act=3");
 				} else {		   
-					
+					Log.d("submit cps error: ", json.toString());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -489,16 +530,26 @@ public class SurveyView extends Activity {
 	 			try {
 	 				if	(result.getBoolean("status")==true) {
 	 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
+	 					Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
+	 					startActivity(intent);
+	 					finish();
 	 				} else {
 	 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
+	 					Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
+	 					startActivity(intent);
+	 					finish();
 	 				}
 
 	 			} catch (Exception e) {
-
+	 				e.printStackTrace();
 	 			}
 	 		}
 	 	}
 	}
+	
+	
+	
+
 }
 
 

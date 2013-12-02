@@ -26,8 +26,7 @@
         android:layout_centerHorizontal="true"
         android:textSize="18sp"
         android:textColor="#000000"
-        android:text="본 설문조사는 토드팝이 의뢰한 것이며 짭짤한 영어가 제공하는 것입니다. 설문조사에 응할시 장학금 200원이 적립됩니다. 본 설문의
-결과는 안전하게 제공됩니다"
+       
         />
     
     <ImageView 
