@@ -10,6 +10,7 @@
         android:layout_centerInParent="true" >
 
 
+
     
 	<!-- ad -->
     <ImageView
@@ -60,6 +61,7 @@
         android:layout_marginLeft="267.5dp"
         android:layout_marginTop="555dp"
         android:src="@drawable/test_30_image_blackman"/>
+
 
 
 

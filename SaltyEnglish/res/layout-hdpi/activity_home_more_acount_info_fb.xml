@@ -11,6 +11,7 @@
         android:layout_centerInParent="true" >
 
 
+
     
     <ImageView
         android:layout_width="wrap_content"
@@ -70,6 +71,7 @@
         android:layout_marginLeft="51.11dp"
         android:layout_marginTop="134.08dp"
         android:src="@drawable/store_59_image_pwman" />
+
 
 
 

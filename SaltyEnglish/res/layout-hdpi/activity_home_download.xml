@@ -81,7 +81,7 @@
             android:background="@drawable/homestore_drawable_btn_search"/>
     
     
-<!--     
+    
     <RadioGroup
         android:id="@+id/homestore_id_sexgroup"
         android:layout_width="wrap_content"
@@ -97,7 +97,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="26.67dp"
             android:background="@drawable/store_36_btn_carousel_cpi_off"
-            android:button="@drawable/homedownload_drawable_btn_cpi"
             android:checked="true" />
         
          <RadioButton
@@ -106,13 +105,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="26.67dp"
             android:background="@drawable/store_36_btn_carousel_cpi_off"
-            android:button="@drawable/homedownload_drawable_btn_cps"
             />
         
         
     </RadioGroup>
- -->   
-    <!--
+    
     <ListView 
             android:id="@+id/homedownload_id_listiew_cpi"
             android:layout_width="match_parent"
@@ -139,7 +136,6 @@
             >
             
         </ListView>
-       -->
     
     <ImageView
         android:id="@+id/homedownloal_id_nopci"
@@ -149,6 +145,7 @@
         android:visibility="gone"
         android:src="@drawable/store_41_image_nocpi"/>
     
+
 
 
      </RelativeLayout>

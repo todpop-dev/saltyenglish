@@ -11,6 +11,7 @@
         android:layout_centerInParent="true" >
 
 
+
     
     <Button
         android:layout_width="wrap_content"
@@ -336,6 +337,9 @@
     	android:layout_marginTop="9.99dp"
     	android:src="@drawable/common_bgimg_register"
         />
+
+
+
 
 
      </RelativeLayout>

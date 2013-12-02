@@ -12,6 +12,8 @@
         android:layout_centerInParent="true" >
 
 
+
+
 	<!--  
     <TextView 
         android:layout_width="200.44dp"
@@ -129,6 +131,9 @@
     	android:layout_marginTop="124.92dp"
     	android:src="@drawable/register_19_image_emailman"
         />
+
+
+
 
 
 

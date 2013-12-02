@@ -10,6 +10,7 @@
         android:layout_centerInParent="true" >
 
 
+
     
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -228,6 +229,7 @@
         android:layout_marginTop="554.5dp"
         android:onClick="showHomeMyPagePurchased"
         android:background="@drawable/homemypage_drawable_btn_purchase"/>
+
 
 
 

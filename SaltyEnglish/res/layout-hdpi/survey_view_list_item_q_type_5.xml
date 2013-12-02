@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    
+    
+    
+    <Button 
+        android:id="@+id/survye_submit_id_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24.98dp"
+        android:layout_marginBottom="24.98dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/survey_drawable_btn_submit"
+        android:onClick="submitSurvey"/>
+
+</RelativeLayout>

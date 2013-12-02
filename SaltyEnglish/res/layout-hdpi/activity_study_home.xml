@@ -11,6 +11,7 @@
 
 
 
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -316,6 +317,7 @@
         
         <!-- ad image-->
         <ImageView 
+            android:id="@+id/study_home_id_cpi_ad_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -323,6 +325,7 @@
             android:background="@drawable/test_27_image_frame"/>
         
         <TextView 
+            android:id="@+id/study_home_id_cpi_ad_text"
             android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -339,7 +342,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="422.65dp"
             android:background="@drawable/studytest_drawable_btn_saving"
-            android:onClick="goSaving"/>
+            android:onClick="cpxGoReward"/>
         
         <Button 
             android:layout_width="wrap_content"
@@ -347,10 +350,13 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="473.87dp"
             android:background="@drawable/studytest_drawable_btn_later"
-            android:onClick="goHome"/>
+            android:onClick="cpxGoHome"/>
         
         
     </RelativeLayout>
+
+
+
 
 
 

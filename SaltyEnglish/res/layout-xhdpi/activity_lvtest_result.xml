@@ -10,6 +10,7 @@
         android:layout_centerInParent="true" >
 
 
+
     
     <!--  
     <ImageView
@@ -68,6 +69,8 @@
         android:layout_marginTop="556dp"
         android:background="@drawable/lvtestresult_drawable_continue_btn"
         android:onClick="showHomeActivity"/>
+
+
 
 
 

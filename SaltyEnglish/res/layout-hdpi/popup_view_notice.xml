@@ -7,16 +7,17 @@
     android:background = "@drawable/common_pop_big"
      >
      
-        <TextView 
+    <TextView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16.66dp"
         android:textStyle="bold"
         android:text="@string/study_home_popup_notice"
         android:textSize="20sp"
         android:textColor="#000000"
         />
+    
     <TextView 
         android:id="@+id/popup_notice_id_text"
         android:layout_width="wrap_content"

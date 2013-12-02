@@ -12,6 +12,8 @@
 
 
 
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -119,6 +121,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="9.99dp"
         android:src="@drawable/common_bgimg_register" />
+
+
+
 
 
 

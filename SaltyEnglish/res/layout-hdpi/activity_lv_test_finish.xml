@@ -10,7 +10,6 @@
         android:layout_centerInParent="true" >
 
 
-    
 
 
     <ImageView
@@ -52,6 +51,8 @@
         android:enabled="false"
         android:onClick="onClick"
         android:background="@drawable/lvtest_8_btn_skipinactive" />
+
+
 
 
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    
+    <ImageView 
+        android:id="@+id/survey_id_coin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16.66dp"
+        android:layout_marginLeft="208.89dp"
+        android:src="@drawable/common_image_bigcoin"/>
+    
+    <TextView 
+        android:id="@+id/surey_id_save"
+        android:layout_width="41.78dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16.66dp"
+        android:layout_toRightOf="@id/survey_id_coin"
+        android:gravity="right"
+        android:textColor="#000000"
+        android:text="0000"/>
+    
+    
+
+    <TextView
+        android:id="@+id/survey_id_top_text"
+        android:layout_width="217.78dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/survey_id_coin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8.33dp"
+        android:gravity="center"
+        
+        android:textSize="16sp"
+         />
+
+</RelativeLayout>
