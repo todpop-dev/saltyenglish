@@ -65,6 +65,7 @@ public class SurveyView extends Activity {
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
 
 		listView = (ListView)findViewById(R.id.survey_id_list_view);
+		listView.setFocusableInTouchMode(true);
 		listView.setDividerHeight(0);
 		listArray = new ArrayList<ContentItem>();
 		
@@ -86,6 +87,7 @@ public class SurveyView extends Activity {
 	{
 		finish();
 	}
+	
 	
 	private class GetInfo extends AsyncTask<String, Void, JSONObject> 
 	{
@@ -372,27 +374,17 @@ public class SurveyView extends Activity {
 				        public void onFocusChange(View v, boolean hasFocus) {
 				            if(!hasFocus) {
 				            	EditText tmpEt = (EditText)v;
-
-						        Log.d("surver text --- ", "lose focues -----------");
-						        Log.d("position: ", Integer.toString(position));
-						        Log.d("text : ", tmpEt.getText().toString());
-						        Log.d("length: ", Integer.toString(tmpEt.getText().toString().length()));
-						        if (answerMap.get(position-1)!=null) {
-							        Log.d("length2: ", Integer.toString(answerMap.get(position-1).toString().length()));
-						        }
 				            	
-				            	if (answerMap.get(position-1)!=null && answerMap.get(position-1).toString().length() == 7 && tmpEt.getText().toString().length()>0) {
+				            	if (answerMap.get(position-1)==null && tmpEt.getText().toString().length()>0) {
 							        surveySelectionChecker++;
 					        		Log.d("how many selected? ---- ", Integer.toString(surveySelectionChecker));
 							        if (surveySelectionChecker == surveyCount) {
 							        	submitBtn.setEnabled(true);
 							        }
+							        
+					        		String tmpAnswer = "&ans[]=" + tmpEt.getText().toString();
+							        answerMap.put(position-1, tmpAnswer);
 				            	}
-				            	
-				        		String tmpAnswer = "&ans[]=" + tmpEt.getText().toString();
-						        answerMap.put(position-1, tmpAnswer);
-
-						        	  
 
 				            }
 				        }
