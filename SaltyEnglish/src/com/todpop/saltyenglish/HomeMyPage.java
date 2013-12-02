@@ -199,7 +199,7 @@ public class HomeMyPage extends FragmentActivity {
 					rankImage.setImageResource(R.drawable.store_31_image_2nd);
 					prizeImage.setImageBitmap(prizeImageArr.get(2));
 					
-					nickName.setText(rankNickNameList.get(2));
+					nickName.setText(rankNickNameList.get(1));
 					Log.d("+++++++++++++++++++++","1");
 					indicatorL.setVisibility(View.GONE);
 					indicatorR.setVisibility(View.GONE);
@@ -218,7 +218,7 @@ public class HomeMyPage extends FragmentActivity {
 					rankImage.setImageResource(R.drawable.store_31_image_3rd);
 					prizeImage.setImageBitmap(prizeImageArr.get(1));
 
-					nickName.setText(rankNickNameList.get(1));
+					nickName.setText(rankNickNameList.get(2));
 					indicatorL.setVisibility(View.GONE);
 					indicatorR.setVisibility(View.GONE);
 				break;

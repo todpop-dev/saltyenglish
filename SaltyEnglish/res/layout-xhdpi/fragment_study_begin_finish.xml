@@ -24,9 +24,10 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="480.5dp"
         android:background="@drawable/studyfinish_drawable_btn_coupon"
-        android:onClick="showCouponPopView"
+        
         />
-     
+     <!--  android:src="@drawable/study_16_btn_coupon_on
+     android:onClick="showCouponPopView" -->
     <Button 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
