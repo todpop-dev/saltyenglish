@@ -698,7 +698,9 @@ public class StudyLearn extends FragmentActivity {
 						JSONObject checkClearJsonObj = json.getJSONObject("data");
 						boolean isPossible = checkClearJsonObj.getBoolean("possible");
 						
-						if (isPossible==true) {
+						//TODO stage limit remove
+						//if (isPossible==true) {
+						if (true) {
 							Log.d("Insert Current Stage -----", Integer.toString(currentBtnStage));
 							ed.putInt("currentStage", currentBtnStage);
 							ed.commit();
