@@ -76,6 +76,11 @@ public class HomeDownload extends Activity {
 		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
 		couponListView.setAdapter(couponListViewAdapter);
 
+		SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+		SharedPreferences.Editor cpxInstallInfoEditor = cpxInstallInfo.edit();
+		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
+		cpxInstallInfoEditor.commit();
+
 		SharedPreferences pref = getSharedPreferences("setting",0);
 
 		new GetCPX().execute("http://todpop.co.kr/api/etc/" + 1 + "/show_cpx_list.json");
