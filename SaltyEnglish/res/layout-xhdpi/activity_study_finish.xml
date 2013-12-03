@@ -26,6 +26,7 @@
 
     <!-- Get Coupon Button -->
     <Button
+        android:id="@+id/study_finish_coupon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
