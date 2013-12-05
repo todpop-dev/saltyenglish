@@ -30,6 +30,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 
 
 import android.app.Activity;
@@ -363,6 +364,20 @@ public class RgLogin extends Activity {
 	        super.onActivityResult(requestCode, resultCode, data);
 	        uiHelper.onActivityResult(requestCode, resultCode, data);
 	    }
+		@Override
+		protected void onStart()
+		{
+			super.onStart();
+			FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	        FlurryAgent.logEvent("Login");
+		}
+		 
+		@Override
+		protected void onStop()
+		{
+			super.onStop();		
+			FlurryAgent.onEndSession(this);
+		}
 }
 
 

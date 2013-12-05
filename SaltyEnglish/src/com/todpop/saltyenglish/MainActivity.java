@@ -1,6 +1,7 @@
 package com.todpop.saltyenglish;
 
 import org.apache.http.HttpEntity;
+import com.flurry.android.FlurryAgent;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity
 	SharedPreferences.Editor settingsEditor;
 	
 	WordDBHelper mHelper;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -182,6 +183,7 @@ public class MainActivity extends Activity
 						{
 							Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 							startActivity(intent);
+							finish();
 						}else{
 							Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
 							startActivity(intent);
@@ -332,5 +334,17 @@ public class MainActivity extends Activity
 		super.onDestroy();
 		mHelper.close();
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

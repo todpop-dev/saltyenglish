@@ -7,7 +7,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +21,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.flurry.android.FlurryAgent;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +72,7 @@ public class LvTestBigin extends Activity {
 	String krWord3;
 	String krWord4;
 	int count=1;
+	int correct = 0;
 	String level=null;
 	int density;
 
@@ -85,12 +90,14 @@ public class LvTestBigin extends Activity {
 	boolean checkAni = false;
 	
 	ArrayList<Integer> randomP = new ArrayList<Integer>(); 
-	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lv_test_bigin);
+
+		FlurryAgent.logEvent("Level Test Start");
 		
 		density = (int) getResources().getDisplayMetrics().density;
 
@@ -250,6 +257,7 @@ public class LvTestBigin extends Activity {
 					lvTextWordEdit.putString("check"+(count-2), "Y");
 					lvTextWordEdit.commit();			
         			
+					correct++;
         			checkRW = "o";
 					
 				break;
@@ -455,6 +463,7 @@ public class LvTestBigin extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
     }
 	
 	@Override
@@ -467,6 +476,7 @@ public class LvTestBigin extends Activity {
 	@Override
 	public void onStop() {
 		super.onStop();
+		FlurryAgent.onEndSession(this);
 	}
 	
 	@Override
@@ -486,6 +496,11 @@ public class LvTestBigin extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Map<String, String> stopParams = new HashMap<String, String>();
+        stopParams.put("Stoped Question", String.valueOf(count));
+        float score = (float)correct / count * 100;
+        stopParams.put("Score", String.format("%.1f", score));
+		FlurryAgent.logEvent("Level Test Destroyed", stopParams);
     }
     
     
@@ -596,5 +611,4 @@ public class LvTestBigin extends Activity {
 		getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
 		return true;
 	}
-
 }

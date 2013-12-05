@@ -1,11 +1,16 @@
 package com.todpop.saltyenglish;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import com.flurry.android.FlurryAgent;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -102,11 +107,12 @@ public class LvTestFinish extends Activity {
 					//mc.hide();
 					//video.setMediaController(mc);
 					video.start();
-					
 					Handler mHandler = new Handler();
 					mHandler.postDelayed(mLaunchTaskMain, 8000);		// should be 5000 but timing difficulty
-
 					
+					Map<String, String> cpdmParams = new HashMap<String, String>();
+				    cpdmParams.put("CPDM ID", json.getJSONObject("data").getString("ad_id"));
+					FlurryAgent.logEvent("CPDM", cpdmParams, true);
 				}else{		        
 					Log.d("-----------------------", "Login Failed");
 				}
@@ -119,6 +125,7 @@ public class LvTestFinish extends Activity {
 
 	public void onClick(View view)
 	{
+		FlurryAgent.endTimedEvent("CPDM");
 		Intent intent = new Intent(getApplicationContext(), LvTestResult.class);
 		startActivity(intent);
 		finish();
@@ -175,5 +182,17 @@ public class LvTestFinish extends Activity {
 		getMenuInflater().inflate(R.menu.lv_test_finish, menu);
 		return true;
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

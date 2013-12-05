@@ -9,6 +9,8 @@ import java.util.Random;
 
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -128,6 +130,7 @@ public class StudyTestC extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_c);
+		FlurryAgent.logEvent("Study Test");
 		
 		englishWords = new ArrayList<String>();
 		englishMeans = new ArrayList<String>();
@@ -779,5 +782,18 @@ public class StudyTestC extends Activity {
 
 			onCreate(db);
 		}
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

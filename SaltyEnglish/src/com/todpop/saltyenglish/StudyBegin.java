@@ -19,6 +19,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
+
 
 import android.os.AsyncTask;
 import android.os.Build;
@@ -398,7 +400,11 @@ public class StudyBegin extends FragmentActivity {
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
 				if(adType != 102){
+					FlurryAgent.logEvent("CPD (without Coupon)");
 					cpdCoupon.setVisibility(View.INVISIBLE);
+				}
+				else{
+					FlurryAgent.logEvent("CPD (with Coupon)");
 				}
 				
 				if (cpdFrontImage == null || cpdBackImage == null) {
@@ -490,6 +496,8 @@ public class StudyBegin extends FragmentActivity {
 			private boolean isCardBack = false;
 			public void onClick(View v)
 			{
+
+				FlurryAgent.logEvent("CPD Image Flipped");
 				
 				animation = AnimationUtils.loadAnimation( getActivity(), R.drawable.studytestc_drawable_flip_card_back_scale); 
 				animation.setAnimationListener(new Animation.AnimationListener() 
@@ -928,6 +936,7 @@ public class StudyBegin extends FragmentActivity {
 	
 	public void showCouponPopView(View v)
 	{
+		FlurryAgent.logEvent("Coupon Get");
 		popupText.setText(R.string.study_finish_popup_text);
 		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		popupWindow.showAsDropDown(null);
@@ -1000,6 +1009,19 @@ public class StudyBegin extends FragmentActivity {
 			db.execSQL("DROP TABLE IF EXISTS dic");
 			onCreate(db);
 		}
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }
 

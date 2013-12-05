@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -79,4 +81,19 @@ public class StudyCategory extends Activity {
 		//finish();
 	}
 
+
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Study Category");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

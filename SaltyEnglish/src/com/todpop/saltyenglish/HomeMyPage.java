@@ -16,6 +16,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.Intent;
@@ -459,6 +461,19 @@ public class HomeMyPage extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.home_my_page, menu);
 		return true;
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("My Page");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 
 }

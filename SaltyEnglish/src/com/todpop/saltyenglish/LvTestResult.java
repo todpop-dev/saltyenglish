@@ -1,6 +1,9 @@
 package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
+
+import com.flurry.android.FlurryAgent;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,6 +49,8 @@ public class LvTestResult extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lvtest_result);
+		
+		FlurryAgent.logEvent("Level Test Result");
 		
 		mHelper = new WordDBHelper(this);
 
@@ -328,5 +333,18 @@ public class LvTestResult extends Activity {
 	{
 		super.onDestroy();
 		mHelper.close();
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }
