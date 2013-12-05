@@ -2,6 +2,7 @@ package com.todpop.saltyenglish;
 
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -15,10 +16,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.facebook.Session;
+import com.flurry.android.FlurryAgent;
+import com.todpop.saltyenglish.StudyLearn.LevelFragment;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -39,14 +43,27 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -55,6 +72,7 @@ import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
 
 public class StudyHome extends Activity {
@@ -79,6 +97,8 @@ public class StudyHome extends Activity {
 	TextView myName;
 	TextView myScore;
 	
+	ImageView categoryWhiteBox;
+	
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
@@ -95,8 +115,9 @@ public class StudyHome extends Activity {
 	SharedPreferences pref;
 	SharedPreferences stdInfo;
 	
-	RadioGroup weekMoonBtn;
-	RadioButton weekBtn, monthBtn;
+	ViewPager categoryPager;
+	ImageAdapter adapter;
+	Point size;
 	
 	int category, period;
 	
@@ -110,6 +131,7 @@ public class StudyHome extends Activity {
 	String cpxConfirmUrl;
 	int cpxReward;
 	int cpxQuestionCount;
+	boolean installed;
 	
 	//CPX Popup
 	PopupWindow cpxPopupWindow;
@@ -119,7 +141,20 @@ public class StudyHome extends Activity {
 	
  	// Database
  	WordDBHelper mHelper;
-	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Study Home");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,13 +167,131 @@ public class StudyHome extends Activity {
 		myImage = (ImageView)findViewById(R.id.studyhome_id_my_rank_image);
 		myName = (TextView)findViewById(R.id.studyhome_id_my_rank_name_text);
 		myScore = (TextView)findViewById(R.id.studyhome_id_my_rank_fraction);
+		//categoryWhiteBox = (ImageView)findViewById(R.id.bgimg_whitebox);
 
 		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
 		rankingItemArray = new ArrayList<RankingListItem>();
+		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
 		
-		weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_week_moon_rank_group);
+        adapter = new ImageAdapter(this);
+		categoryPager.setAdapter(adapter);
+		categoryPager.setCurrentItem(1073741823);
+		Display display = getWindowManager().getDefaultDisplay();
+		size = new Point();
+		display.getSize(size);
+		categoryPager.setPageMargin(-size.x/2);
+		categoryPager.setOffscreenPageLimit(5);
+		categoryPager.setOnTouchListener(new View.OnTouchListener() {
+
+			private float mLastX;
+			private float mFirstX;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch (event.getAction()){
+					case MotionEvent.ACTION_DOWN:
+						mFirstX = event.getX();
+						mLastX = event.getX();
+						//categoryWhiteBox.setVisibility(View.INVISIBLE);
+					break;
+					case MotionEvent.ACTION_MOVE:
+							categoryPager.scrollBy((int)((mLastX-event.getX())/2), 0);
+							categoryPager.invalidate();
+							mLastX = event.getX();
+						break;
+					case MotionEvent.ACTION_UP:
+						if((mFirstX - mLastX) > size.x/6){
+							categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
+						}else if((mLastX - mFirstX) > size.x/6){
+							categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
+						}
+						else{
+							categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
+							categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
+						}
+						//categoryWhiteBox.setVisibility(View.VISIBLE);
+						break;
+					default:
+						break;
+				}
+				return true;
+			}
+		});
+		categoryPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int arg0) {
+				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
+				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+				// TODO Auto-generated method stub
+				if(arg0%2 == 1){
+    				period =1;
+    				stdInfoEdit.putInt("currentPeriod", 1);
+    				stdInfoEdit.commit();
+    				Log.i("TESTING", "id_week getInfo() called");
+    				getInfo();
+				}
+				else{
+    				period =2;
+    				stdInfoEdit.putInt("currentPeriod", 2);
+    				stdInfoEdit.commit();
+    				Log.i("TESTING", "id_moon getInfo() called");
+    				getInfo();
+				}
+			}
+			
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		try {
+			Field mScroller = ViewPager.class.getDeclaredField("mScroller");
+			mScroller.setAccessible(true);
+			FixedSpeedScroller scroller = new FixedSpeedScroller(categoryPager.getContext());
+			mScroller.set(categoryPager, scroller);
+		} catch (NoSuchFieldException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_week_moon_rank_group);
 		weekBtn = (RadioButton)findViewById(R.id.studyhome_id_week);
 		monthBtn = (RadioButton)findViewById(R.id.studyhome_id_moon);
+		horiScrollView = (HorizontalScrollView)findViewById(R.id.horiScrollView);
+		horiScrollView.setOnTouchListener(new View.OnTouchListener() {
+			private int mLastX;
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch (event.getAction()){
+					case MotionEvent.ACTION_DOWN:
+						mLastX = (int)event.getX();
+						break;
+					case MotionEvent.ACTION_MOVE:
+						if(mLastX-event.getX() >= theSizeOfItem){
+							horiScrollView.scrollTo(0, horiScrollView.getScrollX() + theSizeOfItem);
+							horiScrollView.invalidate();
+							mLastX = (int)event.getX();
+						}
+						if(event.getX()-mLastX >= theSizeOfItem){
+							horiScrollView.scrollTo(0, horiScrollView.getScrollX() - theSizeOfItem);
+							horiScrollView.invalidate();
+							mLastX = (int)event.getX();
+						}
+						break;
+					default:
+						break;
+				}
+				return v.onThouchEvent(event);
+			}
+		});
 		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
 	    {
 	        public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -166,7 +319,13 @@ public class StudyHome extends Activity {
         			break;
         		}
 	        }
-	    });
+	    });*/ catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// CPX View
 		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
@@ -215,11 +374,13 @@ public class StudyHome extends Activity {
 
 		getInfo();
 
-		if      (category==1) { weekBtn.setText(R.string.basic_week_ranking); 	   monthBtn.setText(R.string.basic_month_ranking);  }
+		adapter.notifyDataSetChanged(); 
+		/*if      (category==1) { weekBtn.setText(R.string.basic_week_ranking); 	   monthBtn.setText(R.string.basic_month_ranking);  }
 		else if (category==2) { weekBtn.setText(R.string.middle_week_ranking);     monthBtn.setText(R.string.middle_month_ranking); }
 		else if (category==3) {	weekBtn.setText(R.string.high_week_ranking);	   monthBtn.setText(R.string.high_month_ranking);   }
 		else if (category==4) {	weekBtn.setText(R.string.toeic_week_ranking);	   monthBtn.setText(R.string.toeic_month_ranking);  }
 		else                  {	weekBtn.setText(R.string.basic_week_ranking);	   monthBtn.setText(R.string.basic_month_ranking);  }
+		*/
 		
 		
 		// Get CPX Info onResume
@@ -241,6 +402,8 @@ public class StudyHome extends Activity {
 		
 		cpxInfo.edit().clear().commit();
 		if (cpxAdType == 301) {
+
+			FlurryAgent.logEvent("CPI");
 			cpiView.setVisibility(View.VISIBLE);
 			
 			// Send CPX Log
@@ -248,7 +411,17 @@ public class StudyHome extends Activity {
 			String userId = pref.getString("mem_id", "0");
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
-			
+			if (this.checkIsAppInstalled(cpxPackageName)) {
+				installed = true;
+				// App Installed Send act=4 to server
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+			} else {
+				installed = false;
+				// Process CPI
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");	
+			}
 			// Insert into DB
 //			try {
 //			    SQLiteDatabase db = mHelper.getWritableDatabase();
@@ -266,6 +439,7 @@ public class StudyHome extends Activity {
 //			}
 
 		} else if (cpxAdType == 305) {
+			FlurryAgent.logEvent("CPS");
 			cpiView.setVisibility(View.VISIBLE);
 			
 			SharedPreferences.Editor cpxInfoEditor;
@@ -369,6 +543,8 @@ public class StudyHome extends Activity {
 		pref = getSharedPreferences("rgInfo",0);
 		stdInfo = getSharedPreferences("studyInfo",0);
 
+		FlurryAgent.setUserId(pref.getString("mem_id", "NO"));
+		
 		category = stdInfo.getInt("currentCategory", 1);
 		period = stdInfo.getInt("currentPeriod", 1);
 		
@@ -573,6 +749,8 @@ public class StudyHome extends Activity {
 	// Sidebar Menu Callback
 	public void slideMenuBtnCB(View v) {
 		if (isOnSlide == false) {
+
+			FlurryAgent.logEvent("Slide Button Clicked (On)");
 			isOnSlide = true;
 
 			float density = getResources().getDisplayMetrics().density;
@@ -585,6 +763,8 @@ public class StudyHome extends Activity {
 			slideAni.setDuration(300);
 			slideAni.start();
 		} else {
+
+			FlurryAgent.logEvent("Slide Button Clicked (Off)");
 			isOnSlide = false;
 
 			float density = getResources().getDisplayMetrics().density;
@@ -682,10 +862,17 @@ public class StudyHome extends Activity {
 				
 				Log.i("cys c=",curVersion);
 				Log.i("cys n=",newVersion);
+				int curA, curB, curC, newA, newB, newC;
+				curA = Integer.valueOf(curVersion.substring(0, 1));
+				curB = Integer.valueOf(curVersion.substring(2, 3));
+				curC = Integer.valueOf(curVersion.substring(4, curVersion.length()));
+				newA = Integer.valueOf(newVersion.substring(0, 1));
+				newB = Integer.valueOf(newVersion.substring(2, 3));
+				newC = Integer.valueOf(newVersion.substring(4, newVersion.length()));
 
-				if(!curVersion.equals(newVersion)){
+				if(curA < newA || curB < newB || curC < newC){
 					popupText.setText(R.string.study_home_popup_version_check);
-					if(!curVersion.substring(0, 3).equals(newVersion.substring(0, 3))){
+					if(curA != newA || curB != newB){
 						majorVersionUpdate = true;
 					}
 				}
@@ -749,6 +936,7 @@ public class StudyHome extends Activity {
 	// CPI Button CB
 	public void cpxGoHome(View v)
 	{
+		FlurryAgent.logEvent("Intall Later");
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
 		SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 		cpxInfo.edit().clear().commit();
@@ -757,26 +945,19 @@ public class StudyHome extends Activity {
 	}
 	public void cpxGoReward(View v)
 	{	
-		
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
 	
 		
 		if (cpxAdType == 301) {
-			if (this.checkIsAppInstalled(cpxPackageName)) {
-				// App Installed Send act=4 to server
-				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
-				
+			if (installed) {
+				// App Installed 
 				// TODO: Popup notification
 				cpxPopupText.setText(R.string.cpx_popup_text);
 				cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				cpxPopupWindow.showAsDropDown(rankingList);
 			} else {
 				// Process CPI
-				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
-				
 				try {
 				    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id="+cpxPackageName)));
 				} catch (android.content.ActivityNotFoundException anfe) {
@@ -884,7 +1065,9 @@ public class StudyHome extends Activity {
 	public void closePopup(View v)
 	{
 		if(majorVersionUpdate){
-			moveTaskToBack(true);
+			Intent market = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.todpop.saltyenglish"));
+		    startActivity(market);
+			//moveTaskToBack(true);
 			finish();
 		}
 		else {
@@ -920,5 +1103,105 @@ public class StudyHome extends Activity {
 	{
 		super.onDestroy();
 		mHelper.close();
+	}
+	
+	/**
+     * PagerAdapter 
+     */
+	public class ImageAdapter extends PagerAdapter {
+	    Context context;
+	 
+	    private int[] basicImages = new int[] {
+	        R.drawable.home_text_subtitle_basicweek_white,
+	        R.drawable.home_text_subtitle_basicmonth_white
+	    };
+	    private int[] middleImages = new int[] {
+		    R.drawable.home_text_subtitle_middleweek_white,
+		    R.drawable.home_text_subtitle_middlemonth_white
+		};
+	    private int[] highImages = new int[] {
+		    R.drawable.home_text_subtitle_highweek_white,
+		    R.drawable.home_text_subtitle_highmonth_white
+		};
+	    private int[] toiecImages = new int[] {
+		    R.drawable.home_text_subtitle_toeicweek_white,
+		    R.drawable.home_text_subtitle_toeicmonth_white
+		};
+	 
+	    public ImageAdapter(Context context){
+	        this.context=context;
+	    }
+	    
+	    @Override
+	    public int getCount() {
+            return Integer.MAX_VALUE;
+	    }
+	      
+	    @Override
+	        public boolean isViewFromObject(View view, Object object) {
+	        return view == ((ImageView) object);
+	    }
+	      
+	    @Override
+	    public Object instantiateItem(View container, int position) {
+	        ImageView imageView = new ImageView(container.getContext());
+	        imageView.setScaleType(ImageView.ScaleType.CENTER);
+	        switch(category){
+	        	case 1:
+	        		imageView.setImageResource(basicImages[position%2]);
+	        		break;
+	        	case 2:
+	        		imageView.setImageResource(middleImages[position%2]);
+	        		break;
+	        	case 3:
+	        		imageView.setImageResource(highImages[position%2]);
+	        		break;
+	        	case 4:
+	        		imageView.setImageResource(toiecImages[position%2]);
+	        		break;
+	        	default:
+	        		break;
+	        }	
+	        ((ViewPager) container).addView(imageView, 0);
+	 
+	        return imageView;
+	    }
+	      
+	    @Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        ((ViewPager) container).removeView((ImageView) object);
+	    }
+	    public int getItemPosition(Object object){
+	        return POSITION_NONE;
+	   }
+	}
+	public class FixedSpeedScroller extends Scroller {
+
+	    private int mDuration = 1000;
+
+	    public FixedSpeedScroller(Context context) {
+	        super(context);
+	    }
+
+	    public FixedSpeedScroller(Context context, Interpolator interpolator) {
+	        super(context, interpolator);
+	    }
+
+	    public FixedSpeedScroller(Context context, Interpolator interpolator, boolean flywheel) {
+	        super(context, interpolator, flywheel);
+	    }
+
+
+	    @Override
+	    public void startScroll(int startX, int startY, int dx, int dy, int duration) {
+	        // Ignore received duration, use fixed one instead
+	        super.startScroll(startX, startY, dx, dy, mDuration);
+	    }
+
+	    @Override
+	    public void startScroll(int startX, int startY, int dx, int dy) {
+	        // Ignore received duration, use fixed one instead
+	        super.startScroll(startX, startY, dx, dy, mDuration);
+	    }
 	}
 }
