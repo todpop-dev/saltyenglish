@@ -114,6 +114,7 @@ public class StudyBegin extends FragmentActivity {
  	
  	// CPD image view
  	static ImageView cpdView;
+ 	static Button cpdCoupon;
  	 	
  	
  	static ArrayList<View> rootViewArr = new ArrayList<View>();
@@ -393,8 +394,12 @@ public class StudyBegin extends FragmentActivity {
 			} else {
 				rootView = inflater.inflate(R.layout.fragment_study_begin_finish, container, false);
 				cpdView = (ImageView)rootView.findViewById(R.id.studyfinish_id_pop);
+				cpdCoupon = (Button)rootView.findViewById(R.id.studyfinish_id_coupon);
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
+				if(adType != 102){
+					cpdCoupon.setVisibility(View.INVISIBLE);
+				}
 				
 				if (cpdFrontImage == null || cpdBackImage == null) {
 					cpdView.setVisibility(View.INVISIBLE);
@@ -830,7 +835,7 @@ public class StudyBegin extends FragmentActivity {
 			}
 		}
 		
-		private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
 			
 			String imgTag = null;
 			public DownloadImageTask (String imgTag) 

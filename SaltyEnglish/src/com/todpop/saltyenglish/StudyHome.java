@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.PopupWindow;
@@ -81,6 +82,7 @@ public class StudyHome extends Activity {
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
+	//LinearLayout relative;
 	RelativeLayout relative;
 	TextView popupText;
 	
@@ -180,7 +182,7 @@ public class StudyHome extends Activity {
 		
 		
 		// CPX Popup view
-		cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);;
+		//cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);
 		cpxPopupView = View.inflate(this, R.layout.popup_view, null);
 		cpxPopupWindow = new PopupWindow(cpxPopupView,(int)(300*density),(int)(100*density),true);
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
@@ -280,11 +282,11 @@ public class StudyHome extends Activity {
 		} else {
 			
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
-			boolean isCpxInstalling = cpxInstallInfo.getBoolean("isCpxInstalling", false);
+			boolean goMyDownload = cpxInstallInfo.getBoolean("cpxGoMyDownload", false);
 			
 			cpiView.setVisibility(View.GONE);			
 			
-			if (isCpxInstalling == true) {
+			if (goMyDownload == true) {
 				// Save to DB and JUMP to HomwDownload activity
 				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
 				startActivity(intent);
@@ -688,13 +690,17 @@ public class StudyHome extends Activity {
 					}
 				}
 				else if(json.getJSONObject("data").getString("ment")!=""){
-					popupText.setText(json.getJSONObject("data").getString("ment"));
+					String notice = json.getJSONObject("data").getString("ment");
+					notice = notice.replace("\\n", "\n");
+					popupText.setText(notice);
 				}
+				Log.i("STEVEN", "just before pop");
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				Log.i("STEVNE", "just before drop down");
 				popupWindow.showAsDropDown(rankingList);
 			} catch (Exception e) {
 
-				Log.i("STEVEN", "app version check something wrong");
+				Log.i("STEVEN", "app version check and notice something wrong");
 			}
 		}
 	}
@@ -785,6 +791,7 @@ public class StudyHome extends Activity {
 				cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
 				cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
 				cpxInstallInfoEditor.putBoolean("isCpxInstalling", true);
+				cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", true);
 				cpxInstallInfoEditor.commit();			
 			}
 		} else if (cpxAdType == 305) {
@@ -882,8 +889,11 @@ public class StudyHome extends Activity {
 		}
 		else {
 			popupWindow.dismiss();
+			Log.i("STEVEN", "popupWindow dismiss done");
 			cpxPopupWindow.dismiss();
+			Log.i("STEVEN", "cpxPopupWindow dismiss done");
 			cpiView.setVisibility(View.GONE);
+			Log.i("STEVEN", "setVisibility done");
 		}
 	}
 	

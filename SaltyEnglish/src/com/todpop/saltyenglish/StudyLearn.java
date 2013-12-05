@@ -288,7 +288,7 @@ public class StudyLearn extends FragmentActivity {
 				fregmentCount = 15;
 			}else if(levelCount == 61)
 			{
-				fregmentCount = 30;
+				fregmentCount = 20;
 			}
 			else if(levelCount == 121)
 			{

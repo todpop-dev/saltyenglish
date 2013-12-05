@@ -1,30 +1,42 @@
 package com.todpop.saltyenglish;
 
+import java.net.URL;
 import java.util.ArrayList;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomeMyPageSaving extends Activity {
-	
 
 	SavingListViewAdapter savingListViewAdapter;
 	ArrayList<SavingListViewItem> itemArray;
 	SavingListViewItem mSavingListItem;
 	ListView listView;
-	int count = 0;
+	//int count = 0;
 	
+	SharedPreferences rgInfo;
 	RelativeLayout listItemView;
 
 	@Override
@@ -32,18 +44,12 @@ public class HomeMyPageSaving extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_my_page_saving);
 		
+		rgInfo = getSharedPreferences("rgInfo",0);
 		
 		listView = (ListView)findViewById(R.id.home_mypage_saving_id_list_view);
-		
-		
 		itemArray = new ArrayList<SavingListViewItem>();
-		for(int i=0;i<20;i++) {
-			mSavingListItem = new SavingListViewItem("10:15","cake","eleven","3,000");
-			itemArray.add(mSavingListItem);
-		}
+		new RewardHistory().execute("http://todpop.co.kr/api/users/"+rgInfo.getString("mem_id", "NO")+"/get_reward_list.json");
 		
-		savingListViewAdapter = new SavingListViewAdapter(this,R.layout.home_my_page_purchased_list_item_view, itemArray);
-    	listView.setAdapter(savingListViewAdapter);
 	}
 	
 	class SavingListViewItem 
@@ -67,6 +73,7 @@ public class HomeMyPageSaving extends Activity {
     	LayoutInflater Inflater;
     	ArrayList<SavingListViewItem> arSrc;
     	int layout;
+    	int count = 0;
 
     	public SavingListViewAdapter(Context context,int alayout,ArrayList<SavingListViewItem> aarSrc)
     	{
@@ -117,7 +124,64 @@ public class HomeMyPageSaving extends Activity {
     		return convertView;
     	}
     }
-	
+
+	//--- reward history request class ---
+	private class RewardHistory extends AsyncTask<String, Void, JSONObject> 
+	{
+		DefaultHttpClient httpClient ;
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
+
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("REWARD HISTORY JSON ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getBoolean("status") == true) {
+					JSONArray jsonArray = json.getJSONArray("data");
+					for (int i=0;i<jsonArray.length();i++) {
+						if(jsonArray.getJSONObject(i).getInt("reward_type") < 5000){
+							JSONObject jsonObject = jsonArray.getJSONObject(i);
+							String time = jsonObject.getString("created_at");
+							time = time.substring(5, 16);
+							time = time.replace('T', ' ');
+							mSavingListItem = new SavingListViewItem(time, jsonObject.getString("title"), jsonObject.getString("sub_title"), jsonObject.getString("reward"));
+							itemArray.add(mSavingListItem);
+						}
+						
+					}		
+					savingListViewAdapter = new SavingListViewAdapter(getApplicationContext(), R.layout.home_my_page_purchased_list_item_view, itemArray);
+			    	listView.setAdapter(savingListViewAdapter);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	// on click
 	public void onClickBack(View v)
