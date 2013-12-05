@@ -51,32 +51,45 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RgLogin extends Activity {
+
+	// email
 	EditText email;
 	EditText emailPassword;
 	Button loginBtn;
-	
+
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
 	
-	// Facebook 
+	// facebook 
     private UiLifecycleHelper uiHelper;
     private String userInfo = null;
-    
+    String fbId = null;    
     String fbEmail = null;
-    String fbId = null;
-    SharedPreferences rgInfo;
+    
+	SharedPreferences rgInfo;
     SharedPreferences.Editor rgInfoEdit;
+	SharedPreferences setting;
+	SharedPreferences.Editor settingEdit;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
+	    rgInfo = getSharedPreferences("rgInfo",0);
+	    rgInfoEdit = rgInfo.edit();
+		setting = getSharedPreferences("setting", 0);
+		settingEdit = setting.edit();
+		
+		Log.d("RgLogin","1");
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_login);
 		
-		rgInfo = getSharedPreferences("rgInfo",0);
-		rgInfoEdit = rgInfo.edit();
+		Log.d("RgLogin","2");
+		
 		email = (EditText)findViewById(R.id.rglogin_id_email);
 		emailPassword = (EditText)findViewById(R.id.rglogin_id_emailpassword);
 		loginBtn = (Button)findViewById(R.id.rglogin_id_loginbtn);
@@ -97,119 +110,123 @@ public class RgLogin extends Activity {
 		fb_btn.setBackgroundResource(R.drawable.rglogin_drawable_btn_facebook);
 	}
 	
+	
+	public void emailLogin(View view)				// email login button click
+	{
+		new SignInWithEmailAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
+		
+	}
+	
 	//--- request class ---
-		private class CheckLogin extends AsyncTask<String, Void, JSONObject> 
-		{
-			
-	        @Override
-	        protected JSONObject doInBackground(String... urls) 
+	private class SignInWithEmailAPI extends AsyncTask<String, Void, JSONObject> 
+	{
+        @Override
+        protected JSONObject doInBackground(String... urls) 
+        {
+        	JSONObject json = null;
+
+        	try
 	        {
-	        	JSONObject json = null;
+	        	HttpClient client = new DefaultHttpClient();  
+	        	String postURL = urls[0];
+	        	HttpPost post = new HttpPost(postURL); 
+	        	List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-	        	try
-	        	{
-	        		HttpClient client = new DefaultHttpClient();  
-	        		String postURL = urls[0];
-	        		HttpPost post = new HttpPost(postURL); 
-	        		List<NameValuePair> params = new ArrayList<NameValuePair>();
+        		params.add(new BasicNameValuePair("email",email.getText().toString()));
+        		params.add(new BasicNameValuePair("password", returnSHA512(emailPassword.getText().toString())));
 
+        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
+        		post.setEntity(ent);
+        		HttpResponse responsePOST = client.execute(post);  
+        		HttpEntity resEntity = responsePOST.getEntity();
 
-	        		params.add(new BasicNameValuePair("email",email.getText().toString()));
-	        		params.add(new BasicNameValuePair("password", returnSHA512(emailPassword.getText().toString())));
-
-	        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
-	        		post.setEntity(ent);
-	        		HttpResponse responsePOST = client.execute(post);  
-	        		HttpEntity resEntity = responsePOST.getEntity();
-
-
-
-
-	        		if (resEntity != null)
-	        		{    
-	        			json = new JSONObject(EntityUtils.toString(resEntity)); 
-	        			Log.d("login", json.toString());				        	
-	        			return json;
-	        		}
-	        		return json;
-	        	}
-	        	catch (Exception e)
-	        	{
-				        e.printStackTrace();
-				}
+        		if (resEntity != null)
+        		{    
+        			json = new JSONObject(EntityUtils.toString(resEntity)); 
+        			Log.d("login", json.toString());				        	
+        			return json;
+        		}
+        		return json;
+        	}
+        	catch (Exception e)
+        	{
+			        e.printStackTrace();
+			}
 	        	
-	        	return json;
-	        }
+        	return json;
+        }
 	        
-	        @Override
-	        protected void onPostExecute(JSONObject result) {
-	        	try {
-	        		if (result.getBoolean("status")==true) {
-	        			SharedPreferences settings = getSharedPreferences("setting", 0);
-	        			SharedPreferences.Editor editor = settings.edit();
-	        			editor.putString("isLogin","YES");
-	        			editor.putString("loginType", "email");
-	        			//editor.putString("password", returnSHA512(emailPassword.getText().toString()));
-	        			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
-	        			rgInfoEdit.putString("nickname", result.getJSONObject("data").getJSONObject("user").getString("nickname"));
-	        			rgInfoEdit.commit();
-	        			editor.commit();
-	        			
-	        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-	        			startActivity(intent);
-	        			finish();
-	        		} else {
-	        			popupText.setText(R.string.popup_emailogin_error);
-	        			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-	        			popupWindow.showAsDropDown(loginBtn);
-	        		}
-	        	}catch (Exception e) {
-	        	}
+        @Override
+        protected void onPostExecute(JSONObject result) {
+        	try {
+        		if (result.getBoolean("status")==true) {
+        			
+        			settingEdit.putString("isLogin","YES");
+        			settingEdit.putString("loginType", "email");
+        			settingEdit.commit();
 
-	        }
-		}
+        			// email, facebook skip (not needed)
+        			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
+        			rgInfoEdit.putString("nickname", result.getJSONObject("data").getJSONObject("user").getString("nickname"));
+        			rgInfoEdit.putString("mobile", result.getJSONObject("data").getJSONObject("user").getString("mobile"));
+        			rgInfoEdit.putString("level", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
+        			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
+        			rgInfoEdit.commit();
+    			
+        			
+        			
+        			
+        			// cyscys load UserStageOpened
+        			
+        			
+        			
+	        			
+        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+        			startActivity(intent);
+        			finish();
+        		} else {
+        			popupText.setText(R.string.popup_emailogin_error);
+        			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+        			popupWindow.showAsDropDown(loginBtn);
+        		}
+        	}catch (Exception e) {
+        	}
+
+        }
+	}
 	
-	
-		public String returnSHA512(String password) throws NoSuchAlgorithmException {
-	        MessageDigest md = MessageDigest.getInstance("SHA-512");
-	        md.update(password.getBytes());
-	        byte byteData[] = md.digest();
-	        StringBuffer sb = new StringBuffer();
-	        for (int i = 0; i < byteData.length; i++) {
-	            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-	        }
+	public String returnSHA512(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.update(password.getBytes());
+        byte byteData[] = md.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
 	 
-	        StringBuffer hexString = new StringBuffer();
-	        for (int i = 0; i < byteData.length; i++) {
-	            String hex = Integer.toHexString(0xff & byteData[i]);
-	            if (hex.length() == 1) {
-	                hexString.append('0');
-	            }
-	            hexString.append(hex);
-	        }
-	      //  System.out.println("SHA512: " + hexString.toString());
-	        return hexString.toString();
-	    }
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            String hex = Integer.toHexString(0xff & byteData[i]);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+      //  System.out.println("SHA512: " + hexString.toString());
+        return hexString.toString();
+    }
+
+	// ----------------------------------------------------------------------------------------------------------------
+	
 		
 	//----button onClick----
-	public void testLN (View view)
-	{
-		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-		startActivity(intent);
-	}
-
-		
+	
 	public void onClickBack(View view)
 	{
 		
 		finish();
 	}
 	
-	public void emailLogin(View view)
-	{
-		new CheckLogin().execute("http://todpop.co.kr/api/users/sign_in.json");
-		
-	}
 	
 	public void closePopup(View v)
 	{
@@ -221,19 +238,13 @@ public class RgLogin extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.rg_login, menu);
+		//getMenuInflater().inflate(R.menu.rg_login, menu);
 		return true;
 	}
 
 	
 	// Facebook delegates
-	
-    // For Email Address
-    private interface MyGraphEmail extends GraphObject {
-        // Getter for the Email field
-        String getEmail();
-    }
-    
+					
     // Get User Info
 	private String buildUserInfoDisplay(GraphUser user) {
 	    StringBuilder userInfo = new StringBuilder("");
@@ -285,84 +296,147 @@ public class RgLogin extends Activity {
 		            	userInfo = buildUserInfoDisplay(user);
 		            	Log.d("facebook ------------------------- ", userInfo);
 		            	
-		            	// Jump to fb_nickname page
-		            	userInfo = buildUserInfoDisplay(user);
+		            	// try login to SaltyEnglish server with obtained fbEmail
+		        		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
 		            	
-		            	// Check if facebook id exist
-		        		if(rgInfo.getString("facebookEmail","NO").equals(fbEmail)) {
-		        			SharedPreferences setting = getSharedPreferences("setting", 0);
-		        			SharedPreferences.Editor editor = setting.edit();
-		        			editor.putString("isLogin","YES");
-		        			editor.putString("loginType", "fb");
-		        			editor.commit();
-		        			
-			    			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-			    			startActivity(intent);
-			    			finish();
-		        		} else {
-		        			// Popup error message
-		        			popupText.setText(R.string.popup_facebooklogin_error);
-		        			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		        			popupWindow.showAsDropDown(loginBtn);
-		        			
-		        		    Session session = Session.getActiveSession();
-		        		    if (session != null) {
-
-		        		        if (!session.isClosed()) {
-		        		            session.closeAndClearTokenInformation();
-		        		            //clear your preferences if saved
-		        		        }
-		        		    } else {
-
-		        		        session = new Session(getApplicationContext());
-		        		        Session.setActiveSession(session);
-
-		        		        session.closeAndClearTokenInformation();
-		        		            //clear your preferences if saved
-
-		        		    }
-		        		}
 		            }
 		        }
 		    }).executeAsync();
 		}
 	}
+			
+	
+	private class SignInWithFacebookAPI extends AsyncTask<String, Void, JSONObject> 
+	{
+        @Override
+        protected JSONObject doInBackground(String... urls) 
+        {
+        	JSONObject json = null;
 
-		
-	    @Override
-	    protected void onResume() 
-	    {
-	        super.onResume();
-	        uiHelper.onResume();
-	    }
-	    
-	    @Override
-	    public void onPause() 
-	    {
-	        super.onPause();
-	        uiHelper.onPause();
-	    }
+        	try
+	        {
+	        	HttpClient client = new DefaultHttpClient();  
+	        	String postURL = urls[0];
+	        	HttpPost post = new HttpPost(postURL); 
+	        	List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        		params.add(new BasicNameValuePair("facebook",fbEmail));
+
+        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
+        		post.setEntity(ent);
+        		HttpResponse responsePOST = client.execute(post);  
+        		HttpEntity resEntity = responsePOST.getEntity();
+
+        		if (resEntity != null)
+        		{    
+        			json = new JSONObject(EntityUtils.toString(resEntity)); 
+        			Log.d("login", json.toString());				        	
+        			return json;
+        		}
+        		return json;
+        	}
+        	catch (Exception e)
+        	{
+			        e.printStackTrace();
+			}
+	        	
+        	return json;
+        }
+	        
+        @Override
+        protected void onPostExecute(JSONObject result) {
+        	try {
+        		if (result.getBoolean("status")==true) {
+
+        			settingEdit.putString("isLogin","YES");
+        			settingEdit.putString("loginType", "fb");
+        			settingEdit.commit();
+
+        			// email, facebook skip (not needed)
+        			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
+        			rgInfoEdit.putString("nickname", result.getJSONObject("data").getJSONObject("user").getString("nickname"));
+        			rgInfoEdit.putString("mobile", result.getJSONObject("data").getJSONObject("user").getString("mobile"));
+        			rgInfoEdit.putString("level", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
+        			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
+        			rgInfoEdit.commit();
+
+        			
+        			
+        			
+        			// cyscys load UserStageOpened
+        			
+        			
+        			
+	        			
+        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+        			startActivity(intent);
+        			finish();
+        		} else {
+        			
+        			// Popup facebook login error message (not registered fb ID)
+        			popupText.setText(R.string.popup_facebooklogin_error);
+        			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+        			popupWindow.showAsDropDown(loginBtn);
+        			
+        		    Session session = Session.getActiveSession();
+        		    if (session != null) {
+
+        		        if (!session.isClosed()) {
+        		            session.closeAndClearTokenInformation();
+        		            //clear your preferences if saved
+        		        }
+        		    } else {
+
+        		        session = new Session(getApplicationContext());
+        		        Session.setActiveSession(session);
+
+        		        session.closeAndClearTokenInformation();
+        		            //clear your preferences if saved
+
+        		    }
+        			
+        		}
+        	}catch (Exception e) {
+        	}
+
+        }
+	}
 	
-	    @Override
-	    public void onDestroy() 
-	    {
-	        super.onDestroy();
-	        uiHelper.onDestroy();
-	    }
 	
-	    @Override
-	    protected void onSaveInstanceState(Bundle outState) 
-	    {
-	        super.onSaveInstanceState(outState);
-	        uiHelper.onSaveInstanceState(outState);
-	    }
+    @Override
+    protected void onResume() 
+    {
+        super.onResume();
+        uiHelper.onResume();
+    }
 	    
-	    @Override
-	    protected void onActivityResult(int requestCode, int resultCode, Intent data) 
-	    {
-	        super.onActivityResult(requestCode, resultCode, data);
-	        uiHelper.onActivityResult(requestCode, resultCode, data);
-	    }
+    @Override
+    public void onPause() 
+    {
+        super.onPause();
+        uiHelper.onPause();
+    }
+	
+    @Override
+    public void onDestroy() 
+    {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+	
+    @Override
+    protected void onSaveInstanceState(Bundle outState) 
+    {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+	    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
 }
 
 

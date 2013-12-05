@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -24,12 +25,16 @@ public class RgLoginAndRegister extends Activity {
 	//----button onClick----
 	public void showRgRegisterActivity(View view)
 	{
+		Log.d("RgLoginAndRegister","1");
+		
 		Intent intent = new Intent(getApplicationContext(), RgRegister.class);
 		startActivity(intent);
 	}
 	
 	public void showRgLoginActivity(View view)
 	{
+		Log.d("RgLoginAndRegister","2");
+		
 		Intent intent = new Intent(getApplicationContext(), RgLogin.class);
 		startActivity(intent);
 	}

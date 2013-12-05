@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -36,49 +37,38 @@ import android.widget.TextView;
 public class FbNickname extends Activity {
 
 	EditText nickName;
+	Button checkNicknameBtn;
+	
+	EditText nicknamerefre;
 
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
-		
-	EditText nicknamerefre;
-	Button checkNicknameBtn;
-	
-	String fbEmail = "";
+
 	boolean isRegisterFailed;
 	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
+	SharedPreferences setting;
+	SharedPreferences.Editor settingEdit;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fb_nickname);
-		
+
 		rgInfo = getSharedPreferences("rgInfo",0);
-		rgInfoEdit = rgInfo.edit();
+		rgInfoEdit = rgInfo.edit();;
+		setting = getSharedPreferences("setting", 0);
+		settingEdit = setting.edit();
 		
-		Bundle args = getIntent().getExtras();
-		
-		if (args != null) {
-			fbEmail = args.getString("fbEmail");
-			Log.d("fbNickname -- fb email -----", fbEmail);
-		}
-
 		nickName = (EditText)findViewById(R.id.fb_nickname_id_nickname);
-		nicknamerefre = (EditText)findViewById(R.id.fb_nickname_id_nicknamerefre);
 		checkNicknameBtn = (Button)findViewById(R.id.fb_nickname_id_check_btn);
-		if(!rgInfo.getString("nickname", "NO").equals("NO"))
-		{
-			nickName.setEnabled(false);			
-			nickName.setText(rgInfo.getString("nickname", "NO"));
-			nicknamerefre.setEnabled(false);			
-			nicknamerefre.setText(rgInfo.getString("recommend", "NO"));
-			checkNicknameBtn.setVisibility(View.GONE);
-		}
-
+		nicknamerefre = (EditText)findViewById(R.id.fb_nickname_id_nicknamerefre);
+		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.fb_nickname_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
@@ -86,32 +76,24 @@ public class FbNickname extends Activity {
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
-		
-		isRegisterFailed = false;
+		if(!rgInfo.getString("email","no").equals("no"))
+		{
+			new SignUpAPI().execute("http://todpop.co.kr/api/users/sign_up.json");
+		}
+		else
+		{
+			rgInfoEdit.putString("nickname", "no");
+			rgInfoEdit.commit();
+			
+			isRegisterFailed = false;
+		}
 
 	}
 	
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		// Facebook Logout Forcely
-		Session session = Session.getActiveSession();
-		if (session != null) {
-			if (!session.isClosed()) {
-				session.closeAndClearTokenInformation();
-				//clear your preferences if saved
-			}
-		} else {
-			session = new Session(getApplicationContext());
-			Session.setActiveSession(session);
-
-			session.closeAndClearTokenInformation();
-			//clear your preferences if saved
-		}
-	}
-
-	private class SendInfo extends AsyncTask<String, Void, JSONObject> 
+	
+	// Sign Up -------------------------------------------------------------------------------
+	
+	private class SignUpAPI extends AsyncTask<String, Void, JSONObject> 
 	{
 		@Override
 		protected JSONObject doInBackground(String... urls) 
@@ -125,17 +107,21 @@ public class FbNickname extends Activity {
 				HttpPost post = new HttpPost(postURL); 
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				
-				if(!rgInfo.getString("email", "NO").equals("NO"))
+				if(!rgInfo.getString("email","no").equals("no"))										// cross join ( email -> facebook)
 				{
-					params.add(new BasicNameValuePair("facebook", fbEmail));
-					params.add(new BasicNameValuePair("mem_no", rgInfo.getString("mem_id", "NO")));
-				}else{
-					params.add(new BasicNameValuePair("facebook", fbEmail));
-					params.add(new BasicNameValuePair("nickname", rgInfo.getString("nickname", "NO")));
-					params.add(new BasicNameValuePair("mobile", rgInfo.getString("mobile", "NO")));
-					params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", "NO")));
+					params.add(new BasicNameValuePair("facebook", rgInfo.getString("facebook", null)));
+					params.add(new BasicNameValuePair("mem_no", rgInfo.getString("mem_id", null)));
+				}else{																					// first join with facebook
+					params.add(new BasicNameValuePair("facebook", rgInfo.getString("facebook", null)));
+					params.add(new BasicNameValuePair("nickname", rgInfo.getString("nickname", null)));
+					params.add(new BasicNameValuePair("mobile", rgInfo.getString("mobile", "010test0000")));
+					
+					if(!rgInfo.getString("recommend", "no").equals("no"))
+					{
+						params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", null)));
+					}
+					
 				}
-
 
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
@@ -165,26 +151,30 @@ public class FbNickname extends Activity {
 				if(json.getBoolean("status")==true)
 				{
 					// Login OK
-					SharedPreferences settings = getSharedPreferences("setting", 0);
-					SharedPreferences.Editor edit = settings.edit();
-					edit.putString("isLogin", "YES");
-					edit.putString("loginType", "fb");
-					rgInfoEdit.putString("facebookEmail",json.getJSONObject("data").getString("facebook"));
+					settingEdit.putString("isLogin", "YES");
+					settingEdit.putString("loginType", "fb");
+					settingEdit.commit();
+					
+					rgInfoEdit.putString("facebook",json.getJSONObject("data").getString("facebook"));
 					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("mem_id"));
 					rgInfoEdit.commit();
-					edit.commit();
-					
 					
 					if(json.getJSONObject("data").getInt("level_test")==0)
 					{
 						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
 						startActivity(intent);
 					}else{
+						
+						
+						// cyscys read stage Info here
+						
+						
 						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 						startActivity(intent);
 					}
 					
 					finish();
+					
 				}else{		        
 					isRegisterFailed = true;
 					popupText.setText(R.string.rg_register_failed);
@@ -196,20 +186,32 @@ public class FbNickname extends Activity {
 			}
 		}
 	}
+	
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.fb_nickname, menu);
-		return true;
+	
+	// Click nickname_duplication_check -----------------------------------------------------------------------------
+	
+	public void checkNickName(View v)
+	{
+		Log.d("FbNickname","192");
+		//Log.d("chk=",nickName.getText().toString());
+		try {
+			new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickName.getText().toString());
+		}
+		catch (Exception e)
+		{
+			Log.d("FbNickname","197");
+			
+		}
 	}
 
 	//---check nickname
-	
-	private class CheckNickname extends AsyncTask<String, Void, JSONObject> {
+	private class CheckNicknameExistAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
+			Log.d("FbNickname","210");
+			
 			JSONObject result = null;
 			try
 			{
@@ -219,6 +221,8 @@ public class FbNickname extends Activity {
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
+				Log.d("FbNickname","221");
+				
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
@@ -231,14 +235,20 @@ public class FbNickname extends Activity {
 			{
 				e.printStackTrace();
 			}
+			
+			Log.d("FbNickname","236");
+			
 			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
+				
+				Log.d("FbNickname","243");
+				
 				if(nickName.getText().toString().length() < 3 || nickName.getText().toString().length() > 8){
-					rgInfoEdit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","no");
 					popupText.setText(R.string.popup_nickname_length);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}else if(json.getJSONObject("data").getBoolean("result")){
@@ -246,7 +256,7 @@ public class FbNickname extends Activity {
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}else{
-					rgInfoEdit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","no");
 					popupText.setText(R.string.popup_nickname_no);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}
@@ -257,9 +267,23 @@ public class FbNickname extends Activity {
 		}
 	}
 
-	//---check recommender nickname
 	
-	private class CheckRecommenderNickname extends AsyncTask<String, Void, JSONObject> {
+	// Click next stage ------------------------------------------------------------------------------------
+	
+	public void bridgeToShowLvTest(View v){
+		if(!nicknamerefre.getText().toString().isEmpty()){
+			Log.i("STEVEN----not empty", "right now nick is"+nicknamerefre.getText().toString());
+			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
+		}
+		else{
+			rgInfoEdit.putString("recommend",null);
+			rgInfoEdit.commit();
+			showLvtest();
+		}
+	}
+
+	//---check recommender nickname
+	private class CheckRecommendExistAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -295,7 +319,7 @@ public class FbNickname extends Activity {
 					Log.i("STEVEN----", nicknamerefre.getText().toString());
 				}
 				else{
-					rgInfoEdit.putString("recommend","NO");
+					rgInfoEdit.putString("recommend",null);
 					Log.i("STEVEN-----", "NO");
 				}
 				rgInfoEdit.commit();
@@ -305,51 +329,83 @@ public class FbNickname extends Activity {
 			}
 		}
 	}
-	//----button onClick----
-	public void closePopup(View v)
-	{
-		popupWindow.dismiss();
-		if (isRegisterFailed) {
-			Intent intent = new Intent(getApplicationContext(), RgRegister.class);
-			startActivity(intent);
-			finish();
-		}
-	}
-
-	public void checkNickName(View v)
-	{
-		new CheckNickname().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickName.getText().toString());
-	}
 
 	public void showLvtest()
 	{
 		boolean isOk = true;
-		if(!rgInfo.getString("nickname", "NO").equals(nickName.getText().toString()))
+		if(!rgInfo.getString("nickname","no").equals(nickName.getText().toString()))
 		{
 			isOk = false;
 			popupText.setText(R.string.popup_nickname_needcheck);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		}else if(!nicknamerefre.getText().toString().isEmpty() && !rgInfo.getString("recommend", "NO").equals(nicknamerefre.getText().toString())){
-			Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", "NO")+"rightnow is = "+nicknamerefre.getText().toString());
+		}else if(!nicknamerefre.getText().toString().isEmpty() && !rgInfo.getString("recommend","no").equals(nicknamerefre.getText().toString())){
+			Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", null)+"rightnow is = "+nicknamerefre.getText().toString());
 			isOk = false;
 			popupText.setText(R.string.popup_recom_no);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		}
 		if(isOk == true){
-			new SendInfo().execute("http://todpop.co.kr/api/users/sign_up.json");
-		}
-	}
-	
-	public void bridgeToShowLvTest(View v){
-		if(!nicknamerefre.getText().toString().isEmpty()){
-			Log.i("STEVEN----not empty", "right now nick is"+nicknamerefre.getText().toString());
-			new CheckRecommenderNickname().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
-		}
-		else{
-			rgInfoEdit.putString("recommend","NO");
-			rgInfoEdit.commit();
-			showLvtest();
+			new SignUpAPI().execute("http://todpop.co.kr/api/users/sign_up.json");
 		}
 	}
 
+	
+	// -------------------------------------------------------------------------------------
+	
+		
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		// Facebook Logout Forcely
+		Session session = Session.getActiveSession();
+		if (session != null) {
+			if (!session.isClosed()) {
+				session.closeAndClearTokenInformation();
+				//clear your preferences if saved
+			}
+		} else {
+			session = new Session(getApplicationContext());
+			Session.setActiveSession(session);
+
+			session.closeAndClearTokenInformation();
+			//clear your preferences if saved
+		}
+	}
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		//getMenuInflater().inflate(R.menu.fb_nickname, menu);
+		return true;
+	}
+
+
+	//----button onClick----
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
+//		if (isRegisterFailed) {
+//			Intent intent = new Intent(getApplicationContext(), RgRegister.class);
+//			startActivity(intent);
+//			finish();
+//		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	{
+		// TODO Auto-generated method stub
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) 
+		{
+			Intent intent = new Intent(getApplicationContext(), RgRegister.class);
+			startActivity(intent);
+
+			finish();
+		}
+		return false;
+	}
+	
+
 }
+
