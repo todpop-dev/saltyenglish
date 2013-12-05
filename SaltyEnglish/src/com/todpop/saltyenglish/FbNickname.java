@@ -53,7 +53,8 @@ public class FbNickname extends Activity {
 	SharedPreferences.Editor rgInfoEdit;
 	SharedPreferences setting;
 	SharedPreferences.Editor settingEdit;
-
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,8 @@ public class FbNickname extends Activity {
 		rgInfoEdit = rgInfo.edit();;
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
+		studyInfo = getSharedPreferences("studyInfo", 0);
+		studyInfoEdit = studyInfo.edit();
 		
 		nickName = (EditText)findViewById(R.id.fb_nickname_id_nickname);
 		checkNicknameBtn = (Button)findViewById(R.id.fb_nickname_id_check_btn);
@@ -163,14 +166,10 @@ public class FbNickname extends Activity {
 					{
 						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
 						startActivity(intent);
-					}else{
-						
-						
-						// cyscys read stage Info here
-						
-						
-						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-						startActivity(intent);
+					}
+					else
+					{
+						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
 					}
 					
 					finish();
@@ -187,6 +186,66 @@ public class FbNickname extends Activity {
 		}
 	}
 	
+	// -------------- get stage info ---------------------------------------------------------------
+
+	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			Log.d("F N","192");
+			
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				Log.d("F N","203");
+				
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			Log.d("F N","216");
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				
+				Log.d("F N","225");
+				
+				if(json.getBoolean("status")) {
+					
+					String stage_info = json.getJSONObject("data").getString("stage");
+					studyInfoEdit.putString("stageInfo",stage_info);
+					studyInfoEdit.commit();
+					
+    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+    				startActivity(intent);
+				}
+				else
+				{
+					Log.d("F N","238");
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
 
 	
 	// Click nickname_duplication_check -----------------------------------------------------------------------------

@@ -93,7 +93,7 @@ public class StudyHome extends Activity {
 	boolean majorVersionUpdate = false;
 	
 	SharedPreferences pref;
-	SharedPreferences stdInfo;
+	SharedPreferences studyInfo;
 	
 	RadioGroup weekMoonBtn;
 	RadioButton weekBtn, monthBtn;
@@ -125,6 +125,8 @@ public class StudyHome extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_home);
+		
+		studyInfo = getSharedPreferences("studyInfo",0);
 		
 		mHelper = new WordDBHelper(this);
 
@@ -190,6 +192,11 @@ public class StudyHome extends Activity {
 		//TODO 
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
+		
+		Log.d("S H ----","196");
+		Log.d("stageInfo",studyInfo.getString("stageInfo", null));
+		Log.d("S H ----","198");
+		
 	}
 	
 	
@@ -367,10 +374,9 @@ public class StudyHome extends Activity {
 	public void getInfo()
 	{
 		pref = getSharedPreferences("rgInfo",0);
-		stdInfo = getSharedPreferences("studyInfo",0);
 
-		category = stdInfo.getInt("currentCategory", 1);
-		period = stdInfo.getInt("currentPeriod", 1);
+		category = studyInfo.getInt("currentCategory", 1);
+		period = studyInfo.getInt("currentPeriod", 1);
 		
 		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
 					category+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));

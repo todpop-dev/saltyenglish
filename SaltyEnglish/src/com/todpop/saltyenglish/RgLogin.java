@@ -73,7 +73,8 @@ public class RgLogin extends Activity {
     SharedPreferences.Editor rgInfoEdit;
 	SharedPreferences setting;
 	SharedPreferences.Editor settingEdit;
-
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +83,8 @@ public class RgLogin extends Activity {
 	    rgInfoEdit = rgInfo.edit();
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
+		studyInfo = getSharedPreferences("studyInfo", 0);
+		studyInfoEdit = studyInfo.edit();
 		
 		Log.d("RgLogin","1");
 		
@@ -173,18 +176,12 @@ public class RgLogin extends Activity {
         			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
         			rgInfoEdit.commit();
     			
-        			
-        			
-        			
-        			// cyscys load UserStageOpened
-        			
-        			
-        			
-	        			
-        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-        			startActivity(intent);
+        			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));        			
+
         			finish();
-        		} else {
+        		}
+        		else
+        		{
         			popupText.setText(R.string.popup_emailogin_error);
         			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
         			popupWindow.showAsDropDown(loginBtn);
@@ -216,8 +213,68 @@ public class RgLogin extends Activity {
         return hexString.toString();
     }
 
+	// -------------- get stage info ---------------------------------------------------------------
+
+	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			Log.d("R L","222");
+			
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				Log.d("R L","233");
+				
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			Log.d("R L","246");
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				
+				Log.d("R L","255");
+				
+				if(json.getBoolean("status")) {
+					
+					String stage_info = json.getJSONObject("data").getString("stage");
+					studyInfoEdit.putString("stageInfo",stage_info);
+					studyInfoEdit.commit();
+					
+	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+	    				startActivity(intent);
+				}
+				else
+				{
+					Log.d("R L","268");
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
+
 	// ----------------------------------------------------------------------------------------------------------------
-	
 		
 	//----button onClick----
 	
@@ -360,18 +417,12 @@ public class RgLogin extends Activity {
         			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
         			rgInfoEdit.commit();
 
+        			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
         			
-        			
-        			
-        			// cyscys load UserStageOpened
-        			
-        			
-        			
-	        			
-        			Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-        			startActivity(intent);
         			finish();
-        		} else {
+        		}
+        		else
+        		{
         			
         			// Popup facebook login error message (not registered fb ID)
         			popupText.setText(R.string.popup_facebooklogin_error);

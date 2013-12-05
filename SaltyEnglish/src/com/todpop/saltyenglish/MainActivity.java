@@ -44,6 +44,8 @@ public class MainActivity extends Activity
 	SharedPreferences rgInfo;
 	SharedPreferences setting;
 	SharedPreferences.Editor settingEdit;
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 	
 	WordDBHelper mHelper;
 	
@@ -56,6 +58,9 @@ public class MainActivity extends Activity
 		rgInfo = getSharedPreferences("rgInfo",0);
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
+		studyInfo = getSharedPreferences("studyInfo", 0);
+		studyInfoEdit = studyInfo.edit();
+		
 	
 		mHelper = new WordDBHelper(this);
 
@@ -147,16 +152,10 @@ public class MainActivity extends Activity
         		if (result.getBoolean("status")==true) {
         			if (result.getJSONObject("data").getJSONObject("user").getInt("level_test")>0)
         			{
-        				
-        				// cyscys load UserStageOpened
-        				
-        				
-        				
-        				
-        				
-        				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-        				startActivity(intent);
-        			}else{
+        				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+        			}
+        			else
+        			{
         				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
         				startActivity(intent);
         			}
@@ -172,6 +171,68 @@ public class MainActivity extends Activity
         	}
         }
 	}
+	
+	// -------------- get stage info ---------------------------------------------------------------
+
+	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			Log.d("M A","183");
+			
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				Log.d("M A","194");
+				
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			Log.d("M A","207");
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				
+				Log.d("FbNickname","243");
+				
+				if(json.getBoolean("status")) {
+					
+					String stage_info = json.getJSONObject("data").getString("stage");
+					studyInfoEdit.putString("stageInfo",stage_info);
+					studyInfoEdit.commit();
+					
+    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+    				startActivity(intent);
+				}
+				else
+				{
+					Log.d("M A","224");
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
+	
 
 	// --------------------------------------------------------------------------------------------------------------
 	

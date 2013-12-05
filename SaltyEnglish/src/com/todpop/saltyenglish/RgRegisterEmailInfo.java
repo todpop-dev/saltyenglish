@@ -86,7 +86,8 @@ public class RgRegisterEmailInfo extends Activity {
 	SharedPreferences.Editor rgInfoEdit;
 	SharedPreferences setting;
 	SharedPreferences.Editor settingEdit;
-
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,8 @@ public class RgRegisterEmailInfo extends Activity {
 		rgInfoEdit = rgInfo.edit();
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
+		studyInfo = getSharedPreferences("studyInfo", 0);
+		studyInfoEdit = studyInfo.edit();
 
 		doneBtn = (Button)findViewById(R.id.rgregisteremailinfo_id_donebtn);
 		
@@ -413,18 +416,14 @@ public class RgRegisterEmailInfo extends Activity {
 					{
 						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
 						startActivity(intent);
-					}else{
-						
-						
-						// cyscys load stage info here
-						
-						
-						
-						
-						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-						startActivity(intent);
 					}
+					else
+					{
+						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+					}
+					
 					finish();
+					
 				} else {
 
 				}
@@ -436,6 +435,68 @@ public class RgRegisterEmailInfo extends Activity {
 		}
 
 	}
+	
+	// -------------- get stage info ---------------------------------------------------------------
+
+	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			Log.d("RRE","445");
+			
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				Log.d("RRE","456");
+				
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			Log.d("RRE","469");
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				
+				Log.d("RRE","478");
+				
+				if(json.getBoolean("status")) {
+					
+					String stage_info = json.getJSONObject("data").getString("stage");
+					studyInfoEdit.putString("stageInfo",stage_info);
+					studyInfoEdit.commit();
+					
+	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+	    				startActivity(intent);
+				}
+				else
+				{
+					Log.d("RRE","491");
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
+	
 
 	//----button onClick----
 
