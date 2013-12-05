@@ -30,23 +30,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RgRegisterEmail extends Activity {
+
 	//declare define UI EditText 
 	EditText email;
 	EditText emailPassword;
 	EditText emailPasswordCheck;
+	
 	EditText nickname;
-	EditText nicknameRefre;
 	Button checkNickname;
+	EditText nicknameRefre;
+	
 	Button doneBtn;
+	
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
-	//nickname value
+	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,23 +59,27 @@ public class RgRegisterEmail extends Activity {
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
+		
 		email = (EditText)findViewById(R.id.rgregisteremail_id_email);
 		emailPassword = (EditText)findViewById(R.id.rgregisteremail_id_emailpwd);
 		emailPasswordCheck = (EditText)findViewById(R.id.rgregisteremail_id_emailpwdcheck);
 		nickname = (EditText)findViewById(R.id.rgregisteremail_id_nickname);
-		nicknameRefre = (EditText)findViewById(R.id.rgregisteremail_id_nicknamerefre);
 		checkNickname = (Button)findViewById(R.id.rgregisteremail_id_checknickname);
+		nicknameRefre = (EditText)findViewById(R.id.rgregisteremail_id_nicknamerefre);
+
 		doneBtn = (Button)findViewById(R.id.rgregisteremail_id_donebtn);
 		
-		if(!rgInfo.getString("nickname", "NO").equals("NO"))
+		Log.d("nick=",rgInfo.getString("nickname","no"));
+		
+		if(!rgInfo.getString("facebook","no").equals("no"))						// cross join (facebook -> email)
 		{
 			nickname.setEnabled(false);			
-			nickname.setText(rgInfo.getString("nickname", "NO"));
+			nickname.setText(rgInfo.getString("nickname", null));
 			nicknameRefre.setEnabled(false);			
-			nicknameRefre.setText(rgInfo.getString("recommend", "NO"));
+			nicknameRefre.setText(rgInfo.getString("recommend", null));
 			checkNickname.setVisibility(View.GONE);
 			
-			if(rgInfo.getString("password", "NO").equals("1"))
+			if(rgInfo.getString("password", "0").equals("1"))
 			{
 				emailPassword.setEnabled(false);
 				emailPasswordCheck.setEnabled(false);
@@ -79,6 +88,12 @@ public class RgRegisterEmail extends Activity {
 			}
 			
 		}
+		else																		// first join with email
+		{
+			rgInfoEdit.putString("nickname", "no");
+		}
+		
+		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.rgregisteremail_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
@@ -86,27 +101,18 @@ public class RgRegisterEmail extends Activity {
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 	}
-	
-	//---email check format---
-	
-	public static boolean isEmailValid(String email) {
-	    boolean isValid = false;
+		
 
-	    //String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-	    String expression = "^([0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$";
-	    CharSequence inputStr = email;
 
-	    Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-	    Matcher matcher = pattern.matcher(inputStr);
-	    if (matcher.matches()) {
-	        isValid = true;
-	    }
-	    return isValid;
+	// Click Nickname_Duplication_Check ------------------------------------------------------------------------
+	
+	public void checkDuplicatedNickname(View view)
+	{
+		Log.i("STEVEN----dupicated nickname", "right now nick is"+nickname.getText());
+		new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickname.getText().toString());
 	}
-	
-	//---check nickname
-	
-	private class CheckNickname extends AsyncTask<String, Void, JSONObject> {
+
+	private class CheckNicknameExistAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -138,7 +144,7 @@ public class RgRegisterEmail extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if(nickname.getText().toString().length()<3||nickname.getText().toString().length()>8){
-					rgInfoEdit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","no");
 					popupText.setText(R.string.popup_nickname_length);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
@@ -148,7 +154,7 @@ public class RgRegisterEmail extends Activity {
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}else{
-					rgInfoEdit.putString("nickname","NO");
+					rgInfoEdit.putString("nickname","no");
 					popupText.setText(R.string.popup_nickname_no);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
@@ -160,9 +166,24 @@ public class RgRegisterEmail extends Activity {
 		}
 	}
 
-	//---check recommender nickname
+	// Click Nest_Stage ----------------------------------------------------------------------------------------------------
 	
-	private class CheckRecommenderNickname extends AsyncTask<String, Void, JSONObject> {
+	public void bridgeToEmailInfoActivity(View view)
+	{
+		if(!nicknameRefre.getText().toString().isEmpty()){
+			Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
+			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
+		}
+		else{
+			rgInfoEdit.putString("recommend",null);
+			rgInfoEdit.commit();
+			showRgRegisterEmailInfoActivity();
+		}
+		
+	}
+
+	//---check recommender nickname
+	private class CheckRecommendExistAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -198,7 +219,7 @@ public class RgRegisterEmail extends Activity {
 					Log.i("STEVEN----", nicknameRefre.getText().toString());
 				}
 				else{
-					rgInfoEdit.putString("recommend","NO");
+					rgInfoEdit.putString("recommend",null);
 					Log.i("STEVEN-----", "NO");
 				}
 				rgInfoEdit.commit();
@@ -208,78 +229,9 @@ public class RgRegisterEmail extends Activity {
 			}
 		}
 	}
-	//---check email
-	
-		private class CheckEmail extends AsyncTask<String, Void, JSONObject> {
-			@Override
-			protected JSONObject doInBackground(String... urls) 
-			{
-				JSONObject result = null;
-				try
-				{
-					DefaultHttpClient httpClient = new DefaultHttpClient();
-					String getURL = urls[0];
-					HttpGet httpGet = new HttpGet(getURL);
-					HttpResponse httpResponse = httpClient.execute(httpGet);
-					HttpEntity resEntity = httpResponse.getEntity();
 
-					if (resEntity != null)
-					{    
-						result = new JSONObject(EntityUtils.toString(resEntity)); 
-						Log.d("email", result.getString("result"));				        	
-						return result;
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				return result;
-			}
-
-			@Override
-			protected void onPostExecute(JSONObject json) {
-				try {
-					if(json.getJSONObject("data").getBoolean("result"))
-					{
-						rgInfoEdit.putString("email", email.getText().toString());
-						rgInfoEdit.putString("tempPassword", returnSHA512(emailPassword.getText().toString()));
-						
-						Intent intent = new Intent(getApplicationContext(), RgRegisterEmailInfo.class);
-						startActivity(intent);
-					}else{
-						rgInfoEdit.putString("email","NO");
-						rgInfoEdit.putString("tempPassword", "NO");
-						
-						popupText.setText(R.string.popup_send_info_error);
-						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						popupWindow.showAsDropDown(doneBtn);
-
-					}
-					rgInfoEdit.commit();
-				} catch (Exception e) {
-
-				}
-			}
-		}
+	// -------------------------------------------------------------------------
 	
-	//----button onClick----
-	public void closePopup(View v)
-	{
-		popupWindow.dismiss();
-	}
-	
-	public void onClickBack(View view)
-	{
-		finish();
-	}
-	
-	public void checkDuplicatedNickname(View view)
-	{
-		Log.i("STEVEN----dupicated nickname", "right now nick is"+nickname.getText());
-		new CheckNickname().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickname.getText().toString());
-	}
-		
 	public void showRgRegisterEmailInfoActivity(){
 		boolean isOk = true;
 
@@ -306,14 +258,14 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(doneBtn);
 		}
-		else if(!rgInfo.getString("nickname", "NO").equals(nickname.getText().toString()))
+		else if(!rgInfo.getString("nickname","no").equals(nickname.getText().toString()))
 		{
 			isOk = false;
 			popupText.setText(R.string.popup_nickname_needcheck);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(doneBtn);
 		}
-		else if(!nicknameRefre.getText().toString().isEmpty() && !rgInfo.getString("recommend", "NO").equals(nicknameRefre.getText().toString())){
+		else if(!nicknameRefre.getText().toString().isEmpty() && !rgInfo.getString("recommend","no").equals(nicknameRefre.getText().toString())){
 				Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", "NO")+"rightnow is = "+nicknameRefre.getText().toString());
 				isOk = false;
 				popupText.setText(R.string.popup_recom_no);
@@ -322,28 +274,99 @@ public class RgRegisterEmail extends Activity {
 		}
 		
 		if (isOk == true) {
-			new CheckEmail().execute("http://todpop.co.kr/api/users/check_email_exist.json?email="+email.getText().toString());
+			new CheckEmailExistAPI().execute("http://todpop.co.kr/api/users/check_email_exist.json?email="+email.getText().toString());
 		}
-	}
-	public void bridgeToEmailInfoActivity(View view)
-	{
-		if(!nicknameRefre.getText().toString().isEmpty()){
-			Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
-			new CheckRecommenderNickname().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
-		}
-		else{
-			rgInfoEdit.putString("recommend","NO");
-			rgInfoEdit.commit();
-			showRgRegisterEmailInfoActivity();
-		}
-		
 	}
 	
+	//---email check format---
+	public static boolean isEmailValid(String email) {
+	    boolean isValid = false;
+
+	    //String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	    String expression = "^([0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$";
+	    CharSequence inputStr = email;
+
+	    Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+	    Matcher matcher = pattern.matcher(inputStr);
+	    if (matcher.matches()) {
+	        isValid = true;
+	    }
+	    return isValid;
+	}
+	
+	//---check email
+	private class CheckEmailExistAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("email", result.getString("result"));				        	
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getJSONObject("data").getBoolean("result"))
+				{
+					rgInfoEdit.putString("email", email.getText().toString());
+					rgInfoEdit.putString("tempPassword", returnSHA512(emailPassword.getText().toString()));
+					
+					Intent intent = new Intent(getApplicationContext(), RgRegisterEmailInfo.class);
+					startActivity(intent);
+				}else{
+					rgInfoEdit.putString("email",null);
+					rgInfoEdit.putString("tempPassword", null);
+					
+					popupText.setText(R.string.popup_send_info_error);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					popupWindow.showAsDropDown(doneBtn);
+
+				}
+				rgInfoEdit.commit();
+			} catch (Exception e) {
+
+			}
+		}
+	}
+	
+	// ---------------------------------------------------------------------------------------------------------------------
+	
+	
+	//----button onClick----
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
+	}
+	
+	public void onClickBack(View view)
+	{
+		finish();
+	}
+		
 		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.rg_register_email, menu);
+		//getMenuInflater().inflate(R.menu.rg_register_email, menu);
 		return true;
 	}
 

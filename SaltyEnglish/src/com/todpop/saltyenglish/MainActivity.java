@@ -1,13 +1,22 @@
 package com.todpop.saltyenglish;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import com.flurry.android.FlurryAgent;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import android.app.Activity;
@@ -21,6 +30,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,20 +40,13 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity 
 {
-	//declare define popup view
-	PopupWindow popupWindow;
-	View popupview;
-	RelativeLayout relative;
-	TextView popupText;
 	AnimationDrawable mainLoading;
-	String mobile = "";
-
 	
 	SharedPreferences rgInfo;
-	SharedPreferences.Editor rgInfoEdit;
-	
-	SharedPreferences settings;
-	SharedPreferences.Editor settingsEditor;
+	SharedPreferences setting;
+	SharedPreferences.Editor settingEdit;
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 	
 	WordDBHelper mHelper;
 
@@ -52,21 +55,16 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		settings = getSharedPreferences("setting", 0);
-		settingsEditor = settings.edit();
-		
+
 		rgInfo = getSharedPreferences("rgInfo",0);
-		rgInfoEdit = rgInfo.edit();
+		setting = getSharedPreferences("setting", 0);
+		settingEdit = setting.edit();
+		studyInfo = getSharedPreferences("studyInfo", 0);
+		studyInfoEdit = studyInfo.edit();
+		
 	
 		mHelper = new WordDBHelper(this);
-		
-		/*//popupview
-		relative = (RelativeLayout)findViewById(R.id.main_activity_id_main);
-		popupview = View.inflate(this, R.layout.popup_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(200*density),true);
-		popupText = (TextView)popupview.findViewById(R.id.http_popup_id_text);*/
+
 
 		//loading animation
 		ImageView rocketImage = (ImageView) findViewById(R.id.main_id_loading);
@@ -74,27 +72,22 @@ public class MainActivity extends Activity
 		mainLoading = (AnimationDrawable) rocketImage.getBackground();
 		mainLoading.start();
 
-		//get phone number
-		try {
-			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
-			mobile =phoneMgr.getLine1Number().toString();
-			mobile = mobile.replace("+82", "0");
-		} catch(Exception e) {
-			mobile = "01000001002";
-		}
-
-		//SharedPreferences settings = getSharedPreferences("setting", 0);
-		if(settings.getString("check","NO").equals("YES"))
+		if(setting.getString("check","NO").equals("YES"))												// want to quit
 		{
-			
-			settingsEditor.putString("check","NO");
-			settingsEditor.commit();
+			settingEdit.putString("check","NO");
+			settingEdit.commit();
 
 			finish();
 		} else {
-			Log.d("Phone No............. ", mobile);
-
-			new RgInfo().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
+			Log.d("[Register-1]","New service started");
+			
+			if(setting.getString("isLogin","NO").equals("YES")) {										// already logged in
+				// update user info (only level)
+				new SignInAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
+			} else {																					// not logged in yet
+				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
+				startActivity(intent);
+			}
 		}
 
 		
@@ -115,181 +108,135 @@ public class MainActivity extends Activity
 		}
 	}
 
-	//--- request class ---
-	private class CheckLogin extends AsyncTask<String, Void, JSONObject> 
+	
+	private class SignInAPI extends AsyncTask<String, Void, JSONObject> 
 	{
-		DefaultHttpClient httpClient ;
+        @Override
+        protected JSONObject doInBackground(String... urls) 
+        {
+        	JSONObject json = null;
+
+        	try
+        	{
+        		HttpClient client = new DefaultHttpClient();  
+        		String postURL = urls[0];
+        		HttpPost post = new HttpPost(postURL); 
+        		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        		String user_id = rgInfo.getString("mem_id", "");
+        		params.add(new BasicNameValuePair("user_id", user_id));
+
+        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+        		post.setEntity(ent);
+        		HttpResponse responsePOST = client.execute(post);  
+        		HttpEntity resEntity = responsePOST.getEntity();
+
+        		if (resEntity != null)
+        		{    
+        			json = new JSONObject(EntityUtils.toString(resEntity)); 
+        			Log.d("[Register-1] user info check", json.toString());				        	
+        			return json;
+        		}
+        		return json;
+        	}
+        	catch (Exception e)
+        	{
+			        e.printStackTrace();
+			}
+        	
+        	return json;
+        }
+        
+        @Override
+        protected void onPostExecute(JSONObject result) {
+        	try {
+        		if (result.getBoolean("status")==true) {
+        			if (result.getJSONObject("data").getJSONObject("user").getInt("level_test")>0)
+        			{
+        				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+        			}
+        			else
+        			{
+        				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
+        				startActivity(intent);
+        			}
+        		} else {
+        			// something wrong (ex: user deleted) = logout
+        			settingEdit = setting.edit();
+        			settingEdit.putString("isLogin","NO");
+        			settingEdit.commit();
+        			
+        			finish();
+        		}
+        	}catch (Exception e) {
+        	}
+        }
+	}
+	
+	// -------------- get stage info ---------------------------------------------------------------
+
+	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
+			Log.d("M A","183");
+			
 			JSONObject result = null;
 			try
 			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				Log.d("M A","194");
 				
-				int timeoutConnection = 3000; 
-				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 3000; 
-				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
-
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
-
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					return result;
 				}
-				return result;
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-			finally 
-			{     
-				httpClient.getConnectionManager().shutdown();     
-			} 
+			
+			Log.d("M A","207");
+			
 			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
-//			if(json == null) {
-//				popupText.setText(R.string.rg_register_network_error);
-//				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-//			}
-
 			try {
-				if(json.getBoolean("status")==false) {
-					// Setup emailCheck and fbCheck to NO and Jump to Register & Login Activity
-					rgInfoEdit.putString("email", "NO");
-					rgInfoEdit.putString("facebookEmail", "NO");
-					rgInfoEdit.putString("mobile", mobile);
-					rgInfoEdit.putString("level", "NO");
-					rgInfoEdit.commit();
+				
+				Log.d("FbNickname","243");
+				
+				if(json.getBoolean("status")) {
 					
-					Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
-					startActivity(intent);
-				} else {	
+					String stage_info = json.getJSONObject("data").getString("stage");
+					studyInfoEdit.putString("stageInfo",stage_info);
+					studyInfoEdit.commit();
 					
-					rgInfoEdit.putString("mobile",json.getJSONObject("data").getString("mobile"));
-					rgInfoEdit.putString("level", json.getJSONObject("data").getString("level_test"));
-					if(settings.getString("isLogin","NO").equals("YES")) {
-						if(json.getJSONObject("data").getInt("level_test")>0)
-						{
-							Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-							startActivity(intent);
-							finish();
-						}else{
-							Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
-							startActivity(intent);
-						}
-					} else {
-						if(json.getJSONObject("data").getString("email")=="null") {
-							rgInfoEdit.putString("email","NO");
-						} else {
-							rgInfoEdit.putString("email",json.getJSONObject("data").getString("email"));
-						}
-						if(json.getJSONObject("data").getString("facebook")=="null") {
-							rgInfoEdit.putString("facebookEmail", "NO");
-						} else {
-							rgInfoEdit.putString("facebookEmail",json.getJSONObject("data").getString("facebook"));
-						}
-
-						Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
-						startActivity(intent);
-					}
+    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+    				startActivity(intent);
 				}
-				rgInfoEdit.commit();
-				Log.d("return info",rgInfo.getString("email", "--")+"  "
-						+rgInfo.getString("facebookEmail", "--")+"  "
-						+rgInfo.getString("mobile", "--")+"  "
-						+rgInfo.getString("level", "--")+"  "
-						+rgInfo.getString("nickname", "--")+"  "
-						+rgInfo.getString("recommend", "--")+"  "
-						+rgInfo.getString("mem_id", "-- ")+"  "
-						+rgInfo.getString("password", "--"));
-				mainLoading.stop();
-
+				else
+				{
+					Log.d("M A","224");
+				}
+				
 			} catch (Exception e) {
 
 			}
 		}
 	}
 	
-	private class RgInfo extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try
-			{
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
 
-
-				if (resEntity != null)
-				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
-				}
-				return result;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			
-			try {
-				if(json.getBoolean("status")==true)
-				{
-					rgInfoEdit.putString("nickname", json.getJSONObject("data").getString("nickname"));
-					rgInfoEdit.putString("password", json.getJSONObject("data").getString("is_set_password"));
-					if(json.getJSONObject("data").getString("recommend").equals(""))
-					{
-						rgInfoEdit.putString("recommend", "NO");
-					}else{
-						rgInfoEdit.putString("recommend", json.getJSONObject("data").getString("recommend"));
-					}
-					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("mem_id"));
-				}else{
-					rgInfoEdit.putString("nickname", "NO");
-					rgInfoEdit.putString("recommend", "NO");
-					rgInfoEdit.putString("mem_id", "NO");
-					rgInfoEdit.putString("password", "NO");
-				}
-				rgInfoEdit.commit();
-				
-				new CheckLogin().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
-			} catch (Exception e) {
-
-			}
-		}
-	}
-
-
-	/*//onClick
-	public void closePopup(View v)
-	{
-		popupWindow.dismiss();
-		new CheckLogin().execute("http://todpop.co.kr/api/users/resign_up_info.json?mobile="+mobile);
-	}*/
+	// --------------------------------------------------------------------------------------------------------------
+	
 
 	//---disable back btn---
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

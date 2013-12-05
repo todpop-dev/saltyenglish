@@ -13,10 +13,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,17 +36,28 @@ import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphObject;
+import com.facebook.model.GraphUser;
+
+
+
+
 public class RgRegister extends Activity {
 	
     private UiLifecycleHelper uiHelper;
     private String userInfo = null;
-    
-    String fbEmail = null;
+
     String fbId = null;
-    
-    Button emailBtn;
-    Button fbCheckPointBtn;
+    String fbEmail = null;
+
     ImageView rgNotice;
+    Button fbCheckPointBtn;
+    Button emailBtn;
     CheckBox rgCheckbox;
     
 	PopupWindow popupWindow;
@@ -53,18 +66,27 @@ public class RgRegister extends Activity {
 	TextView popupText;
 	LoginButton fb_btn;
 	
+	String mobile;
+	
 	SharedPreferences rgInfo;
+	SharedPreferences.Editor rgInfoEdit;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_register);
 		
-		rgInfo = getSharedPreferences("rgInfo",0);
-		emailBtn = (Button)findViewById(R.id.register_17_email_btn);
+		Log.d("RgRegister","1");
+		
+		rgInfo = getSharedPreferences("rgInfo", 0);
+		rgInfoEdit = rgInfo.edit();
+
+		rgNotice = (ImageView)findViewById(R.id.register_17_email_notice);
 		fbCheckPointBtn = (Button)findViewById(R.id.register_id_facebook_btn_checkPoint);
 		fbCheckPointBtn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
 		fb_btn = (LoginButton)findViewById(R.id.register_id_facebook_btn);
-		rgNotice = (ImageView)findViewById(R.id.register_17_email_notice);
+		emailBtn = (Button)findViewById(R.id.register_17_email_btn);
 		rgCheckbox = (CheckBox)findViewById(R.id.rg_register_id_checkbox);
 		
 		//popupview
@@ -74,57 +96,176 @@ public class RgRegister extends Activity {
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(110*density),true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
-		if(!rgInfo.getString("facebookEmail","NO").equals("NO"))
-		{
-			fbCheckPointBtn.setEnabled(false);
-		}else{
-			fbCheckPointBtn.setEnabled(true);
-		}
-		if(!rgInfo.getString("email","NO").equals("NO"))
-		{
-			emailBtn.setEnabled(false);
-		}else{
-			emailBtn.setEnabled(true);
-		}
 		
-		if(rgInfo.getString("facebookEmail","NO").equals("NO")&&rgInfo.getString("email","NO").equals("NO"))
-		{
-			rgNotice.setImageResource(R.drawable.register_19_text_info3);
-		}
-		
-		else if(!rgInfo.getString("facebookEmail","NO").equals("NO")&&rgInfo.getString("email","NO").equals("NO"))
-		{
-			rgNotice.setImageResource(R.drawable.register_19_text_info2);
-		}
-		else if(rgInfo.getString("facebookEmail","NO").equals("NO")&&!rgInfo.getString("email","NO").equals("NO"))
-		{
-			rgNotice.setImageResource(R.drawable.register_19_text_info4);
-		}else if(!rgInfo.getString("facebookEmail","NO").equals("NO")&&!rgInfo.getString("email","NO").equals("NO"))
-		{
-			rgNotice.setImageResource(R.drawable.register_19_text_info1);
+		//get phone number
+		try {
+			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+			mobile =phoneMgr.getLine1Number().toString();
+			mobile = mobile.replace("+82", "0");
+		} catch(Exception e) {
+			mobile = "010test0000";
 		}
 		
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
+
+		new CheckMobileExist().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
 		
-		// Facebook Login Button
-		fb_btn.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "email"));
-		//fb_btn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
-//	       try {
-//	            PackageInfo info = getPackageManager().getPackageInfo(
-//	                    "com.todpop.saltyenglish", 
-//	                    PackageManager.GET_SIGNATURES);
-//	            for (Signature signature : info.signatures) {
-//	                MessageDigest md = MessageDigest.getInstance("SHA");
-//	                md.update(signature.toByteArray());
-//	                Log.d("KeyHash: ******* ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//	                }
-//	        } catch (NameNotFoundException e) {
-//
-//	        } catch (NoSuchAlgorithmException e) {
-//
-//	        }
+		
 	}
+	
+	
+	//--- request class ---
+	private class CheckMobileExist extends AsyncTask<String, Void, JSONObject> 
+	{
+		DefaultHttpClient httpClient ;
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				
+				int timeoutConnection = 3000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 3000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally 
+			{     
+				httpClient.getConnectionManager().shutdown();     
+			} 
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+
+			try {
+				if(json.getBoolean("status")==false) {
+
+					rgInfoEdit.putString("email",null);
+					rgInfoEdit.putString("facebook",null);
+					rgInfoEdit.putString("mobile",mobile);
+					rgInfoEdit.putString("level", "0");
+					
+					rgInfoEdit.putString("mem_id", null);
+					rgInfoEdit.putString("nickname", null);
+					rgInfoEdit.putString("recommend", null);
+					rgInfoEdit.putString("password", "0");
+					
+					rgInfoEdit.commit();
+
+				} else {	
+					
+					rgInfoEdit.putString("email",json.getJSONObject("data").getString("email"));
+					rgInfoEdit.putString("facebook",json.getJSONObject("data").getString("facebook"));
+					rgInfoEdit.putString("mobile",json.getJSONObject("data").getString("mobile"));
+					rgInfoEdit.putString("level", json.getJSONObject("data").getString("level_test"));
+					
+					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("id"));
+					rgInfoEdit.putString("nickname", json.getJSONObject("data").getString("nickname"));
+					rgInfoEdit.putString("recommend", json.getJSONObject("data").getString("recommend"));
+					rgInfoEdit.putString("password", json.getJSONObject("data").getString("is_set_facebook_password"));
+					
+					if(json.getJSONObject("data").getString("email").equals("null")) {rgInfoEdit.putString("email",null);}
+					if(json.getJSONObject("data").getString("facebook").equals("null")) {rgInfoEdit.putString("facebook",null);}
+										
+					rgInfoEdit.commit();
+
+				}
+
+				Log.d("return info",rgInfo.getString("email", "--")+"  "
+						+rgInfo.getString("facebook", "--")+"  "
+						+rgInfo.getString("mobile", "--")+"  "
+						+rgInfo.getString("level", "--")+"  "
+						+rgInfo.getString("mem_id", "--")+"  "
+						+rgInfo.getString("nickname", "--")+"  "
+						+rgInfo.getString("recommend", "-- ")+"  "
+						+rgInfo.getString("password", "--"));
+
+			} catch (Exception e) {
+
+			}
+			
+			
+			if(!rgInfo.getString("facebook","no").equals("no")) 
+			{
+				fbCheckPointBtn.setEnabled(false);
+			}else{
+				fbCheckPointBtn.setEnabled(true);
+			}
+			
+			if(!rgInfo.getString("email","no").equals("no"))
+			{
+				emailBtn.setEnabled(false);
+			}else{
+				emailBtn.setEnabled(true);
+			}
+			
+			
+			Log.d("f=",rgInfo.getString("facebook","no"));
+			Log.d("e=",rgInfo.getString("email","no"));
+			
+			if(rgInfo.getString("facebook","no").equals("no") && rgInfo.getString("email","no").equals("no"))
+			{
+				rgNotice.setImageResource(R.drawable.register_19_text_info3);
+			}
+			else if(!rgInfo.getString("facebook","no").equals("no") && rgInfo.getString("email","no").equals("no"))
+			{
+				rgNotice.setImageResource(R.drawable.register_19_text_info2);
+			}
+			else if(rgInfo.getString("facebook","no").equals("no") && !rgInfo.getString("email","no").equals("no"))
+			{
+				rgNotice.setImageResource(R.drawable.register_19_text_info4);
+			}else if(!rgInfo.getString("facebook","no").equals("no") && !rgInfo.getString("email","no").equals("no"))
+			{
+				rgNotice.setImageResource(R.drawable.register_19_text_info1);
+			}
+			
+			// Facebook Login Button
+			fb_btn.setReadPermissions(Arrays.asList("user_location", "user_birthday", "user_likes", "email"));
+			//fb_btn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
+//		       try {
+//		            PackageInfo info = getPackageManager().getPackageInfo(
+//		                    "com.todpop.saltyenglish", 
+//		                    PackageManager.GET_SIGNATURES);
+//		            for (Signature signature : info.signatures) {
+//		                MessageDigest md = MessageDigest.getInstance("SHA");
+//		                md.update(signature.toByteArray());
+//		                Log.d("KeyHash: ******* ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//		                }
+//		        } catch (NameNotFoundException e) {
+	//
+//		        } catch (NoSuchAlgorithmException e) {
+	//
+//		        }
+
+			
+		}
+	}
+
+	
+	// ------------------------------------------------------------------------------------------------------------------------------
+		
 	
 	//----button onClick----
 	public void onClickBack(View view)
@@ -178,7 +319,7 @@ public class RgRegister extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.rg_register, menu);
+		//getMenuInflater().inflate(R.menu.rg_register, menu);
 		return true;
 	}
 	
@@ -264,7 +405,7 @@ public class RgRegister extends Activity {
 		            	// Check if facebook id exist
 
 		    		    Log.i("STEVEN", "Check facebook id exist "+ fbEmail);
-		        		new CheckFacebookEmail().execute("http://todpop.co.kr/api/users/check_facebook_exist.json?facebook="+fbEmail);
+		        		new CheckFacebookExistAPI().execute("http://todpop.co.kr/api/users/check_facebook_exist.json?facebook="+fbEmail);
 		            	
 		            }
 		        }
@@ -277,7 +418,7 @@ public class RgRegister extends Activity {
 		popupWindow.dismiss();
 	}
 	
-	private class CheckFacebookEmail extends AsyncTask<String, Void, JSONObject> 
+	private class CheckFacebookExistAPI extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;
 		@Override
@@ -327,8 +468,12 @@ public class RgRegister extends Activity {
 					if (result == true) {
 
 					    Log.i("STEVEN", "change activity to FbNickname "+ fbEmail);
+					    
+						rgInfoEdit.putString("facebook", fbEmail);
+						rgInfoEdit.commit();
+					    
 						Intent intent = new Intent(getApplicationContext(), FbNickname.class);
-						intent.putExtra("fbEmail",fbEmail);
+//						intent.putExtra("fbEmail",fbEmail);
 						startActivity(intent);
 		    			finish();
 					} else {

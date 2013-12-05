@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+﻿<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,17 +13,6 @@
 
 
 
-
-	<!--  
-    <TextView 
-        android:layout_width="225.5dp"
-        android:layout_height="55.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="85.5dp"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:text="당신은 facebook으로 로그인 가능하며 E-mail로 로그인은 할수없습니다"
-        /> -->
 	
     <Button
         android:layout_width="wrap_content"
@@ -68,7 +57,7 @@
    	    android:inputType="textEmailAddress"
    	    android:textSize="15sp"
    	    android:gravity="center"
-   	    android:hint="salty-english@todpop.co.kr"
+   	    android:hint="Email 입력 ex) salty@todpop.co.kr"
    	    />
    	
    	<EditText
@@ -84,7 +73,7 @@
    	    android:background="@drawable/common_textbox_long"
    	    android:textSize="15sp"
    	    android:gravity="center"
-   	    android:hint="비밀번호 입력(영문,숫자혼합8-12자)"
+   	    android:hint="비밀번호 입력 (6글자 이상)"
    	    />
    	
    	<Button
