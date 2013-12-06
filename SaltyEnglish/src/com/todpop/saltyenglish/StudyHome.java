@@ -406,7 +406,7 @@ public class StudyHome extends Activity {
 		
 		// Download CPX Image and update UI
 		new DownloadImageTask().execute(cpxAdImageUrl);
-		
+		cpxAdType = 0;
 		cpxInfo.edit().clear().commit();
 		if (cpxAdType == 301) {
 
