@@ -339,6 +339,7 @@ public class LvTestBigin extends Activity {
         			select1.setText(result.getJSONObject("data").getString("mean"));
         			level = result.getJSONObject("data").getString("level");
         			
+	
         			select2.setText(list.get(0));
         			select3.setText(list.get(1));
         			select4.setText(list.get(2));
@@ -428,6 +429,14 @@ public class LvTestBigin extends Activity {
         				imageTestendAni.stop();
         				rgInfoEdit.putString("level", level);
         				rgInfoEdit.commit();
+        				
+        				SharedPreferences studyInfo = getSharedPreferences("studyInfo",0);
+        				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+        				
+            			String stageInfo = result.getJSONObject("data").getString("stage_info");
+            			studyInfoEdit.putString("stageInfo", stageInfo);
+            			studyInfoEdit.commit();
+
 
         				Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);
         				startActivity(intent);
