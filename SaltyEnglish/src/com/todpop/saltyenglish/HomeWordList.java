@@ -2,6 +2,8 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -588,5 +590,18 @@ public class HomeWordList extends Activity {
 		super.onDestroy();
 		mHelper.close();
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("My Word List");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

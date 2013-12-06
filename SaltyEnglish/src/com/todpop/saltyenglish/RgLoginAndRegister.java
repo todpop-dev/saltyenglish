@@ -1,6 +1,8 @@
 package com.todpop.saltyenglish;
 
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,13 +16,12 @@ import android.view.View;
 
 public class RgLoginAndRegister extends Activity {
 
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_login_and_register);
 	}
-	
 	
 	//----button onClick----
 	public void showRgRegisterActivity(View view)
@@ -91,6 +92,19 @@ public class RgLoginAndRegister extends Activity {
 		return true;
 	}
 	
-	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Login or Register");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
+import com.flurry.android.FlurryAgent;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -48,7 +49,7 @@ public class MainActivity extends Activity
 	SharedPreferences.Editor studyInfoEdit;
 	
 	WordDBHelper mHelper;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -280,5 +281,17 @@ public class MainActivity extends Activity
 		super.onDestroy();
 		mHelper.close();
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

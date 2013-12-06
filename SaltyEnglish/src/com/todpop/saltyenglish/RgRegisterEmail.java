@@ -11,6 +11,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
+
 
 import android.app.Activity;
 import android.content.Intent;
@@ -388,4 +390,17 @@ public class RgRegisterEmail extends Activity {
       //  System.out.println("SHA512: " + hexString.toString());
         return hexString.toString();
     }
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

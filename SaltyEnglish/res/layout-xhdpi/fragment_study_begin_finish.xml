@@ -3,21 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_yellowpattern" >
-    
+
     <ImageView
-       	android:id="@+id/studyfinish_id_pop"
+        android:id="@+id/studyfinish_id_pop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
-        android:scaleType="centerInside"
-       
-        />
-    
-    
-     
-     
-     <!-- Get Coupon Button -->
+        android:scaleType="centerInside" />
+
+    <!-- Get Coupon Button -->
+
     <Button
         android:id="@+id/studyfinish_id_coupon"
         android:layout_width="wrap_content"
@@ -25,24 +21,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="480.5dp"
         android:background="@drawable/studyfinish_drawable_btn_coupon"
-        
-        />
-     <!--  android:src="@drawable/study_16_btn_coupon_on
-     android:onClick="showCouponPopView" -->
-    <Button 
+        android:onClick="showCouponPopView" />
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="550.5dp"
         android:background="@drawable/studybegin_drawable_btn_gotest"
-        android:onClick="showTestActivity"/>
-    
-    
-    <ImageView 
+        android:onClick="showTestActivity" />
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="267.5dp"
         android:layout_marginTop="545.5dp"
-        android:src="@drawable/study_16_image_mananddog"/>
+        android:src="@drawable/study_16_image_mananddog" />
+
 
 </RelativeLayout>

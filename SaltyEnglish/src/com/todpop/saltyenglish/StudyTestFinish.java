@@ -1,11 +1,16 @@
 package com.todpop.saltyenglish;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import com.flurry.android.FlurryAgent;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -104,9 +109,12 @@ public class StudyTestFinish extends Activity {
 					video.setOnCompletionListener(cl);
 					video.start();
 					
-					
 					Handler mHandler = new Handler();
 					mHandler.postDelayed(mLaunchTaskMain, 8000);	// should be 5000 but timing difficulty
+					
+					Map<String, String> cpdmParams = new HashMap<String, String>();
+				    cpdmParams.put("CPDM ID", String.valueOf(ad_id));
+					FlurryAgent.logEvent("CPDM", cpdmParams, true);
 					
 				} else {		        
 				}
@@ -181,6 +189,7 @@ public class StudyTestFinish extends Activity {
 		v.setEnabled(false);
 		int view_time = (int)Math.floor(video.getCurrentPosition()/1000);
 		Log.d("cpdm view_time----",""+view_time);
+		FlurryAgent.endTimedEvent("CPDM");
 		new SetCPDMlog().execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="+ad_id+"&ad_type="+ad_type+"&user_id="+rgInfo.getString("mem_id", "0")+"&view_time="+view_time);
 //		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
 //		SharedPreferences.Editor editor = sp.edit();
@@ -218,7 +227,19 @@ public class StudyTestFinish extends Activity {
 //		}
 		
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }
 
 

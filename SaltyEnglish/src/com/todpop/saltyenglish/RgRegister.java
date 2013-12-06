@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.facebook.*;
 import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
+import com.flurry.android.FlurryAgent;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -282,6 +283,7 @@ public class RgRegister extends Activity {
 			popupWindow.showAsDropDown(rgCheckbox);
 		}
 		else{
+			FlurryAgent.logEvent("Email Register Clicked");
 			Intent intent = new Intent(getApplicationContext(), RgRegisterEmail.class);
 			startActivity(intent);
 		}
@@ -295,6 +297,7 @@ public class RgRegister extends Activity {
 			popupWindow.showAsDropDown(rgCheckbox);
 		}
 		else{
+			FlurryAgent.logEvent("Facebook Register Clicked");
 			fb_btn.performClick();
 		}
 	}
@@ -528,4 +531,18 @@ public class RgRegister extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
     }
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Register");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

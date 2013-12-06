@@ -222,5 +222,6 @@
 	<string name="cpx_popup_text">이미 설치되어 있습니다. </string>
 	<string name="check_new_stage_popup_string">오늘은 더이상 새로운 스테이지에 진입할 수 없습니다. 예전 스테이지를 복습해 주세요. </string>
 	<string name="survey_view_title">설문조사</string>
-	
+	<string name="home_download_dialog_action">실행하기</string>
+	<string name="home_download_dialog_check">적립확인</string>
 </resources>

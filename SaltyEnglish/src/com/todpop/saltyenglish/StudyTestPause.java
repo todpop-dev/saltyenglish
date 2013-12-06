@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -33,5 +35,18 @@ public class StudyTestPause extends Activity {
 		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 		startActivity(intent);
 		finish();
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

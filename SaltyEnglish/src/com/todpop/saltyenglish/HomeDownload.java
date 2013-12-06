@@ -12,11 +12,17 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
+
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -37,6 +43,11 @@ import android.widget.TextView;
 
 public class HomeDownload extends Activity {
 
+	final int CPI_SAVING_ON = 2;
+	final int CPI_SAVING_COMP = 3;
+	final int CPI_SAVING_NO = 4;
+	final int CPI_SAVING_EXHAUS = 9;
+	
 	CpiListViewAdapter cpiListViewAdapter;
 	ArrayList<CpiListViewItem> cpiArray;
 	CpiListViewItem mCpiListItem;
@@ -81,9 +92,9 @@ public class HomeDownload extends Activity {
 		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
 		cpxInstallInfoEditor.commit();
 
-		SharedPreferences pref = getSharedPreferences("setting",0);
-
-		new GetCPX().execute("http://todpop.co.kr/api/etc/" + 1 + "/show_cpx_list.json");
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "0");
+		new GetCPX().execute("http://todpop.co.kr/api/etc/" + userId + "/show_cpx_list.json");
 	}
 
 
@@ -105,15 +116,17 @@ public class HomeDownload extends Activity {
 
 	class CpiListViewItem 
 	{
-		CpiListViewItem(String aImage,String aName,String aCoin)
+		CpiListViewItem(String aImage,String aName,String aCoin, int aState)
 		{
 			image = aImage;
 			name = aName;
 			coin = aCoin;
+			state = aState;
 		}
 		String image;
 		String name;
 		String coin;
+		int state;
 	}
 
 	class CpiListViewAdapter extends BaseAdapter
@@ -158,6 +171,29 @@ public class HomeDownload extends Activity {
 
 			TextView name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
 			name2Text.setText(arSrc.get(position).coin);
+			Button getRewardBut = (Button)convertView.findViewById(R.id.homedownload_list_item_id_btn);
+			switch(arSrc.get(position).state){
+			case 2:
+				getRewardBut.setBackgroundResource(R.drawable.homedownload_drawable_btn_saving);
+				getRewardBut.setOnClickListener(new Button.OnClickListener(){
+					public void onClick(View V){
+						//TODO AlertDialog dialog = createDialogBox();
+						//dialog.show();
+					}
+				});
+				break;
+			case 3:
+				getRewardBut.setBackgroundResource(R.drawable.store_36_btn_savingcomplete);
+				break;
+			case 4:
+				getRewardBut.setBackgroundResource(R.drawable.store_36_btn_savingno);
+				break;
+			case 9:
+				getRewardBut.setBackgroundResource(R.drawable.store_36_btn_savingexhaustion);
+				break;
+			default:
+				break;	
+			}
 			
 			try {
 				// show The Image
@@ -177,8 +213,30 @@ public class HomeDownload extends Activity {
 			}
 			return convertView;
 		}
+	 
 	}
-
+	
+	private AlertDialog creatDialogBox(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		builder.setPositiveButton(R.string.home_download_dialog_action, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		})
+		.setNegativeButton(R.string.home_download_dialog_check, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		return builder.create();
+	}
 	class CouponListViewItem 
 	{
 		CouponListViewItem(int aItem,String aName)
@@ -231,6 +289,7 @@ public class HomeDownload extends Activity {
 
 			TextView name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_coupon_id_name);
 			name1Text.setText(arSrc.get(position).name);
+			
 			
 			if (couponCount%2 == 1) {
 				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
@@ -286,7 +345,8 @@ public class HomeDownload extends Activity {
 					JSONArray jsonArray = result.getJSONArray("data");
 					
 					for(int i=0;i<jsonArray.length();i++) {
-						mCpiListItem = new CpiListViewItem(jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("reward"));
+						mCpiListItem = new CpiListViewItem(jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),
+								jsonArray.getJSONObject(i).getString("reward"),jsonArray.getJSONObject(i).getInt("act"));
 						cpiArray.add(mCpiListItem);
 
 					}	
@@ -349,11 +409,11 @@ public class HomeDownload extends Activity {
 		finish();
 	}
 	
-	public void SavingCPI(View v)
+	/*public void SavingCPI(View v)
 	{
 		Button savingBtin = (Button)v;
 		savingBtin.setEnabled(false);
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -361,5 +421,18 @@ public class HomeDownload extends Activity {
 		getMenuInflater().inflate(R.menu.home_download, menu);
 		return true;
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Download Right now");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

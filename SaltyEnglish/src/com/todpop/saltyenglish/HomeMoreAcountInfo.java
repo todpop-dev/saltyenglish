@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.facebook.Session;
+import com.flurry.android.FlurryAgent;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -61,9 +62,11 @@ public class HomeMoreAcountInfo extends Activity {
 		
 		if(settings.getString("loginType", "NO").equals("email"))
 		{
+			FlurryAgent.logEvent("Account Info (Email)");
 			setContentView(R.layout.activity_home_more_acount_info_email);
 			relative = (RelativeLayout)findViewById(R.id.home_more_acount_info_id_main_email_activity);
 		}else{
+			FlurryAgent.logEvent("Account Info (Facebook)");
 			setContentView(R.layout.activity_home_more_acount_info_fb);
 			relative = (RelativeLayout)findViewById(R.id.home_more_acount_info_id_main_fb_activity);
 			setPwBtn = (Button)findViewById(R.id.home_more_accoun_setpw_btn);
@@ -222,11 +225,22 @@ public class HomeMoreAcountInfo extends Activity {
 	
 	public void setPassword(View view)
 	{
-
+		FlurryAgent.logEvent("Set Password");
 		isSetPwBtn = true;
 		popupText.setText(getString(R.string.home_more_acount_set_pwd1)+rgInfo.getString("nickname", "NO")+getString(R.string.home_more_acount_set_pwd2));
 		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-
-
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

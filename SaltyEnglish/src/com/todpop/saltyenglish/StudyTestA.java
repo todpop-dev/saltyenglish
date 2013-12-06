@@ -15,6 +15,9 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.flurry.android.FlurryAgent;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -109,7 +112,7 @@ public class StudyTestA extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_a);
-		
+		FlurryAgent.logEvent("Study Test");
 		//test word
 		enWordText = (TextView)findViewById(R.id.study_testa_id_enword);
 		
@@ -564,5 +567,18 @@ public class StudyTestA extends Activity {
 			db.execSQL("DROP TABLE IF EXISTS dic");
 			onCreate(db);
 		}
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 }

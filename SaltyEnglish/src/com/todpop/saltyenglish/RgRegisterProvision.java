@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -55,5 +57,17 @@ public class RgRegisterProvision extends Activity {
 		//getMenuInflater().inflate(R.menu.rg_register_provision, menu);
 		return true;
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }

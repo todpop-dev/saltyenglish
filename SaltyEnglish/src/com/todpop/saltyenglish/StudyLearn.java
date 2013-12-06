@@ -8,6 +8,8 @@ package com.todpop.saltyenglish;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +21,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.flurry.android.FlurryAgent;
 import com.todpop.saltyenglish.LvTestResult.MyItem;
 
 import android.os.AsyncTask;
@@ -369,6 +372,7 @@ public class StudyLearn extends FragmentActivity {
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
@@ -376,6 +380,11 @@ public class StudyLearn extends FragmentActivity {
 						try
 						{
 							if (selectedStageStatus != 'Y') {
+
+								Map<String, String> stageParams = new HashMap<String, String>();
+								stageParams.put("User Id", userId);
+								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
 								ed.putInt("currentStage", currentBtnClickStage);
 								ed.commit();
 									
@@ -477,6 +486,11 @@ public class StudyLearn extends FragmentActivity {
 						try
 						{
 							if (selectedStageStatus != 'Y') {
+
+								Map<String, String> stageParams = new HashMap<String, String>();
+								stageParams.put("User Id", userId);
+								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
 								ed.putInt("currentStage", currentBtnClickStage);
 								ed.commit();
 									
@@ -585,6 +599,11 @@ public class StudyLearn extends FragmentActivity {
 						try
 						{
 							if (selectedStageStatus != 'Y') {
+
+								Map<String, String> stageParams = new HashMap<String, String>();
+								stageParams.put("User Id", userId);
+								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
 								ed.putInt("currentStage", currentBtnClickStage);
 								ed.commit();
 								
@@ -703,6 +722,9 @@ public class StudyLearn extends FragmentActivity {
 						
 						//TODO stage to be limit remove
 						if (isPossible==true) {
+							Map<String, String> stageParams = new HashMap<String, String>();
+							stageParams.put("User Id", userId);
+							FlurryAgent.logEvent("Stage clicked (New)", stageParams);
 							Log.d("Insert Current Stage -----", Integer.toString(currentBtnStage));
 							ed.putInt("currentStage", currentBtnStage);
 							ed.commit();
@@ -794,6 +816,20 @@ public class StudyLearn extends FragmentActivity {
 		Log.d("On Restart", "---------------");
 		startActivity(new Intent(this, StudyLearn.class));
 		finish();
+	}
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Study Stage Select");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
 	}
 
 }

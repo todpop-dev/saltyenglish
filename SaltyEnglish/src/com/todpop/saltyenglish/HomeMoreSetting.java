@@ -2,6 +2,8 @@ package com.todpop.saltyenglish;
 
 import java.util.Calendar;
 
+import com.flurry.android.FlurryAgent;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -144,21 +146,25 @@ public class HomeMoreSetting extends Activity {
 	        	switch(checkedId)
         		{
         			case R.id.home_more_radiobtn_basic:
+        				FlurryAgent.logEvent("Category set basic");
         				stdInfoEdit.putInt("currentCategory", 1);
         				Log.d("!!!!!!!!!!!!!!","1111111111111111");
         			break;
         			
         			case R.id.home_more_radiobtn_middle:
+        				FlurryAgent.logEvent("Category set middle");
         				stdInfoEdit.putInt("currentCategory", 2);        				
         				Log.d("222222222222222","2222222222222");
         			break;
         			
         			case R.id.home_more_radiobtn_high:
+        				FlurryAgent.logEvent("Category set high");
         				stdInfoEdit.putInt("currentCategory", 3);
         				Log.d("222222222222222","2222222222222");
         			break;
         			
         			case R.id.home_more_radiobtn_toeic:
+        				FlurryAgent.logEvent("Category set toiec");
         				stdInfoEdit.putInt("currentCategory", 4);
         				Log.d("222222222222222","2222222222222");
         			break;
@@ -218,5 +224,18 @@ public class HomeMoreSetting extends Activity {
 	{
 		showDialog(1);
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("Setting");
+	}
+	 
+	@Override
+	protected void onStop()
+	{
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+	}
 }
