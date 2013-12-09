@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,8 +42,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -368,15 +371,46 @@ public class StudyLearn extends FragmentActivity {
 				button8.setTag((firstLevel-1)*10+8);
 				button9.setTag((firstLevel-1)*10+9);
 				button10.setTag(firstLevel*10);
+				
+				if(stageInfoFirst.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoFirst.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoFirst.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoFirst.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
 
+				if(stageInfoFirst.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoFirst.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoFirst.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoFirst.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoFirst.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoFirst.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoFirst.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoFirst.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoFirst.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoFirst.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoFirst.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoFirst.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoFirst.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoFirst.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoFirst.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoFirst.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
+				
+				
 				OnClickListener clickListener = new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
-						
+
 						try
 						{
 							if (selectedStageStatus != 'Y') {
@@ -402,11 +436,13 @@ public class StudyLearn extends FragmentActivity {
 										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
 								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} catch(Exception e)
-						{
-							e.printStackTrace();
 						}
+						catch(Exception e)
+						{
+						}
+
 					}
+
 				};
 
 				button1.setOnClickListener(clickListener);
@@ -475,6 +511,37 @@ public class StudyLearn extends FragmentActivity {
 				button9.setTag((firstLevel+1-1)*10+9);
 				button10.setTag((firstLevel+1)*10);
 				
+				if(stageInfoSecond.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoSecond.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoSecond.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoSecond.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
+
+				if(stageInfoSecond.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoSecond.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoSecond.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoSecond.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoSecond.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoSecond.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoSecond.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoSecond.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoSecond.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoSecond.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoSecond.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoSecond.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoSecond.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoSecond.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoSecond.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoSecond.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
+				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -512,8 +579,9 @@ public class StudyLearn extends FragmentActivity {
 										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
 								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
+						}
+						catch(Exception e)
+						{
 						}
 
 					}
@@ -588,6 +656,41 @@ public class StudyLearn extends FragmentActivity {
 				button9.setTag((firstLevel+2-1)*10+9);
 				button10.setTag((firstLevel+2)*10);
 				
+				if(stageInfoThird.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoThird.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoThird.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoThird.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
+
+				if(stageInfoThird.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoThird.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoThird.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoThird.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoThird.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoThird.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoThird.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoThird.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoThird.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoThird.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoThird.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoThird.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoThird.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoThird.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoThird.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoThird.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
+				
+				
+				
+
+				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -595,7 +698,7 @@ public class StudyLearn extends FragmentActivity {
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
-
+						
 						try
 						{
 							if (selectedStageStatus != 'Y') {
@@ -620,10 +723,11 @@ public class StudyLearn extends FragmentActivity {
 										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
 								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} catch(Exception e)
-						{
-							e.printStackTrace();
 						}
+						catch(Exception e)
+						{
+						}
+						
 					}
 				};
 
