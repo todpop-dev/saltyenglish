@@ -441,10 +441,12 @@ public class LvTestBigin extends Activity {
         				SharedPreferences studyInfo = getSharedPreferences("studyInfo",0);
         				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
         				
-            			String stageInfo = result.getJSONObject("data").getString("stage_info");
-            			studyInfoEdit.putString("stageInfo", stageInfo);
-            			studyInfoEdit.commit();
-
+        				if(count==21)
+        				{
+	            			String stageInfo = result.getJSONObject("data").getString("stage_info");
+	            			studyInfoEdit.putString("stageInfo", stageInfo);
+	            			studyInfoEdit.commit();
+        				}
 
         				Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);
         				startActivity(intent);
