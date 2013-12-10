@@ -243,7 +243,7 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentPeriod", 2);
     				studyInfoEdit.commit();
 
-					//rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
+					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
 					rankingList.setAdapter(rankingListAdapterMonth);
 					myRank.setText(myRankInfo.getString("monthRank", "null"));
 					myScore.setText(myRankInfo.getString("monthScore", "null"));
