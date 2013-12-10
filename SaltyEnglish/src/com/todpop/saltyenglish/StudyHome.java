@@ -271,66 +271,7 @@ public class StudyHome extends Activity {
 		} catch (NoSuchFieldException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		/*weekMoonBtn= (RadioGroup)findViewById(R.id.homestore_id_week_moon_rank_group);
-		weekBtn = (RadioButton)findViewById(R.id.studyhome_id_week);
-		monthBtn = (RadioButton)findViewById(R.id.studyhome_id_moon);
-		horiScrollView = (HorizontalScrollView)findViewById(R.id.horiScrollView);
-		horiScrollView.setOnTouchListener(new View.OnTouchListener() {
-			private int mLastX;
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				switch (event.getAction()){
-					case MotionEvent.ACTION_DOWN:
-						mLastX = (int)event.getX();
-						break;
-					case MotionEvent.ACTION_MOVE:
-						if(mLastX-event.getX() >= theSizeOfItem){
-							horiScrollView.scrollTo(0, horiScrollView.getScrollX() + theSizeOfItem);
-							horiScrollView.invalidate();
-							mLastX = (int)event.getX();
-						}
-						if(event.getX()-mLastX >= theSizeOfItem){
-							horiScrollView.scrollTo(0, horiScrollView.getScrollX() - theSizeOfItem);
-							horiScrollView.invalidate();
-							mLastX = (int)event.getX();
-						}
-						break;
-					default:
-						break;
-				}
-				return v.onThouchEvent(event);
-			}
-		});
-		weekMoonBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() 
-	    {
-	        public void onCheckedChanged(RadioGroup group, int checkedId) {
-				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
-				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
-	        	switch(checkedId)
-        		{
-        			case R.id.studyhome_id_week:
-        				period =1;
-        				stdInfoEdit.putInt("currentPeriod", 1);
-        				stdInfoEdit.commit();
-        				Log.i("TESTING", "id_week getInfo() called");
-        				getInfo();
-        			break;
-        			
-        			case R.id.studyhome_id_moon:
-        				period =2;
-        				stdInfoEdit.putInt("currentPeriod", 2);
-        				stdInfoEdit.commit();
-        				Log.i("TESTING", "id_moon getInfo() called");
-        				getInfo();
-        			break;
-        			
-        			default:
-        			break;
-        		}
-	        }
-	    });*/ catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -403,7 +344,7 @@ public class StudyHome extends Activity {
 
 		getInfo();
 		
-		
+		adapter.notifyDataSetChanged();
 		// Get CPX Info onResume
 
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -1168,36 +1109,47 @@ public class StudyHome extends Activity {
 	{
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
-			DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) 
-				{
-					switch (which) {
-					case AlertDialog.BUTTON_POSITIVE:
-						SharedPreferences settings = getSharedPreferences("setting", 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putString("check","YES");
-						editor.commit();
+			if(cpiView.isShown()){
+				FlurryAgent.logEvent("Intall Later");
+				SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+				cpxInfo.edit().clear().commit();
+				cpxSInstallInfo.edit().clear().commit();
+				cpiView.setVisibility(View.GONE);
+			}
+			else{
+				final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
+				DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) 
+					{
+						switch (which) {
+						case AlertDialog.BUTTON_POSITIVE:
+							Log.e("STEVEN", String.valueOf(cpiView.isShown()));
+							SharedPreferences settings = getSharedPreferences("setting", 0);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString("check","YES");
+							editor.commit();
 
-						Intent intent = new Intent();
-						intent.setClass(StudyHome.this, MainActivity.class);    
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
-						startActivity(intent);
-						finish();	
-						break;
-					case AlertDialog.BUTTON_NEGATIVE:
-						break;
-					default:
-						break;
+							Intent intent = new Intent();
+							intent.setClass(StudyHome.this, MainActivity.class);    
+							intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+							startActivity(intent);
+							finish();	
+							break;
+						case AlertDialog.BUTTON_NEGATIVE:
+							break;
+						default:
+							break;
+						}
 					}
-				}
-			};
+				};
 			
-			isExit.setTitle(getResources().getString(R.string.register_alert_title));
-			isExit.setMessage(getResources().getString(R.string.register_alert_text));
-			isExit.setPositiveButton("OK", listener);
-			isExit.setNegativeButton("Cancel", listener);
-			isExit.show();
+				isExit.setTitle(getResources().getString(R.string.register_alert_title));
+				isExit.setMessage(getResources().getString(R.string.register_alert_text));
+				isExit.setPositiveButton("OK", listener);
+				isExit.setNegativeButton("Cancel", listener);
+				isExit.show();
+			}
 
 			return false;
 		}
