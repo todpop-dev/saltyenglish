@@ -4,6 +4,8 @@ package com.todpop.saltyenglish;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -1082,17 +1084,29 @@ public class StudyHome extends Activity {
 
 		// check, intent is available.
 		if (!kakaoLink.isAvailableIntent()) {
-			//alert("Not installed KakaoTalk.");			
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.study_home_popup_nokakao), 1000).show();
 			return;
 		}
-		//TODO -- need to rearrange
-		kakaoLink.openKakaoLink(this, 
-				kaokaoAndroidUrl, 
-				iosUrl, 
-				getPackageName(), 
-				getPackageManager().getPackageInfo(getPackageName(), 0).versionName, 
-				kakaoMent, 
-				encoding);
+		else
+		{
+			ArrayList<Map<String, String>> metaInfoArray = new ArrayList<Map<String, String>>();
+			
+			Map<String, String> metaInfoAndroid = new Hashtable<String, String>(1);
+			metaInfoAndroid.put("os", "android");
+			metaInfoAndroid.put("devicetype", "phone");
+			metaInfoAndroid.put("installurl", "market://details?id=com.todpop.saltyenglish");		// fix
+			metaInfoArray.add(metaInfoAndroid);
+
+			String nickname = pref.getString("nickname", null);
+			String strMessage = kakaoMent + "[" + nickname +"]";
+			String strURL = "http://market.android.com/details?id=com.todpop.saltyenglish";			// fix & hidden
+			String strAppId = "com.todpop.saltyenglish";											// fix
+			String strAppVer = "0.1.x";																// cannot get real AppVer automatically (no matter)
+			String strAppName = getResources().getString(R.string.app_name);
+						
+			kakaoLink.openKakaoAppLink(StudyHome.this, strURL, strMessage, strAppId, strAppVer, strAppName, "UTF-8", metaInfoArray);
+			
+		}
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
