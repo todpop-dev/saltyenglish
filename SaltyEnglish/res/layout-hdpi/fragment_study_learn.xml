@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+            android:background="@drawable/studylearn_drawable_btn_level_1_n"
             />
 
         <Button
@@ -49,8 +49,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_2"
-            android:onClick="showLearn" />
+            android:background="@drawable/studylearn_drawable_btn_level_2_n"
+            />
 
         <Button
             android:id="@+id/studylearn_id_levelbtn_1_3"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+            android:background="@drawable/studylearn_drawable_btn_level_3_n"
             />
 
         <Button
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+            android:background="@drawable/studylearn_drawable_btn_level_4_n"
              />
 
         <Button
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+            android:background="@drawable/studylearn_drawable_btn_level_5_n"
            />
 
         <Button
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+            android:background="@drawable/studylearn_drawable_btn_level_6_n"
              />
 
         <Button
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+            android:background="@drawable/studylearn_drawable_btn_level_7_n"
             />
 
         <Button
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+            android:background="@drawable/studylearn_drawable_btn_level_8_n"
              />
 
         <Button
@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+            android:background="@drawable/studylearn_drawable_btn_level_9_n"
              />
 
         <Button
@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+            android:background="@drawable/studylearn_drawable_btn_level_10_n"
              />
     </GridLayout>
 
@@ -158,7 +158,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+            android:background="@drawable/studylearn_drawable_btn_level_1_n"
              />
 
         <Button
@@ -167,8 +167,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_2"
-            android:onClick="showLearn" />
+            android:background="@drawable/studylearn_drawable_btn_level_2_n"
+            />
 
         <Button
             android:id="@+id/studylearn_id_levelbtn_2_3"
@@ -176,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+            android:background="@drawable/studylearn_drawable_btn_level_3_n"
             android:onClick="showLearn" />
 
         <Button
@@ -185,7 +185,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+            android:background="@drawable/studylearn_drawable_btn_level_4_n"
              />
 
         <Button
@@ -194,7 +194,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+            android:background="@drawable/studylearn_drawable_btn_level_5_n"
              />
 
         <Button
@@ -202,7 +202,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+            android:background="@drawable/studylearn_drawable_btn_level_6_n"
 		 />
 
         <Button
@@ -211,7 +211,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+            android:background="@drawable/studylearn_drawable_btn_level_7_n"
              />
 
         <Button
@@ -220,7 +220,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+            android:background="@drawable/studylearn_drawable_btn_level_8_n"
              />
 
         <Button
@@ -229,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+            android:background="@drawable/studylearn_drawable_btn_level_9_n"
              />
 
         <Button
@@ -238,7 +238,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+            android:background="@drawable/studylearn_drawable_btn_level_10_n"
              />
     </GridLayout>
 
@@ -276,7 +276,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_1"
+            android:background="@drawable/studylearn_drawable_btn_level_1_n"
             
             />
 
@@ -286,7 +286,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_2"
+            android:background="@drawable/studylearn_drawable_btn_level_2_n"
              />
 
         <Button
@@ -295,7 +295,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_3"
+            android:background="@drawable/studylearn_drawable_btn_level_3_n"
              />
 
         <Button
@@ -304,7 +304,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_4"
+            android:background="@drawable/studylearn_drawable_btn_level_4_n"
              />
 
         <Button
@@ -313,7 +313,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_5"
+            android:background="@drawable/studylearn_drawable_btn_level_5_n"
              />
 
         <Button
@@ -321,7 +321,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_6"
+            android:background="@drawable/studylearn_drawable_btn_level_6_n"
              />
 
         <Button
@@ -330,7 +330,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_7"
+            android:background="@drawable/studylearn_drawable_btn_level_7_n"
              />
 
         <Button
@@ -339,7 +339,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_8"
+            android:background="@drawable/studylearn_drawable_btn_level_8_n"
              />
 
         <Button
@@ -348,7 +348,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_9"
+            android:background="@drawable/studylearn_drawable_btn_level_9_n"
              />
 
         <Button
@@ -357,7 +357,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8.89dp"
             android:enabled="false"
-            android:background="@drawable/studylearn_drawable_btn_level_1_10"
+            android:background="@drawable/studylearn_drawable_btn_level_10_n"
              />
     </GridLayout>
 

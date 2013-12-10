@@ -31,6 +31,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,8 +42,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,6 +65,8 @@ public class StudyLearn extends FragmentActivity {
 
 	static SharedPreferences prefs;
 	static SharedPreferences.Editor ed;
+	static SharedPreferences studyInfo;
+	static String stageInfo;
 	
 	
 	// TMP page number and stage information
@@ -96,7 +101,9 @@ public class StudyLearn extends FragmentActivity {
 		// User ID
 		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
 		userId = rgInfo.getString("mem_id", "0");
-		
+
+		studyInfo = getSharedPreferences("studyInfo",0);
+		stageInfo = studyInfo.getString("stageInfo", null);
 		
 		// Get level 
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
@@ -331,12 +338,19 @@ public class StudyLearn extends FragmentActivity {
 			return rootView;
 		}
 		
-		public void adjustLevelStageButtonStatus(View rootView, final int firstLabel )
+		public void adjustLevelStageButtonStatus(View rootView, final int firstLevel)
 		{
-			if (firstLabel <= testLevel) {
+			
+			
+			
+			int stageIndexStart = firstLevel*10 - 10;
+			String stageInfoFirst = stageInfo.substring(stageIndexStart,stageIndexStart+10);
+			String stageInfoSecond = stageInfo.substring(stageIndexStart+10,stageIndexStart+20);
+			String stageInfoThird = stageInfo.substring(stageIndexStart+20,stageIndexStart+30);
+			
+			if (!stageInfoFirst.equals("xxxxxxxxxx")) {
+				
 				Button button1 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_1);
-				button1.setEnabled(true);
-
 				Button button2 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_2);
 				Button button3 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_3);
 				Button button4 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_4);
@@ -347,43 +361,88 @@ public class StudyLearn extends FragmentActivity {
 				Button button9 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_9); 
 				Button button10 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_1_10);
 				
-				button1.setTag((firstLabel-1)*10+1);
-				button2.setTag((firstLabel-1)*10+2);
-				button3.setTag((firstLabel-1)*10+3);
-				button4.setTag((firstLabel-1)*10+4);
-				button5.setTag((firstLabel-1)*10+5);
-				button6.setTag((firstLabel-1)*10+6);
-				button7.setTag((firstLabel-1)*10+7);
-				button8.setTag((firstLabel-1)*10+8);
-				button9.setTag((firstLabel-1)*10+9);
-				button10.setTag(firstLabel*10);
+				button1.setTag((firstLevel-1)*10+1);
+				button2.setTag((firstLevel-1)*10+2);
+				button3.setTag((firstLevel-1)*10+3);
+				button4.setTag((firstLevel-1)*10+4);
+				button5.setTag((firstLevel-1)*10+5);
+				button6.setTag((firstLevel-1)*10+6);
+				button7.setTag((firstLevel-1)*10+7);
+				button8.setTag((firstLevel-1)*10+8);
+				button9.setTag((firstLevel-1)*10+9);
+				button10.setTag(firstLevel*10);
+				
+				if(stageInfoFirst.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoFirst.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoFirst.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoFirst.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
 
+				if(stageInfoFirst.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoFirst.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoFirst.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoFirst.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoFirst.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoFirst.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoFirst.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoFirst.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoFirst.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoFirst.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoFirst.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoFirst.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoFirst.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoFirst.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoFirst.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoFirst.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
+				
+				
 				OnClickListener clickListener = new OnClickListener() {
-					@Override
 					public void onClick(View v) {
-						int currentBtnClickStage = (Integer)(v.getTag());
-						if (checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW").equals("OLD")) {
-							Map<String, String> stageParams = new HashMap<String, String>();
-							stageParams.put("User Id", userId);
-							FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
-							ed.putInt("currentStage", currentBtnClickStage);
-							ed.commit();
-								
-							if (currentBtnClickStage%10 ==0) {
-								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-								getActivity().startActivity(myIntent);
-							} else {
-								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-								getActivity().startActivity(myIntent);
-							}
 
-						} else {
-							// New Stage! So check if it is OK to open-up
-							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + firstLabel + 
-									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
-							new CheckStageClear(currentBtnClickStage).execute(url);
+						int currentBtnClickStage = (Integer)(v.getTag());
+						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
+						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
+
+						try
+						{
+							if (selectedStageStatus != 'Y') {
+
+								Map<String, String> stageParams = new HashMap<String, String>();
+								stageParams.put("User Id", userId);
+								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
+								ed.putInt("currentStage", currentBtnClickStage);
+								ed.commit();
+									
+								if (selectedStageNo == 10) {
+									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+									getActivity().startActivity(myIntent);
+								} else {
+									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									getActivity().startActivity(myIntent);
+								}
+	
+							} else {
+								// New Stage! So check if it is OK to open-up
+								String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + firstLevel + 
+										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
+								new CheckStageClear(currentBtnClickStage).execute(url);
+							}
 						}
+						catch(Exception e)
+						{
+						}
+
 					}
+
 				};
 
 				button1.setOnClickListener(clickListener);
@@ -399,50 +458,38 @@ public class StudyLearn extends FragmentActivity {
 
 
 
-				String levelCountStr = "Level" + Integer.toString(firstLabel);
-				int levelStageCount = prefs.getInt(levelCountStr, 1);
-				Log.d("Level --- ", levelCountStr);
-				Log.d("Count --- ", Integer.toString(levelStageCount));
+				
+				Log.d("------ ", "-------------------------------------------");
+				Log.d("Level --- ", stageInfoFirst);
+				Log.d("------ ", "-------------------------------------------");
 
-				switch(levelStageCount) {//levelStageCount
-				case 2:
-					button2.setEnabled(true);
-					break;
-				case 3:
-					button2.setEnabled(true); button3.setEnabled(true);
-					break;
-				case 4:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true);
-					break;
-				case 5:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true);
-					break;
-				case 6:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true);
-					break;
-				case 7:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true);
-					break;
-				case 8: 
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true);
-					break;
-				case 9:                	
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true);
-					break;
-				case 10:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true); button10.setEnabled(true);
-					break;
-				default:
-					break;
-				}
-
-
+				char s1 = stageInfoFirst.charAt(0);
+				char s2 = stageInfoFirst.charAt(1);
+				char s3 = stageInfoFirst.charAt(2);
+				char s4 = stageInfoFirst.charAt(3);
+				char s5 = stageInfoFirst.charAt(4);
+				char s6 = stageInfoFirst.charAt(5);
+				char s7 = stageInfoFirst.charAt(6);
+				char s8 = stageInfoFirst.charAt(7);
+				char s9 = stageInfoFirst.charAt(8);
+				char s10 = stageInfoFirst.charAt(9);
+				
+				if (s1!='x')	{	button1.setEnabled(true);}
+				if (s2!='x')	{	button2.setEnabled(true);}
+				if (s3!='x')	{	button3.setEnabled(true);}
+				if (s4!='x')	{	button4.setEnabled(true);}
+				if (s5!='x')	{	button5.setEnabled(true);}
+				if (s6!='x')	{	button6.setEnabled(true);}
+				if (s7!='x')	{	button7.setEnabled(true);}
+				if (s8!='x')	{	button8.setEnabled(true);}
+				if (s9!='x')	{	button9.setEnabled(true);}
+				if (s10!='x')	{	button10.setEnabled(true);}
 			} 
 
-			if (firstLabel + 1 <= testLevel) {
-				Button button1 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_1);
-				button1.setEnabled(true);
+			
+			if (!stageInfoSecond.equals("xxxxxxxxxx")) {
 
+				Button button1 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_1);
 				Button button2 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_2);
 				Button button3 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_3);
 				Button button4 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_4);
@@ -453,51 +500,88 @@ public class StudyLearn extends FragmentActivity {
 				Button button9 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_9); 
 				Button button10 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_2_10);
 				
-				button1.setTag((firstLabel+1-1)*10+1);
-				button2.setTag((firstLabel+1-1)*10+2);
-				button3.setTag((firstLabel+1-1)*10+3);
-				button4.setTag((firstLabel+1-1)*10+4);
-				button5.setTag((firstLabel+1-1)*10+5);
-				button6.setTag((firstLabel+1-1)*10+6);
-				button7.setTag((firstLabel+1-1)*10+7);
-				button8.setTag((firstLabel+1-1)*10+8);
-				button9.setTag((firstLabel+1-1)*10+9);
-				button10.setTag((firstLabel+1)*10);
+				button1.setTag((firstLevel+1-1)*10+1);
+				button2.setTag((firstLevel+1-1)*10+2);
+				button3.setTag((firstLevel+1-1)*10+3);
+				button4.setTag((firstLevel+1-1)*10+4);
+				button5.setTag((firstLevel+1-1)*10+5);
+				button6.setTag((firstLevel+1-1)*10+6);
+				button7.setTag((firstLevel+1-1)*10+7);
+				button8.setTag((firstLevel+1-1)*10+8);
+				button9.setTag((firstLevel+1-1)*10+9);
+				button10.setTag((firstLevel+1)*10);
+				
+				if(stageInfoSecond.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoSecond.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoSecond.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoSecond.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
+
+				if(stageInfoSecond.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoSecond.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoSecond.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoSecond.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoSecond.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoSecond.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoSecond.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoSecond.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoSecond.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoSecond.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoSecond.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoSecond.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoSecond.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoSecond.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoSecond.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoSecond.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
 				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						
 						int currentBtnClickStage = (Integer)(v.getTag());
-						try{
-							String stageStr = Integer.toString(currentBtnClickStage);
-							String stageNew = checkStageIsNew.getString(stageStr, "NEW");
-							if (stageNew.equals("OLD")) {							
+						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
+						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
+						
+						try
+						{
+							if (selectedStageStatus != 'Y') {
+
 								Map<String, String> stageParams = new HashMap<String, String>();
 								stageParams.put("User Id", userId);
 								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
 								ed.putInt("currentStage", currentBtnClickStage);
 								ed.commit();
 									
-								if (currentBtnClickStage%10 ==0) {
+								if (selectedStageNo == 10) {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 									getActivity().startActivity(myIntent);
 								} else {
 									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
 									getActivity().startActivity(myIntent);
 								}
+								
 							} else {
 								// New Stage! So check if it is OK to open-up
 								Log.d("usrid : ", userId);
-								Log.d("level : ", Integer.toString(firstLabel+1));
+								Log.d("level : ", Integer.toString(firstLevel+1));
 								Log.d("stage : ", Integer.toString(currentBtnClickStage%10));
 								
-								String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+1) + 
-										"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
+								String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLevel+1) + 
+										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
 								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
+						}
+						catch(Exception e)
+						{
 						}
 
 					}
@@ -515,48 +599,42 @@ public class StudyLearn extends FragmentActivity {
 				button10.setOnClickListener(clickListener);
 
 
-				String levelCountStr = "Level" + Integer.toString(firstLabel+1);
-				int levelStageCount = prefs.getInt(levelCountStr, 1);
-				Log.d("Level --- ", levelCountStr);
-				Log.d("Count --- ", Integer.toString(levelStageCount));
+				//String levelCountStr = "Level" + Integer.toString(firstLevel+1);
+				//int levelStageCount = prefs.getInt(levelCountStr, 1);
+				//Log.d("Level --- ", levelCountStr);
+				//Log.d("Count --- ", Integer.toString(levelStageCount));
+				
+				Log.d("------ ", "-------------------------------------------");
+				Log.d("Level --- ", stageInfoSecond);
+				Log.d("------ ", "-------------------------------------------");
 
-				switch(levelStageCount) {
-				case 2:
-					button2.setEnabled(true);
-					break;
-				case 3:
-					button2.setEnabled(true); button3.setEnabled(true);
-					break;
-				case 4:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true);
-					break;
-				case 5:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true);
-					break;
-				case 6:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true);
-					break;
-				case 7:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true);
-					break;
-				case 8: 
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true);
-					break;
-				case 9:                	
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true);
-					break;
-				case 10:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true); button10.setEnabled(true);
-					break;
-				default:
-					break;
-				}
+				char s1 = stageInfoSecond.charAt(0);
+				char s2 = stageInfoSecond.charAt(1);
+				char s3 = stageInfoSecond.charAt(2);
+				char s4 = stageInfoSecond.charAt(3);
+				char s5 = stageInfoSecond.charAt(4);
+				char s6 = stageInfoSecond.charAt(5);
+				char s7 = stageInfoSecond.charAt(6);
+				char s8 = stageInfoSecond.charAt(7);
+				char s9 = stageInfoSecond.charAt(8);
+				char s10 = stageInfoSecond.charAt(9);
+				
+				if (s1!='x')	{	button1.setEnabled(true);}
+				if (s2!='x')	{	button2.setEnabled(true);}
+				if (s3!='x')	{	button3.setEnabled(true);}
+				if (s4!='x')	{	button4.setEnabled(true);}
+				if (s5!='x')	{	button5.setEnabled(true);}
+				if (s6!='x')	{	button6.setEnabled(true);}
+				if (s7!='x')	{	button7.setEnabled(true);}
+				if (s8!='x')	{	button8.setEnabled(true);}
+				if (s9!='x')	{	button9.setEnabled(true);}
+				if (s10!='x')	{	button10.setEnabled(true);}
+
 			}
 
-			if (firstLabel + 2 <= testLevel) {
-				Button button1 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_1);
-				button1.setEnabled(true);
+			if (!stageInfoThird.equals("xxxxxxxxxx")) {
 
+				Button button1 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_1);
 				Button button2 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_2);
 				Button button3 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_3);
 				Button button4 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_4);
@@ -567,43 +645,89 @@ public class StudyLearn extends FragmentActivity {
 				Button button9 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_9); 
 				Button button10 = (Button)rootView.findViewById(R.id.studylearn_id_levelbtn_3_10);
 				
-				button1.setTag((firstLabel+2-1)*10+1);
-				button2.setTag((firstLabel+2-1)*10+2);
-				button3.setTag((firstLabel+2-1)*10+3);
-				button4.setTag((firstLabel+2-1)*10+4);
-				button5.setTag((firstLabel+2-1)*10+5);
-				button6.setTag((firstLabel+2-1)*10+6);
-				button7.setTag((firstLabel+2-1)*10+7);
-				button8.setTag((firstLabel+2-1)*10+8);
-				button9.setTag((firstLabel+2-1)*10+9);
-				button10.setTag((firstLabel+2)*10);
+				button1.setTag((firstLevel+2-1)*10+1);
+				button2.setTag((firstLevel+2-1)*10+2);
+				button3.setTag((firstLevel+2-1)*10+3);
+				button4.setTag((firstLevel+2-1)*10+4);
+				button5.setTag((firstLevel+2-1)*10+5);
+				button6.setTag((firstLevel+2-1)*10+6);
+				button7.setTag((firstLevel+2-1)*10+7);
+				button8.setTag((firstLevel+2-1)*10+8);
+				button9.setTag((firstLevel+2-1)*10+9);
+				button10.setTag((firstLevel+2)*10);
+				
+				if(stageInfoThird.charAt(0)=='1')		{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_s);}
+				else if(stageInfoThird.charAt(0)=='2')	{button1.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_1_g);}
+				
+				if(stageInfoThird.charAt(1)=='1')		{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_s);}
+				else if(stageInfoThird.charAt(1)=='2')	{button2.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_2_g);}
+
+				if(stageInfoThird.charAt(2)=='1')		{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_s);}
+				else if(stageInfoThird.charAt(2)=='2')	{button3.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_3_g);}
+
+				if(stageInfoThird.charAt(3)=='1')		{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_s);}
+				else if(stageInfoThird.charAt(3)=='2')	{button4.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_4_g);}
+
+				if(stageInfoThird.charAt(4)=='1')		{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_s);}
+				else if(stageInfoThird.charAt(4)=='2')	{button5.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_5_g);}
+
+				if(stageInfoThird.charAt(5)=='1')		{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_s);}
+				else if(stageInfoThird.charAt(5)=='2')	{button6.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_6_g);}
+
+				if(stageInfoThird.charAt(6)=='1')		{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_s);}
+				else if(stageInfoThird.charAt(6)=='2')	{button7.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_7_g);}
+
+				if(stageInfoThird.charAt(7)=='1')		{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_s);}
+				else if(stageInfoThird.charAt(7)=='2')	{button8.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_8_g);}
+
+				if(stageInfoThird.charAt(8)=='1')		{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_s);}
+				else if(stageInfoThird.charAt(8)=='2')	{button9.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_9_g);}
+
+				if(stageInfoThird.charAt(9)=='1')		{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_s);}
+				else if(stageInfoThird.charAt(9)=='2')	{button10.setBackgroundResource(R.drawable.studylearn_drawable_btn_level_10_g);}
+
+				
+				
+				
+
 				
 				OnClickListener clickListener = new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						
 						int currentBtnClickStage = (Integer)(v.getTag());
+						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
+						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
 						
-						if (checkStageIsNew.getString(Integer.toString(currentBtnClickStage), "NEW").equals("OLD")) {
-							Map<String, String> stageParams = new HashMap<String, String>();
-							stageParams.put("User Id", userId);
-							FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
-							ed.putInt("currentStage", currentBtnClickStage);
-							ed.commit();
+						try
+						{
+							if (selectedStageStatus != 'Y') {
+
+								Map<String, String> stageParams = new HashMap<String, String>();
+								stageParams.put("User Id", userId);
+								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
+
+								ed.putInt("currentStage", currentBtnClickStage);
+								ed.commit();
 								
-							if (currentBtnClickStage%10 ==0) {
-								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
-								getActivity().startActivity(myIntent);
+								if (selectedStageNo == 10) {
+									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
+									getActivity().startActivity(myIntent);
+								} else {
+									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									getActivity().startActivity(myIntent);
+								}
 							} else {
-								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
-								getActivity().startActivity(myIntent);
+								// New Stage! So check if it is OK to open-up
+								String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLevel+2) + 
+										"&stage=" + selectedStageNo + "&category=" + category +"&is_new=1";
+								new CheckStageClear(currentBtnClickStage).execute(url);
 							}
-						} else {
-							// New Stage! So check if it is OK to open-up
-							String url = "http://todpop.co.kr/api/studies/get_possible_stage.json?user_id=" + userId + "&level=" + (firstLabel+2) + 
-									"&stage=" + currentBtnClickStage%10 + "&category=" + category +"&is_new=1";
-							new CheckStageClear(currentBtnClickStage).execute(url);
 						}
+						catch(Exception e)
+						{
+						}
+						
 					}
 				};
 
@@ -619,42 +743,33 @@ public class StudyLearn extends FragmentActivity {
 				button10.setOnClickListener(clickListener);
 
 
-				String levelCountStr = "Level" + Integer.toString(firstLabel+2);
-				int levelStageCount = prefs.getInt(levelCountStr, 1);
-				Log.d("Level --- ", levelCountStr);
-				Log.d("Count --- ", Integer.toString(levelStageCount));
+				
+				Log.d("------ ", "-------------------------------------------");
+				Log.d("Level --- ", stageInfoThird);
+				Log.d("------ ", "-------------------------------------------");
 
-				switch(levelStageCount) {
-				case 2:
-					button2.setEnabled(true);
-					break;
-				case 3:
-					button2.setEnabled(true); button3.setEnabled(true);
-					break;
-				case 4:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true);
-					break;
-				case 5:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true);
-					break;
-				case 6:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true);
-					break;
-				case 7:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true);
-					break;
-				case 8: 
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true);
-					break;
-				case 9:                	
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true);
-					break;
-				case 10:
-					button2.setEnabled(true); button3.setEnabled(true); button4.setEnabled(true); button5.setEnabled(true); button6.setEnabled(true); button7.setEnabled(true); button8.setEnabled(true); button9.setEnabled(true); button10.setEnabled(true);
-					break;
-				default:
-					break;
-				}
+				char s1 = stageInfoThird.charAt(0);
+				char s2 = stageInfoThird.charAt(1);
+				char s3 = stageInfoThird.charAt(2);
+				char s4 = stageInfoThird.charAt(3);
+				char s5 = stageInfoThird.charAt(4);
+				char s6 = stageInfoThird.charAt(5);
+				char s7 = stageInfoThird.charAt(6);
+				char s8 = stageInfoThird.charAt(7);
+				char s9 = stageInfoThird.charAt(8);
+				char s10 = stageInfoThird.charAt(9);
+				
+				if (s1!='x')	{	button1.setEnabled(true);}
+				if (s2!='x')	{	button2.setEnabled(true);}
+				if (s3!='x')	{	button3.setEnabled(true);}
+				if (s4!='x')	{	button4.setEnabled(true);}
+				if (s5!='x')	{	button5.setEnabled(true);}
+				if (s6!='x')	{	button6.setEnabled(true);}
+				if (s7!='x')	{	button7.setEnabled(true);}
+				if (s8!='x')	{	button8.setEnabled(true);}
+				if (s9!='x')	{	button9.setEnabled(true);}
+				if (s10!='x')	{	button10.setEnabled(true);}
+
 			}
 		}
 		

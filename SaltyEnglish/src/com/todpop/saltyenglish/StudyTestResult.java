@@ -62,10 +62,16 @@ public class StudyTestResult extends Activity {
 	TextView scoreView;
 	TextView rewardView;
 	
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_result);
+		
+		studyInfo = getSharedPreferences("studyInfo",0);
+		studyInfoEdit = studyInfo.edit();
 		
 		mHelper = new WordDBHelper(this);
 		
@@ -133,7 +139,7 @@ public class StudyTestResult extends Activity {
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.ja
+			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.java
 			String userId = pref.getString("mem_id", "0");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
@@ -151,11 +157,9 @@ public class StudyTestResult extends Activity {
 			// ----------- End of  Request Result -------------
 			
 			// ------- cys added -----------
-			SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
-			SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
-			stdInfoEdit.putInt("currentCategory", category);					// will be modified later with tmpCategory obtained from StudyLearn.java
-			stdInfoEdit.putInt("currentStageAccumulated", currentStage);		// will be modified later with tmpStageAccumulated obtained from StudyLearn.java
-			stdInfoEdit.commit();
+			studyInfoEdit.putInt("currentCategory", category);					// will be modified later with tmpCategory obtained from StudyLearn.java
+			studyInfoEdit.putInt("currentStageAccumulated", currentStage);		// will be modified later with tmpStageAccumulated obtained from StudyLearn.java
+			studyInfoEdit.commit();
 			// ----------------------------
 		}
 		
@@ -212,6 +216,10 @@ public class StudyTestResult extends Activity {
 						resultScore = resultObj.getString("score");
 						resultReward = resultObj.getString("reward");
 						resultMedal = resultObj.getString("medal");
+
+            			String stageInfo = resultObj.getString("stage_info");		// stageInfo
+            			studyInfoEdit.putString("stageInfo", stageInfo);
+            			studyInfoEdit.commit();
 					
 						rewardView.setText(resultReward);
 						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
