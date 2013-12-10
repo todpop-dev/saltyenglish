@@ -11,6 +11,7 @@ import android.content.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class CpxPackageChangeReceiver extends BroadcastReceiver {
     @Override
@@ -28,11 +29,13 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
 		String adPackageName = cpxInstallInfo.getString("cpxPackageName", "");
 				
 		if (isCpxInstalling==true && packageName.equals(adPackageName)) {
+			Toast toast = Toast.makeText(ctx, R.string.cpi_install_notification, Toast.LENGTH_LONG);
+			toast.show();
 			// Send CPX act=3 to Server
-			SharedPreferences pref = ctx.getSharedPreferences("rgInfo",0);
-			String userId = pref.getString("mem_id", "0");
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
-					"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
+			//SharedPreferences pref = ctx.getSharedPreferences("rgInfo",0);
+			//String userId = pref.getString("mem_id", "0");
+			//new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
+			//		"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
 			cpxInstallInfo.edit().clear().commit();
 		}
 			
