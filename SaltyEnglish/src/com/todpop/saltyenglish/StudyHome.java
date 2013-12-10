@@ -17,24 +17,19 @@ import org.json.JSONObject;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
-import com.todpop.saltyenglish.StudyLearn.LevelFragment;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -44,14 +39,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -63,17 +53,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.PopupWindow;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StudyHome extends Activity {
 	private String encoding = "UTF-8";
@@ -89,8 +76,10 @@ public class StudyHome extends Activity {
 	
 	// Ranking Item and Adaptor
 	RankingListItem rankingItem;
-	ArrayList<RankingListItem> rankingItemArray;
-	RankingListAdapter rankingListAdapter;
+	ArrayList<RankingListItem> rankingItemArrayWeek;
+	ArrayList<RankingListItem> rankingItemArrayMonth;
+	RankingListAdapter rankingListAdapterWeek;
+	RankingListAdapter rankingListAdapterMonth;
 
 	TextView myRank;
 	ImageView myImage;
@@ -102,18 +91,19 @@ public class StudyHome extends Activity {
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
-	//LinearLayout relative;
-	RelativeLayout relative;
+	LinearLayout mainLayout;
 	TextView popupText;
 	
 	String kakaoMent = "";
 	String kaokaoAndroidUrl = "";
 	String iosUrl = "";
+	String userId;
 	
 	boolean majorVersionUpdate = false;
 	
 	SharedPreferences pref;
 	SharedPreferences studyInfo;
+	SharedPreferences myRankInfo;
 	
 	ViewPager categoryPager;
 	ImageAdapter adapter;
@@ -131,7 +121,7 @@ public class StudyHome extends Activity {
 	String cpxConfirmUrl;
 	int cpxReward;
 	int cpxQuestionCount;
-	boolean installed;
+	boolean cpxHistoryFlag;
 	
 	//CPX Popup
 	PopupWindow cpxPopupWindow;
@@ -161,8 +151,12 @@ public class StudyHome extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_home);
 		
+		myRankInfo = getSharedPreferences("myRankInfo", 0);
 		studyInfo = getSharedPreferences("studyInfo",0);
+
 		
+		pref = getSharedPreferences("rgInfo",0);
+		userId = pref.getString("mem_id", "0");
 		mHelper = new WordDBHelper(this);
 
 		myRank = (TextView)findViewById(R.id.studyhome_id_my_rank);
@@ -172,7 +166,8 @@ public class StudyHome extends Activity {
 		//categoryWhiteBox = (ImageView)findViewById(R.id.bgimg_whitebox);
 
 		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
-		rankingItemArray = new ArrayList<RankingListItem>();
+		rankingItemArrayWeek = new ArrayList<RankingListItem>();
+		rankingItemArrayMonth = new ArrayList<RankingListItem>();
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
 		
         adapter = new ImageAdapter(this);
@@ -194,22 +189,27 @@ public class StudyHome extends Activity {
 					case MotionEvent.ACTION_DOWN:
 						mFirstX = event.getX();
 						mLastX = event.getX();
+						Log.i("STEVEN ACTION_DOWN", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
 						//categoryWhiteBox.setVisibility(View.INVISIBLE);
 					break;
 					case MotionEvent.ACTION_MOVE:
 							categoryPager.scrollBy((int)((mLastX-event.getX())/2), 0);
 							categoryPager.invalidate();
 							mLastX = event.getX();
+							Log.i("STEVEN ACTION_MOVE", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
 						break;
 					case MotionEvent.ACTION_UP:
-						if((mFirstX - mLastX) > size.x/6){
-							categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
-						}else if((mLastX - mFirstX) > size.x/6){
-							categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
-						}
-						else{
-							categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
-							categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
+						Log.i("STEVEN ACTION_UP", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
+						if(mFirstX != mLastX){
+							if((mFirstX - mLastX) > size.x/6){
+								categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
+							}else if((mLastX - mFirstX) > size.x/6){
+								categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
+							}
+							else{
+								categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
+								categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
+							}
 						}
 						//categoryWhiteBox.setVisibility(View.VISIBLE);
 						break;
@@ -226,19 +226,27 @@ public class StudyHome extends Activity {
 				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
 				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
 				// TODO Auto-generated method stub
-				if(arg0%2 == 1){
+				if(arg0%2 == 1){ //Weekly
     				period =1;
     				stdInfoEdit.putInt("currentPeriod", 1);
     				stdInfoEdit.commit();
+					rankingList.setAdapter(rankingListAdapterWeek);
+
+					myRank.setText(myRankInfo.getString("weekRank", "null"));
+					myScore.setText(myRankInfo.getString("weekScore", "null"));
+					
     				Log.i("TESTING", "id_week getInfo() called");
-    				getInfo();
 				}
-				else{
+				else{		//Monthly
     				period =2;
     				stdInfoEdit.putInt("currentPeriod", 2);
     				stdInfoEdit.commit();
+					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
+					rankingList.setAdapter(rankingListAdapterMonth);
+
+					myRank.setText(myRankInfo.getString("monthRank", "null"));
+					myScore.setText(myRankInfo.getString("monthScore", "null"));
     				Log.i("TESTING", "id_moon getInfo() called");
-    				getInfo();
 				}
 			}
 			
@@ -335,7 +343,7 @@ public class StudyHome extends Activity {
 		cpiAdTextView = (TextView)findViewById(R.id.study_home_id_cpi_ad_text);
 		
 		//popupview
-		relative = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
+		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
 		float density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
@@ -363,7 +371,8 @@ public class StudyHome extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-		
+
+
 		// Facebook Logout
 		Session session = Session.getActiveSession();
 		if (session != null) {
@@ -380,14 +389,6 @@ public class StudyHome extends Activity {
 		}
 
 		getInfo();
-
-		adapter.notifyDataSetChanged(); 
-		/*if      (category==1) { weekBtn.setText(R.string.basic_week_ranking); 	   monthBtn.setText(R.string.basic_month_ranking);  }
-		else if (category==2) { weekBtn.setText(R.string.middle_week_ranking);     monthBtn.setText(R.string.middle_month_ranking); }
-		else if (category==3) {	weekBtn.setText(R.string.high_week_ranking);	   monthBtn.setText(R.string.high_month_ranking);   }
-		else if (category==4) {	weekBtn.setText(R.string.toeic_week_ranking);	   monthBtn.setText(R.string.toeic_month_ranking);  }
-		else                  {	weekBtn.setText(R.string.basic_week_ranking);	   monthBtn.setText(R.string.basic_month_ranking);  }
-		*/
 		
 		
 		// Get CPX Info onResume
@@ -406,7 +407,7 @@ public class StudyHome extends Activity {
 		
 		// Download CPX Image and update UI
 		new DownloadImageTask().execute(cpxAdImageUrl);
-		cpxAdType = 0;
+		//cpxAdType = 0;
 		cpxInfo.edit().clear().commit();
 		if (cpxAdType == 301) {
 
@@ -414,37 +415,37 @@ public class StudyHome extends Activity {
 			cpiView.setVisibility(View.VISIBLE);
 			
 			// Send CPX Log
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			String userId = pref.getString("mem_id", "0");
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
 			if (this.checkIsAppInstalled(cpxPackageName)) {
-				installed = true;
+				cpxHistoryFlag = true;
 				// App Installed Send act=4 to server
 				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
 			} else {
-				installed = false;
+				cpxHistoryFlag = false;
 				// Process CPI
 				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");	
 			}
-			// Insert into DB
-//			try {
-//			    SQLiteDatabase db = mHelper.getWritableDatabase();
-//
-//				ContentValues insertValues = new ContentValues();
-//				insertValues.put("name", cpxPackageName);
-//				insertValues.put("ad_id", cpxAdId);
-//				insertValues.put("ad_type", cpxAdType);
-//				insertValues.put("reward", cpxReward);
-//				insertValues.put("installed", "N");
-				
-//				db.insert("cpxInfo", null, insertValues);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
+		}else if(cpxAdType == 303){
+			FlurryAgent.logEvent("CPA");
+			cpiView.setVisibility(View.VISIBLE);
+			
+			SharedPreferences.Editor cpxInfoEditor;
+			cpxInfoEditor = cpxInfo.edit();
 
+			cpxInfoEditor.putInt("adId", cpxAdId);
+			cpxInfoEditor.commit();
+			
+			// Send CPX Log
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+
+			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+			String mobile =phoneMgr.getLine1Number().toString();
+			
+			new CheckCPA().execute(cpxConfirmUrl + "?mobile=" + mobile);
 		} else if (cpxAdType == 305) {
 			FlurryAgent.logEvent("CPS");
 			cpiView.setVisibility(View.VISIBLE);
@@ -456,10 +457,11 @@ public class StudyHome extends Activity {
 			cpxInfoEditor.commit();
 			
 			// Send CPX Log
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			String userId = pref.getString("mem_id", "0");
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
 					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+			
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
 		} else {
 			
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
@@ -477,7 +479,53 @@ public class StudyHome extends Activity {
 		
 		
 	}
-	
+	// ******************** CPA signed up Check *************************
+		private class CheckCPA extends AsyncTask<String, Void, JSONObject> {
+			@Override
+			protected JSONObject doInBackground(String... urls) 
+			{
+				JSONObject result = null;
+				try {
+					DefaultHttpClient httpClient = new DefaultHttpClient();
+					String getURL = urls[0];
+					HttpGet httpGet = new HttpGet(getURL);
+					HttpResponse httpResponse = httpClient.execute(httpGet);
+					HttpEntity resEntity = httpResponse.getEntity();
+
+					if (resEntity != null) {    
+						result = new JSONObject(EntityUtils.toString(resEntity)); 
+						Log.d("RESPONSE ---- ", result.toString());				        	
+					}
+					return result;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				return result;
+			}
+
+			@Override
+			protected void onPostExecute(JSONObject result) 
+			{
+
+				try {
+					if	(result.getBoolean("status")==true) {
+						new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+								"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+						cpxHistoryFlag = true;
+						Log.d("CPX LOG:  ---- ", "Send CPX Log OK!");
+					} else {
+						new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+								"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+						cpxHistoryFlag = false;
+						Log.d("CPX LOG:  ---- ", "Send CPX Log Failed!");
+					}
+
+				} catch (Exception e) {
+
+				}
+			}
+		}
 	// ******************** CPX UTILITY CLASS *************************
 	private class SendCPXLog extends AsyncTask<String, Void, JSONObject> {
 		@Override
@@ -551,13 +599,18 @@ public class StudyHome extends Activity {
 
 
 		FlurryAgent.setUserId(pref.getString("mem_id", "NO"));
-
+		
 		category = studyInfo.getInt("currentCategory", 1);
 		period = studyInfo.getInt("currentPeriod", 1);
 		
-		new GetRank().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-					category+"&period="+period+"&nickname="+pref.getString("nickname", "NO"));
-		
+		rankingItemArrayWeek.clear();
+		rankingItemArrayMonth.clear();
+		//get weekly, monthly rank
+		new GetRankWeek().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+					category+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+		Log.e("STEVEN", "609");
+		new GetRankMonth().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+				category+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
 	}
 
 	class RankingListItem{
@@ -573,6 +626,7 @@ public class StudyHome extends Activity {
 		String name;
 		String fraction;
 	}
+
 
 	class RankingListAdapter extends BaseAdapter
 	{
@@ -616,8 +670,8 @@ public class StudyHome extends Activity {
 			ImageView rankImage = (ImageView)convertView.findViewById(R.id.home_list_id_rank_user_image);
 			TextView name = (TextView)convertView.findViewById(R.id.home_list_id_rank_name_text);
 			TextView fraction = (TextView)convertView.findViewById(R.id.home_list_rank_id_user_fraction);
-
-			setRankImage(arSrc.get(position).imageNO,rankImage);
+			
+			setRankImage(arSrc.get(position).imageNO, rankImage);
 
 			if(position<3) {
 
@@ -650,12 +704,10 @@ public class StudyHome extends Activity {
 
 			return convertView;
 		}
-
-
 	}
 
 
-	private class GetRank extends AsyncTask<String, Void, JSONObject> {
+	private class GetRankWeek extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -688,24 +740,83 @@ public class StudyHome extends Activity {
 		{
 
 			try {
-				rankingItemArray.clear();
 				if	(result.getBoolean("status")==true) {
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
 					for(int i=0;i<6;i++) {
 						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
 								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
-						rankingItemArray.add(rankingItem);
+						rankingItemArrayWeek.add(rankingItem);
 					}	
+					SharedPreferences.Editor myRankInfoEdit = myRankInfo.edit();
+					myRankInfoEdit.putString("weekRank", result.getJSONObject("data").getJSONObject("mine").getString("rank"));
+					myRankInfoEdit.putString("weekScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
+					myRankInfoEdit.commit();
 
+					//move current ranking page to weekly ranking page
+					categoryPager.setCurrentItem(1073741823);
+
+					rankingListAdapterWeek = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayWeek);
+					rankingList.setAdapter(rankingListAdapterWeek);
 					
-
+					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"), myImage);
 					myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);
-					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));;
 					myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
+					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
+				}
+
+			} catch (Exception e) {
+
+			}
+		}
+	}	
+	private class GetRankMonth extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) 
+		{
+
+			try {
+				if	(result.getBoolean("status")==true) {
+					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
+					for(int i=0;i<6;i++) {
+						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+						rankingItemArrayMonth.add(rankingItem);
+					}	
+					SharedPreferences.Editor myRankInfoEdit = myRankInfo.edit();
+					myRankInfoEdit.putString("monthRank", result.getJSONObject("data").getJSONObject("mine").getString("rank"));
+					myRankInfoEdit.putString("monthScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
+					myRankInfoEdit.commit();
 					
-					rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray);
-					rankingList.setAdapter(rankingListAdapter);
+					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);
+					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
+					
 				}
 
 			} catch (Exception e) {
@@ -713,6 +824,7 @@ public class StudyHome extends Activity {
 			}
 		}
 	}
+	
 	public void setRankImage(String imageID,ImageView mRankImage)
 	{		
 		if(imageID.equals("1")){
@@ -762,7 +874,7 @@ public class StudyHome extends Activity {
 
 			float density = getResources().getDisplayMetrics().density;
 			ObjectAnimator slideAni;
-			RelativeLayout rl = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
+			LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 			slideAni = ObjectAnimator.ofFloat(rl, "x",0*density, (173/2)*density);
 
 			slideAni.addListener(mAnimationListener);
@@ -776,7 +888,7 @@ public class StudyHome extends Activity {
 
 			float density = getResources().getDisplayMetrics().density;
 			ObjectAnimator slideAni;
-			RelativeLayout rl = (RelativeLayout)findViewById(R.id.frag_home_rela_id);
+			LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 			slideAni = ObjectAnimator.ofFloat(rl, "x", (173/2)*density,0*density);
 
 			slideAni.addListener(mAnimationListener);
@@ -889,7 +1001,7 @@ public class StudyHome extends Activity {
 					popupText.setText(notice);
 				}
 				Log.i("STEVEN", "just before pop");
-				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				Log.i("STEVNE", "just before drop down");
 				popupWindow.showAsDropDown(rankingList);
 			} catch (Exception e) {
@@ -952,16 +1064,13 @@ public class StudyHome extends Activity {
 	}
 	public void cpxGoReward(View v)
 	{	
-		SharedPreferences pref = getSharedPreferences("rgInfo",0);
-		String userId = pref.getString("mem_id", "0");
 	
 		
 		if (cpxAdType == 301) {
-			if (installed) {
+			if (cpxHistoryFlag) {
 				// App Installed 
-				// TODO: Popup notification
-				cpxPopupText.setText(R.string.cpx_popup_text);
-				cpxPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				cpxPopupText.setText(R.string.cpi_popup_text);
+				cpxPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				cpxPopupWindow.showAsDropDown(rankingList);
 			} else {
 				// Process CPI
@@ -975,6 +1084,7 @@ public class StudyHome extends Activity {
 				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
 				
+				//for CpxPackageChangeReceiver.java
 				cpxInstallInfoEditor.putInt("cpxAdType", cpxAdType);
 				cpxInstallInfoEditor.putInt("cpxAdId", cpxAdId);
 				cpxInstallInfoEditor.putString("cpxPackageName", cpxPackageName);
@@ -982,10 +1092,22 @@ public class StudyHome extends Activity {
 				cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", true);
 				cpxInstallInfoEditor.commit();			
 			}
-		} else if (cpxAdType == 305) {
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
-			
+		} else if(cpxAdType == 303){
+			if (cpxHistoryFlag) {
+				// already signed up
+				cpxPopupText.setText(R.string.cpa_popup_text);
+				cpxPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+				cpxPopupWindow.showAsDropDown(rankingList);
+			}else{
+				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
+				cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", true);
+				cpxInstallInfoEditor.commit();			
+				Toast toast = Toast.makeText(null, R.string.cpa_install_notice, Toast.LENGTH_LONG);
+				toast.show();
+				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(cpxTargetUrl)));
+			}
+		}else if (cpxAdType == 305) {
 			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
 			startActivity(intent);
 		}
@@ -1119,20 +1241,20 @@ public class StudyHome extends Activity {
 	    Context context;
 	 
 	    private int[] basicImages = new int[] {
-	        R.drawable.home_text_subtitle_basicweek_white,
-	        R.drawable.home_text_subtitle_basicmonth_white
+	        R.drawable.home_text_subtitle_basicmonth_white,
+	        R.drawable.home_text_subtitle_basicweek_white
 	    };
 	    private int[] middleImages = new int[] {
-		    R.drawable.home_text_subtitle_middleweek_white,
-		    R.drawable.home_text_subtitle_middlemonth_white
+			R.drawable.home_text_subtitle_middlemonth_white,
+		    R.drawable.home_text_subtitle_middleweek_white
 		};
 	    private int[] highImages = new int[] {
-		    R.drawable.home_text_subtitle_highweek_white,
-		    R.drawable.home_text_subtitle_highmonth_white
+		    R.drawable.home_text_subtitle_highmonth_white,
+		    R.drawable.home_text_subtitle_highweek_white
 		};
 	    private int[] toiecImages = new int[] {
-		    R.drawable.home_text_subtitle_toeicweek_white,
-		    R.drawable.home_text_subtitle_toeicmonth_white
+			R.drawable.home_text_subtitle_toeicmonth_white,
+		    R.drawable.home_text_subtitle_toeicweek_white
 		};
 	 
 	    public ImageAdapter(Context context){

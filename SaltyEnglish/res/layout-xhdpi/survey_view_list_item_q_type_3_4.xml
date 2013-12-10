@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content" 
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
     
     <TextView 
         android:id="@+id/survey_id_point"
         android:layout_width="15dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:layout_alignParentLeft="true"
@@ -21,7 +22,7 @@
         android:layout_width="245dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:gravity="center"
+        android:gravity="left"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textSize="18sp"
@@ -36,7 +37,9 @@
         android:layout_below="@id/survey_id_question"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:gravity="center"
+        android:gravity="left"
+        android:inputType="text"
+        android:focusableInTouchMode="true"
         android:background="@drawable/que_body_inputtext"/>
     
     <ImageView 

@@ -3,78 +3,130 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:src="@drawable/home_image_slidemenu" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:src="@drawable/home_image_slidemenu" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="233" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="116.5dp"
+            android:layout_weight="821"
             android:src="@drawable/home_image_slidemenu_bar" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="226" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="73" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="36.5dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable_btn_slid_mypage"
             android:onClick="showHomeMyPage" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9" />
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="119dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable_btn_invitefriend"
             android:onClick="kakaoInvitefriend" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9" />
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="201dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable_btn_download"
             android:onClick="showHomeDownload" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9" />
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="283dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable__btn_slid_myvocabulary"
             android:onClick="showHomeWordList" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9" />
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="365.5dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable_btn_store"
             android:onClick="showHomeStore" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9" />
+
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="447.5dp"
+            android:layout_height="0dp"
+            android:layout_weight="156"
             android:background="@drawable/studyhome_drawable_btn_more"
             android:onClick="showMore" />
 
-        <RelativeLayout
-            android:id="@+id/frag_home_rela_id"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/home_bg_pinkpattern"
-            android:clickable="true" >
+            android:layout_height="0dp"
+            android:layout_weight="229" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/frag_home_rela_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_bg_pinkpattern"
+        android:clickable="true"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
 
             <!-- side bar menu button -->
 
@@ -87,14 +139,182 @@
                 android:background="@drawable/studyhome_drawable_btn_menu"
                 android:onClick="slideMenuBtnCB" />
 
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/home_bgimg_home" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/horiScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="88"
+            android:background="@drawable/home_image_carousel" >
+
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/study_home_id_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <!--
+            <RadioGroup
+                android:id="@+id/homestore_id_week_moon_rank_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="88"
+                android:background="@drawable/home_image_myrankingbox"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/studyhome_id_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:checked="true"
+                    android:text="기초 주간순위" />
+
+                <RadioButton
+                    android:id="@+id/studyhome_id_moon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="기초 월간순위" />
+            </RadioGroup>
+        -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="954"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" > <!-- page bg -->
+
+            <RelativeLayout
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/home_image_rankingbox"
+                android:padding="25dp" >
+
+                <ListView
+                    android:id="@+id/studyhome_id_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/home_bgimg_whitebar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp" 
+                    android:dividerHeight="15dp"
+                    android:divider="@drawable/home_image_scrollline"/>
+
+                <!-- bg -->
+
+                <ImageView
+                    android:id="@+id/home_bgimg_whitebar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/home_image_myrankingbox"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/home_bgimg_whitebar" />
+
+                <LinearLayout
+                    android:id="@+id/home_image_myrankingbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/home_image_myrankingbox"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" > <!-- my rank -->
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="17" />
+
+                    <TextView
+                        android:id="@+id/studyhome_id_my_rank"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="79"
+                        android:gravity="center"
+                        android:textColor="#000000"
+                        android:textSize="14sp" />
+                    <!-- wrap, wrap, 60dp, 493dp, 19sp -->
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="52" />
+
+                    <ImageView
+                        android:id="@+id/studyhome_id_my_rank_image"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:layout_weight="81" />
+                    <!-- 50dp, 50dp, 97dp, 481dp -->
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="23" />
+
+                    <TextView
+                        android:id="@+id/studyhome_id_my_rank_name_text"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="141"
+                        android:textColor="#000000"
+                        android:gravity="left|center_vertical"
+                        android:textSize="16sp" />
+                    <!-- 180dp, 493dp, 17sp -->
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25" />
+
+                    <TextView
+                        android:id="@+id/studyhome_id_my_rank_fraction"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="141"
+                        android:textColor="#000000"
+                        android:gravity="center_vertical|right"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="44" />
+                    <!-- 57dp, 493dp, 17sp -->
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="150" >
+
             <!-- study button -->
 
             <Button
                 android:id="@+id/studyhome_id_study_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="580dp"
                 android:background="@drawable/studyhome_drawable_btn_study"
                 android:onClick="showStudyCategory" />
 
@@ -104,8 +324,8 @@
                 android:id="@+id/studyhome_id_wordlist_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="592.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
                 android:background="@drawable/studyhome_drawable_btn_myvocabulary"
                 android:onClick="showHomeWordList" />
 
@@ -115,259 +335,73 @@
                 android:id="@+id/studyhome_id_mypage_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="245.5dp"
-                android:layout_marginTop="592.5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:background="@drawable/studyhome_drawable_btn_mypage"
                 android:onClick="showHomeMyPage" />
-            <!-- page bg -->
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="89dp"
-                android:src="@drawable/home_image_rankingbox" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:src="@drawable/home_bgimg_home" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/home_image_myrankingbox" />
-
-            <!--
-            <RadioGroup
-                    android:id="@+id/homestore_id_week_moon_rank_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                     >
-
-                    <RadioButton
-                        android:id="@+id/studyhome_id_week"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                       	android:text="기초 주간순위"
-                        android:checked="true" 
-                       	/>
-       
-                    <RadioButton
-                        android:id="@+id/studyhome_id_moon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="기초 월간순위" 
-                        />
-                </RadioGroup>
-            -->
-            <!-- View Pager -->
-
-            <RelativeLayout
-                android:id="@+id/horiScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="45dp" >
-
-               <!--  <ImageView
-                    android:id="@+id/bgimg_whitebox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/home_bgimg_subtitle_whitebox" />-->
-
-                <android.support.v4.view.ViewPager
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/study_home_id_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </RelativeLayout>
-            <!--
-            <HorizontalScrollView
-                android:id="@+id/horiScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/home_image_myrankingbox"
-                android:scrollbars="none" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal" >
-
-                    <RadioGroup
-                    android:id="@+id/homestore_id_week_moon_rank_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal"
-                     >
-
-                    <RadioButton
-                        android:id="@+id/studyhome_id_week"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                       	android:text="기초 주간순위"
-                        android:checked="true" 
-                       	/>
-       
-                    <RadioButton
-                        android:id="@+id/studyhome_id_moon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="기초 월간순위" 
-                        />
-                </RadioGroup>
-                </LinearLayout>
-            </HorizontalScrollView>
-            -->
-
-            <ListView
-                android:id="@+id/studyhome_id_listview"
-                android:layout_width="325dp"
-                android:layout_height="336dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="101dp"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:paddingTop="30dp" />
-
-            <!-- bg -->
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="451dp"
-                android:src="@drawable/home_bgimg_whitebar" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="480dp"
-                android:src="@drawable/home_image_myrankingbox" />
-
-            <!-- my rank -->
-
-            <TextView
-                android:id="@+id/studyhome_id_my_rank"
-                android:layout_width="36dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="495dp"
-                android:gravity="center"
-                android:textColor="#000000"
-                android:textSize="14sp" />
-            <!-- wrap, wrap, 60dp, 493dp, 19sp -->
-
-            <ImageView
-                android:id="@+id/studyhome_id_my_rank_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="88dp"
-                android:layout_marginTop="481dp" />
-            <!-- 50dp, 50dp, 97dp, 481dp -->
-
-            <TextView
-                android:id="@+id/studyhome_id_my_rank_name_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="140dp"
-                android:layout_marginTop="493dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-            <!-- 180dp, 493dp, 17sp -->
-
-            <TextView
-                android:id="@+id/studyhome_id_my_rank_fraction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="57dp"
-                android:layout_marginTop="493dp"
-                android:textColor="#000000"
-                android:textSize="16sp" />
-            <!-- 57dp, 493dp, 17sp -->
         </RelativeLayout>
+    </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/studyhome_cpi_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/test_27_bg_opacity"
-            android:clickable="true"
-            android:visibility="gone" >
+    <RelativeLayout
+        android:id="@+id/studyhome_cpi_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/test_27_bg_opacity"
+        android:clickable="true"
+        android:visibility="gone" >
 
-            <!-- bg -->
+        <!-- bg -->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="196.5dp"
-                android:layout_marginTop="84.5dp"
-                android:src="@drawable/test_27_image_dogs" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="196.5dp"
+            android:layout_marginTop="84.5dp"
+            android:src="@drawable/test_27_image_dogs" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="347.5dp"
-                android:background="@drawable/test_27_image_infotitle" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="347.5dp"
+            android:background="@drawable/test_27_image_infotitle" />
 
-            <!-- ad image -->
+        <!-- ad image -->
 
-            <ImageView
-                android:id="@+id/study_home_id_cpi_ad_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="108dp"
-                android:background="@drawable/test_27_image_frame" />
+        <ImageView
+            android:id="@+id/study_home_id_cpi_ad_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="108dp"
+            android:background="@drawable/test_27_image_frame" />
 
-            <TextView
-                android:id="@+id/study_home_id_cpi_ad_text"
-                android:layout_width="211.5dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="396dp"
-                android:gravity="center"
-                android:text="INFO"
-                android:textColor="#000000"
-                android:textSize="18sp" />
+        <TextView
+            android:id="@+id/study_home_id_cpi_ad_text"
+            android:layout_width="211.5dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="396dp"
+            android:gravity="center"
+            android:text="INFO"
+            android:textColor="#000000"
+            android:textSize="18sp" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="507.5dp"
-                android:background="@drawable/studytest_drawable_btn_saving"
-                android:onClick="cpxGoReward" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="507.5dp"
+            android:background="@drawable/studytest_drawable_btn_saving"
+            android:onClick="cpxGoReward" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="569dp"
-                android:background="@drawable/studytest_drawable_btn_later"
-                android:onClick="cpxGoHome" />
-        </RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="569dp"
+            android:background="@drawable/studytest_drawable_btn_later"
+            android:onClick="cpxGoHome" />
     </RelativeLayout>
 
 </RelativeLayout>
