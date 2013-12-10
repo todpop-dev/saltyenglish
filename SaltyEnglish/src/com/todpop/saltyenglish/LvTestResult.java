@@ -42,8 +42,9 @@ public class LvTestResult extends Activity {
 	ArrayList<String> enArray = new ArrayList<String>() ;
 	ArrayList<String> krArray = new ArrayList<String>();
 	
-	//ArrayList<String> enSave = new ArrayList<String>() ;
-	//ArrayList<String> krSave = new ArrayList<String>();
+	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
+	SharedPreferences lvTextWord;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,37 +55,32 @@ public class LvTestResult extends Activity {
 		
 		mHelper = new WordDBHelper(this);
 
+		studyInfo = getSharedPreferences("studyInfo",0);
+		studyInfoEdit = studyInfo.edit();
 		
-		SharedPreferences lvTextWord = getSharedPreferences("lvTextWord",0);
+		lvTextWord = getSharedPreferences("lvTextWord",0);
+
 		arItem = new ArrayList<MyItem>();
 		MyItem mi;
-		
-		TextView level = (TextView)findViewById(R.id.lvtest_result_id_level);
-		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-		
-		level.setText(rgInfo.getString("level", "NO"));
-		
-		// Save level info to StudyLevelInfo
-		SharedPreferences prefs = getSharedPreferences("StudyLevelInfo", MODE_PRIVATE);
-		SharedPreferences.Editor ed = prefs.edit();
-		ed.putInt("totalStage", (Integer.parseInt(rgInfo.getString("level", "1"))-1)*10+1);
-		ed.commit();
-		// ---- 
-		
-		// Save category & stage_acc info to StudyInfo by cys ------------------------
-		SharedPreferences stdInfo = getSharedPreferences("studyInfo", MODE_PRIVATE);
-		SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
-		int currentCategory = 1;
-		int tmpLevel = Integer.parseInt(rgInfo.getString("level", "1"));
 
-		if (tmpLevel > 120)     {currentCategory = 4;}
-		else if (tmpLevel > 60) {currentCategory = 3;}
-		else if (tmpLevel > 15) {currentCategory = 2;}
+		int myLevel = Integer.parseInt(studyInfo.getString("myLevel", "1"));
+		
+		TextView levelShow = (TextView)findViewById(R.id.lvtest_result_id_level);
+		String levelShow1 = getResources().getString(R.string.level_show_1);
+		String levelShow2 = getResources().getString(R.string.level_show_2);
+		levelShow.setText("      " + levelShow1 + String.valueOf(myLevel) + levelShow2);
+		
+		// Save level info to StudyInfo
+		// Save category & stage_acc info to StudyInfo by cys ------------------------
+		int currentCategory = 1;
+		if      (myLevel > 120) {currentCategory = 4;}
+		else if (myLevel > 60)	{currentCategory = 3;}
+		else if (myLevel > 15)	{currentCategory = 2;}
 		else                    {currentCategory = 1;}
 
-		stdInfoEdit.putInt("currentCategory", currentCategory);
-		stdInfoEdit.putInt("currentStageAccumulated", tmpLevel*10-9);
-		stdInfoEdit.commit();
+		studyInfoEdit.putInt("currentCategory", currentCategory);
+		studyInfoEdit.putInt("currentStageAccumulated", myLevel*10-9);
+		studyInfoEdit.commit();
 		// ----------------------------------------------------------------------------
 		
 		for(int i=0;i<20;i++) {
@@ -167,7 +163,7 @@ public class LvTestResult extends Activity {
 			viewHolder.textKr.setText(arSrc.get(position).kr);
 			
 			viewHolder.textEn.setTag(position);
-			viewHolder.textEn.setTag(position);
+			//viewHolder.textKr.setTag(position);
 			viewHolder.selectBtn.setTag(position);
 			
 //			if(enSave != null)

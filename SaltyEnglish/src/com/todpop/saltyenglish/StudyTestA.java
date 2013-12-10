@@ -59,7 +59,7 @@ public class StudyTestA extends Activity {
 	ImageView pageNumber;
 	
 	// Total Stage
-	int currentStage;
+	int tmpStageAccumulated;
 	
  	// Database
  	WordDBHelper mHelper;
@@ -142,8 +142,8 @@ public class StudyTestA extends Activity {
 		optionThree = new ArrayList<String>();
 		optionFour = new ArrayList<String>();
 		
-		SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-		currentStage = levelInfoSp.getInt("currentStage", 1);
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		
 		//page number
@@ -411,7 +411,7 @@ public class StudyTestA extends Activity {
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
 		try {
-			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + currentStage + ";", null);
+			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
 			
 			if (cursor.getCount()>0) {
 				while(cursor.moveToNext()) {

@@ -4,6 +4,8 @@ package com.todpop.saltyenglish;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -103,8 +105,8 @@ public class StudyHome extends Activity {
 	
 	SharedPreferences pref;
 	SharedPreferences studyInfo;
+	SharedPreferences.Editor studyInfoEdit;
 	SharedPreferences myRankInfo;
-	SharedPreferences StudyLevelInfo;				// test purpose
 	
 	ViewPager categoryPager;
 	ImageAdapter adapter;
@@ -154,7 +156,6 @@ public class StudyHome extends Activity {
 		
 		myRankInfo = getSharedPreferences("myRankInfo", 0);
 		studyInfo = getSharedPreferences("studyInfo",0);
-		StudyLevelInfo = getSharedPreferences("StudyLevelInfo",0);			// test purpose
 		
 		pref = getSharedPreferences("rgInfo",0);
 		userId = pref.getString("mem_id", "0");
@@ -224,29 +225,31 @@ public class StudyHome extends Activity {
 			
 			@Override
 			public void onPageSelected(int arg0) {
-				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
-				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+				
+				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+
 				// TODO Auto-generated method stub
 				if(arg0%2 == 1){ //Weekly
     				period =1;
-    				stdInfoEdit.putInt("currentPeriod", 1);
-    				stdInfoEdit.commit();
-					rankingList.setAdapter(rankingListAdapterWeek);
+    				studyInfoEdit.putInt("currentPeriod", 1);
+    				studyInfoEdit.commit();
 
+					rankingList.setAdapter(rankingListAdapterWeek);
 					myRank.setText(myRankInfo.getString("weekRank", "null"));
 					myScore.setText(myRankInfo.getString("weekScore", "null"));
-					
+
     				Log.i("TESTING", "id_week getInfo() called");
 				}
 				else{		//Monthly
     				period =2;
-    				stdInfoEdit.putInt("currentPeriod", 2);
-    				stdInfoEdit.commit();
+    				studyInfoEdit.putInt("currentPeriod", 2);
+    				studyInfoEdit.commit();
+
 					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
 					rankingList.setAdapter(rankingListAdapterMonth);
-
 					myRank.setText(myRankInfo.getString("monthRank", "null"));
 					myScore.setText(myRankInfo.getString("monthScore", "null"));
+
     				Log.i("TESTING", "id_moon getInfo() called");
 				}
 			}
@@ -302,22 +305,11 @@ public class StudyHome extends Activity {
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 		
-		Log.d("S H ----","196");
-		Log.d("stageInfo",studyInfo.getString("stageInfo", null));
-		Log.d("S H ----","198");
+		//Log.d("S H ----","196");
+		//Log.d("stageInfo",studyInfo.getString("stageInfo", null));
+		//Log.d("S H ----","198");
 		
-		int totalStage = StudyLevelInfo.getInt("totalStage", -99);
-		int currentStage = StudyLevelInfo.getInt("currentStage", -99);
-		int Level1 = StudyLevelInfo.getInt("Level1", -99);
-		int Level2 = StudyLevelInfo.getInt("Level2", -99);
-		Log.d("total",String.valueOf(totalStage));
-		Log.d("current",String.valueOf(currentStage));
-		Log.d("Level1",String.valueOf(Level1));
-		Log.d("Level2",String.valueOf(Level2));
-
-
-		
-		
+	
 	}
 	
 	
@@ -1092,17 +1084,29 @@ public class StudyHome extends Activity {
 
 		// check, intent is available.
 		if (!kakaoLink.isAvailableIntent()) {
-			//alert("Not installed KakaoTalk.");			
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.study_home_popup_nokakao), 1000).show();
 			return;
 		}
-		//TODO -- need to rearrange
-		kakaoLink.openKakaoLink(this, 
-				kaokaoAndroidUrl, 
-				iosUrl, 
-				getPackageName(), 
-				getPackageManager().getPackageInfo(getPackageName(), 0).versionName, 
-				kakaoMent, 
-				encoding);
+		else
+		{
+			ArrayList<Map<String, String>> metaInfoArray = new ArrayList<Map<String, String>>();
+			
+			Map<String, String> metaInfoAndroid = new Hashtable<String, String>(1);
+			metaInfoAndroid.put("os", "android");
+			metaInfoAndroid.put("devicetype", "phone");
+			metaInfoAndroid.put("installurl", "market://details?id=com.todpop.saltyenglish");		// fix
+			metaInfoArray.add(metaInfoAndroid);
+
+			String nickname = pref.getString("nickname", null);
+			String strMessage = kakaoMent + nickname +"]";
+			String strURL = "http://market.android.com/details?id=com.todpop.saltyenglish";			// fix & hidden
+			String strAppId = "com.todpop.saltyenglish";											// fix
+			String strAppVer = "0.1.x";																// cannot get real AppVer automatically (no matter)
+			String strAppName = getResources().getString(R.string.app_name);
+						
+			kakaoLink.openKakaoAppLink(StudyHome.this, strURL, strMessage, strAppId, strAppVer, strAppName, "UTF-8", metaInfoArray);
+			
+		}
 	}
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) 

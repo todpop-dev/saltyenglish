@@ -50,9 +50,8 @@ public class StudyTestResult extends Activity {
 	
  	// Database
  	WordDBHelper mHelper;
-
  	
- 	static int currentStage;
+ 	int tmpStageAccumulated;
 	String resultScore;
 	String resultReward;
 	String resultMedal;
@@ -88,7 +87,7 @@ public class StudyTestResult extends Activity {
 			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT NOT NULL UNIQUE, mean TEXT);");
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 		
 
@@ -131,36 +130,43 @@ public class StudyTestResult extends Activity {
 //		
 
 		{
+			Log.e("STEVEN", "line 135");
 			// Get Test result from database
-			SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-			currentStage = levelInfoSp.getInt("currentStage", 1);
+			SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+			tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 			getTestWords();
 			
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = pref.getInt("categoryStage", 1);										// will be modified later with tmpCategory obtained from StudyLearn.java
+			int category = studyInfo.getInt("tmpCategory", 1);
 			String userId = pref.getString("mem_id", "0");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
 			String resultUrl;
+
+			// ------- cys added -----------
+			studyInfoEdit.putInt("currentCategory", category);
+			studyInfoEdit.putInt("currentStageAccumulated", tmpStageAccumulated);		// save tmpStage -> currentStage
+			int level = ((tmpStageAccumulated-1)/10) + 1;
+			if(category==1)			{studyInfoEdit.putInt("levelLast1", level);Log.e("STR1",String.valueOf(level));}
+			else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);Log.e("STR2",String.valueOf(level));}
+			else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);Log.e("STR3",String.valueOf(level));}
+			else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
+			studyInfoEdit.commit();
+			// ----------------------------
 			
-			if (currentStage%10 != 0) {
-				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
-						"&stage=" + currentStage%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
+			if (tmpStageAccumulated%10 != 0) {
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+						"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
 			} else {
-				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((currentStage-1)/10+1) + 
+				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
 						"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
 			}
 			new GetTestResult().execute(resultUrl);
 			Log.d("-------- result url ------- ", resultUrl);
 			// ----------- End of  Request Result -------------
 			
-			// ------- cys added -----------
-			studyInfoEdit.putInt("currentCategory", category);					// will be modified later with tmpCategory obtained from StudyLearn.java
-			studyInfoEdit.putInt("currentStageAccumulated", currentStage);		// will be modified later with tmpStageAccumulated obtained from StudyLearn.java
-			studyInfoEdit.commit();
-			// ----------------------------
 		}
 		
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
@@ -223,57 +229,7 @@ public class StudyTestResult extends Activity {
 					
 						rewardView.setText(resultReward);
 						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
-						
-						if (Integer.parseInt(resultMedal) > 0) {
-							// Update Counts
-							SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-							SharedPreferences.Editor editor = sp.edit();
-							int totalStage = sp.getInt("totalStage", 1);
-							int currentStage = sp.getInt("currentStage", 1);
 
-
-							
-							if ((currentStage+1) > totalStage) {
-								
-								editor.putInt("currentStage", (currentStage+1));			
-								editor.putInt("totalStage", (currentStage+1));
-								editor.commit();
-								
-								SharedPreferences pref = getSharedPreferences("rgInfo",0);
-								SharedPreferences.Editor editor2 = pref.edit();
-								
-								int testLevel = currentStage/10+1;
-								int savedLevel = Integer.parseInt(pref.getString("level", "1"));
-								
-								if (testLevel > savedLevel) {
-									editor2.putString("level", Integer.toString(testLevel));
-									String levelLabel = "Level"+testLevel;
-									editor.putInt(levelLabel, 1);
-								} else {
-									String levelLabel = "Level"+(testLevel);
-									int levelInt = sp.getInt(levelLabel, 1)+1;
-									editor.putInt(levelLabel, levelInt);
-								}
-								
-								editor.commit();
-								editor2.commit();
-							} else {
-								int nextStage = currentStage+1;
-								int testLevel = (nextStage-1)/10+1;
-								int stageCount = nextStage%10;
-								if (stageCount ==0){
-									stageCount = 10;
-								}
-								
-								String levelLabel = "Level"+(testLevel);
-								int levelInt = sp.getInt(levelLabel, 1);
-								if (stageCount > levelInt) {
-									editor.putInt(levelLabel, stageCount);
-									editor.commit();
-								}
-							}
-						}
-						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -295,8 +251,9 @@ public class StudyTestResult extends Activity {
 		try {
 			SQLiteDatabase db = mHelper.getReadableDatabase();
 
-			if (currentStage%10 == 0) {
+			if (tmpStageAccumulated%10 == 0) {
 				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
+				Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 				if (cursor.getCount() > 0) {
 					while(cursor.moveToNext()) {
 						Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
@@ -309,10 +266,12 @@ public class StudyTestResult extends Activity {
 
 
 			} else {
-				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + currentStage + ";", null);
+				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
+
+				Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 				if (cursor.getCount() > 0) {
 					while(cursor.moveToNext()) {
-						Log.d("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
+						Log.e("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
 						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
 						arItem.add(mi);
 					}
@@ -320,6 +279,7 @@ public class StudyTestResult extends Activity {
 
 			}
 		} catch (Exception e) {
+			Log.e("AFDSDFDSFSDFDSF", "catch error");
 			e.printStackTrace();
 		}
 		

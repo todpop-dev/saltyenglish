@@ -77,6 +77,7 @@ public class HomeMyPage extends FragmentActivity {
 	static int prizeImageCount = 0;
 
 	SharedPreferences rgInfo;
+	SharedPreferences studyInfo;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class HomeMyPage extends FragmentActivity {
 		setContentView(R.layout.activity_home_my_page);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
+		studyInfo = getSharedPreferences("studyInfo",0);
 		
 		characterBtn = (ImageView)findViewById(R.id.home_mypage_id_character_btn);		
 		levelBox = (TextView)findViewById(R.id.home_mypage_id_level_text);
@@ -106,10 +108,8 @@ public class HomeMyPage extends FragmentActivity {
 			rankNickNameList.add(i,"null");
 		}	
 		
-		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-		SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
-		int category = stdInfo.getInt("currentCategory",1);
-		int period = stdInfo.getInt("currentPeriod", 1);
+		int category = studyInfo.getInt("currentCategory",1);
+		int period = studyInfo.getInt("currentPeriod", 1);
 		
 		// image here cys !!!!!!!!!!
 		Log.i("cys category", String.valueOf(category));

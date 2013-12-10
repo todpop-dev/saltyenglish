@@ -118,8 +118,8 @@ public class StudyTestB extends Activity {
 		
 		// Database initiation
 		mHelper = new WordDBHelper(this);
-		SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-		totalStage = levelInfoSp.getInt("currentStage", 1);
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		totalStage = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		
 		// English Word View

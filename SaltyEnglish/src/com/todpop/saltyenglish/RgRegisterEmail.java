@@ -50,6 +50,8 @@ public class RgRegisterEmail extends Activity {
 	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
+	
+	int passRecommend;			// if 1 , no check recommend
 
 	
 	@Override
@@ -69,14 +71,20 @@ public class RgRegisterEmail extends Activity {
 
 		doneBtn = (Button)findViewById(R.id.rgregisteremail_id_donebtn);
 		
+		passRecommend = 0;
+		
 		Log.d("nick=",rgInfo.getString("nickname","no"));
 		
 		if(!rgInfo.getString("facebook","no").equals("no"))						// cross join (facebook -> email)
 		{
 			nickname.setEnabled(false);			
 			nickname.setText(rgInfo.getString("nickname", null));
-			nicknameRefre.setEnabled(false);			
-			nicknameRefre.setText(rgInfo.getString("recommend", null));
+			nicknameRefre.setEnabled(false);
+			
+			Log.e("RRE-cross",rgInfo.getString("recommend", getResources().getString(R.string.rg_register_recommend_none)) );
+			
+			nicknameRefre.setText(rgInfo.getString("recommend", getResources().getString(R.string.rg_register_recommend_none)));
+			passRecommend=1;
 			checkNickname.setVisibility(View.GONE);
 			
 			if(rgInfo.getString("password", "0").equals("1"))
@@ -109,7 +117,25 @@ public class RgRegisterEmail extends Activity {
 	public void checkDuplicatedNickname(View view)
 	{
 		Log.i("STEVEN----dupicated nickname", "right now nick is"+nickname.getText());
-		new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickname.getText().toString());
+		Log.e("RRE",nickname.getText().toString());
+		String tmpNickname = nickname.getText().toString();
+		if(tmpNickname.contains(" "))
+		{
+			popupText.setText(R.string.popup_nickname_no_blank);
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			popupWindow.showAsDropDown(checkNickname);
+		}
+		else if(tmpNickname.length()<3||tmpNickname.length()>8){
+			Log.e("RRE-string","1212");
+			rgInfoEdit.putString("nickname","no");
+			popupText.setText(R.string.popup_nickname_length);
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			popupWindow.showAsDropDown(checkNickname);
+		}
+		else
+		{
+			new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickname.getText().toString());
+		}
 	}
 
 	private class CheckNicknameExistAPI extends AsyncTask<String, Void, JSONObject> {
@@ -142,18 +168,17 @@ public class RgRegisterEmail extends Activity {
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
+			Log.e("RRE-string",nickname.getText().toString());
+			Log.e("RRE-length",String.valueOf(nickname.getText().toString().length()));
 			try {
-				if(nickname.getText().toString().length()<3||nickname.getText().toString().length()>8){
-					rgInfoEdit.putString("nickname","no");
-					popupText.setText(R.string.popup_nickname_length);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					popupWindow.showAsDropDown(checkNickname);
-				}else if(json.getJSONObject("data").getBoolean("result")){
+				if(json.getJSONObject("data").getBoolean("result")){
+					Log.e("RRE-string","3434");
 					rgInfoEdit.putString("nickname",nickname.getText().toString());
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}else{
+					Log.e("RRE-string","5656");
 					rgInfoEdit.putString("nickname","no");
 					popupText.setText(R.string.popup_nickname_no);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
@@ -161,8 +186,9 @@ public class RgRegisterEmail extends Activity {
 				}
 				rgInfoEdit.commit();
 			} catch (Exception e) {
-
+				Log.e("RRE","asdf");
 			}
+			Log.e("RRE","qweasd");
 		}
 	}
 
@@ -170,7 +196,7 @@ public class RgRegisterEmail extends Activity {
 	
 	public void bridgeToEmailInfoActivity(View view)
 	{
-		if(!nicknameRefre.getText().toString().isEmpty()){
+		if(!nicknameRefre.getText().toString().isEmpty() && passRecommend==0){
 			Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
 			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
 		}
@@ -265,7 +291,7 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(doneBtn);
 		}
-		else if(!nicknameRefre.getText().toString().isEmpty() && !rgInfo.getString("recommend","no").equals(nicknameRefre.getText().toString())){
+		else if(!nicknameRefre.getText().toString().isEmpty() && !rgInfo.getString("recommend","no").equals(nicknameRefre.getText().toString()) && passRecommend==0){
 				Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", "NO")+"rightnow is = "+nicknameRefre.getText().toString());
 				isOk = false;
 				popupText.setText(R.string.popup_recom_no);
