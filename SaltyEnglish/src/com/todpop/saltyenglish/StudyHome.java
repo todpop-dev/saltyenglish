@@ -1098,7 +1098,7 @@ public class StudyHome extends Activity {
 			metaInfoArray.add(metaInfoAndroid);
 
 			String nickname = pref.getString("nickname", null);
-			String strMessage = kakaoMent + "[" + nickname +"]";
+			String strMessage = kakaoMent + nickname +"]";
 			String strURL = "http://market.android.com/details?id=com.todpop.saltyenglish";			// fix & hidden
 			String strAppId = "com.todpop.saltyenglish";											// fix
 			String strAppVer = "0.1.x";																// cannot get real AppVer automatically (no matter)
