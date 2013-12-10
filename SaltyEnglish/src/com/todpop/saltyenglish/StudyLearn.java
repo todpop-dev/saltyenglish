@@ -118,30 +118,33 @@ public class StudyLearn extends FragmentActivity {
 		pageView.setAdapter(pagerAdapter);
 		
 		// 1. Calculate Page Count for each Section. 
-		if(category == 1)
-		{
+		if(category == 1) {
 			levelLast = studyInfo.getInt("levelLast1", 1);
 			pageView.setCurrentItem((levelLast-1)/3);
 			currentViewCount = (levelLast-1)/3;
 			pageViewPointIndexCount = 5;
+			Log.e("SL1",String.valueOf(levelLast));
 		} else if(category == 2) {
 			levelLast = studyInfo.getInt("levelLast2", 16);
 			currentViewCount=(levelLast-16)/3;
 			if (currentViewCount <0)	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 15;
+			Log.e("SL2",String.valueOf(levelLast));
 		} else if(category == 3) {
 			levelLast = studyInfo.getInt("levelLast3", 61);
 			currentViewCount=(levelLast-61)/3;
 			if (currentViewCount <0)	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 20;
+			Log.e("SL3",String.valueOf(levelLast));
 		} else if(category == 4) {
 			levelLast = studyInfo.getInt("levelLast4", 121);
 			currentViewCount=(levelLast-121)/3;
 			if (currentViewCount <0) 	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 20;
+			Log.e("SL4",String.valueOf(levelLast));
 		}
 		
 		

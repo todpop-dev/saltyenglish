@@ -254,9 +254,22 @@ public class FbNickname extends Activity {
 	public void checkNickName(View v)
 	{
 		Log.d("FbNickname","192");
-		//Log.d("chk=",nickName.getText().toString());
+
 		try {
-			new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+nickName.getText().toString());
+			String tmpNickname = nickName.getText().toString();
+			if(tmpNickname.contains(" "))
+			{
+				popupText.setText(R.string.popup_nickname_no_blank);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
+			else if(tmpNickname.length()<3||tmpNickname.length()>8){
+				popupText.setText(R.string.popup_nickname_length);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
+			else
+			{
+				new CheckNicknameExistAPI().execute("http://todpop.co.kr/api/users/check_nickname_exist.json?nickname="+tmpNickname);
+			}
 		}
 		catch (Exception e)
 		{
@@ -307,11 +320,7 @@ public class FbNickname extends Activity {
 				
 				Log.d("FbNickname","243");
 				
-				if(nickName.getText().toString().length() < 3 || nickName.getText().toString().length() > 8){
-					rgInfoEdit.putString("nickname","no");
-					popupText.setText(R.string.popup_nickname_length);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-				}else if(json.getJSONObject("data").getBoolean("result")){
+				if(json.getJSONObject("data").getBoolean("result")){
 					rgInfoEdit.putString("nickname",nickName.getText().toString());
 					popupText.setText(R.string.popup_nickname_yes);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);

@@ -139,7 +139,7 @@ public class StudyTestResult extends Activity {
 			// ----------- Request Result -------------
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = studyInfo.getInt("tmpCategoryStage", 1);
+			int category = studyInfo.getInt("tmpCategory", 1);
 			String userId = pref.getString("mem_id", "0");
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			String finalAnswerForRequest = levelPref.getString("testResult", "");
@@ -149,10 +149,10 @@ public class StudyTestResult extends Activity {
 			studyInfoEdit.putInt("currentCategory", category);
 			studyInfoEdit.putInt("currentStageAccumulated", tmpStageAccumulated);		// save tmpStage -> currentStage
 			int level = ((tmpStageAccumulated-1)/10) + 1;
-			if(category==1)			{studyInfoEdit.putInt("levelLast1", level);}
-			else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);}
-			else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);}
-			else					{studyInfoEdit.putInt("levelLast4", level);}
+			if(category==1)			{studyInfoEdit.putInt("levelLast1", level);Log.e("STR1",String.valueOf(level));}
+			else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);Log.e("STR2",String.valueOf(level));}
+			else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);Log.e("STR3",String.valueOf(level));}
+			else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
 			studyInfoEdit.commit();
 			// ----------------------------
 			

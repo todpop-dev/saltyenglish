@@ -183,7 +183,11 @@ public class RgRegister extends Activity {
 					
 					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("id"));
 					rgInfoEdit.putString("nickname", json.getJSONObject("data").getString("nickname"));
-					rgInfoEdit.putString("recommend", json.getJSONObject("data").getString("recommend"));
+					
+					String recommend = json.getJSONObject("data").getString("recommend");
+					if(recommend.equals("null"))	{rgInfoEdit.putString("recommend", null);}
+					else							{rgInfoEdit.putString("recommend", recommend);}
+					
 					rgInfoEdit.putString("password", json.getJSONObject("data").getString("is_set_facebook_password"));
 					
 					if(json.getJSONObject("data").getString("email").equals("null")) {rgInfoEdit.putString("email",null);}

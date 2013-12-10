@@ -11,6 +11,7 @@
     <string name="title_activity_rg_register_email_info">RgRegisterEmailInfo</string>
     <string name="title_activity_rg_register_finish">RgRegisterFinish</string>
     <string name="popup_nickname_no">중복된 닉네임이 있어요. </string>
+    <string name="popup_nickname_no_blank">빈칸은 사용할 수 없어요</string>
     <string name="popup_nickname_reserved">사용할 수 없어요 (예약된 닉네임)</string>
     <string name="popup_recom_no">추천인 닉네임이 잘못되었어요</string>
     <string name="popup_email_pwd_wrong">이메일 혹은 패스워드를 확인해 주세요</string>
@@ -198,6 +199,7 @@
     <string name="rg_register_failed">회원가입에 실패하였어요</string>
     <string name="rg_register_have_nickname">닉네임이 설정되어있습니다</string>
     <string name="rg_register_have_password">비밀번호가 설정되어있습니다</string>
+    <string name="rg_register_recommend_none">추천인이 없었어요</string>
     <string name="title_activity_home_mypage_option_character">HomeMypageOptionCharacter</string>
     <string name="title_activity_home_more_account_delete">HomeMoreAccountDelete</string>
     <string name="title_activity_lv_test_pause">LvTestPause</string>
