@@ -59,7 +59,7 @@ public class StudyTestC extends Activity {
 	ArrayList<String> randomArrange5;
 	ArrayList<String> randomArrange6;
 	
-	static int totalStage;
+	static int tmpStageAccumulated;
 	static int testSetCount;
 	static int cardCount;
 	static int finalAnswerForRequest = 0;
@@ -165,9 +165,9 @@ public class StudyTestC extends Activity {
 		pauseView = (RelativeLayout)findViewById(R.id.study_test_c_id_pause_layout);
 		pauseView.setVisibility(View.GONE);
 		
-		SharedPreferences levelInfoSp = getSharedPreferences("StudyLevelInfo", 0);
-		totalStage = levelInfoSp.getInt("currentStage", 1);
-		Log.d("first totalStage ----", Integer.toString(totalStage));
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
+		Log.d("first totalStage ----", Integer.toString(tmpStageAccumulated));
 		getTestWords();
 		
 		card1_1 = (Button)findViewById(R.id.study_testc_card_1_1);
@@ -380,9 +380,9 @@ public class StudyTestC extends Activity {
 		try {
 			
 			// It should be 66 words 11 sets
-			Log.d("stage number", Integer.toString(totalStage));
+			Log.d("stage number", Integer.toString(tmpStageAccumulated));
 			Cursor otherCursor = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
-					"xo=\'X\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + " ORDER BY RANDOM() LIMIT 36", null);
+					"xo=\'X\' AND stage>" + (tmpStageAccumulated-10) + " AND stage <" + tmpStageAccumulated + " ORDER BY RANDOM() LIMIT 36", null);
 
 			if (otherCursor.getCount()>0) {
 				while(otherCursor.moveToNext()) {
@@ -395,7 +395,7 @@ public class StudyTestC extends Activity {
 			
 			if (englishWords.size() < 36) {
 				Cursor otherCursor2 = db.rawQuery("SELECT DISTINCT name, mean FROM dic WHERE " +
-						"xo=\'O\' AND stage>" + (totalStage-10) + " AND stage <" + totalStage + 
+						"xo=\'O\' AND stage>" + (tmpStageAccumulated-10) + " AND stage <" + tmpStageAccumulated + 
 						" ORDER BY RANDOM() LIMIT " + (36 - englishWords.size()), null);
 				if (otherCursor2.getCount()>0) {
 					while(otherCursor2.moveToNext()) {

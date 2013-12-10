@@ -63,19 +63,19 @@ public class StudyLearn extends FragmentActivity {
 	// Fragment attached to pageView
 	LevelFragment levelFragment;
 
-	static SharedPreferences prefs;
-	static SharedPreferences.Editor ed;
 	static SharedPreferences studyInfo;
+	static SharedPreferences.Editor studyInfoEdit;
 	static String stageInfo;
+	SharedPreferences rgInfo;
 	
 	
 	// TMP page number and stage information
-	static int testLevel = 8;
+	int levelLast = 1;
 	int stage = 0;
 	
 	//study category parameter
 	Bundle bundle;
-	static int levelCount;
+	static int levelStart;
 	//page point index count
 	int pageViewPointIndexCount;
 	int currentViewCount;
@@ -98,75 +98,48 @@ public class StudyLearn extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_learn);
 		
-		// User ID
-		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-		userId = rgInfo.getString("mem_id", "0");
+		rgInfo = getSharedPreferences("rgInfo",0);		// User ID
+		studyInfo = getSharedPreferences("studyInfo",0);;
+		studyInfoEdit = studyInfo.edit();
 
+		userId = rgInfo.getString("mem_id", "0");
 		studyInfo = getSharedPreferences("studyInfo",0);
 		stageInfo = studyInfo.getString("stageInfo", null);
 		
-		// Get level 
-		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
-		category = pref.getInt("categoryStage", 1);
-		if (category == 1)
-			{levelCount = 1;}
-		else if (category == 2)
-			{levelCount = 16;}
-		else if (category == 3)
-			{levelCount = 61;}
-		else						// category 4
-			{levelCount = 121;}
-		
-		// Preference Study Level Info save all dynamic level info
-		prefs = getSharedPreferences("StudyLevelInfo", MODE_PRIVATE);
-		testLevel = (prefs.getInt("totalStage", 1)-1)/10+1;
-		
-		ed = prefs.edit();
-		
-		// For each level how many stages opened?
-		for (int i=1; i<=testLevel; i++) {
-			String levelCountStr = "Level" + Integer.toString(i);
-			try {
-				int origCount = prefs.getInt(levelCountStr, 1);
-				ed.putInt(levelCountStr, origCount);
-			} catch( Exception e) {
-				ed.putInt(levelCountStr, 1);
-			}
-		}
-		ed.commit();
-		// ---- 
-
-		// stage old and new info
-		checkStageIsNew = getSharedPreferences("CheckStageIsNew",0);
-
+		category = studyInfo.getInt("tmpCategory", 1);
+		if (category == 1)		{levelStart = 1;}
+		else if (category == 2)	{levelStart = 16;}
+		else if (category == 3)	{levelStart = 61;}
+		else					{levelStart = 121;}		// category 4
 		
 		pageView = (ViewPager)findViewById(R.id.studylearn_id_pager);
 		pagerAdapter = new PagerAdapter(getSupportFragmentManager());	
 		pageView.setAdapter(pagerAdapter);
 		
 		// 1. Calculate Page Count for each Section. 
-		if(levelCount ==1)
+		if(category == 1)
 		{
-			pageView.setCurrentItem((testLevel-1)/3);
-			currentViewCount = (testLevel-1)/3;
+			levelLast = studyInfo.getInt("levelLast1", 1);
+			pageView.setCurrentItem((levelLast-1)/3);
+			currentViewCount = (levelLast-1)/3;
 			pageViewPointIndexCount = 5;
-		} else if(levelCount == 16) {
-			currentViewCount=(testLevel-16)/3;
-			if (currentViewCount <0) 
-				currentViewCount = 0;
+		} else if(category == 2) {
+			levelLast = studyInfo.getInt("levelLast2", 16);
+			currentViewCount=(levelLast-16)/3;
+			if (currentViewCount <0)	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 15;
-		} else if(levelCount == 61) {
-			currentViewCount=(testLevel-61)/3;
-			if (currentViewCount <0) 
-				currentViewCount = 0;
+		} else if(category == 3) {
+			levelLast = studyInfo.getInt("levelLast3", 61);
+			currentViewCount=(levelLast-61)/3;
+			if (currentViewCount <0)	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 20;
-		} else if(levelCount == 121) {
-			currentViewCount=(testLevel-121)/3;
-			if (currentViewCount <0) 
-				currentViewCount = 0;
+		} else if(category == 4) {
+			levelLast = studyInfo.getInt("levelLast4", 121);
+			currentViewCount=(levelLast-121)/3;
+			if (currentViewCount <0) 	currentViewCount = 0;
 			pageView.setCurrentItem(currentViewCount);
 			pageViewPointIndexCount = 20;
 		}
@@ -287,23 +260,10 @@ public class StudyLearn extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			
-
-			
-			if(levelCount ==1)
-			{
-				fregmentCount = 5;
-			}else if(levelCount == 16)
-			{
-				fregmentCount = 15;
-			}else if(levelCount == 61)
-			{
-				fregmentCount = 20;
-			}
-			else if(levelCount == 121)
-			{
-				fregmentCount = 20;
-			}
+			if(category == 1)		{fregmentCount = 5;}
+			else if(category ==2 )	{fregmentCount = 15;}
+			else if(category == 3)	{fregmentCount = 20;}
+			else if(category == 4)	{fregmentCount = 20;}
 			return fregmentCount;
 		}
 	}
@@ -324,7 +284,7 @@ public class StudyLearn extends FragmentActivity {
 
 			Bundle args = getArguments();
 			
-			int labelNumber = levelCount + 3*(args.getInt("page"));
+			int labelNumber = levelStart + 3*(args.getInt("page"));
 
 			levelText1.setText("level  "+Integer.toString(labelNumber));
 			levelText2.setText("level  "+Integer.toString(labelNumber+1));
@@ -410,6 +370,9 @@ public class StudyLearn extends FragmentActivity {
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
+						
+						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
+						studyInfoEdit.commit();
 
 						try
 						{
@@ -419,8 +382,6 @@ public class StudyLearn extends FragmentActivity {
 								stageParams.put("User Id", userId);
 								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
 
-								ed.putInt("currentStage", currentBtnClickStage);
-								ed.commit();
 									
 								if (selectedStageNo == 10) {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
@@ -549,7 +510,10 @@ public class StudyLearn extends FragmentActivity {
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
-						
+
+						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
+						studyInfoEdit.commit();
+
 						try
 						{
 							if (selectedStageStatus != 'Y') {
@@ -557,10 +521,7 @@ public class StudyLearn extends FragmentActivity {
 								Map<String, String> stageParams = new HashMap<String, String>();
 								stageParams.put("User Id", userId);
 								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
-
-								ed.putInt("currentStage", currentBtnClickStage);
-								ed.commit();
-									
+						
 								if (selectedStageNo == 10) {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 									getActivity().startActivity(myIntent);
@@ -698,6 +659,15 @@ public class StudyLearn extends FragmentActivity {
 						int currentBtnClickStage = (Integer)(v.getTag());
 						int selectedStageNo = (currentBtnClickStage-1)%10+1; 
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
+
+						Log.d("============","===============");
+						Log.d("============","===============");
+						Log.d("tsa",String.valueOf(currentBtnClickStage));
+						Log.d("============","===============");
+						Log.d("============","===============");
+						
+						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
+						studyInfoEdit.commit();
 						
 						try
 						{
@@ -706,9 +676,6 @@ public class StudyLearn extends FragmentActivity {
 								Map<String, String> stageParams = new HashMap<String, String>();
 								stageParams.put("User Id", userId);
 								FlurryAgent.logEvent("Stage clicked (Review)", stageParams);
-
-								ed.putInt("currentStage", currentBtnClickStage);
-								ed.commit();
 								
 								if (selectedStageNo == 10) {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
@@ -830,8 +797,6 @@ public class StudyLearn extends FragmentActivity {
 							stageParams.put("User Id", userId);
 							FlurryAgent.logEvent("Stage clicked (New)", stageParams);
 							Log.d("Insert Current Stage -----", Integer.toString(currentBtnStage));
-							ed.putInt("currentStage", currentBtnStage);
-							ed.commit();
 								
 							if (currentBtnStage%10 ==0) {
 								Intent myIntent = new Intent(getActivity(), StudyTestC.class);

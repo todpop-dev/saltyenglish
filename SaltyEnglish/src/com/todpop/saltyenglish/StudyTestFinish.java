@@ -191,40 +191,6 @@ public class StudyTestFinish extends Activity {
 		Log.d("cpdm view_time----",""+view_time);
 		FlurryAgent.endTimedEvent("CPDM");
 		new SetCPDMlog().execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="+ad_id+"&ad_type="+ad_type+"&user_id="+rgInfo.getString("mem_id", "0")+"&view_time="+view_time);
-//		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-//		SharedPreferences.Editor editor = sp.edit();
-//		int totalStage = sp.getInt("totalStage", 1);
-//		int currentStage = sp.getInt("currentStage", 1);
-//		
-//
-//
-//		
-//		if ((currentStage+1) > totalStage) {
-//			editor.putInt("currentStage", (currentStage+1));
-//			editor.commit();
-//			
-//			editor.putInt("totalStage", (currentStage+1));
-//			editor.commit();
-//			
-//			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-//			SharedPreferences.Editor editor2 = pref.edit();
-//			
-//			int testLevel = currentStage/10+1;
-//			int savedLevel = Integer.parseInt(pref.getString("level", "1"));
-//			
-//			if (testLevel > savedLevel) {
-//				editor2.putString("level", Integer.toString(testLevel));
-//				String levelLabel = "Level"+testLevel;
-//				editor.putInt(levelLabel, 1);
-//			} else {
-//				String levelLabel = "Level"+(testLevel);
-//				int levelInt = sp.getInt(levelLabel, 1)+1;
-//				editor.putInt(levelLabel, levelInt);
-//			}
-//			
-//			editor.commit();
-//			editor2.commit();
-//		}
 		
 	}
 	@Override

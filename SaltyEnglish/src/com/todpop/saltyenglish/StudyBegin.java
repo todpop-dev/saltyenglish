@@ -66,10 +66,9 @@ public class StudyBegin extends FragmentActivity {
 	TextView popupText;
 		
 		
-	static int totalStage = 0;
-	static int currentStage = 0;
-	static int level = 0;
-	static int stage = 0;
+	static int tmpStageAccumulated = 1;
+	static int tmpLevel = 1;
+	static int tmpStage = 1;
 	
 	// Slide Level Page
 	ViewPager studyStartPageView;
@@ -118,6 +117,7 @@ public class StudyBegin extends FragmentActivity {
  	static ImageView cpdView;
  	static Button cpdCoupon;
  	 	
+ 	SharedPreferences studyInfo;
  	
  	static ArrayList<View> rootViewArr = new ArrayList<View>();
  	
@@ -130,27 +130,13 @@ public class StudyBegin extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_begin);
+
+		studyInfo = getSharedPreferences("studyInfo",0);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
+		Log.d("current stage ------------ ", Integer.toString(tmpStageAccumulated));
 		
-		// Get Level Stage info
-//		Bundle bundle = getIntent().getExtras();
-//		totalStage = bundle.getInt("currentStage");
-		
-		SharedPreferences levelInfo = getSharedPreferences("StudyLevelInfo",0);
-		currentStage = levelInfo.getInt("currentStage", 1);
-		Log.d("current stage ------------ ", Integer.toString(currentStage));
-		
-		// Current Stage is Open, therefore setup current stage as OLD
-		String stageStr = Integer.toString(currentStage);
-		SharedPreferences checkStageIsNew = getSharedPreferences("CheckStageIsNew",0);
-		SharedPreferences.Editor checkStageIsNewEditor = checkStageIsNew.edit();
-		checkStageIsNewEditor.putString(stageStr, "OLD");
-		checkStageIsNewEditor.commit();
-		
-		String tmp = checkStageIsNew.getString(stageStr, "1");
-		Log.d(" tmp --- ", tmp);
-		
-		level = (currentStage-1)/10+1;
-		stage = currentStage%10;
+		tmpLevel = (tmpStageAccumulated-1)/10+1;
+		tmpStage = tmpStageAccumulated%10;
 		
 		// Bitmap ArrayList
 		bitmapArr = new ArrayList<Bitmap>();
@@ -198,7 +184,12 @@ public class StudyBegin extends FragmentActivity {
 		// Get word list - callback when get word list to setup page view
 		//new GetWord().execute("http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level);
 
-		String getWordsUrl = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level;
+		Log.d("=======================","=========================");
+		Log.d("level",String.valueOf(tmpLevel));
+		Log.d("stage",String.valueOf(tmpStage));
+		Log.d("=======================","=========================");
+		
+		String getWordsUrl = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + tmpStage + "&level=" + tmpLevel;
 		
 		GetWord getWordTask = new GetWord();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -569,7 +560,7 @@ public class StudyBegin extends FragmentActivity {
 					
 					SQLiteDatabase db = mHelper.getWritableDatabase();
 					try {
-						db.execSQL("DELETE FROM dic WHERE stage=" + currentStage + ";");
+						db.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
 					} catch (Exception e) {
 						
 					}
@@ -612,7 +603,7 @@ public class StudyBegin extends FragmentActivity {
 						row.put("phonetics", jsonWords.getJSONObject(i).get("phonetics").toString());
 						row.put("picture", (Integer)(jsonWords.getJSONObject(i).get("picture")));
 						row.put("image_url", jsonWords.getJSONObject(i).get("image_url").toString());
-						row.put("stage", currentStage);
+						row.put("stage", tmpStageAccumulated);
 						row.put("xo", "X");
 
 						db.insert("dic", null, row);
@@ -623,8 +614,8 @@ public class StudyBegin extends FragmentActivity {
 												
 						// Add additional 3 words
 						Cursor otherCursor = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
-								"xo=\'X\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
-								" AND stage <> " + currentStage + " ORDER BY RANDOM() LIMIT 3" , null);
+								"xo=\'X\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated/10+1)*10 + 
+								" AND stage <> " + tmpStageAccumulated + " ORDER BY RANDOM() LIMIT 3" , null);
 						
 						if (otherCursor.getCount() > 0) {
 							while(otherCursor.moveToNext()) {
@@ -649,7 +640,7 @@ public class StudyBegin extends FragmentActivity {
 								row.put("phonetics", otherCursor.getString(4));
 								row.put("picture", otherCursor.getString(5));
 								row.put("image_url", otherCursor.getString(6));
-								row.put("stage", currentStage);
+								row.put("stage", tmpStageAccumulated);
 								row.put("xo", "X");
 
 								db.insert("dic", null, row);
@@ -666,8 +657,8 @@ public class StudyBegin extends FragmentActivity {
 							}
 							
 							Cursor otherCursor2 = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
-									"xo=\'O\' AND stage>=" + currentStage/10*10 + " AND stage <=" + (currentStage/10+1)*10 + 
-									" AND stage <> " + currentStage + " AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
+									"xo=\'O\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated/10+1)*10 + 
+									" AND stage <> " + tmpStageAccumulated + " AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
 							if (otherCursor2.getCount()>0) {
 								while(otherCursor2.moveToNext()) {
 									JSONObject jsonObj= new JSONObject();
@@ -691,7 +682,7 @@ public class StudyBegin extends FragmentActivity {
 									row.put("phonetics", otherCursor2.getString(4));
 									row.put("picture", otherCursor2.getString(5));
 									row.put("image_url", otherCursor2.getString(6));
-									row.put("stage", currentStage);
+									row.put("stage", tmpStageAccumulated);
 									row.put("xo", "X");
 
 									db.insert("dic", null, row);
@@ -752,7 +743,7 @@ public class StudyBegin extends FragmentActivity {
 		        //bmImage.setImageBitmap(result);
 		    	bitmapArr.add(result);
 		    	Log.d("------------- big count ------", Integer.toString(bitmapArr.size()));
-		        if (stage%10 == 1) {
+		        if (tmpStage == 1) {
 		        	if (bitmapArr.size() == 10) {
 		        		setupPagerView();
 				        // Get CPD after Get Words
@@ -760,7 +751,7 @@ public class StudyBegin extends FragmentActivity {
 						userId = rgInfo.getString("mem_id", "1");
 						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 		        	}
-		        } else if (stage%10 <=9) {
+		        } else if (tmpStage <=9) {
 		        	if (bitmapArr.size() == 7) {
 		        		setupPagerView();
 				        // Get CPD after Get Words
@@ -949,27 +940,20 @@ public class StudyBegin extends FragmentActivity {
 	
 	public void showTestActivity(View view)
 	{		
-//		SharedPreferences settings = getSharedPreferences("StudyLevelInfo", 0);
-//		SharedPreferences.Editor editor = settings.edit();
-//
-//		editor.putInt("totalStage", totalStage);
-//		editor.putInt("testLevel", level);
-//		editor.putInt("testStage", stage);
-//		editor.commit();
 		
 		Log.d("------- send info -----", "info");
 		new SendCPDInfo().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
 		
-		if(stage==1 || stage==2 || stage==4 || stage==5 || stage==7 || stage==8) {
+		if(tmpStage==1 || tmpStage==2 || tmpStage==4 || tmpStage==5 || tmpStage==7 || tmpStage==8) {
 			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
 			startActivity(intent);
 			finish();
 			
-		} else if(stage==3 || stage==6 || stage==9) {
+		} else if(tmpStage==3 || tmpStage==6 || tmpStage==9) {
 			Intent intent = new Intent(getApplicationContext(), StudyTestB.class);
 			startActivity(intent);
 			finish();
-		}else if(stage==10)
+		}else if(tmpStage==10)
 		{
 			Intent intent = new Intent(getApplicationContext(), StudyTestC.class);
 			startActivity(intent);

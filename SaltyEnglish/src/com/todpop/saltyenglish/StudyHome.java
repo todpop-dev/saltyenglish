@@ -114,7 +114,7 @@ public class StudyHome extends Activity {
 	
 	SharedPreferences pref;
 	SharedPreferences studyInfo;
-	SharedPreferences StudyLevelInfo;				// test purpose
+	SharedPreferences.Editor studyInfoEdit;
 	
 	ViewPager categoryPager;
 	ImageAdapter adapter;
@@ -163,7 +163,6 @@ public class StudyHome extends Activity {
 		setContentView(R.layout.activity_study_home);
 		
 		studyInfo = getSharedPreferences("studyInfo",0);
-		StudyLevelInfo = getSharedPreferences("StudyLevelInfo",0);			// test purpose
 		
 		mHelper = new WordDBHelper(this);
 
@@ -225,20 +224,21 @@ public class StudyHome extends Activity {
 			
 			@Override
 			public void onPageSelected(int arg0) {
-				SharedPreferences stdInfo = getSharedPreferences("studyInfo",0);
-				SharedPreferences.Editor stdInfoEdit = stdInfo.edit();
+				
+				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+
 				// TODO Auto-generated method stub
 				if(arg0%2 == 1){
     				period =1;
-    				stdInfoEdit.putInt("currentPeriod", 1);
-    				stdInfoEdit.commit();
+    				studyInfoEdit.putInt("currentPeriod", 1);
+    				studyInfoEdit.commit();
     				Log.i("TESTING", "id_week getInfo() called");
     				getInfo();
 				}
 				else{
     				period =2;
-    				stdInfoEdit.putInt("currentPeriod", 2);
-    				stdInfoEdit.commit();
+    				studyInfoEdit.putInt("currentPeriod", 2);
+    				studyInfoEdit.commit();
     				Log.i("TESTING", "id_moon getInfo() called");
     				getInfo();
 				}
@@ -354,22 +354,11 @@ public class StudyHome extends Activity {
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 		
-		Log.d("S H ----","196");
-		Log.d("stageInfo",studyInfo.getString("stageInfo", null));
-		Log.d("S H ----","198");
+		//Log.d("S H ----","196");
+		//Log.d("stageInfo",studyInfo.getString("stageInfo", null));
+		//Log.d("S H ----","198");
 		
-		int totalStage = StudyLevelInfo.getInt("totalStage", -99);
-		int currentStage = StudyLevelInfo.getInt("currentStage", -99);
-		int Level1 = StudyLevelInfo.getInt("Level1", -99);
-		int Level2 = StudyLevelInfo.getInt("Level2", -99);
-		Log.d("total",String.valueOf(totalStage));
-		Log.d("current",String.valueOf(currentStage));
-		Log.d("Level1",String.valueOf(Level1));
-		Log.d("Level2",String.valueOf(Level2));
-
-
-		
-		
+	
 	}
 	
 	

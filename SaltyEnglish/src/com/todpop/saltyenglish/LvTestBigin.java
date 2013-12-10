@@ -435,8 +435,6 @@ public class LvTestBigin extends Activity {
         				Log.d("------------------------- ", "finish_________________");
         				
         				imageTestendAni.stop();
-        				rgInfoEdit.putString("level", level);
-        				rgInfoEdit.commit();
         				
         				SharedPreferences studyInfo = getSharedPreferences("studyInfo",0);
         				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
@@ -444,8 +442,11 @@ public class LvTestBigin extends Activity {
         				if(count==21)
         				{
 	            			String stageInfo = result.getJSONObject("data").getString("stage_info");
+        					studyInfoEdit.putString("myLevel", level);
 	            			studyInfoEdit.putString("stageInfo", stageInfo);
 	            			studyInfoEdit.commit();
+	            			
+	            			getApplicationContext().deleteDatabase("EngWord.db");				// my_word_book DB reset
         				}
 
         				Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);
