@@ -938,7 +938,9 @@ public class StudyHome extends Activity {
 				newC = Integer.valueOf(newVersion.substring(4, newVersion.length()));
 
 				if(curA < newA || curB < newB || curC < newC){
-					noticeList.add(getResources().getString(R.string.study_home_popup_version_check));
+					noticeList.add(getResources().getString(R.string.study_home_popup_version_check) 
+							+ "\ncurrent version = " + curVersion + "\nnew version =" + newVersion);
+
 					if(curA != newA || curB != newB){
 						majorVersionUpdate = true;
 					}
