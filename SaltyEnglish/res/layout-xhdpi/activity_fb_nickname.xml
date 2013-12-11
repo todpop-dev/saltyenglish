@@ -21,7 +21,7 @@
         android:layout_marginLeft="45dp"
         android:layout_marginTop="-16dp"
         android:src="@drawable/register_21_bgimg_nickname" />
- 
+
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/common_image_bgcharacter4" />
- 
+
     <EditText
         android:id="@+id/fb_nickname_id_nicknamerefre"
         android:layout_width="wrap_content"
@@ -55,14 +55,13 @@
         android:paddingRight="20dp"
         android:singleLine="true"
         android:textSize="15sp" />
- 
-   <EditText
+
+    <EditText
         android:id="@+id/fb_nickname_id_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:layout_alignbelow="@+id/fb_nickname_id_nicknamerefre"
         android:layout_alignLeft="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_marginTop="150dp"
         android:background="@drawable/common_textbox_short"
         android:ems="10"
         android:hint="예) 짭짤"
@@ -71,10 +70,8 @@
         android:paddingRight="20dp"
         android:singleLine="true"
         android:textSize="15sp" >
-
-
     </EditText>
- 
+
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
@@ -84,7 +81,7 @@
         android:layout_marginBottom="13dp"
         android:layout_marginLeft="0dp"
         android:src="@drawable/register_21_image_nicknamegirl" />
-  
+
     <Button
         android:id="@+id/fb_nickname_id_check_btn"
         android:layout_width="wrap_content"
@@ -93,7 +90,7 @@
         android:layout_toRightOf="@+id/fb_nickname_id_nickname"
         android:background="@drawable/rgregistere_fb_btn_nickname"
         android:onClick="checkNickName" />
- 
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
