@@ -1,112 +1,114 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fb_nickname_id_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_darkyellowpattern"
-    android:id="@+id/fb_nickname_id_main_activity" >
+    android:background="@drawable/common_bg_darkyellowpattern" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
-
-
-     <ImageView 
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_centerHorizontal="true"
-    	android:layout_marginTop="12dp"
-    	android:src="@drawable/common_bgimg_register"
-        />
-     
-     <ImageView 
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/common_bgimg_register" />
+
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_marginLeft="51.8dp"
-    	android:layout_marginTop="201.5dp"
-    	android:src="@drawable/register_21_bgimg_nickname"
-        />
-     
-     <EditText 
-        android:id="@+id/fb_nickname_id_nickname"
+        android:layout_alignLeft="@+id/fb_nickname_id_nickname"
+        android:layout_alignTop="@+id/fb_nickname_id_nickname"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="-16dp"
+        android:src="@drawable/register_21_bgimg_nickname" />
+ 
+    <Button
+        android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_marginLeft="20dp"
-    	android:layout_marginTop="220.5dp"
-    	android:singleLine="true"
-        android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textEmailAddress"
-       	android:hint="예) 짭짤"
-        android:textSize="15sp"
-    	android:background="@drawable/common_textbox_short"
-        />
-     
-     <ImageView 
+        android:layout_below="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/rgregisteremail_drawable_btn_next"
+        android:onClick="bridgeToShowLvTest" />
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_marginLeft="21.5dp"
-    	android:layout_marginTop="202.5dp"
-    	android:src="@drawable/register_21_image_nicknamegirl"
-        />
-     
-     <Button
-         android:id="@+id/fb_nickname_id_check_btn"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginLeft="265dp"
-         android:layout_marginTop="233dp"
-         android:background="@drawable/rgregistere_fb_btn_nickname"
-         android:onClick="checkNickName"/>
-     
-     <EditText 
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/common_image_bgcharacter4" />
+ 
+    <EditText
         android:id="@+id/fb_nickname_id_nicknamerefre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_marginLeft="20dp"
-    	android:layout_marginTop="295.5dp"
-    	android:hint="추천인이 없는 경우 빈칸으로 남겨주세요"
-    	android:singleLine="true"
-        android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textEmailAddress"
-        android:textSize="15sp"
-    	android:background="@drawable/common_textbox_long"
-        />
-     
-     <ImageView 
+        android:layout_alignLeft="@+id/button1"
+        android:layout_below="@+id/fb_nickname_id_nickname"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/common_textbox_long"
+        android:ems="10"
+        android:hint="추천인이 없는 경우 빈칸으로 남겨주세요"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="40dp"
+        android:paddingRight="20dp"
+        android:singleLine="true"
+        android:textSize="15sp" />
+ 
+   <EditText
+        android:id="@+id/fb_nickname_id_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_marginLeft="21.5dp"
-    	android:layout_marginTop="278.5dp"
-    	android:src="@drawable/register_21_image_recommendman"
-        />
-     
-     
-     <Button
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_centerHorizontal="true"
-         android:layout_marginTop="393dp"
-         android:background="@drawable/rgregisteremail_drawable_btn_next"
-         android:onClick="bridgeToShowLvTest"
-         />
-     
-      <ImageView 
+        android:layout_marginTop="150dp"
+        android:layout_alignbelow="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_alignLeft="@+id/fb_nickname_id_nicknamerefre"
+        android:background="@drawable/common_textbox_short"
+        android:ems="10"
+        android:hint="예) 짭짤"
+        android:inputType="textEmailAddress"
+        android:paddingLeft="40dp"
+        android:paddingRight="20dp"
+        android:singleLine="true"
+        android:textSize="15sp" >
+
+
+    </EditText>
+ 
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-    	android:layout_alignParentRight="true"
-    	android:layout_alignParentBottom="true"
-    	android:src="@drawable/common_image_bgcharacter4"
-    	
-        />
-   
+        android:layout_alignBottom="@+id/fb_nickname_id_nickname"
+        android:layout_alignLeft="@+id/fb_nickname_id_nickname"
+        android:layout_marginBottom="13dp"
+        android:layout_marginLeft="0dp"
+        android:src="@drawable/register_21_image_nicknamegirl" />
+  
+    <Button
+        android:id="@+id/fb_nickname_id_check_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_toRightOf="@+id/fb_nickname_id_nickname"
+        android:background="@drawable/rgregistere_fb_btn_nickname"
+        android:onClick="checkNickName" />
+ 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_marginBottom="13dp"
+        android:src="@drawable/register_21_image_recommendman" />
 
-
-
-
-     </RelativeLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_alignTop="@+id/fb_nickname_id_nicknamerefre"
+        android:layout_marginLeft="45dp"
+        android:layout_marginTop="-16dp"
+        android:src="@drawable/register_21_bgimg_recommendnickname" />
 
 </RelativeLayout>

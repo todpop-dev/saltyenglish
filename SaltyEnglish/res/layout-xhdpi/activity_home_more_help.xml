@@ -52,7 +52,19 @@
             
     </LinearLayout>
     
+
     
+    <!-- //counsel  btn -->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/homemorehelp_id_listview"
+        android:layout_below="@+id/homemorehelp_id_listview"
+        android:alignBottom="@+id/homemorehelp_id_listview_item"
+        android:background="@drawable/homemorehelp_drawable_btn_counsel" />
+
+        
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,18 +72,6 @@
         android:layout_marginTop="465dp"
         android:src="@drawable/store_57_image_helpman" />
     
-    
-    <!-- //counsel  btn -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="569dp"
-        android:background="@drawable/homemorehelp_drawable_btn_counsel"/>
-        
-
-
-
      </RelativeLayout>
 
 </RelativeLayout>

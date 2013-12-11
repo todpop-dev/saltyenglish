@@ -1,191 +1,198 @@
 ﻿<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rgregisteremail_id_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_darkyellowpattern"
-    android:id="@+id/rgregisteremail_id_main_activity"
-   >
+    android:background="@drawable/common_bg_darkyellowpattern" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
-
-
-
-   
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10.5dp"
         android:layout_marginTop="10.5dp"
-        android:onClick="onClickBack"
-        android:background="@drawable/rg_drawable_btn_back"/>
-    
-   <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_marginLeft="88.5dp"
-    	android:layout_marginTop="108dp"
-    	android:src="@drawable/register_4_bgimg_email"
-        />
-   
-   <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_marginLeft="88.5dp"
-    	android:layout_marginTop="312dp"
-    	android:src="@drawable/register_21_bgimg_nickname"
-        />
-   <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_marginLeft="88.5dp"
-    	android:layout_marginTop="393dp"
-    	android:src="@drawable/register_21_bgimg_recommendnickname"
-        />
-   
-   
-   
-   
-   
+        android:background="@drawable/rg_drawable_btn_back"
+        android:onClick="onClickBack" />
 
-    <EditText 
-        android:id="@+id/rgregisteremail_id_email"
-        android:layout_width="284dp"
-        android:layout_height="63dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="132dp"
-       	android:singleLine="true"
-       	android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textEmailAddress"
-       	android:hint="Email 입력 ex) salty@todpop.co.kr"
-       	android:textSize="15sp"
-        android:background="@drawable/common_textbox_long"
-        />
-    
-    <EditText 
-        android:id="@+id/rgregisteremail_id_emailpwd"
-        android:layout_width="284dp"
-        android:layout_height="63dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="189.5dp"
-        android:singleLine="true"
-       	android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textPassword"
-        android:hint="비밀번호 입력 (6글자 이상)"
-        android:textSize="15sp"
-        android:background="@drawable/common_textbox_long"
-        />
-    
-    <EditText 
-        android:id="@+id/rgregisteremail_id_emailpwdcheck"
-        android:layout_width="284dp"
-        android:layout_height="63dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="247.5dp"
-        android:singleLine="true"
-       	android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textPassword"
-        android:hint="비밀번호 확인"
-        android:textSize="15sp"
-        android:background="@drawable/common_textbox_long"
-        />
-    
-    <EditText 
-        android:id="@+id/rgregisteremail_id_nickname"
-        android:layout_width="191dp"
-        android:layout_height="63dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="330.5dp"
-        android:singleLine="true"
-        android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-       	android:inputType="textEmailAddress"
-        android:hint="예) 짭짤"
-        android:textSize="15sp"
-        android:background="@drawable/common_textbox_short"
-        />
-    
-    <EditText 
-        android:id="@+id/rgregisteremail_id_nicknamerefre"
-        android:layout_width="248dp"
-        android:layout_height="63dp"
-        android:layout_marginLeft="55dp"
-        android:layout_marginTop="408.5dp"
-        android:singleLine="true"
-        android:paddingLeft="25dp"
-       	android:paddingRight="20dp"
-        android:hint="없으면 빈칸으로 남겨주세요"
-        android:textSize="15sp"
-        android:background="@drawable/common_textbox_short"
-        />
-    
-    <Button 
-        android:id="@+id/rgregisteremail_id_checknickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="245dp"
-        android:layout_marginTop="342dp"
-        android:background="@drawable/rgregisteremail_drawable_btn_checknickname"
-        android:onClick="checkDuplicatedNickname"
-        />
-    
-    <Button 
-        android:id="@+id/rgregisteremail_id_donebtn"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="491.5dp"
-        android:background="@drawable/rgregisteremail_drawable_btn_next_activity"
-        android:onClick="bridgeToEmailInfoActivity"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="35.5dp"
-        android:layout_marginTop="95.5dp"
-        android:src="@drawable/register_19_image_emailman"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-        android:layout_marginTop="310.5dp"
-        android:src="@drawable/register_21_image_nicknamegirl"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="46.5dp"
-        android:layout_marginTop="389.5dp"
-        android:src="@drawable/register_21_image_recommendman"/>
-    
-     <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_marginLeft="70.5dp"
-    	android:layout_marginTop="565.5dp"
-    	android:src="@drawable/common_image_bgcharacter4"
-        />
-     
-     <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    	android:layout_centerHorizontal="true"
-    	android:layout_marginTop="12dp"
-    	android:src="@drawable/common_bgimg_register"
-        />
+        android:layout_marginTop="12dp"
+        android:src="@drawable/common_bgimg_register" />
 
+    <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+        
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
 
+            android:src="@drawable/common_image_bgcharacter4" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:layout_alignTop="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_alignLeft="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_marginTop="-15dp"
+            android:layout_marginLeft="45dp"
+            
+            android:src="@drawable/register_21_bgimg_recommendnickname" />
+        
 
+        <EditText
+            android:id="@+id/rgregisteremail_id_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="95dp"
+            android:background="@drawable/common_textbox_long"
+            android:hint="Email 입력 ex) salty@todpop.co.kr"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="40dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="15sp" >
 
-     </RelativeLayout>
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/rgregisteremail_id_donebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rgregisteremail_drawable_btn_next_activity"
+            android:onClick="bridgeToEmailInfoActivity" />
+
+        <ImageView
+            android:id="@+id/rgregisteremail_id_emailman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rgregisteremail_id_email"
+            android:layout_alignLeft="@+id/rgregisteremail_id_email"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="0dp"
+            android:src="@drawable/register_19_image_emailman" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"            
+            android:layout_alignTop="@+id/rgregisteremail_id_email"
+            android:layout_alignLeft="@+id/rgregisteremail_id_email"
+            android:layout_marginTop="-15dp"
+            android:layout_marginLeft="45dp"
+            android:paddingLeft="7dp"
+
+            android:src="@drawable/register_4_bgimg_email" />
+
+        <EditText
+            android:id="@+id/rgregisteremail_id_emailpwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rgregisteremail_id_email"
+            android:layout_below="@+id/rgregisteremail_id_email"
+            android:background="@drawable/common_textbox_long"
+            android:ems="10"
+            android:hint="비밀번호 입력 (6글자 이상)"
+            android:inputType="textPassword"
+            android:paddingLeft="40dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/rgregisteremail_id_emailpwdcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rgregisteremail_id_emailpwd"
+            android:layout_below="@+id/rgregisteremail_id_emailpwd"
+            android:background="@drawable/common_textbox_long"
+            android:ems="10"
+            android:hint="비밀번호 확인"
+            android:inputType="textPassword"
+            android:paddingLeft="30dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/rgregisteremail_id_nickname"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rgregisteremail_id_emailpwdcheck"
+            android:layout_below="@+id/rgregisteremail_id_emailpwdcheck"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/common_textbox_short"
+            android:ems="10"
+            android:hint="예) 짭짤"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="40dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rgregisteremail_id_nickname"
+            android:layout_alignLeft="@+id/rgregisteremail_id_nickname"
+            android:layout_marginTop="-15dp"
+            android:layout_marginLeft="45dp"
+            android:src="@drawable/register_21_bgimg_nickname" />
+
+        <ImageView
+            android:id="@+id/rgregisteremail_id_woman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rgregisteremail_id_nickname"
+            android:layout_alignLeft="@+id/rgregisteremail_id_nickname"
+            android:layout_marginBottom="13dp"
+            android:layout_marginLeft="0dp"
+            android:src="@drawable/register_21_image_nicknamegirl" />
+
+        <EditText
+            android:id="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rgregisteremail_id_nickname"
+            android:layout_below="@+id/rgregisteremail_id_nickname"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/common_textbox_long"
+            android:ems="10"
+            android:hint="없으면 빈칸으로 남겨주세요"
+            android:paddingLeft="40dp"
+            android:paddingRight="20dp"
+            android:singleLine="true"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_alignLeft="@+id/rgregisteremail_id_nicknamerefre"
+            android:layout_marginLeft="0dp"
+            android:layout_marginBottom="13dp"
+            android:src="@drawable/register_21_image_recommendman" />
+
+        <Button
+            android:id="@+id/rgregisteremail_id_checknickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/rgregisteremail_id_nickname"
+            android:layout_alignBottom="@+id/rgregisteremail_id_nickname"
+            android:layout_alignRight="@+id/rgregisteremail_id_emailpwdcheck"
+            android:background="@drawable/rgregisteremail_drawable_btn_checknickname"
+            android:onClick="checkDuplicatedNickname" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
