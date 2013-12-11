@@ -4,103 +4,128 @@
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_bluepattern" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/common_bgimg_resultcheck" />
+        </RelativeLayout>
 
-    
-    <!--  
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="67dp"
-        android:src="@drawable/lvtest_10_text_level" />
-    -->
-    
-    <TextView 
-        android:id="@+id/lvtest_result_id_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="67dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="30dp"
-        />
-    
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="450dp"
-        android:background="@drawable/lvtest_10_text_myword" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1190" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/common_bgimg_resultcheck" />
-    
-    
-    <ListView 
-            android:id="@+id/lvtestresult_id_listview"
-            android:layout_width="344.5dp"
-            android:layout_height="333dp"
-            android:layout_marginTop="105dp"
-            android:layout_centerHorizontal="true"
-			android:fadeScrollbars="false"
-			android:scrollbarTrackVertical="@drawable/lvtest_10_drop_underbar"
-			 android:scrollbarThumbVertical="@drawable/lvtest_10_drop_scroll"
-            />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="14dp"
-        android:layout_marginTop="53dp"
-        android:background="@drawable/lvtest_10_image_blackman" />
-    
-     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="54.5dp"
-        android:background="@drawable/test_23_image_speechbubble" />
-     
-     <TextView 
-        android:id="@+id/study_test_result_id_score_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:layout_marginLeft="90dp"
-        android:textSize="15sp"
-        android:textColor="#000000"
-        />
-    
-    
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="490dp"
-        android:background="@drawable/lvtestresult_drawable_continue_btn"
-        android:onClick="showStudyLearnActivity"/>
-    
-     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="556dp"
-        android:background="@drawable/lvtestresult_drawable_home_btn"
-        android:onClick="showHomeActivity"/>
+            <ImageView
+                android:id="@+id/test_result_10_image_blackman"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/lvtest_10_image_blackman"
+                android:visibility="invisible" />
 
+            <Button
+                android:id="@+id/test_result_drawable_home_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="18dp"
+                android:background="@drawable/lvtestresult_drawable_home_btn"
+                android:onClick="showHomeActivity" />
 
+            <Button
+                android:id="@+id/test_result_drawable_continue_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/test_result_drawable_home_btn"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/lvtestresult_drawable_continue_btn"
+                android:onClick="showStudyLearnActivity" />
 
+            <ImageView
+                android:id="@+id/test_result_10_text_myword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/test_result_drawable_continue_btn"
+                android:layout_marginBottom="22dp"
+                android:layout_marginLeft="26dp"
+                android:background="@drawable/lvtest_10_text_myword" />
 
+            <RelativeLayout
+                android:id="@+id/test_result_10_image_resultbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/test_result_10_text_myword"
+                android:layout_below="@id/test_result_10_image_blackman"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="-19dp"
+                android:background="@drawable/lvtest_10_image_resultbox"
+                android:padding="15dp" >
 
+                <ListView
+                    android:id="@+id/lvtestresult_id_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:fadeScrollbars="false"
+                    android:scrollbarThumbVertical="@drawable/lvtest_10_drop_scroll"
+                    android:scrollbarTrackVertical="@drawable/lvtest_10_drop_underbar" />
+            </RelativeLayout>
 
-     </RelativeLayout>
+            <TextView
+                android:id="@+id/lvtest_result_id_level"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_above="@id/test_result_10_image_resultbox"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textSize="30sp" />
+
+            <ImageView
+                android:id="@+id/test_result_speechbubble"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/test_result_10_image_blackman"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/test_23_image_speechbubble" />
+
+            <TextView
+                android:id="@+id/study_test_result_id_score_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/test_result_speechbubble"
+                android:layout_alignRight="@id/test_result_speechbubble"
+                android:layout_alignTop="@id/test_result_speechbubble"
+                android:layout_alignBottom="@id/test_result_speechbubble"
+                android:paddingRight="12dp"
+                android:paddingTop="11dp"
+                android:gravity="right|center_vertical"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/lvtest_10_image_blackman" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

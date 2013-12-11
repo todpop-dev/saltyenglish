@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -62,7 +63,7 @@ public class StudyTestC extends Activity {
 	static int tmpStageAccumulated;
 	static int testSetCount;
 	static int cardCount;
-	static int finalAnswerForRequest = 0;
+	int finalAnswerForRequest = 0;
 
 	
  	// Database
@@ -481,6 +482,7 @@ public class StudyTestC extends Activity {
 		int cardId;
 		public void onClick(View v)
 		{
+			Log.i("STEVEN", "button clicked cardCheck = " +cardCheck);
 			cardId = v.getId();
 			
 			
@@ -494,6 +496,7 @@ public class StudyTestC extends Activity {
 				} 
 				@Override 
 				public void onAnimationEnd(Animation animation) { 
+
 					
 					if (testSetCount == 0) {
 						tmpArray = randomArrange1;
@@ -547,16 +550,16 @@ public class StudyTestC extends Activity {
 							setCardFlip(card3_4, tmpArray.get(11)); 
 							break;
 					}
-					
-					if(cardCheck ==2) {
+					/*if(cardCheck ==2) {
 						Handler mFrontToBackHandler = new Handler();
 						mFrontToBackHandler.postDelayed(checkCardText, 1000);
-					}
+					}*/
 				} 
 			});
 
 
 			if(cardCheck<2) {
+				
 				if((Integer)v.getTag() == TAG_BACK) {
 					if ((select1 == null) || (select1.getId() != v.getId())) {
 						setCardOnTouchFlip((Button)v);
@@ -574,10 +577,17 @@ public class StudyTestC extends Activity {
 			}
 			cardCheck++;
 			card.startAnimation(animation);
+			if(cardCheck ==2) {
+				Handler mFrontToBackHandler = new Handler();
+				mFrontToBackHandler.postDelayed(checkCardText, 1500);
+			}
 		}
 		
 		private Runnable checkCardText = new Runnable() {
 			public void run() {
+				Log.e("STEVEN", "Just before log.i");
+				Log.i("STEVEN", "select1 = " + select1.toString() + " select2 = " + select2.toString());
+				Log.i("STEVEN", "select1 = " + select1.getText().toString() + " select2 = " + select2.getText().toString());
 				int index1 = englishWords.indexOf(select1.getText().toString());
 				int index2 = englishMeans.indexOf(select2.getText().toString());
 				int index3 = englishMeans.indexOf(select1.getText().toString());
@@ -593,9 +603,6 @@ public class StudyTestC extends Activity {
 					
 					cardCount -= 2;
 					
-					if (cardCount == 0) {
-						resetCards();
-					}
 					
 					try {
 						SQLiteDatabase db = mHelper.getWritableDatabase();
@@ -615,13 +622,17 @@ public class StudyTestC extends Activity {
 
 					
 					finalAnswerForRequest++;
-					
+
+					if (cardCount == 0) {
+						resetCards();
+					}
 				} else {
 					select1.setTag(TAG_FRONT);
 					select2.setTag(TAG_FRONT);
 					setCardFlip(select1,"");
 					setCardFlip(select2,"");	
 				}
+				
 				
 				cardCheck = 0;
 				select1.setTag(TAG_BACK);
@@ -637,7 +648,7 @@ public class StudyTestC extends Activity {
 		testSetCount++;
 		ImageView setNumView = (ImageView)findViewById(R.id.study_test_c_id_set_number);
 		
-		if (testSetCount <= 6) {
+		if (testSetCount < 6) {
 			String imageName = "test_18_image_number6_"+(testSetCount+1);
 			int resId = getResources().getIdentifier(imageName , "drawable", getPackageName());
 			setNumView.setImageResource(resId);

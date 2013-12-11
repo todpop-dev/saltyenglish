@@ -80,6 +80,7 @@ public class StudyHome extends Activity {
 	RankingListItem rankingItem;
 	ArrayList<RankingListItem> rankingItemArrayWeek;
 	ArrayList<RankingListItem> rankingItemArrayMonth;
+	ArrayList<String> noticeList;
 	RankingListAdapter rankingListAdapterWeek;
 	RankingListAdapter rankingListAdapterMonth;
 
@@ -170,6 +171,7 @@ public class StudyHome extends Activity {
 		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
 		rankingItemArrayWeek = new ArrayList<RankingListItem>();
 		rankingItemArrayMonth = new ArrayList<RankingListItem>();
+		noticeList = new ArrayList<String>();
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
 		
         adapter = new ImageAdapter(this);
@@ -936,23 +938,27 @@ public class StudyHome extends Activity {
 				newC = Integer.valueOf(newVersion.substring(4, newVersion.length()));
 
 				if(curA < newA || curB < newB || curC < newC){
-					popupText.setText(getResources().getString(R.string.study_home_popup_version_check) +"\ncurrent version = " + curVersion + "\nnew version =" + newVersion);
+					noticeList.add(getResources().getString(R.string.study_home_popup_version_check) 
+							+ "\ncurrent version = " + curVersion + "\nnew version =" + newVersion);
+
 					if(curA != newA || curB != newB){
 						majorVersionUpdate = true;
 					}
 				}
-				else if(json.getJSONObject("data").getString("ment")!=""){
+				if(json.getJSONObject("data").getString("ment")!=""){
 					String notice = json.getJSONObject("data").getString("ment");
 					notice = notice.replace("\\n", "\n");
-					popupText.setText(notice);
+					noticeList.add(notice);
 				}
+				popupText.setText(noticeList.get(0));
+				noticeList.remove(0);
 				Log.i("STEVEN", "just before pop");
 				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				Log.i("STEVNE", "just before drop down");
 				popupWindow.showAsDropDown(rankingList);
 			} catch (Exception e) {
 
-				Log.i("STEVEN", "app version check and notice something wrong");
+				Log.e("STEVEN", "app version check and notice something wrong");
 			}
 		}
 	}
@@ -1128,7 +1134,6 @@ public class StudyHome extends Activity {
 					{
 						switch (which) {
 						case AlertDialog.BUTTON_POSITIVE:
-							Log.e("STEVEN", String.valueOf(cpiView.isShown()));
 							SharedPreferences settings = getSharedPreferences("setting", 0);
 							SharedPreferences.Editor editor = settings.edit();
 							editor.putString("check","YES");
@@ -1163,18 +1168,34 @@ public class StudyHome extends Activity {
 	public void closePopup(View v)
 	{
 		if(majorVersionUpdate){
+			SharedPreferences settings = getSharedPreferences("setting", 0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString("check","YES");
+			editor.commit();
+
+			//clear activities
+		    Intent intent = new Intent();
+			intent.setClass(StudyHome.this, MainActivity.class);    
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+			startActivity(intent);
+			
+			//go to market
 			Intent market = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.todpop.saltyenglish"));
 		    startActivity(market);
-			//moveTaskToBack(true);
+		    
+		    //close app
 			finish();
 		}
 		else {
 			popupWindow.dismiss();
-			Log.i("STEVEN", "popupWindow dismiss done");
+			if(!noticeList.isEmpty()){	//if more then one notice left
+				popupText.setText(noticeList.get(0));
+				noticeList.remove(0);
+				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(rankingList);
+			}
 			cpxPopupWindow.dismiss();
-			Log.i("STEVEN", "cpxPopupWindow dismiss done");
 			cpiView.setVisibility(View.GONE);
-			Log.i("STEVEN", "setVisibility done");
 		}
 	}
 	

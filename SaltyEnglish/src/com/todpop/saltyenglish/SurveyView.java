@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -307,6 +308,9 @@ public class SurveyView extends Activity {
 						@Override
 						public void onCheckedChanged(RadioGroup group,
 								int checkedId) {
+
+							listView.setSelection(position);
+							
 							String tmpAnswer = "";
 							switch (checkedId) {
 							case R.id.survey_id_btn_1:
@@ -343,6 +347,8 @@ public class SurveyView extends Activity {
 								Log.d("how many selected? ---- ", Integer
 										.toString(surveySelectionChecker));
 								if (surveySelectionChecker == surveyCount) {
+
+									listView.setSelection(arSrc.size());
 									submitBtn.setEnabled(true);
 								}
 							}
@@ -401,15 +407,21 @@ public class SurveyView extends Activity {
 					et.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 						public void onFocusChange(View v, boolean hasFocus) {
-							if (!hasFocus) {
-								EditText tmpEt = (EditText) v;
 
+							
+							if (!hasFocus) {
+
+								EditText tmpEt = (EditText) v;
+								
 								String tmpAnswer = "&ans[]="
 										+ tmpEt.getText().toString()
 												.replace("\n", ".");
 								answerMap.put(position - 1, tmpAnswer);
 
 							} else {
+
+								listView.setSelection(position);
+								
 								if (answerMap.get(position - 1) == null) {
 									surveySelectionChecker++;
 									Log.d("how many selected? ---- ", Integer

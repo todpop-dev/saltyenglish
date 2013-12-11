@@ -24,12 +24,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -55,7 +58,8 @@ public class HomeMyPage extends FragmentActivity {
 	int myRewardTotay = 0;
 	int myRewardCurrent = 0;
 	int myRewardTotal = 0;
-	
+
+	Point size;
 	TextView levelBox;
 	TextView rankBox;
 	Button attendanceBtn;
@@ -335,7 +339,11 @@ public class HomeMyPage extends FragmentActivity {
 					pageView.setClipChildren(false);
 					pageView.setAdapter(pagerAdapter);
 					pageView.setOffscreenPageLimit(pagerAdapter.getCount());
-					pageView.setPageMargin(-210);
+
+					Display display = getWindowManager().getDefaultDisplay();
+					size = new Point();
+					display.getSize(size);
+					pageView.setPageMargin(-size.x/3);
 					pageView.setClipChildren(false);
 					pageView.setCurrentItem(1);
 		    	}

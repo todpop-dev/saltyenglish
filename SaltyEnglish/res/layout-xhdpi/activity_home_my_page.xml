@@ -4,235 +4,326 @@
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_pinkpattern" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
-
-    
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="236dp"
-        android:layout_marginTop="45dp"
-        android:background="@drawable/store_31_image_wholewhitebox" />
-  
-    <!-- image -->
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="9dp"
-        android:layout_marginTop="302dp"
-        android:src="@drawable/store_31_image_userbox"/>
-    
-   <TextView
-        android:id="@+id/home_mypage_id_level_text"
-       	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="21.5dp"
-        android:layout_marginTop="337.5dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="#E6947F"
-        android:background="@drawable/store_31_image_levelbox"/>
-    
-     <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="317dp"
-        android:layout_marginTop="344dp"
-        android:src="@drawable/store_31_text_ranking"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128dp"
-        android:layout_marginTop="371.5dp"
-        android:src="@drawable/store_31_image_whitebar"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128.5dp"
-        android:layout_marginTop="414.5dp"
-        android:src="@drawable/store_31_text_rankingpoint"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128.5dp"
-        android:layout_marginTop="438.5dp"
-        android:src="@drawable/store_31_text_score"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128.5dp"
-        android:layout_marginTop="462.5dp"
-        android:src="@drawable/store_31_text_todaymoney"/>
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128.5dp"
-        android:layout_marginTop="487dp"
-        android:src="@drawable/store_31_text_presentmoney"/>
-    
-	<!-- back btn -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:background="@drawable/rg_drawable_btn_back"
-        android:onClick="onClickBack"/>
-    
-    <!-- my character btn -->
-    <ImageView 
-        android:id="@+id/home_mypage_id_character_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="376dp"
-        android:onClick="showMyCharacter"/>
-  
-    <!-- velue  -->
-     <TextView 
-        android:id="@+id/home_mypage_id_my_nickname"
-        android:layout_width="106.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="360dp"
-        android:textSize="15sp"
-        android:gravity="left"
-        android:textColor="#000000"
-        />
-    
-    <ImageView
-	android:id="@+id/home_mypage_id_myrank_category" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="127.5dp"
-        android:layout_marginTop="352.5dp" />
-        <!--  android:src="@drawable/store_31_text_middleranking" -->
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_myrank_text"
-        android:layout_width="106.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="210.5dp"
-        android:layout_marginTop="318dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="48sp"
-        />
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_mypoint_text"
-        android:layout_width="55.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="414dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="13sp"/>
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_myremain_text"
-        android:layout_width="55.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="438dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="13sp"/>
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_rewardtotay_text"
-        android:layout_width="55.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="462dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="13sp"/>
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_rewardcurrent_text"
-        android:layout_width="55.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="485.5dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="13sp"/>
-    
-    <!--money btn -->
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="123dp"
-        android:layout_marginTop="506.5dp"
-        android:background="@drawable/homemypage_drawable_btn_money"
-        android:onClick="showHomeMyPageSaving"/>
-    
-    <!-- money text -->
-    <TextView 
-        android:id="@+id/home_mypage_id_rewardtotal_text"
-        android:layout_width="55.5dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="285dp"
-        android:layout_marginTop="511.5dp"
-        android:gravity="right"
-        android:textColor="#000000"
-        android:textSize="13sp"/>
-  
-    <!-- attendance btn -->
-    <Button 
-        android:id="@+id/home_mypage_id_attendance_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="128dp"
-        android:layout_marginTop="380dp"
-        android:gravity="center"
-        android:paddingLeft="18dp"
-        android:paddingBottom="2dp"
-        android:background="@drawable/homemypage_drawable_btn_dinoattendance"
-        android:onClick="showAttendanceActivity"
-        />
-  
-    <!-- button download  store   purchase -->
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="554.5dp"
-        android:background="@drawable/homemypage_drawable_btn_download"
-        android:onClick="showHomeDownload"/>
-    
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="131dp"
-        android:layout_marginTop="554.5dp"
-        android:onClick="showHomeStoreActivity"
-        android:background="@drawable/homemypage_drawable_btn_store"/>
-    
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="239.5dp"
-        android:layout_marginTop="554.5dp"
-        android:onClick="showHomeMyPagePurchased"
-        android:background="@drawable/homemypage_drawable_btn_purchase"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
 
+            <!-- back btn -->
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
+        </RelativeLayout>
 
-     </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="472" >
+
+            <android.support.v4.view.ViewPager
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/store_31_image_wholewhitebox" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="718"
+            android:paddingBottom="21dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="21dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/store_31_image_userbox"
+                android:paddingBottom="13dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/home_my_page_userbox_bottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal" >
+
+                    <!-- button download  store   purchase -->
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/homemypage_drawable_btn_download"
+                        android:onClick="showHomeDownload" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/homemypage_drawable_btn_store"
+                        android:onClick="showHomeStoreActivity" />
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/homemypage_drawable_btn_purchase"
+                        android:onClick="showHomeMyPagePurchased" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/home_my_page_userbox_bottom"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="213"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="132" >
+
+                            <!-- velue -->
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_my_nickname"
+                                android:layout_width="106.5dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:gravity="left"
+                                android:textColor="#EEF5D3"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_level_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_my_nickname"
+                                android:background="@drawable/store_31_image_levelbox"
+                                android:gravity="left"
+                                android:paddingLeft="5dp"
+                                android:textColor="#E6947F"
+                                android:textSize="16sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="213" >
+
+                            <!-- my character btn -->
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_character_btn"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_centerInParent="true"
+                                android:onClick="showMyCharacter" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="148" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="427"
+                        android:orientation="vertical"
+                        android:paddingLeft="5dp" >
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="455" >
+
+                            <!-- money btn -->
+
+                            <Button
+                                android:id="@+id/home_mypage_id_total_money"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/homemypage_drawable_btn_money"
+                                android:onClick="showHomeMyPageSaving" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_presentmoney"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_total_money"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginLeft="9dp"
+                                android:src="@drawable/store_31_text_presentmoney" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_todaymoney"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_presentmoney"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:src="@drawable/store_31_text_todaymoney" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_score"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_todaymoney"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:src="@drawable/store_31_text_score" />
+
+                            <ImageView
+                                android:id="@+id/rankingpoint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_score"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginLeft="9dp"
+                                android:src="@drawable/store_31_text_rankingpoint" />
+
+                            <!-- attendance btn -->
+
+                            <Button
+                                android:id="@+id/home_mypage_id_attendance_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/rankingpoint"
+                                android:layout_marginBottom="3dp"
+                                android:background="@drawable/homemypage_drawable_btn_dinoattendance"
+                                android:gravity="center"
+                                android:onClick="showAttendanceActivity"
+                                android:paddingBottom="2dp"
+                                android:paddingLeft="18dp"
+                                android:textColor="#EE3F42" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_whitebar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_attendance_btn"
+                                android:layout_marginBottom="4dp"
+                                android:src="@drawable/store_31_image_whitebar" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_ranking_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_whitebar"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginBottom="8dp"
+                                android:src="@drawable/store_31_text_ranking" />
+
+                            <ImageView
+                                android:id="@+id/home_mypage_id_myrank_category"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_above="@id/home_mypage_id_whitebar"
+                                android:layout_marginBottom="6dp" />
+                            <!-- android:src="@drawable/store_31_text_middleranking" -->
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_myrank_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_above="@id/home_mypage_id_attendance_btn"
+                                android:layout_marginBottom="3dp"
+                                android:layout_marginRight="2dp"
+                                android:layout_toLeftOf="@id/home_mypage_id_ranking_text"
+                                android:gravity="bottom|right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="48sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_mypoint_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/rankingpoint"
+                                android:gravity="right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_myremain_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/home_mypage_id_score"
+                                android:gravity="right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_rewardtotay_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/home_mypage_id_todaymoney"
+                                android:gravity="right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_rewardcurrent_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignTop="@id/home_mypage_id_presentmoney"
+                                android:gravity="right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="13sp" />
+
+                            <!-- money text -->
+
+                            <TextView
+                                android:id="@+id/home_mypage_id_rewardtotal_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@id/home_mypage_id_total_money"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginBottom="3dp"
+                                android:gravity="right"
+                                android:textColor="#EEF5D3"
+                                android:textSize="13sp" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp" 
+                            android:layout_weight="50"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

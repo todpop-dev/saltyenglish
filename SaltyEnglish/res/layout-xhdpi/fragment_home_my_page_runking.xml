@@ -1,59 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-     >
-     
-    
-    <ImageView 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="160" >
+
+            <ImageView
+                android:id="@+id/left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/store_31_image_whitearrow_left" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="406" >
+
+            <ImageButton
+                android:id="@+id/home_my_page_goodsbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/store_31_image_goodsbox" />
+
+            <ImageView
+                android:id="@+id/home_mypage_id_rankingid_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/home_my_page_goodsbox"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
+
+            <ImageView
+                android:id="@+id/home_mypage_id_ranking_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@id/home_my_page_goodsbox"
+                android:layout_alignLeft="@id/home_my_page_goodsbox"
+                android:layout_alignRight="@id/home_my_page_goodsbox"
+                android:layout_below="@id/home_mypage_id_rankingid_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp" 
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/home_mypage_id_ranking_nickName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/home_my_page_goodsbox"
+                android:layout_alignRight="@id/home_my_page_goodsbox"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="right"
+                android:textColor="#000000" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="160" >
+
+            <ImageView
+                android:id="@+id/right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/store_31_image_whitearrow_right" />
+        </RelativeLayout>
+    </LinearLayout>
+    <!--
+    <ImageView
+        android:id="@+id/store_31_image_goodsbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="37dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/store_43_image_opacitybox"/>
-    
-     <ImageView 
-        android:id="@+id/home_mypage_id_rankingid_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        />
-    
-    
-    <ImageView 
-        android:id="@+id/home_mypage_id_ranking_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:src="@drawable/store_43_image_shoes"/>
-    
-    <TextView 
-        android:id="@+id/home_mypage_id_ranking_nickName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="175dp"
-        android:layout_marginTop="200dp"
-        android:layout_centerHorizontal="true"
-        android:textColor="#000000"
-       />
-    
-    <ImageView 
-        android:id="@+id/left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="48dp"
-        android:layout_centerVertical="true"
-        android:src="@drawable/store_31_image_whitearrow_left"/>
-    
-     <ImageView 
-         android:id="@+id/right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="300dp"
-        android:layout_centerVertical="true"
-        android:src="@drawable/store_31_image_whitearrow_right"/>
-    
+        android:src="@drawable/store_31_image_goodsbox" />
+    -->
+
 </RelativeLayout>
