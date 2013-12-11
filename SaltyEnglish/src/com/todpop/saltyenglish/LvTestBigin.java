@@ -75,6 +75,7 @@ public class LvTestBigin extends Activity {
 	int correct = 0;
 	String level=null;
 	int density;
+	static int correctOption;
 
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
@@ -88,9 +89,6 @@ public class LvTestBigin extends Activity {
 	String checkRW = "";
 	
 	boolean checkAni = false;
-	
-	ArrayList<Integer> randomP = new ArrayList<Integer>(); 
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +98,6 @@ public class LvTestBigin extends Activity {
 		FlurryAgent.logEvent("Level Test Start");
 		
 		density = (int) getResources().getDisplayMetrics().density;
-
-		Log.d("density","    density = "+density);
-		randomP.add(506/2*density);
-		randomP.add(640/2*density);
-		randomP.add(774/2*density);
-		randomP.add(908/2*density);
 		
 		lvTextWord = getSharedPreferences("lvTextWord",0);
 		lvTextWordEdit = lvTextWord.edit();
@@ -119,17 +111,25 @@ public class LvTestBigin extends Activity {
 		introView = (RelativeLayout)findViewById(R.id.lvtestbigin_id_introView);
 
 		numberView = (ImageView)findViewById(R.id.lvtextbigin_id_view_number);
-
+		//test word
 		enWord = (TextView)findViewById(R.id.lvtextbigin_id_enword);
+		
+		//select word button
 		select1 = (Button)findViewById(R.id.lvtestbigin_id_select1);
 		select2 = (Button)findViewById(R.id.lvtestbigin_id_select2);
 		select3 = (Button)findViewById(R.id.lvtestbigin_id_select3);
 		select4 = (Button)findViewById(R.id.lvtestbigin_id_select4);
-
 		select1.setOnClickListener(new ButtonListener());
 		select2.setOnClickListener(new ButtonListener());
 		select3.setOnClickListener(new ButtonListener());
 		select4.setOnClickListener(new ButtonListener());
+		
+		// For correct answer comparison 
+		select1.setTag(1);
+		select2.setTag(2);
+		select3.setTag(3);
+		select4.setTag(4);
+		
 		select1.setClickable(false);
 		select2.setClickable(false);
 		select3.setClickable(false);
@@ -170,41 +170,6 @@ public class LvTestBigin extends Activity {
 		
 		Handler mHandler = new Handler();
 		mHandler.postDelayed(mLaunchTaskMain, 4000);
-	}
-	
-
-	
-	public void setButtonPosition()
-	{
-		
-		Collections.shuffle(randomP);
-		
-		
-
-		for(int i = 0 ; i<4; i++){
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-			lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			lp.setMargins(0, randomP.get(i), 0, 0);
-			
-			Log.d("random",""+randomP.get(i));
-			switch(i)
-			{
-			case 0:
-				select1.setLayoutParams(lp);
-				break;
-			case 1:
-				select2.setLayoutParams(lp);
-
-				break;
-			case 2:
-				select3.setLayoutParams(lp);
-				break;
-			case 3:
-				select4.setLayoutParams(lp);
-				break;
-			}
-		}
-		
 	}
 	
 	private  AnimatorListener mAnimationListener = new AnimatorListenerAdapter() {
@@ -249,31 +214,24 @@ public class LvTestBigin extends Activity {
 			select3.setClickable(false);
 			select4.setClickable(false);
 			
-			switch(v.getId())
-			{
-				case R.id.lvtestbigin_id_select1:
-					lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-					lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-					lvTextWordEdit.putString("check"+(count-2), "Y");
-					lvTextWordEdit.commit();			
-        			
-					correct++;
-        			checkRW = "o";
-					
-				break;
-				
-				case R.id.lvtestbigin_id_select2:
-				case R.id.lvtestbigin_id_select3:
-				case R.id.lvtestbigin_id_select4:
-					
-					lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-					lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-					lvTextWordEdit.putString("check"+(count-2), "N");
-					lvTextWordEdit.commit();
-        			checkRW = "x";
-				break;
-				
+			int buttonTag = (Integer)v.getTag();
+			if(buttonTag == correctOption){
 
+				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
+				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
+				lvTextWordEdit.putString("check"+(count-2), "Y");
+				lvTextWordEdit.commit();			
+    			
+				correct++;
+    			checkRW = "o";
+			}
+			else{
+
+				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
+				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
+				lvTextWordEdit.putString("check"+(count-2), "N");
+				lvTextWordEdit.commit();
+    			checkRW = "x";
 			}
 			if(count == 21)
 			{
@@ -346,11 +304,35 @@ public class LvTestBigin extends Activity {
         			enWord.setText(result.getJSONObject("data").getString("word"));
         			select1.setText(result.getJSONObject("data").getString("mean"));
         			level = result.getJSONObject("data").getString("level");
+
+        			int ran = (int)(Math.random() * 4);
+        			Log.d("ran number ------ ", Integer.toString(ran));
         			
-	
-        			select2.setText(list.get(0));
-        			select3.setText(list.get(1));
-        			select4.setText(list.get(2));
+        			if (ran == 0) {
+        				select1.setText(result.getJSONObject("data").getString("mean"));
+        				select2.setText(list.get(0));
+        				select3.setText(list.get(1));
+        				select4.setText(list.get(2));
+        				correctOption = 1;
+        			} else if (ran == 1) {
+        				select1.setText(list.get(0));
+        				select2.setText(result.getJSONObject("data").getString("mean"));
+        				select3.setText(list.get(1));
+        				select4.setText(list.get(2));
+        				correctOption = 2;
+        			} else if (ran == 2) {
+        				select1.setText(list.get(0));
+        				select2.setText(list.get(1));
+        				select3.setText(result.getJSONObject("data").getString("mean"));
+        				select4.setText(list.get(2));
+        				correctOption = 3;
+        			} else if (ran == 3) {
+        				select1.setText(list.get(0));
+        				select2.setText(list.get(1));
+        				select3.setText(list.get(2));
+        				select4.setText(result.getJSONObject("data").getString("mean"));
+        				correctOption = 4;
+        			}
         			
         			
         			select1.setClickable(true);
@@ -362,8 +344,6 @@ public class LvTestBigin extends Activity {
         			{
         				
         				if(checkAni == true){
-        					
-        					setButtonPosition();
         					imageTimeAni.start();
         				      
             				imageTimeBlindAni.start();

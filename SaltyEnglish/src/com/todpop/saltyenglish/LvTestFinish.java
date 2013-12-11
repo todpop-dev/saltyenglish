@@ -32,7 +32,6 @@ import android.widget.VideoView;
 public class LvTestFinish extends Activity {
 
 	Button skipBtn;
-	ImageView adView;
 	VideoView video;
 	SharedPreferences rgInfo;
 	@Override
@@ -40,7 +39,6 @@ public class LvTestFinish extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lv_test_finish);
 		skipBtn = (Button)findViewById(R.id.lvtestfinish_id_skip_btn);
-		adView = (ImageView)findViewById(R.id.rgregisterfinish_id_ad);
 		  
 		  video = (VideoView)findViewById(R.id.test_video_view);
 		  rgInfo = getSharedPreferences("rgInfo",0);
