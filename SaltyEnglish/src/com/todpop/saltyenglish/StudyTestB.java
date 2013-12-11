@@ -36,9 +36,9 @@ import android.widget.TextView;
 
 public class StudyTestB extends Activity {
 	
-	static int totalStage;
+	static int tmpStageAccumulated;
 	
-	// ballon animation view  
+	// balloon animation view  
 	Button balloonPink;
 	Button balloonYellow;
 	Button balloonBlue;
@@ -119,7 +119,7 @@ public class StudyTestB extends Activity {
 		// Database initiation
 		mHelper = new WordDBHelper(this);
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
-		totalStage = studyInfo.getInt("tmpStageAccumulated", 1);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		
 		// English Word View
@@ -313,7 +313,7 @@ public class StudyTestB extends Activity {
 		try {
 			SQLiteDatabase db = mHelper.getReadableDatabase();
 			//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
-			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + totalStage + ";", null);
+			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
 			
 			if (cursor.getCount()>0) {
 				while(cursor.moveToNext()) {
@@ -630,7 +630,7 @@ public class StudyTestB extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_test_b, menu);
+		//getMenuInflater().inflate(R.menu.study_test_b, menu);
 		return true;
 	}
 
