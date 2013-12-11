@@ -3,152 +3,104 @@
     android:id="@+id/home_download"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:background="@drawable/common_bg_white">
+    android:background="@drawable/common_bg_white"
+    android:focusableInTouchMode="true" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
-
-    
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12.5dp"
-        android:src="@drawable/common_bgimg_download"/>
-
-   <!-- back btn -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:background="@drawable/rg_drawable_btn_back"
-        android:onClick="onClickBack"/>
-    
-    <!-- bg -->
-    
-    <ImageView 
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="41dp"
-        android:src="@drawable/store_2_image_carouselbar"/>
-    
-    
-    <ImageView 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="92dp"
-        android:src="@drawable/store_2_image_searchboxbar"/>
-    
-     <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="18.5dp"
-        android:layout_marginTop="107dp"
-        android:src="@drawable/common_image_bigcoin"/>
-     <!-- search -->
-     <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="105dp"
-            android:gravity="center"
-            android:textColor="#000000"
-            android:background="@drawable/store_2_textbox_money"
-            android:text = "0"/>
-     
-     <EditText 
-            android:layout_width="215dp"
-            android:layout_height="31.5dp"
-            android:layout_marginLeft="87.5dp"
-            android:layout_marginTop="99dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="5dp"
-            android:singleLine="true"
-            
-            android:background="@drawable/store_2_image_searchbox"
-            />
-        
-        <Button 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="311dp"
-            android:layout_marginTop="95dp"
-            android:background="@drawable/homestore_drawable_btn_search"/>
-    
-    
-    
-    <RadioGroup
-        android:id="@+id/homestore_id_sexgroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="48dp"
-         >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <RadioButton
-            android:id="@+id/homedownload_id_btn_cpi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:background="@drawable/store_36_btn_carousel_cpi_off"
-            android:checked="true" />
-        
-         <RadioButton
-            android:id="@+id/homedownload_id_btn_coupon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:background="@drawable/store_36_btn_carousel_cpi_off"
-            />
-        
-        
-    </RadioGroup>
-    
-    <ListView 
-            android:id="@+id/homedownload_id_listiew_cpi"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="136dp"
-            android:fadeScrollbars="false"
-			android:scrollbarTrackVertical="@drawable/store_2_drop_underbar"
-			 android:scrollbarThumbVertical="@drawable/store_2_drop_scroll"
-			 
-            >
-            
-        </ListView>
-        
-    <ListView 
-            android:id="@+id/homedownload_id_listiew_coupon"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/common_bgimg_download" />
+
+            <!-- back btn -->
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
+        </RelativeLayout>
+<!-- 
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            android:layout_marginTop="136dp"
-            android:fadeScrollbars="false"
-			android:scrollbarTrackVertical="@drawable/store_2_drop_underbar"
-			 android:scrollbarThumbVertical="@drawable/store_2_drop_scroll"
-			 
-            >
-            
-        </ListView>
-    
-    <ImageView
-        android:id="@+id/homedownloal_id_nopci"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:src="@drawable/store_41_image_nocpi"/>
-    
+            android:layout_height="0dp"
+            android:layout_weight="90"
+            android:background="@drawable/store_2_image_searchboxbar" >
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="18.5dp"
+                android:src="@drawable/common_image_bigcoin" />
 
+            <TextView
+                android:id="@+id/homedownload_id_current_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:background="@drawable/store_2_textbox_money"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#000000" />
 
-     </RelativeLayout>
+            <EditText
+                android:layout_width="215dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="87.5dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/store_2_image_searchbox"
+                android:paddingLeft="20dp"
+                android:paddingRight="5dp"
+                android:singleLine="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/homestore_drawable_btn_search" />
+        </RelativeLayout>
+-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1190" >
+
+            <ListView
+                android:id="@+id/homedownload_id_listiew_cpi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:fadeScrollbars="false"
+                android:scrollbarThumbVertical="@drawable/store_2_drop_scroll"
+                android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
+            </ListView>
+
+            <ImageView
+                android:id="@+id/homedownloal_id_nopci"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/store_41_image_nocpi"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

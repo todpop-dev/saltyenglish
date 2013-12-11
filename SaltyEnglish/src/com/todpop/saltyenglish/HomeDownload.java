@@ -62,15 +62,16 @@ public class HomeDownload extends Activity {
 	int cpiCount = 0;
 
 	RelativeLayout homeDownload;
-	CouponListViewAdapter couponListViewAdapter;
-	ArrayList<CouponListViewItem> couponArray;
-	CouponListViewItem mCouponListViewItem;
-	ListView couponListView;
-	int couponCount = 0;
+//	CouponListViewAdapter couponListViewAdapter;
+//	ArrayList<CouponListViewItem> couponArray;
+//	CouponListViewItem mCouponListViewItem;
+//	ListView couponListView;
+//	int couponCount = 0;
 
 	ImageView noCPIimage;
-	RadioButton cpiBtn;
-	RadioButton couponBtn;
+//	TextView currentReward;
+//	RadioButton cpiBtn;
+//	RadioButton couponBtn;
 
 	//popup
 	PopupWindow cpxPopupWindow;
@@ -85,10 +86,11 @@ public class HomeDownload extends Activity {
 		setContentView(R.layout.activity_home_download);
 		homeDownload = (RelativeLayout)findViewById(R.id.home_download);
 		noCPIimage = (ImageView)findViewById(R.id.homedownloal_id_nopci);
-		cpiBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_cpi);
-		couponBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_coupon);
-		cpiBtn.setOnClickListener(radio_listener);
-		couponBtn.setOnClickListener(radio_listener);
+//		currentReward = (TextView)findViewById(R.id.homedownload_id_current_reward);
+//		cpiBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_cpi);
+//		couponBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_coupon);
+//		cpiBtn.setOnClickListener(radio_listener);
+//		couponBtn.setOnClickListener(radio_listener);
 
 		//popupview
 		cpxPopupview = View.inflate(this, R.layout.popup_studyfinish_coupon_view, null);
@@ -99,14 +101,14 @@ public class HomeDownload extends Activity {
 		cpiArray = new ArrayList<CpiListViewItem>();
 		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
 
-		couponArray = new ArrayList<CouponListViewItem>();
-		couponListView=(ListView)findViewById(R.id.homedownload_id_listiew_coupon);
-		for(int i=0;i<20;i++) {
-			mCouponListViewItem = new CouponListViewItem(R.drawable.store_33_image_dinosaur_on,"seoga & cook 20% sale");
-			couponArray.add(mCouponListViewItem);
-		}
-		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
-		couponListView.setAdapter(couponListViewAdapter);
+//		couponArray = new ArrayList<CouponListViewItem>();
+//		couponListView=(ListView)findViewById(R.id.homedownload_id_listiew_coupon);
+//		for(int i=0;i<20;i++) {
+//			mCouponListViewItem = new CouponListViewItem(R.drawable.store_33_image_dinosaur_on,"seoga & cook 20% sale");
+//			couponArray.add(mCouponListViewItem);
+//		}
+//		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
+//		couponListView.setAdapter(couponListViewAdapter);
 		
 		TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 		mobile = phoneMgr.getLine1Number().toString();
@@ -115,7 +117,6 @@ public class HomeDownload extends Activity {
 		SharedPreferences.Editor cpxInstallInfoEditor = cpxInstallInfo.edit();
 		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
 		cpxInstallInfoEditor.commit();
-
 		
 	}
 	
@@ -128,6 +129,8 @@ public class HomeDownload extends Activity {
 		//cpiListViewAdapter.notifyDataSetChanged();
 		
 	}
+	
+	/*
 	OnClickListener radio_listener = new OnClickListener (){
 		public void onClick(View v) {
 			switch(v.getId())
@@ -143,6 +146,7 @@ public class HomeDownload extends Activity {
 			}
 		}
 	};
+	 */
 
 	class CpiListViewItem 
 	{
@@ -330,17 +334,19 @@ public class HomeDownload extends Activity {
 		});
 		return builder.create();
 	}*/
-	class CouponListViewItem 
-	{
-		CouponListViewItem(int aItem,String aName)
-		{
-			item = aItem;
-			name = aName;
-		}
-		int item;
-		String name;
-	}
-
+	
+	//class CouponListViewItem 
+	//{
+	//	CouponListViewItem(int aItem,String aName)
+	//	{
+	//		item = aItem;
+	//		name = aName;
+	//	}
+	//	int item;
+	//	String name;
+	//}
+	
+/*
 	class CouponListViewAdapter extends BaseAdapter
 	{
 		Context maincon;
@@ -392,6 +398,7 @@ public class HomeDownload extends Activity {
 			return convertView;
 		}
 	}
+	*/
 
 	// request 
 	private class GetCPX extends AsyncTask<String, Void, JSONObject> 
@@ -429,6 +436,7 @@ public class HomeDownload extends Activity {
 		{
 			try {
 				if	(result.getBoolean("status")==true) {
+
 					if(result.getString("msg").equals("not exist log")) {
 						noCPIimage.setVisibility(View.VISIBLE);
 					} else {
@@ -555,7 +563,7 @@ public class HomeDownload extends Activity {
 
 							cpxPopupText.setText(R.string.home_download_install_confirmed);
 							cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
-							cpxPopupWindow.showAsDropDown(cpiBtn);
+							cpxPopupWindow.showAsDropDown(null);
 						}
 						else{
 							try {
@@ -622,7 +630,8 @@ public class HomeDownload extends Activity {
 
 					cpxPopupText.setText(R.string.home_download_action_confirmed);
 					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
-					cpxPopupWindow.showAsDropDown(cpiBtn);
+					cpxPopupWindow.showAsDropDown(null);
+
 					
 					Log.d("CPX LOG:  ---- ", "Send CPX Log OK!");
 				} else {
@@ -708,7 +717,7 @@ public class HomeDownload extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_download, menu);
+		//getMenuInflater().inflate(R.menu.home_download, menu);
 		return true;
 	}
 	@Override
