@@ -656,7 +656,24 @@ public class StudyTestB extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 	}
-	 
+	 @Override
+	 public void onBackPressed(){
+
+			pauseView.setVisibility(View.VISIBLE);
+			if(isRunning){
+				isRunning = false;
+				pinkTime = pinkAni.getCurrentPlayTime();
+				yellowTime = yellowAni.getCurrentPlayTime();
+				blueTime = blueAni.getCurrentPlayTime();
+				greenTime = greenAni.getCurrentPlayTime();
+				stopTimeCount();
+			
+				pinkAni.cancel();
+				yellowAni.cancel();
+				blueAni.cancel();
+				greenAni.cancel();
+			}
+	 }
 	@Override
 	protected void onStop()
 	{
