@@ -937,7 +937,10 @@ public class StudyHome extends Activity {
 				newB = Integer.valueOf(newVersion.substring(2, 3));
 				newC = Integer.valueOf(newVersion.substring(4, newVersion.length()));
 
-				if(curA < newA || curB < newB || curC < newC){
+				int curVersionInt = curA*1000000 + curB*1000 + curC;
+				int newVersionInt = newA*1000000 + newB*1000 + newC;
+				
+				if(curVersionInt < newVersionInt){
 					noticeList.add(getResources().getString(R.string.study_home_popup_version_check) 
 							+ "\ncurrent version = " + curVersion + "\nnew version =" + newVersion);
 
