@@ -110,9 +110,14 @@ public class HomeDownload extends Activity {
 //		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
 //		couponListView.setAdapter(couponListViewAdapter);
 		
-		TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
-		mobile = phoneMgr.getLine1Number().toString();
-		
+		//get phone number
+		try {
+			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+			mobile =phoneMgr.getLine1Number().toString();
+			mobile = mobile.replace("+82", "0");
+		} catch(Exception e) {
+			mobile = "010test0000";
+		}
 		SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 		SharedPreferences.Editor cpxInstallInfoEditor = cpxInstallInfo.edit();
 		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
@@ -223,6 +228,7 @@ public class HomeDownload extends Activity {
 				getRewardBut.setOnClickListener(new Button.OnClickListener(){
 					public void onClick(View V){
 						getRewardBut.setEnabled(false);
+						getRewardBut.setBackgroundResource(R.drawable.store_36_btn_saving_ing);
 						new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
 					}
 				});
