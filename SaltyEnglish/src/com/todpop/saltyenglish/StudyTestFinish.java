@@ -107,10 +107,11 @@ public class StudyTestFinish extends Activity {
 					ad_id = json.getJSONObject("data").getInt("ad_id");
 					video.setVideoPath("http://todpop.co.kr/"+json.getJSONObject("data").getString("url"));
 					video.setOnCompletionListener(cl);
+					video.setOnPreparedListener(opl);
 					video.start();
 					
-					Handler mHandler = new Handler();
-					mHandler.postDelayed(mLaunchTaskMain, 8000);	// should be 5000 but timing difficulty
+					//Handler mHandler = new Handler();
+					//mHandler.postDelayed(mLaunchTaskMain, 8000);	// should be 5000 but timing difficulty
 					
 					Map<String, String> cpdmParams = new HashMap<String, String>();
 				    cpdmParams.put("CPDM ID", String.valueOf(ad_id));
@@ -176,11 +177,27 @@ public class StudyTestFinish extends Activity {
 		}
 	};
 	
+	private MediaPlayer.OnPreparedListener opl = new MediaPlayer.OnPreparedListener() {
+
+		@Override
+		public void onPrepared(MediaPlayer arg0) {
+			
+			Log.e("cpdm----", "ready");
+			
+			Handler mHandler = new Handler();
+			mHandler.postDelayed(mLaunchTaskMain, 5000);	// exact 5000 timing try
+			
+		}
+	
+		
+	};
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_test_finish, menu);
+		//getMenuInflater().inflate(R.menu.study_test_finish, menu);
 		return true;
 	}
 	
