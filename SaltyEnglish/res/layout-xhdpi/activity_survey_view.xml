@@ -2,39 +2,52 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_darkyellowpattern">
+    android:background="@drawable/common_bg_darkyellowpattern" >
 
-    <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12.5dp"
-            android:src="@drawable/que_nav_text" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="93" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.5dp"
-            android:layout_marginTop="10.5dp"
-            android:background="@drawable/common_btn_back_off"
-            android:onClick="onClickBack" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/que_nav_text" />
 
-        <ListView
-            android:id="@+id/survey_id_list_view"
-            android:layout_width="350dp"
-            android:layout_height="570dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="62dp"
-            android:background="@drawable/common_yellowbox"
-            android:fadeScrollbars="false"
-            android:padding="15dp"
-            android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
-            android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" />
-    </RelativeLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/common_btn_back_off"
+                android:onClick="onClickBack" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1187"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="10dp" >
+
+            <ListView
+                android:id="@+id/survey_id_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/common_yellowbox"
+                android:fadeScrollbars="false"
+                android:padding="15dp"
+                android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
+                android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
