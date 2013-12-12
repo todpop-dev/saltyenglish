@@ -43,6 +43,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,7 +56,6 @@ public class LvTestBigin extends Activity {
 	AnimationDrawable imageTimeAni ;
 	ImageView imageTime ;
 	
-	ObjectAnimator imageTimeBlindAni;
 	ImageView imageTimeBlind;
 	
 	RelativeLayout endView;
@@ -83,6 +83,7 @@ public class LvTestBigin extends Activity {
 	SharedPreferences lvTextWord;
 	SharedPreferences.Editor lvTextWordEdit;
 	
+	BlindAnim imageTimeBlindAni;
 	TranslateAnimation.AnimationListener MyAnimationListener;
 	
 	String userId = "";
@@ -156,9 +157,59 @@ public class LvTestBigin extends Activity {
 
 		imageTimeBlind = (ImageView)findViewById(R.id.lv_test_image_timeblind);
 		
-		imageTimeBlindAni = ObjectAnimator.ofFloat(imageTimeBlind, "x",-720/2*density, 0/2*density);		
+		imageTimeBlindAni = new BlindAnim(
+				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+				TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
+				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
+				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
+				);	
 		imageTimeBlindAni.setDuration(10000);
-		imageTimeBlindAni.addListener(mAnimationListener);
+		imageTimeBlindAni.setRepeatCount(20);
+
+		MyAnimationListener = new Animation.AnimationListener() {
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+
+				count++;
+				imageTimeAni.stop();
+
+				Log.e("STEVEN", "LINE 177");
+				imageTimeBlindAni.start();
+
+				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
+				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
+				lvTextWordEdit.putString("check"+(count-2), "N");
+				lvTextWordEdit.commit();
+				checkRW = "x";
+
+				if(count == 21)
+				{
+					Log.d("finel level: ", level);
+					new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
+					endView.setVisibility(View.VISIBLE);
+					imageTestendAni.start();
+//					Handler goNextHandler = new Handler();
+//					goNextHandler.postDelayed(GoNextHandler, 1000);
+				}else{
+					new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?step="+count+"&level="+level+"&ox="+checkRW);
+				}
+
+			}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		imageTimeBlindAni.setAnimationListener(MyAnimationListener);
+		imageTimeBlind.setAnimation(imageTimeBlindAni);
 
 		endView = (RelativeLayout)findViewById(R.id.lvtest_7_view);
 
@@ -172,6 +223,39 @@ public class LvTestBigin extends Activity {
 		mHandler.postDelayed(mLaunchTaskMain, 4000);
 	}
 	
+	private class BlindAnim extends TranslateAnimation {
+		
+		public BlindAnim(int fromXType, float fromXValue, int toXType,
+				float toXValue, int fromYType, float fromYValue, int toYType,
+				float toYValue) {
+			super(fromXType, fromXValue, toXType, toXValue, fromYType, fromYValue, toYType,
+					toYValue);
+		}
+
+		private long mPauseTime =0;
+		private boolean mPaused = false;
+		@Override
+		public boolean getTransformation(long currentTime,
+				Transformation outTransformation) {
+			if(mPaused && mPauseTime == 0) {
+				mPauseTime = currentTime-getStartTime();
+			}
+			if(mPaused) {
+				setStartTime(currentTime-mPauseTime);
+			}
+			return super.getTransformation(currentTime, outTransformation);
+		}
+		
+		public void pause() {
+			mPauseTime = 0;
+			mPaused = true;
+		}
+		
+		public void resume() {
+			mPaused = false;
+		}
+	}
+	/*
 	private  AnimatorListener mAnimationListener = new AnimatorListenerAdapter() {
 		public void onAnimationEnd(Animator animation) 
 		{
@@ -202,7 +286,7 @@ public class LvTestBigin extends Activity {
 		public void onAnimationCancel(Animator animation) {}
 		public void onAnimationRepeat(Animator animation) {}
 		public void onAnimationStart(Animator animation) {}
-	};
+	};*/
 
 	private class ButtonListener implements OnClickListener{
 		public void onClick(View v)
@@ -345,8 +429,8 @@ public class LvTestBigin extends Activity {
         				
         				if(checkAni == true){
         					imageTimeAni.start();
-        				      
-            				imageTimeBlindAni.start();
+        					Log.e("STEVEN", "LINE 429");
+        				    imageTimeBlindAni.start();
         				}
         				
         				switch(count)
@@ -445,6 +529,7 @@ public class LvTestBigin extends Activity {
 		public void run() {
 			introView.setVisibility(View.GONE);
 			checkAni =true;
+			imageTimeAni.stop();
 			imageTimeAni.start();
 
 			imageTimeBlindAni.start();
@@ -461,7 +546,9 @@ public class LvTestBigin extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-	    imageTimeBlindAni.start();
+		imageTimeBlindAni.resume();
+	    //imageTimeBlindAni.start();
+	    
 	    imageTimeAni.start();
 	}
 	
@@ -474,7 +561,7 @@ public class LvTestBigin extends Activity {
 	@Override
     public void onPause() {
        super.onPause();  
-       imageTimeBlindAni.cancel();
+       imageTimeBlindAni.pause();
        imageTestendAni.stop();
        imageTimeAni.stop();
        
@@ -496,7 +583,7 @@ public class LvTestBigin extends Activity {
     }
     
     
-    public class JSONParser {
+    /*public class JSONParser {
     	 
         InputStream is = null;
         JSONObject jObj = null;
@@ -552,7 +639,7 @@ public class LvTestBigin extends Activity {
             return jObj;
      
         }
-    }
+    }*/
     public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
 		// TODO Auto-generated method stub
@@ -601,6 +688,6 @@ public class LvTestBigin extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
-		return true;
+		return false;
 	}
 }
