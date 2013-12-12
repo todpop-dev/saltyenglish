@@ -211,9 +211,9 @@
                     android:layout_height="match_parent"
                     android:layout_above="@+id/home_bgimg_whitebar"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="5dp" 
-                    android:dividerHeight="15dp"
-                    android:divider="@drawable/home_image_scrollline"/>
+                    android:layout_marginBottom="5dp"
+                    android:divider="@drawable/home_image_scrollline"
+                    android:dividerHeight="15dp" />
 
                 <!-- bg -->
 
@@ -260,8 +260,8 @@
                         android:id="@+id/studyhome_id_my_rank_image"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:gravity="center"
-                        android:layout_weight="81" />
+                        android:layout_weight="81"
+                        android:gravity="center" />
                     <!-- 50dp, 50dp, 97dp, 481dp -->
 
                     <View
@@ -274,8 +274,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="141"
-                        android:textColor="#000000"
                         android:gravity="left|center_vertical"
+                        android:textColor="#000000"
                         android:textSize="16sp" />
                     <!-- 180dp, 493dp, 17sp -->
 
@@ -289,8 +289,8 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="141"
-                        android:textColor="#000000"
                         android:gravity="center_vertical|right"
+                        android:textColor="#000000"
                         android:textSize="16sp" />
 
                     <View
@@ -350,58 +350,117 @@
         android:clickable="true"
         android:visibility="gone" >
 
-        <!-- bg -->
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="196.5dp"
-            android:layout_marginTop="84.5dp"
-            android:src="@drawable/test_27_image_dogs" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="347.5dp"
-            android:background="@drawable/test_27_image_infotitle" />
-
-        <!-- ad image -->
-
-        <ImageView
-            android:id="@+id/study_home_id_cpi_ad_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="108dp"
-            android:background="@drawable/test_27_image_frame" />
-
-        <TextView
-            android:id="@+id/study_home_id_cpi_ad_text"
-            android:layout_width="211.5dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="396dp"
-            android:gravity="center"
-            android:text="INFO"
-            android:textColor="#000000"
-            android:textSize="18sp" />
+        <!-- android:visibility="gone" -->
 
         <Button
+            android:id="@+id/studyhome_id_go_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="507.5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/studytest_drawable_btn_later"
+            android:onClick="cpxGoHome" />
+
+        <Button
+            android:id="@+id/studyhome_id_save_now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/studyhome_id_go_home"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="2dp"
             android:background="@drawable/studytest_drawable_btn_saving"
             android:onClick="cpxGoReward" />
 
-        <Button
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="569dp"
-            android:background="@drawable/studytest_drawable_btn_later"
-            android:onClick="cpxGoHome" />
+            android:layout_alignBottom="@id/studyhome_id_save_now"
+            android:layout_alignRight="@id/studyhome_id_save_now"
+            android:layout_marginBottom="18dp"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/test_27_image_soldier" />
+        <!-- bg -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/studyhome_id_save_now"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="135" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="450"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="216" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/test_27_image_dogs" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="456"
+                    android:background="@drawable/test_27_image_frame"
+                    android:padding="12dp" >
+
+                    <!-- ad image -->
+
+                    <ImageView
+                        android:id="@+id/study_home_id_cpi_ad_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="340" >
+
+                    <ImageView
+                        android:id="@+id/study_home_id_infotitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/test_27_image_infotitle" />
+
+                    <TextView
+                        android:id="@+id/study_home_id_cpi_ad_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/study_home_id_infotitle"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="INFO"
+                        android:textColor="#000000"
+                        android:textSize="18sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="135" />
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>
