@@ -14,7 +14,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,7 +48,7 @@ public class HomeWordList extends Activity {
 	
 	HomeWordViewItem mHomeWordViewItem;
 	ListView listView;
-	
+	Point size;
 	Button card;
 	ObjectAnimator cardAni;
 	
@@ -57,7 +59,7 @@ public class HomeWordList extends Activity {
 	Button deleteBtn;
 	float density;
 	
-	ImageView editBg;
+	RelativeLayout editBg;
 	CheckBox selectAllBtn;
 	
 	// popup view
@@ -65,7 +67,6 @@ public class HomeWordList extends Activity {
 	View popupview;
 	RelativeLayout relative;
  	WordDBHelper mHelper;
-
 	EditText searchText;
 	
 	SharedPreferences myWord;
@@ -82,7 +83,7 @@ public class HomeWordList extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_word_list);
 		
-		editBg = (ImageView)findViewById(R.id.wordbook_16_image_edit_bg);
+		editBg = (RelativeLayout)findViewById(R.id.wordbook_16_image_edit_bg_new);
 		selectAllBtn = (CheckBox)findViewById(R.id.home_word_list_id_select_all_btn);
 		selectAllBtn.setEnabled(true);
 		selectAllBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -100,7 +101,10 @@ public class HomeWordList extends Activity {
 
             }
         });	
-		
+
+		Display display = getWindowManager().getDefaultDisplay();
+		size = new Point();
+		display.getSize(size);
 		myWord = getSharedPreferences("myword", 0);
 		
 		// Search Text
@@ -169,7 +173,15 @@ public class HomeWordList extends Activity {
 
 		updateListView();
 	}
-	
+    @Override
+    protected void onResume() 
+    {
+        super.onResume();
+
+		cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
+		cardAni.setDuration(500);
+		cardAni.start();
+    }
 	public void updateListView()
     {
 		listView.setAdapter(null);
@@ -306,15 +318,15 @@ public class HomeWordList extends Activity {
 
 	public void cardBlind(View v)
 	{
-		float density = getResources().getDisplayMetrics().density;
+
 		if(checkCardAni==false)
 		{
-			cardAni = ObjectAnimator.ofFloat(card,"x",-180f*density); 
+			cardAni = ObjectAnimator.ofFloat(card,"translationX", -35f); 
 			cardAni.setDuration(500);
 			cardAni.start();
 			checkCardAni = true;
 		}else{
-			cardAni = ObjectAnimator.ofFloat(card,"x",-285f*density); 
+			cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 			cardAni.setDuration(500);
 			cardAni.start();
 			checkCardAni = false;
@@ -371,6 +383,7 @@ public class HomeWordList extends Activity {
 			LayoutParams lp = (LayoutParams) listView.getLayoutParams();
 		       lp.height = 450*(int)density;
 		       listView.setLayoutParams(lp);
+		       
 			card.setVisibility(RelativeLayout.GONE);
 			editBg.setVisibility(RelativeLayout.VISIBLE);
 			selectAllBtn.setVisibility(RelativeLayout.VISIBLE);
@@ -444,7 +457,7 @@ public class HomeWordList extends Activity {
 			
 			
 			try {
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name LIKE '%" + sT + "%'", null);
 				while (c.moveToNext()) {
 					Log.d("name --- ", c.getString(0));
 					Log.d("mean --- ", c.getString(1));
@@ -493,7 +506,7 @@ public class HomeWordList extends Activity {
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			
 			try {
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name='" + sT + "'", null);
+				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name LIKE '%" + sT + "%'", null);
 				while (c.moveToNext()) {
 					if (count%2==1) {
 						checkChangeWord = true;
@@ -508,7 +521,6 @@ public class HomeWordList extends Activity {
 				e.printStackTrace();
 			}
 
-			
 			updateListView();
 
 		} else {
