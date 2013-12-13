@@ -33,9 +33,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -62,6 +65,7 @@ public class LvTestBigin extends Activity {
 	AnimationDrawable imageTestendAni;
 	ImageView numberView;
 	
+	WordDBHelper mHelper;
 	Button select1;
 	Button select2;
 	Button select3;
@@ -102,7 +106,7 @@ public class LvTestBigin extends Activity {
 		
 		lvTextWord = getSharedPreferences("lvTextWord",0);
 		lvTextWordEdit = lvTextWord.edit();
-		
+		mHelper = new WordDBHelper(this);
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
 		
@@ -511,6 +515,23 @@ public class LvTestBigin extends Activity {
 	            			studyInfoEdit.commit();
 	            			
 	            			getApplicationContext().deleteDatabase("EngWord.db");				// my_word_book DB reset
+	            			// Force create Database
+	            			
+	            			SQLiteDatabase db = mHelper.getReadableDatabase();
+	            			try {
+	            				Log.e("STEVEN", "Main Activity line 98");
+	            				db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+	            						"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
+	            				db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+	            						"name TEXT NOT NULL UNIQUE, mean TEXT);");
+	            				db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+	            							"name TEXT, mean TEXT, xo TEXT);");
+	            				db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+	            						"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+	            				Log.e("STEVEN", "Main Activity line 107");
+	            			} catch (Exception e) {
+	            				e.printStackTrace();
+	            			}
         				}
 
         				Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);
@@ -689,5 +710,30 @@ public class LvTestBigin extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
 		return false;
+	}
+	//------- Database Operation ------------------
+	private class WordDBHelper extends SQLiteOpenHelper {
+		public WordDBHelper(Context context) {
+			super(context, "EngWord.db", null, 1);
+		}
+		
+		public void onCreate(SQLiteDatabase db) {
+			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT NOT NULL UNIQUE, mean TEXT);");
+			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, xo TEXT);");
+			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+		}
+		
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+			db.execSQL("DROP TABLE IF EXISTS dic");
+			db.execSQL("DROP TABLE IF EXISTS flip");
+			db.execSQL("DROP TABLE IF EXISTS mywords");
+			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
+			onCreate(db);
+		}
 	}
 }
