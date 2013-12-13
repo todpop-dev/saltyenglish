@@ -173,10 +173,15 @@ public class StudyHome extends Activity {
 		rankingItemArrayMonth = new ArrayList<RankingListItem>();
 		noticeList = new ArrayList<String>();
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
+
 		
         adapter = new ImageAdapter(this);
 		categoryPager.setAdapter(adapter);
 		categoryPager.setCurrentItem(1073741823);
+
+		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+		studyInfoEdit.putInt("currentPeriod", 1);
+		studyInfoEdit.commit();
 		Display display = getWindowManager().getDefaultDisplay();
 		size = new Point();
 		display.getSize(size);

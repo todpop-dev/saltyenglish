@@ -124,6 +124,29 @@ public class LvTestBigin extends Activity {
 		select2 = (Button)findViewById(R.id.lvtestbigin_id_select2);
 		select3 = (Button)findViewById(R.id.lvtestbigin_id_select3);
 		select4 = (Button)findViewById(R.id.lvtestbigin_id_select4);
+		
+		
+		// my_word_book DB reset
+		getApplicationContext().deleteDatabase("EngWord.db");				
+		// Force create Database
+		
+		SQLiteDatabase db = mHelper.getReadableDatabase();
+		try {
+			Log.e("STEVEN", "Main Activity line 98");
+			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
+			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, mean TEXT);");
+			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+						"name TEXT, mean TEXT, xo TEXT);");
+			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+			Log.e("STEVEN", "Main Activity line 107");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 		select1.setOnClickListener(new ButtonListener());
 		select2.setOnClickListener(new ButtonListener());
 		select3.setOnClickListener(new ButtonListener());
@@ -176,18 +199,17 @@ public class LvTestBigin extends Activity {
 			public void onAnimationRepeat(Animation animation) {
 				// TODO Auto-generated method stub
 
-				count++;
 				imageTimeAni.stop();
 
 				Log.e("STEVEN", "LINE 177");
 				imageTimeBlindAni.start();
 
-				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-				lvTextWordEdit.putString("check"+(count-2), "N");
+				lvTextWordEdit.putString("check"+(count-1), "N");
+				Log.d("LvTesting", "line 211" + enWord.getText().toString()+select1.getText().toString());
 				lvTextWordEdit.commit();
 				checkRW = "x";
 
+				count++;
 				if(count == 21)
 				{
 					Log.d("finel level: ", level);
@@ -296,7 +318,6 @@ public class LvTestBigin extends Activity {
 		public void onClick(View v)
 		{
 			
-			count++;
 			select1.setClickable(false);
 			select2.setClickable(false);
 			select3.setClickable(false);
@@ -305,9 +326,8 @@ public class LvTestBigin extends Activity {
 			int buttonTag = (Integer)v.getTag();
 			if(buttonTag == correctOption){
 
-				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-				lvTextWordEdit.putString("check"+(count-2), "Y");
+				lvTextWordEdit.putString("check"+(count-1), "Y");
+				Log.d("LvTesting", "line 334" + enWord.getText().toString()+select1.getText().toString());
 				lvTextWordEdit.commit();			
     			
 				correct++;
@@ -315,12 +335,13 @@ public class LvTestBigin extends Activity {
 			}
 			else{
 
-				lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-				lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-				lvTextWordEdit.putString("check"+(count-2), "N");
+				lvTextWordEdit.putString("check"+(count-1), "N");
+				Log.d("LvTesting", "line 346" + enWord.getText().toString()+select1.getText().toString());
 				lvTextWordEdit.commit();
     			checkRW = "x";
 			}
+
+			count++;
 			if(count == 21)
 			{
 				Log.d("final level: ---------------- ", level);
@@ -388,7 +409,11 @@ public class LvTestBigin extends Activity {
 						 Log.d("123111111111111111 ---- ", jsonArray.getString(i));
 					}	
         			
-        			
+
+					lvTextWordEdit.putString("enWord"+(count-1), result.getJSONObject("data").getString("word"));
+					lvTextWordEdit.putString("krWord"+(count-1), result.getJSONObject("data").getString("mean"));
+					lvTextWordEdit.commit();
+					
         			enWord.setText(result.getJSONObject("data").getString("word"));
         			select1.setText(result.getJSONObject("data").getString("mean"));
         			level = result.getJSONObject("data").getString("level");
@@ -514,24 +539,6 @@ public class LvTestBigin extends Activity {
 	            			studyInfoEdit.putString("stageInfo", stageInfo);
 	            			studyInfoEdit.commit();
 	            			
-	            			getApplicationContext().deleteDatabase("EngWord.db");				// my_word_book DB reset
-	            			// Force create Database
-	            			
-	            			SQLiteDatabase db = mHelper.getReadableDatabase();
-	            			try {
-	            				Log.e("STEVEN", "Main Activity line 98");
-	            				db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-	            						"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-	            				db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-	            						"name TEXT NOT NULL UNIQUE, mean TEXT);");
-	            				db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-	            							"name TEXT, mean TEXT, xo TEXT);");
-	            				db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-	            						"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
-	            				Log.e("STEVEN", "Main Activity line 107");
-	            			} catch (Exception e) {
-	            				e.printStackTrace();
-	            			}
         				}
 
         				Intent intent = new Intent(getApplicationContext(), LvTestFinish.class);

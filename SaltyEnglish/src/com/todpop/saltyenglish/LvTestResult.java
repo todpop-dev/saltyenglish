@@ -85,6 +85,7 @@ public class LvTestResult extends Activity {
 		
 		for(int i=0;i<20;i++) {
 			mi = new MyItem(lvTextWord.getString("enWord"+i, "N"),lvTextWord.getString("krWord"+i, "N"),lvTextWord.getString("check"+i, "N"));
+			Log.e("STEVEN LVRESULT count is "+i, "   "+lvTextWord.getString("enWord"+i, "N")+lvTextWord.getString("krWord"+i, "N")+lvTextWord.getString("check"+i, "N"));
 			arItem.add(mi);
 		}
 		
@@ -124,6 +125,10 @@ public class LvTestResult extends Activity {
 			Inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			arSrc = aarSrc;
 			layout = alayout;
+			for(int i=0; i <20; i++){
+				Log.e("RESULT 129", arSrc.get(i).en+ arSrc.get(i).kr);
+				
+			}
 		}
 		public int getCount()
 		{
@@ -145,6 +150,9 @@ public class LvTestResult extends Activity {
 		{
 			View v = convertView;
 			if(convertView == null) {
+				convertView = Inflater.inflate(layout, parent,false);
+				
+			}
 				viewHolder = new ViewHolder();
 				v = Inflater.inflate(layout, parent,false);
 				viewHolder.textEn = (TextView)v.findViewById(R.id.lv_test_english);
@@ -153,7 +161,6 @@ public class LvTestResult extends Activity {
 				viewHolder.selectBtn =(CheckBox)v.findViewById(R.id.lv_test_btn);
 				
 				//v.setTag(viewHolder);
-			} 
 			
 //			else {
 //				viewHolder = (ViewHolder)v.getTag();
@@ -165,7 +172,8 @@ public class LvTestResult extends Activity {
 			viewHolder.textEn.setTag(position);
 			//viewHolder.textKr.setTag(position);
 			viewHolder.selectBtn.setTag(position);
-			
+
+			Log.d("LvTestResult", "line 169" + "positoin = "+position+" "+arSrc.get(position).en+arSrc.get(position).kr);
 //			if(enSave != null)
 //			{
 //				if(enSave.get(position).equals(arSrc.get(position).en))
