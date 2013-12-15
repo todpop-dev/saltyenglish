@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -21,8 +22,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -320,7 +324,7 @@ public class StudyTestB extends Activity {
 					englishWords.add(cursor.getString(0));
 					optionOne.add(cursor.getString(1));
 					
-					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> " + cursor.getShort(1) + " ORDER BY RANDOM() LIMIT 3", null);
+					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
 					otherCursor.moveToNext();
 					optionTwo.add(otherCursor.getString(0));
 					otherCursor.moveToNext();
@@ -343,7 +347,6 @@ public class StudyTestB extends Activity {
 		int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
 		pageNumber.setBackgroundResource(resID);
 		// End of Set up page number --------
-		float density = getResources().getDisplayMetrics().density;
 		
 		balloonPink.setEnabled(true);
 		balloonYellow.setEnabled(true);
@@ -377,21 +380,64 @@ public class StudyTestB extends Activity {
 		blueDrawableAni 	= (AnimationDrawable)balloonBlue.getBackground();
 		greenDrawableAni 	= (AnimationDrawable)balloonGreen.getBackground();
 
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		
+		//get display's density and if it's lower than xhdpi, set balloon's size to originalsize*0.75
+		int balloonHeight;
+		int balloonWidth;
+		if(metrics.densityDpi <= DisplayMetrics.DENSITY_HIGH ){
+		    balloonHeight = (int)(341 * 0.75);
+		    balloonWidth = (int)(171 * 0.75);
+		}
+		else{
+		    balloonHeight = 314;
+		    balloonWidth = 171;
+		}
+		
 		//balloon set random X
-		int pinkRandomX = (int)(Math.random() * (360-85.5));
-		int yellowRandomX = (int)(Math.random() * (360-85.5));
-		int blueRandomX = (int)(Math.random() * (360-85.5));
-		int greenRandomX = (int)(Math.random() * (360-85.5));
+		int pinkRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		int yellowRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		while(((yellowRandomX + balloonWidth) >= pinkRandomX) && (yellowRandomX <= (pinkRandomX + balloonWidth))){
+			Log.e("RE RANDOM!!!", "yellow");
+			yellowRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		}		
+		int greenRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		while(((greenRandomX + balloonWidth) >= yellowRandomX) && (greenRandomX <= (yellowRandomX + balloonWidth))){
+			Log.e("RE RANDOM!!!", "green");
+			greenRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		}
+		int blueRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		while(((blueRandomX + balloonWidth) >= greenRandomX) && (blueRandomX <= (greenRandomX + balloonWidth))){
+			Log.e("RE RANDOM!!!", "blue");
+			blueRandomX = (int)(Math.random() * (metrics.widthPixels-balloonWidth));
+		}
 
-		balloonPink.setX(pinkRandomX*density);
-		balloonYellow.setX(yellowRandomX*density);
-		balloonBlue.setX(blueRandomX*density);
-		balloonGreen.setX(greenRandomX*density);
+		
+		balloonPink.setX(pinkRandomX);
+		balloonYellow.setX(yellowRandomX);
+		balloonBlue.setX(blueRandomX);
+		balloonGreen.setX(greenRandomX);
+		
+		//balloon position adjustment
+		int balloonSpacing;
+		balloonSpacing = (int)(balloonHeight * 0.65);
+		
+		int pinkStartPosition = metrics.heightPixels;
+		int yellowStartPosition = pinkStartPosition + balloonSpacing;
+		int greenStartPosition = yellowStartPosition + balloonSpacing;
+		int blueStartPosition = greenStartPosition + balloonSpacing;
 
-		pinkAni = ObjectAnimator.ofFloat(balloonPink, "y",1280/2*density, -1364/2*density);
-		yellowAni = ObjectAnimator.ofFloat(balloonYellow, "y",1621/2*density, -1023/2*density);
-		blueAni = ObjectAnimator.ofFloat(balloonBlue, "y",1962/2*density, -682/2*density);
-		greenAni = ObjectAnimator.ofFloat(balloonGreen, "y",2303/2*density, -341/2*density);
+		int blueEndPosition = -balloonHeight;
+		int greenEndPosition = blueEndPosition - balloonSpacing;
+		int yellowEndPosition = greenEndPosition - balloonSpacing;
+		int pinkEndPosition = yellowEndPosition - balloonSpacing;
+		
+		pinkAni = ObjectAnimator.ofFloat(balloonPink, "y", pinkStartPosition, pinkEndPosition);
+		yellowAni = ObjectAnimator.ofFloat(balloonYellow, "y", yellowStartPosition, yellowEndPosition);
+		greenAni = ObjectAnimator.ofFloat(balloonGreen, "y", greenStartPosition, greenEndPosition);
+		blueAni = ObjectAnimator.ofFloat(balloonBlue, "y", blueStartPosition, blueEndPosition);
+		
 		pinkAni.setRepeatCount(0);
 		yellowAni.setRepeatCount(0);
 		blueAni.setRepeatCount(0);

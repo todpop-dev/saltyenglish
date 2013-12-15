@@ -83,7 +83,9 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/test_9_textbox_englishword"
                     android:gravity="center_horizontal"
-                    android:textSize="30sp" />
+                    android:textColor="#EEF7D4"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
         </RelativeLayout>
     </LinearLayout>
@@ -93,25 +95,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingBottom="35dp" />
+        android:paddingBottom="35dp"
+        android:textColor="#EEF7D4"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/study_testb_id_green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="35dp" />
+        android:paddingBottom="35dp"
+        android:textColor="#EEF7D4"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/study_testb_id_yellow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="35dp" />
+        android:paddingBottom="35dp"
+        android:textColor="#EEF7D4"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/study_testb_id_blue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="35dp" />
+        android:paddingBottom="35dp"
+        android:textColor="#EEF7D4"
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/study_test_b_id_intro_button"
