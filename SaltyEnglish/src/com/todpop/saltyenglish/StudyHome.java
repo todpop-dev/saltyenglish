@@ -22,6 +22,7 @@ import com.flurry.android.FlurryAgent;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -53,6 +54,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -172,20 +174,28 @@ public class StudyHome extends Activity {
 		rankingItemArrayWeek = new ArrayList<RankingListItem>();
 		rankingItemArrayMonth = new ArrayList<RankingListItem>();
 		noticeList = new ArrayList<String>();
-		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
-
 		
-        adapter = new ImageAdapter(this);
-		categoryPager.setAdapter(adapter);
-		categoryPager.setCurrentItem(1073741823);
-
 		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
 		studyInfoEdit.putInt("currentPeriod", 1);
 		studyInfoEdit.commit();
-		Display display = getWindowManager().getDefaultDisplay();
+		
+		//setting category view pager.
+		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
+
+        adapter = new ImageAdapter(this);
+		categoryPager.setAdapter(adapter);
+		categoryPager.setCurrentItem(1073741823);
+		
 		size = new Point();
-		display.getSize(size);
-		categoryPager.setPageMargin(-size.x/2);
+		Display display = getWindowManager().getDefaultDisplay();
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2){
+			display.getSize(size);
+			categoryPager.setPageMargin(-size.x/2);
+		}
+		else{
+			categoryPager.setPageMargin(-display.getWidth()/2);
+		}
 		categoryPager.setOffscreenPageLimit(5);
 		categoryPager.setOnTouchListener(new View.OnTouchListener() {
 
@@ -263,13 +273,11 @@ public class StudyHome extends Activity {
 			
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -279,15 +287,13 @@ public class StudyHome extends Activity {
 			FixedSpeedScroller scroller = new FixedSpeedScroller(categoryPager.getContext());
 			mScroller.set(categoryPager, scroller);
 		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//category view pager setting done
 		
 		// CPX View
 		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
