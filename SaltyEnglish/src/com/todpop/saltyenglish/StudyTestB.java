@@ -267,14 +267,7 @@ public class StudyTestB extends Activity {
 	{
 		pauseView.setVisibility(View.GONE);
 		isRunning = true;
-		
-		/*
-		pinkAni.end();
-		yellowAni.end();
-		blueAni.end();
-		greenAni.end();
-		greenAni.removeAllListeners();
-		*/
+
 		Log.d("spink pause time ---", Long.toString(pinkTime)+", "+pinkAni.getDuration());
 		
 		pinkAni.start();
@@ -336,8 +329,6 @@ public class StudyTestB extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-
 	}
 
 	@SuppressLint("NewApi")
@@ -391,7 +382,7 @@ public class StudyTestB extends Activity {
 		    balloonWidth = (int)(171 * 0.75);
 		}
 		else{
-		    balloonHeight = 314;
+		    balloonHeight = 341;
 		    balloonWidth = 171;
 		}
 		
@@ -433,6 +424,7 @@ public class StudyTestB extends Activity {
 		int yellowEndPosition = greenEndPosition - balloonSpacing;
 		int pinkEndPosition = yellowEndPosition - balloonSpacing;
 		
+		Log.i("STEVEN BALLOON POSTION Y", "pos"+pinkStartPosition+" "+pinkEndPosition+" "+yellowStartPosition+" "+yellowEndPosition);
 		pinkAni = ObjectAnimator.ofFloat(balloonPink, "y", pinkStartPosition, pinkEndPosition);
 		yellowAni = ObjectAnimator.ofFloat(balloonYellow, "y", yellowStartPosition, yellowEndPosition);
 		greenAni = ObjectAnimator.ofFloat(balloonGreen, "y", greenStartPosition, greenEndPosition);
@@ -456,7 +448,6 @@ public class StudyTestB extends Activity {
 		
 		startTime = 10000;
 		startTimeCount(startTime);
-
 	}
 
 	private Runnable replayAni = new Runnable() {

@@ -25,7 +25,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -34,6 +33,8 @@ public class LvTestFinish extends Activity {
 	Button skipBtn;
 	VideoView video;
 	SharedPreferences rgInfo;
+	private int ad_id = -1;
+	private int ad_type = 201;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,8 +99,9 @@ public class LvTestFinish extends Activity {
 		protected void onPostExecute(JSONObject json) {
 
 			try {
-				if(json.getBoolean("status")==true)
-				{
+				if(json.getBoolean("status")==true){
+					ad_id = json.getJSONObject("data").getInt("ad_id");
+				
 					video.setVideoPath("http://todpop.co.kr/"+json.getJSONObject("data").getString("url"));
 					final MediaController mc = new MediaController(LvTestFinish.this);
 					//mc.hide();
@@ -120,14 +122,53 @@ public class LvTestFinish extends Activity {
 
 		}
 	}
+	private class SetCPDMlog extends AsyncTask<String, Void, JSONObject> {
 
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("SET CPDM LOG RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+		
+		@Override
+		protected void onPostExecute(JSONObject json) {
+
+			try {
+				if(json.getBoolean("status")==true) {
+					Intent intent = new Intent(getApplicationContext(), LvTestResult.class);
+					startActivity(intent);
+					finish();
+				} else {		        
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+	}
 	public void onClick(View view)
 	{
 		FlurryAgent.endTimedEvent("CPDM");
-		Intent intent = new Intent(getApplicationContext(), LvTestResult.class);
-		startActivity(intent);
-		finish();
-		
+		int view_time = (int)Math.floor(video.getCurrentPosition()/1000);
+		Log.e("STEVEN", String.valueOf(view_time));
+		Log.e("send log", "AD_ID = "+ad_id+" AD_TYPE = "+ad_type+" USER_ID = "+rgInfo.getString("mem_id", "0")+" VIEW TIME = "+view_time);
+		new SetCPDMlog().execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="+ad_id+"&ad_type="+ad_type+"&user_id="+rgInfo.getString("mem_id", "0")+"&view_time="+view_time);
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) 

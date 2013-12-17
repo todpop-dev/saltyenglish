@@ -304,7 +304,7 @@ public class StudyHome extends Activity {
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
 		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(300*density),true);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
 		
 		
@@ -817,7 +817,7 @@ public class StudyHome extends Activity {
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.study_home, menu);
-		return true;
+		return false;
 	}
 
 	public void showShop(View view)
@@ -959,11 +959,13 @@ public class StudyHome extends Activity {
 						majorVersionUpdate = true;
 					}
 				}
-				if(json.getJSONObject("data").getString("ment")!=""){
-					String notice = json.getJSONObject("data").getString("ment");
+				JSONArray noticeArray = json.getJSONObject("data").getJSONArray("ment");
+				for(int i = 0; i < noticeArray.length(); i++){
+					String notice = noticeArray.getString(i);
 					notice = notice.replace("\\n", "\n");
 					noticeList.add(notice);
 				}
+					
 				popupText.setText(noticeList.get(0));
 				noticeList.remove(0);
 				Log.i("STEVEN", "just before pop");
@@ -1133,6 +1135,7 @@ public class StudyHome extends Activity {
 	{
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			
 			if(cpiView.isShown()){
 				FlurryAgent.logEvent("Intall Later");
 				SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -1140,6 +1143,20 @@ public class StudyHome extends Activity {
 				cpxInfo.edit().clear().commit();
 				cpxSInstallInfo.edit().clear().commit();
 				cpiView.setVisibility(View.GONE);
+			}
+			if(isOnSlide == true){
+				FlurryAgent.logEvent("Slide Button Clicked (Off)");
+				isOnSlide = false;
+
+				float density = getResources().getDisplayMetrics().density;
+				ObjectAnimator slideAni;
+				LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
+				slideAni = ObjectAnimator.ofFloat(rl, "x", (173/2)*density,0*density);
+
+				slideAni.addListener(mAnimationListener);
+
+				slideAni.setDuration(300);
+				slideAni.start();
 			}
 			else{
 				final AlertDialog.Builder isExit = new AlertDialog.Builder(this);

@@ -53,6 +53,10 @@ public class RgRegister extends Activity {
     private String userInfo = null;
 
     String fbId = null;
+    String fbName = null;
+    String fbBDay = null;
+    String fbLocation = null;
+    String fbGender = null;
     String fbEmail = null;
 
     ImageView rgNotice;
@@ -110,8 +114,6 @@ public class RgRegister extends Activity {
 		uiHelper.onCreate(savedInstanceState);
 
 		new CheckMobileExist().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
-		
-		
 	}
 	
 	
@@ -348,18 +350,34 @@ public class RgRegister extends Activity {
 		    // - no special permissions required
 		    userInfo.append(String.format("Name: %s\n\n", 
 		        user.getName()));
+		    fbName = user.getName();
 
 		    // Example: typed access (birthday)
 		    // - requires user_birthday permission
 		    userInfo.append(String.format("Birthday: %s\n\n", 
 		        user.getBirthday()));
+		    fbBDay = user.getBirthday();
 
 		    // Example: partially typed access, to location field,
 		    // name key (location)
 		    // - requires user_location permission
-//		    userInfo.append(String.format("Location: %s\n\n", 
-//		        user.getLocation().getProperty("name")));
-	//
+		    try{
+		    	userInfo.append(String.format("Location: %s\n\n", 
+		    			user.getLocation().getProperty("name")));
+			    fbLocation = String.valueOf(user.getLocation().getProperty("name"));
+		    }catch(NullPointerException e){
+		    	e.printStackTrace();
+		    }
+		    
+		    //get gender
+		    try{
+		    	userInfo.append(String.format("Gender: %s\n\n", 
+				        user.getProperty("gender")));
+			    fbGender = String.valueOf(user.getProperty("gender"));
+		    }catch(NullPointerException e){
+		    	e.printStackTrace();
+		    }
+		    
 //		    // Example: access via property name (locale)
 //		    // - no special permissions required
 //		    userInfo.append(String.format("Locale: %s\n\n", 
@@ -474,7 +492,13 @@ public class RgRegister extends Activity {
 					    Log.i("STEVEN", "change activity to FbNickname "+ fbEmail);
 					    
 						rgInfoEdit.putString("facebook", fbEmail);
+						rgInfoEdit.putString("fbName", fbName);
+						rgInfoEdit.putString("fbBDay", fbBDay);
+						rgInfoEdit.putString("fbLocation", fbLocation);
+						rgInfoEdit.putString("fbGender", fbGender);		
 						rgInfoEdit.commit();
+						
+						Log.i("STEVEN", rgInfo.getString("fbLocation", "NO"));
 					    
 						Intent intent = new Intent(getApplicationContext(), FbNickname.class);
 //						intent.putExtra("fbEmail",fbEmail);
@@ -483,12 +507,9 @@ public class RgRegister extends Activity {
 					} else {
 					    Log.i("STEVEN", "Facebook Email duplication"+ fbEmail);
 						// Popup duplication
-						//popupview
-						relative = (RelativeLayout)findViewById(R.id.id_rg_regster_relative_layout);
-						popupview = View.inflate(getApplicationContext(), R.layout.popup_view, null);
-						float density = getResources().getDisplayMetrics().density;
-						popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
-						popupText = (TextView)popupview.findViewById(R.string.rg_register_facebook_duplicate);
+						popupText.setText(R.string.rg_register_facebook_duplicate);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						popupWindow.showAsDropDown(rgCheckbox);
 					}
 				} else {
 					// Should never be here TODO: Popup

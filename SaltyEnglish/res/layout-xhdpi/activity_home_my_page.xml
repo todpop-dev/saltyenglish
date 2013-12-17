@@ -127,6 +127,7 @@
                                 android:gravity="left"
                                 android:paddingLeft="5dp"
                                 android:textColor="#E6947F"
+                                android:textStyle="bold"
                                 android:textSize="16sp" />
                         </RelativeLayout>
 
