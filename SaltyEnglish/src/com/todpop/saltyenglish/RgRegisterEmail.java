@@ -116,7 +116,7 @@ public class RgRegisterEmail extends Activity {
 	
 	public void checkDuplicatedNickname(View view)
 	{
-		Log.i("STEVEN----dupicated nickname", "right now nick is"+nickname.getText());
+		Log.i("STEVEN----dupicated nickname", "right now nick is "+nickname.getText());
 		Log.e("RRE",nickname.getText().toString());
 		String tmpNickname = nickname.getText().toString();
 		if(tmpNickname.contains(" "))
@@ -309,7 +309,7 @@ public class RgRegisterEmail extends Activity {
 	    boolean isValid = false;
 
 	    //String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-	    String expression = "^([0-9a-zA-Z_-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$";
+	    String expression = "^([0-9a-zA-Z._-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$";
 	    CharSequence inputStr = email;
 
 	    Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
