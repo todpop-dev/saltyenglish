@@ -614,8 +614,8 @@ public class StudyBegin extends FragmentActivity {
 												
 						// Add additional 3 words
 						Cursor otherCursor = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
-								"xo=\'X\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated/10+1)*10 + 
-								" AND stage <> " + tmpStageAccumulated + " ORDER BY RANDOM() LIMIT 3" , null);
+								"xo=\'X\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated-1) + 
+								" ORDER BY RANDOM() LIMIT 3" , null);
 						
 						if (otherCursor.getCount() > 0) {
 							while(otherCursor.moveToNext()) {
@@ -657,8 +657,8 @@ public class StudyBegin extends FragmentActivity {
 							}
 							
 							Cursor otherCursor2 = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
-									"xo=\'O\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated/10+1)*10 + 
-									" AND stage <> " + tmpStageAccumulated + " AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
+									"xo=\'O\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated-1) + 
+									" AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
 							if (otherCursor2.getCount()>0) {
 								while(otherCursor2.moveToNext()) {
 									JSONObject jsonObj= new JSONObject();
@@ -859,8 +859,10 @@ public class StudyBegin extends FragmentActivity {
 		    protected void onPostExecute(Bitmap result) 
 		    {
 		    	if (imgTag.equals("FRONT")) {
+		    		Log.e("STEVEN CPD IMAGE FRONT", "get done");
 		    		cpdFrontImage = result;
 		    	} else if (imgTag.equals("BACK")) {
+		    		Log.e("STEVEN CPD IMAGE BACK", "get done");
 		    		cpdBackImage = result;
 		    	}
 		    }
