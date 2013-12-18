@@ -16,9 +16,12 @@ import org.json.JSONObject;
 import com.flurry.android.FlurryAgent;
 
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,10 +33,17 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class HomeMoreHelp extends Activity {
-
+	
+	//declare define popup view
+	PopupWindow popupWindow;
+	View popupview;
+	LinearLayout mainLayout;
+	TextView popupText;
+	ExpandableListView expandListView;
 	ArrayList<String> titleArray = new ArrayList<String>() ;
 	ArrayList<String> itemArray = new ArrayList<String>();
 
@@ -41,6 +51,13 @@ public class HomeMoreHelp extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_more_help);
+
+		expandListView = (ExpandableListView)findViewById(R.id.homemorehelp_id_listview_item);
+		mainLayout = (LinearLayout)findViewById(R.id.activity_home_more_help);
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
 		new GetHelp().execute("http://todpop.co.kr/api/app_infos/get_helps.json");
 	}
 
@@ -170,7 +187,6 @@ public class HomeMoreHelp extends Activity {
 								return true;
 							}
 						};
-						ExpandableListView expandListView = (ExpandableListView)findViewById(R.id.homemorehelp_id_listview_item);
 						expandListView.setAdapter(adapter);
 
 					}else{
@@ -209,5 +225,13 @@ public class HomeMoreHelp extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	}
+	public void onClickAsk(View view){
+		popupText.setText(getResources().getString(R.string.home_more_help_info));
+		popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+	}
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
 	}
 }

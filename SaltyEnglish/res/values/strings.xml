@@ -234,5 +234,5 @@
 	<string name="home_download_action_confirmed">내역 확인 및 적립이 완료되었습니다.</string>
 	<string name="cpi_install_notification">[짭짤한영어] 내 다운로드함에서 적립확인을 받으셔야 적립이 완료됩니다.</string>
 	<string name="cpa_install_notice">사용 중이신 휴대전화와 동일한 번호로 회원가입을 완료하셔야 적립이 가능합니다.</string>
-
+	<string name="home_more_help_info">\n\n[짭짤한 영어]\nE-mail = email@todpop.co.kr\nTel. 070-4814-4628\n\n(주)토드팝</string>
 </resources>
