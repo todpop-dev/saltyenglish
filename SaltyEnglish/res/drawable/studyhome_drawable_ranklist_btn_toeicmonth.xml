@@ -3,9 +3,9 @@
  
      <item android:state_checked="false"
           android:state_enabled="true"
-          android:drawable="@drawable/home_text_subtitle_toeicmonth_white" />
+          android:drawable="@drawable/home_text_subtitle_toeicmonth_pink" />
     <item android:state_checked="true"
           android:state_enabled="true"
-          android:drawable="@drawable/home_text_subtitle_toeicmonth_pink" />
+          android:drawable="@drawable/home_text_subtitle_toeicmonth_white" />
  
 </selector>
