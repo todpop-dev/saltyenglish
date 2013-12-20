@@ -88,6 +88,7 @@ public class StudyBegin extends FragmentActivity {
 	// Infomation for send CPD cound
 	static int adId;
 	static int adType;
+	static int couponId;
 	static String userId;
 	static int adAct;
 	static int picNull;
@@ -122,6 +123,8 @@ public class StudyBegin extends FragmentActivity {
  	static ArrayList<View> rootViewArr = new ArrayList<View>();
  	
  	static boolean isCardBack = false;
+ 	
+ 	boolean cpdLogSent = false;
  	
  	// Database
  	WordDBHelper mHelper;
@@ -275,6 +278,13 @@ public class StudyBegin extends FragmentActivity {
 					break;
 				case 9:
 					point10.setImageResource(R.drawable.study_8_image_indicator_blue_on);
+					break;
+				case 10:
+					if(cpdLogSent == false){
+						Log.d("------- send info -----", "info");
+						new SendCPD_CouponDown_Info().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
+						cpdLogSent = true;
+					}
 					break;
 				default:
 					break;
@@ -812,6 +822,13 @@ public class StudyBegin extends FragmentActivity {
 					adId = cpdJsonObj.getInt("ad_id");
 					adType = cpdJsonObj.getInt("ad_type");
 					
+					try{
+						couponId = cpdJsonObj.getInt("coupon");
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+						
+					
 					try {
 						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
 						URL url = new URL(imgUrl);
@@ -869,7 +886,7 @@ public class StudyBegin extends FragmentActivity {
 		}		
 	}
 	
-	private class SendCPDInfo extends AsyncTask<String, Void, JSONObject> 
+	private class SendCPD_CouponDown_Info extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;
 		@Override
@@ -905,9 +922,9 @@ public class StudyBegin extends FragmentActivity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if(json.getBoolean("status")==true) {
-					Log.d("Send CPD Info OK!", "OK");
+					Log.d("Send CPD Info or Coupon Save OK!", "OK");
 				}else{		  
-					Log.d("Send CPD Info Failed!", "NO");
+					Log.d("Send CPD Info or Coupon Save Failed!", "NO");
 				}
 
 			} catch (Exception e) {
@@ -930,6 +947,7 @@ public class StudyBegin extends FragmentActivity {
 	public void showCouponPopView(View v)
 	{
 		FlurryAgent.logEvent("Coupon Get");
+		new SendCPD_CouponDown_Info().execute("http://todpop.co.kr/api/advertises/get_coupons.json?user_id=" + userId + "&coupon_id=" + couponId);
 		popupText.setText(R.string.study_finish_popup_text);
 		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		popupWindow.showAsDropDown(null);
@@ -942,10 +960,10 @@ public class StudyBegin extends FragmentActivity {
 	
 	public void showTestActivity(View view)
 	{		
-		
+		/*
 		Log.d("------- send info -----", "info");
 		new SendCPDInfo().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
-		
+		*/
 		if(tmpStage==1 || tmpStage==2 || tmpStage==4 || tmpStage==5 || tmpStage==7 || tmpStage==8) {
 			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
 			startActivity(intent);
