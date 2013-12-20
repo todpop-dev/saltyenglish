@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -180,6 +181,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.todpop.saltyenglish.HomeMyPagePurchasedDetail"
+            android:label="@string/title_activity_home_my_page_purchased_detail"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.todpop.saltyenglish.HomeMyPageSaving"
             android:label="@string/title_activity_home_my_page_saving"
             android:screenOrientation="portrait" >
@@ -221,11 +227,11 @@
             android:label="@string/title_activity_home_more_account_delete"
             android:screenOrientation="portrait" >
         </activity>
-       	<activity
+        <activity
             android:name="com.todpop.saltyenglish.SurveyView"
             android:label="@string/survey_view_title"
-            android:screenOrientation="portrait" 
-            android:windowSoftInputMode="adjustPan">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
             android:name="com.todpop.saltyenglish.CPLView"
@@ -239,16 +245,16 @@
             android:name="com.todpop.saltyenglish.LvTestPause"
             android:label="@string/title_activity_lv_test_pause" >
         </activity>
-        
-       <receiver android:name="CpxPackageChangeReceiver">
-    	<intent-filter>
-			<action android:name="android.intent.action.PACKAGE_ADDED"/>
-			<action android:name="android.intent.action.PACKAGE_REPLACED"/>
-			<action android:name="android.intent.action.PACKAGE_REMOVED"/>
-			<data android:scheme="package"/>
-    	</intent-filter>
-	</receiver>
-    </application>
 
+        <receiver android:name="CpxPackageChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+    </application>
 
 </manifest>
