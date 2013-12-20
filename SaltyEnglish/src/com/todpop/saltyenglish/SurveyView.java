@@ -415,7 +415,7 @@ public class SurveyView extends Activity {
 								
 								String tmpAnswer = "&ans[]="
 										+ tmpEt.getText().toString()
-												.replace("\n", ".");
+												.replace("\n", "%0d").replace(" ", "%20");
 								answerMap.put(position - 1, tmpAnswer);
 
 							} else {
