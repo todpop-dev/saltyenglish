@@ -4,91 +4,99 @@
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_pinkpattern" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
 
+            <!-- title bar -->
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/common_bgimg_purchase" />
 
-    <!-- title bar -->
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12.5dp"
-        android:src="@drawable/common_bgimg_purchase" />
-	
-	<!-- back btn -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:background="@drawable/rg_drawable_btn_back"
-        android:onClick="onClickBack"/>
-    
-    <!-- carousel -->
-    <ImageView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41.5dp"
-        android:src="@drawable/store_34_image_carouselbar"/>
-    
-    <RadioGroup
-        android:id="@+id/homemypagepurchased_id_coupongroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="51dp">
+            <!-- back btn -->
 
-        <RadioButton
-            android:id="@+id/homemypagepurchased_id_btn_coupon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="38dp"
-            android:background="@drawable/store_34_btn_freecoupon_off"
-            android:button="@drawable/homemypagepurchased_drawable_btn_coupon"
-            android:checked="true" />
-        
-         <RadioButton
-            android:id="@+id/homemypagepurchased_id_btn_purchased"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:background="@drawable/store_34_btn_chargecoupon_off"
-            android:button="@drawable/homemypagepurchased_drawable_btn_purchased" />
-        
-    </RadioGroup>
-       
-    <ImageView 
-        android:layout_width="335dp"
-        android:layout_height="508.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="111.5dp"
-        android:src="@drawable/common_image_pinkbox_big"/>
-    
-    <!--  
-    <ListView
-        android:id="@+id/home_mypage_purchased_id_list_view"
-        android:layout_width="335dp"
-        android:layout_height="500dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="124dp"
-        android:paddingRight="5dp"
-        android:background="@drawable/common_image_pinkbox_big"
-        android:fadeScrollbars="false"
-        android:scrollbarThumbVertical="@drawable/store_32_drop_scroll"
-        android:scrollbarTrackVertical="@drawable/store_32_drop_underbar" />
-    -->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
+        </RelativeLayout>
 
+        <!-- carousel -->
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="105"
+            android:background="@drawable/store_34_image_carouselbar" >
 
+            <RadioGroup
+                android:id="@+id/homemypagepurchased_id_coupongroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:orientation="horizontal" >
 
+                <RadioButton
+                    android:id="@+id/homemypagepurchased_id_btn_coupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="275"
+                    android:background="@drawable/store_34_btn_freecoupon_off"
+                    android:button="@drawable/homemypagepurchased_drawable_btn_coupon"
+                    android:checked="true" />
 
-     </RelativeLayout>
+                <RadioButton
+                    android:id="@+id/homemypagepurchased_id_btn_purchased"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="275"
+                    android:background="@drawable/store_34_btn_chargecoupon_off"
+                    android:button="@drawable/homemypagepurchased_drawable_btn_purchased" />
+            </RadioGroup>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1085"
+            android:padding="12dp" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@drawable/common_image_pinkbox_big"
+                android:padding="5dp" >
+
+                <ListView
+                    android:id="@+id/home_mypage_purchased_id_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:fadeScrollbars="false"
+                    android:paddingRight="5dp"
+                    android:scrollbarThumbVertical="@drawable/store_32_drop_scroll"
+                    android:scrollbarTrackVertical="@drawable/store_32_drop_underbar" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40" />
+    </LinearLayout>
 
 </RelativeLayout>
