@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +20,8 @@ import org.json.JSONObject;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
+import com.todpop.saltyenglish.StudyBegin.StudyStartFragment;
+import com.todpop.saltyenglish.StudyBegin.StudyStartFragment.BtnFlipListener;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -34,6 +37,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
@@ -42,6 +46,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
@@ -55,12 +62,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -76,7 +88,7 @@ public class StudyHome extends Activity {
 	TextView cpiAdTextView;
 
 	// Home Ranking List
-	ListView rankingList;
+	static ListView rankingList;
 	
 	// Ranking Item and Adaptor
 	RankingListItem rankingItem;
@@ -112,7 +124,7 @@ public class StudyHome extends Activity {
 	SharedPreferences myRankInfo;
 	
 	ViewPager categoryPager;
-	ImageAdapter adapter;
+	StudyHomePagerAdapter pagerAdapter;
 	Point size;
 	
 	int category, period;
@@ -175,17 +187,19 @@ public class StudyHome extends Activity {
 		rankingItemArrayMonth = new ArrayList<RankingListItem>();
 		noticeList = new ArrayList<String>();
 		
-		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+		studyInfoEdit = studyInfo.edit();
 		studyInfoEdit.putInt("currentPeriod", 1);
 		studyInfoEdit.commit();
-		
+
 		//setting category view pager.
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
 
-        adapter = new ImageAdapter(this);
-		categoryPager.setAdapter(adapter);
-		categoryPager.setCurrentItem(1073741823);
-		
+        pagerAdapter = new StudyHomePagerAdapter(this);
+		categoryPager.setAdapter(pagerAdapter);
+		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
+
+		//categoryPager.setOffscreenPageLimit(5);
+		/*
 		size = new Point();
 		Display display = getWindowManager().getDefaultDisplay();
 		
@@ -196,7 +210,6 @@ public class StudyHome extends Activity {
 		else{
 			categoryPager.setPageMargin(-display.getWidth()/2);
 		}
-		categoryPager.setOffscreenPageLimit(5);
 		categoryPager.setOnTouchListener(new View.OnTouchListener() {
 
 			private float mLastX;
@@ -237,36 +250,50 @@ public class StudyHome extends Activity {
 				}
 				return true;
 			}
-		});
+		});*/
 		categoryPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			
 			@Override
 			public void onPageSelected(int arg0) {
 				
-				SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
-
-				// TODO Auto-generated method stub
-				if(arg0%2 == 1){ //Weekly
-    				period =1;
-    				studyInfoEdit.putInt("currentPeriod", 1);
+				if(arg0%4 == 0){ //basic
+					Log.i("STEVEN", "basic category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 1);
     				studyInfoEdit.commit();
-
-					rankingList.setAdapter(rankingListAdapterWeek);
-					myRank.setText(myRankInfo.getString("weekRank", "null"));
-					myScore.setText(myRankInfo.getString("weekScore", "null"));
-
+    				getInfo();
+    				
     				Log.i("TESTING", "id_week getInfo() called");
 				}
-				else{		//Monthly
-    				period =2;
-    				studyInfoEdit.putInt("currentPeriod", 2);
+				else if(arg0%4 == 1){		//middle
+					Log.i("STEVEN", "middle category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 2);
     				studyInfoEdit.commit();
-
-					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
-					rankingList.setAdapter(rankingListAdapterMonth);
-					myRank.setText(myRankInfo.getString("monthRank", "null"));
-					myScore.setText(myRankInfo.getString("monthScore", "null"));
-
+    				getInfo();
+    				
+    				Log.i("TESTING", "id_moon getInfo() called");
+				}
+				else if(arg0%4 == 2){		//high
+					Log.i("STEVEN", "high category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 3);
+    				studyInfoEdit.commit();
+    				getInfo();
+    				
+    				Log.i("TESTING", "id_moon getInfo() called");
+				}
+				else{		//toiec
+					Log.i("STEVEN", "toiec category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 4);
+    				studyInfoEdit.commit();
+    				getInfo();
+    				
     				Log.i("TESTING", "id_moon getInfo() called");
 				}
 			}
@@ -324,7 +351,101 @@ public class StudyHome extends Activity {
 		
 	
 	}
-	
+	public class StudyHomePagerAdapter extends PagerAdapter{
+		private LayoutInflater mInflater;
+		
+		public StudyHomePagerAdapter(Context c) {
+			super();
+			mInflater = LayoutInflater.from(c);
+		}
+
+		@Override
+		public int getCount() {
+            return Integer.MAX_VALUE;
+		}
+
+		@Override
+		public Object instantiateItem(View container, int position) {
+			View v = null;
+			v = mInflater.inflate(R.layout.fragment_study_home_category, null);
+			RadioButton weekBtn = (RadioButton)v.findViewById(R.id.study_home_category_week);
+			RadioButton monthBtn = (RadioButton)v.findViewById(R.id.study_home_category_month);
+			if(studyInfo.getInt("currentPeriod", 1) == 1){
+				weekBtn.setChecked(true);
+			}
+			else{
+				monthBtn.setChecked(true);
+			}
+			weekBtn.setOnClickListener(radioButton);
+			monthBtn.setOnClickListener(radioButton);
+							
+			switch(position%4){
+			case 0:
+				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_basicweek);
+				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_basicmonth);
+				break;
+			case 1:
+				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_middleweek);
+				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_middlemonth);
+				break;
+			case 2:
+				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_highweek);
+				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_highmonth);
+				break;
+			case 3:
+				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_toeicweek);
+				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_toeicmonth);
+				break;
+			}	
+			((ViewPager)container).addView(v, 0);
+			return v;
+		}
+	    @Override
+	    public void destroyItem(ViewGroup container, int position, Object object) {
+	        ((ViewPager) container).removeView((View) object);
+	    }
+	    public int getItemPosition(Object object){
+	        return POSITION_NONE;
+	   }
+
+		@Override
+		public boolean isViewFromObject(View pager, Object obj) {
+			return pager == obj;
+		}
+
+		OnClickListener radioButton = new OnClickListener(){
+			public void onClick(View v){
+				switch(v.getId()){
+				case R.id.study_home_category_week:
+					studyInfoEdit.putInt("currentPeriod", 1);
+					studyInfoEdit.commit();
+					
+					rankingList.setAdapter(rankingListAdapterWeek);
+					myRank.setText(myRankInfo.getString("weekRank", "null"));
+					myScore.setText(myRankInfo.getString("weekScore", "null"));
+					break;
+				case R.id.study_home_category_month:
+					studyInfoEdit.putInt("currentPeriod", 2);
+					studyInfoEdit.commit();
+					
+					rankingList.setAdapter(rankingListAdapterMonth);
+					myRank.setText(myRankInfo.getString("weekRank", "null"));
+					myScore.setText(myRankInfo.getString("weekScore", "null"));
+					break;
+				}
+			}
+		};
+	}
+	public void goLeft(View v){
+		Log.i("STEVEN", "go left");
+		categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1);
+		Log.i("STEVEN", "go left done");
+	}
+	public void goRight(View v){
+		Log.i("STEVEN", "go right");
+		categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1);
+		Log.i("STEVEN", "go right done");
+	}
 	
 	@Override
 	public void onResume()
@@ -349,7 +470,7 @@ public class StudyHome extends Activity {
 
 		getInfo();
 		
-		adapter.notifyDataSetChanged();
+		pagerAdapter.notifyDataSetChanged();
 		// Get CPX Info onResume
 
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -562,8 +683,6 @@ public class StudyHome extends Activity {
 		category = studyInfo.getInt("currentCategory", 1);
 		period = studyInfo.getInt("currentPeriod", 1);
 		
-		rankingItemArrayWeek.clear();
-		rankingItemArrayMonth.clear();
 		//get weekly, monthly rank
 		new GetRankWeek().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
 					category+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
@@ -700,6 +819,8 @@ public class StudyHome extends Activity {
 
 			try {
 				if	(result.getBoolean("status")==true) {
+
+					rankingItemArrayWeek.clear();
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
 					for(int i=0;i<6;i++) {
 						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
@@ -711,12 +832,11 @@ public class StudyHome extends Activity {
 					myRankInfoEdit.putString("weekScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
 					myRankInfoEdit.commit();
 
-					//move current ranking page to weekly ranking page
-					categoryPager.setCurrentItem(1073741823);
-
 					rankingListAdapterWeek = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayWeek);
-					rankingList.setAdapter(rankingListAdapterWeek);
-					
+
+					if(studyInfo.getInt("currentPeriod", 1) == 1){
+						rankingList.setAdapter(rankingListAdapterWeek);
+					}
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"), myImage);
 					myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
 					myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
@@ -762,6 +882,7 @@ public class StudyHome extends Activity {
 
 			try {
 				if	(result.getBoolean("status")==true) {
+					rankingItemArrayMonth.clear();
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
 					for(int i=0;i<6;i++) {
 						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
@@ -772,6 +893,12 @@ public class StudyHome extends Activity {
 					myRankInfoEdit.putString("monthRank", result.getJSONObject("data").getJSONObject("mine").getString("rank"));
 					myRankInfoEdit.putString("monthScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
 					myRankInfoEdit.commit();
+
+					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
+					
+					if(studyInfo.getInt("currentPeriod", 1) == 2){
+						rankingList.setAdapter(rankingListAdapterMonth);
+					}
 					
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);
 					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
@@ -1258,7 +1385,7 @@ public class StudyHome extends Activity {
 	/**
      * PagerAdapter 
      */
-	public class ImageAdapter extends PagerAdapter {
+	/*public class ImageAdapter extends PagerAdapter {
 	    Context context;
 	 
 	    private int[] basicImages = new int[] {
@@ -1293,7 +1420,9 @@ public class StudyHome extends Activity {
 	    }
 	      
 	    @Override
-	    public Object instantiateItem(View container, int position) {
+	    public Object instantiateItem(View container, int position) { 	
+	    	
+	    	
 	        ImageView imageView = new ImageView(container.getContext());
 	        imageView.setScaleType(ImageView.ScaleType.CENTER);
 	        switch(category){
@@ -1324,7 +1453,7 @@ public class StudyHome extends Activity {
 	    public int getItemPosition(Object object){
 	        return POSITION_NONE;
 	   }
-	}
+	}*/
 	public class FixedSpeedScroller extends Scroller {
 
 	    private int mDuration = 1000;

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_study_begin_id_mainview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/store_34_image_carouselbar"
+    android:orientation="horizontal" >
+
+    <Button
+        android:id="@+id/study_home_category_left"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="48"
+        android:background="@android:color/transparent"
+        android:onClick="goLeft" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="624" >
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_centerInParent="true">
+
+            <RadioButton
+                android:id="@+id/study_home_category_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="275"
+                android:background="@drawable/home_text_subtitle_basicmonth_pink"
+                android:button="@drawable/studyhome_drawable_ranklist_btn_basicweek" />
+
+            <RadioButton
+                android:id="@+id/study_home_category_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="275"
+                android:background="@drawable/home_text_subtitle_basicmonth_pink"
+                android:button="@drawable/studyhome_drawable_ranklist_btn_basicmonth" />
+        </RadioGroup>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/study_home_category_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="48"
+        android:background="@android:color/transparent"
+        android:onClick="goRight" />
+
+</LinearLayout>
