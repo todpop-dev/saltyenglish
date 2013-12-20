@@ -53,19 +53,31 @@ public class HomeMoreSetting extends Activity {
 		setContentView(R.layout.activity_home_more_setting);
 		
 		setAlarm = (Button)findViewById(R.id.home_more_setting_btn_alarm);
-		final Calendar c = Calendar.getInstance();
-		hour = c.get(Calendar.HOUR_OF_DAY);
-		minute = c.get(Calendar.MINUTE);
+
+        stdInfo = getSharedPreferences("studyInfo",0);
+        stdInfoEdit = stdInfo.edit();
+        
+		/*final Calendar c = Calendar.getInstance();*/
+		
+		hour = stdInfo.getInt("alarmHour", 9);
+		minute = stdInfo.getInt("alarmMinute", 0);
 		targetHour = hour;
 		targetMinute = minute;
 		
+
+        
 		Log.d("hour - ", Integer.toString(hour));
 		Log.d("minute - ", Integer.toString(minute));
 		
-		setAlarm.setText("      "+hour+"         "+minute);
+		setAlarm.setText("      "+pad(hour)+"         "+pad(minute));
 		
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
-		
+		if(stdInfo.getBoolean("alarm", false)){
+			alarmCheckBox.setChecked(true);
+		}
+		else{
+			alarmCheckBox.setChecked(false);
+		}
 		alarmCheckBox.setOnCheckedChangeListener(
 				new CompoundButton.OnCheckedChangeListener() {
 
@@ -80,36 +92,19 @@ public class HomeMoreSetting extends Activity {
 					    PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
 
 						if (isChecked == true) {
-//							Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//							PendingIntent pIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-//							
-//							Notification n;
-//							
-//							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-//								n  = new Notification.Builder(getApplicationContext())
-//						        .setContentTitle(getResources().getString(R.string.notificationTitle))
-//						        .setContentText(getResources().getString(R.string.notificationSubject))
-//						        .setSmallIcon(R.drawable.icon)
-//						        .setContentIntent(pIntent).build();
-//							} else {
-//								n  = new Notification.Builder(getApplicationContext())
-//						        .setContentTitle(getResources().getString(R.string.notificationTitle))
-//						        .setContentText(getResources().getString(R.string.notificationSubject))
-//						        .setSmallIcon(R.drawable.icon)
-//						        .setContentIntent(pIntent).getNotification();
-//							}
-//							
-//							notificationManager.notify(0, n);
-							
+							stdInfoEdit.putBoolean("alarm", true);
+							stdInfoEdit.commit();
 							// Setup Alarm
 						    Calendar calendar =  Calendar.getInstance();
 						    calendar.set(Calendar.HOUR_OF_DAY, targetHour);
 						    calendar.set(Calendar.MINUTE, targetMinute);
 						    long when = calendar.getTimeInMillis();         // notification time
 
-						    alarmManager.set(AlarmManager.RTC, when, pendingIntent);
-
+						    //alarmManager.set(AlarmManager.RTC, when, pendingIntent);
+						    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntent);
 						} else {
+							stdInfoEdit.putBoolean("alarm", false);
+							stdInfoEdit.commit();
 							notificationManager.cancelAll();
 							alarmManager.cancel(pendingIntent);
 						}
@@ -122,8 +117,6 @@ public class HomeMoreSetting extends Activity {
         RadioButton rbHigh =(RadioButton)findViewById(R.id.home_more_radiobtn_high);
         RadioButton rbToeic =(RadioButton)findViewById(R.id.home_more_radiobtn_toeic);
 
-        stdInfo = getSharedPreferences("studyInfo",0);
-        stdInfoEdit = stdInfo.edit();
         switch(stdInfo.getInt("currentCategory", 1))
         {
         case 1:
@@ -203,6 +196,27 @@ public class HomeMoreSetting extends Activity {
 			setAlarm.setText("      "+pad(selectedHour)+"         "+pad(selectedMinute));
 			targetHour = selectedHour;
 			targetMinute = selectedMinute;
+			stdInfoEdit.putInt("alarmHour", selectedHour);
+			stdInfoEdit.putInt("alarmMinute", selectedMinute);
+			stdInfoEdit.commit();
+			
+			if(alarmCheckBox.isChecked()){
+				notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+			    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+			    
+			    Intent intent = new Intent(getApplicationContext(), ReminderService.class);
+			    PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+
+				notificationManager.cancelAll();
+				alarmManager.cancel(pendingIntent);
+				// Setup Alarm
+				Calendar calendar =  Calendar.getInstance();
+				calendar.set(Calendar.HOUR_OF_DAY, targetHour);
+				calendar.set(Calendar.MINUTE, targetMinute);
+				long when = calendar.getTimeInMillis();         // notification time
+
+				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntent);
+			}
 		}
 	};
 	
