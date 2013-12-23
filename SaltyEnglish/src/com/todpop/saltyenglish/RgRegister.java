@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -96,8 +97,7 @@ public class RgRegister extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.id_rg_regster_relative_layout);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(110*density),true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 		
@@ -526,6 +526,7 @@ public class RgRegister extends Activity {
     protected void onResume() 
     {
         super.onResume();
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
         uiHelper.onResume();
     }
     

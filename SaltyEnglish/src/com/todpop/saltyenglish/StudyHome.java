@@ -79,7 +79,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class StudyHome extends Activity {
-	private String encoding = "UTF-8";
 	boolean isOnSlide = false;
 
 	// CPI View show in return from study test
@@ -262,6 +261,8 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentPeriod", 1);*/
     				studyInfoEdit.putInt("currentCategory", 1);
     				studyInfoEdit.commit();
+
+					Log.i("STEVEN", "basic 265");
     				getInfo();
     				
     				Log.i("TESTING", "id_week getInfo() called");
@@ -272,6 +273,7 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentPeriod", 1);*/
     				studyInfoEdit.putInt("currentCategory", 2);
     				studyInfoEdit.commit();
+    				
     				getInfo();
     				
     				Log.i("TESTING", "id_moon getInfo() called");
@@ -330,7 +332,6 @@ public class StudyHome extends Activity {
 		//popupview
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
-		float density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
 		
@@ -338,7 +339,7 @@ public class StudyHome extends Activity {
 		// CPX Popup view
 		//cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);
 		cpxPopupView = View.inflate(this, R.layout.popup_view, null);
-		cpxPopupWindow = new PopupWindow(cpxPopupView,(int)(300*density),(int)(100*density),true);
+		cpxPopupWindow = new PopupWindow(cpxPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
 		//TODO 
@@ -433,6 +434,7 @@ public class StudyHome extends Activity {
 					myScore.setText(myRankInfo.getString("weekScore", "null"));
 					break;
 				}
+				categoryPager.getAdapter().notifyDataSetChanged();
 			}
 		};
 	}
@@ -453,6 +455,7 @@ public class StudyHome extends Activity {
 		super.onResume();
 
 
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 		// Facebook Logout
 		Session session = Session.getActiveSession();
 		if (session != null) {
@@ -468,6 +471,11 @@ public class StudyHome extends Activity {
 			//clear your preferences if saved
 		}
 
+		Log.e("STEVEN", "ON RESUME GETINFO!");
+
+
+		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
+		
 		getInfo();
 		
 		pagerAdapter.notifyDataSetChanged();
@@ -677,12 +685,12 @@ public class StudyHome extends Activity {
 	{
 		pref = getSharedPreferences("rgInfo",0);
 
-
 		FlurryAgent.setUserId(pref.getString("mem_id", "NO"));
 		
 		category = studyInfo.getInt("currentCategory", 1);
 		period = studyInfo.getInt("currentPeriod", 1);
 		
+		Log.e("STEVEN", "current category is " + category + "and period is " + period);
 		//get weekly, monthly rank
 		new GetRankWeek().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
 					category+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));

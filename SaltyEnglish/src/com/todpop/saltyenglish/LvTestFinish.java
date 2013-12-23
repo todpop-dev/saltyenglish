@@ -25,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -32,6 +33,8 @@ public class LvTestFinish extends Activity {
 
 	Button skipBtn;
 	VideoView video;
+	ImageView marking;
+	ImageView markingDone;
 	SharedPreferences rgInfo;
 	private int ad_id = -1;
 	private int ad_type = 201;
@@ -40,6 +43,8 @@ public class LvTestFinish extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lv_test_finish);
 		skipBtn = (Button)findViewById(R.id.lvtestfinish_id_skip_btn);
+		marking = (ImageView)findViewById(R.id.lvtestfinish_id_marking);
+		markingDone = (ImageView)findViewById(R.id.lvtestfinish_id_marking_completed);
 		  
 		  video = (VideoView)findViewById(R.id.test_video_view);
 		  rgInfo = getSharedPreferences("rgInfo",0);
@@ -59,7 +64,9 @@ public class LvTestFinish extends Activity {
 
 
 	private Runnable mLaunchTaskMain = new Runnable() {
-	public void run() {
+		public void run() {
+			marking.setVisibility(View.INVISIBLE);
+			markingDone.setVisibility(View.VISIBLE);
 			skipBtn.setEnabled(true);
 			skipBtn.setBackgroundResource(R.drawable.lvtestfinish_drawable_skip_btn);
 			

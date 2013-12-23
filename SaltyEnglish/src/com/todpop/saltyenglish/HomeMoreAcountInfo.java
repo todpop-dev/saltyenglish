@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -80,12 +81,11 @@ public class HomeMoreAcountInfo extends Activity {
 
 		//popupview
 		popupview = View.inflate(this, R.layout.popup_view_home_more_acount_info, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(180*density),true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
-		
-		popupview1 = View.inflate(this, R.layout.popup_view_home_more_account_delete, null);
-		popupWindow1 = new PopupWindow(popupview1,(int)(300*density),(int)(180*density),true);
+
+		popupview1 = View.inflate(this, R.layout.popup_view, null);
+		popupWindow1 = new PopupWindow(popupview1,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText1 = (TextView)popupview1.findViewById(R.id.popup_id_text);
 	}
 
@@ -93,7 +93,8 @@ public class HomeMoreAcountInfo extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-		
+
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 		isLogoutBtn = false;
 		isDeleteAccountBtn = false;
 		isSetPwBtn = false;

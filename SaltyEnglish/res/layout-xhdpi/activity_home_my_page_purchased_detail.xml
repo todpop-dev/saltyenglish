@@ -156,14 +156,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_toLeftOf="@id/home_my_page_purchased_detail_line1"
-                            android:paddingLeft="18dp" >
+                            android:paddingRight="18dp" >
 
                             <ImageView
                                 android:id="@+id/home_my_page_purchased_detail_product_img"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentBottom="true"
-                                android:scaleType="centerInside" />
+                                android:scaleType="fitEnd" />
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -229,7 +229,7 @@
                     android:layout_below="@id/home_my_page_purchased_detail_explain"
                     android:fadeScrollbars="false"
                     android:scrollbarThumbVertical="@drawable/store_32_drop_scroll"
-                    android:scrollbarTrackVertical="@drawable/store_32_drop_underbar"  >
+                    android:scrollbarTrackVertical="@drawable/store_32_drop_underbar" >
 
                     <TextView
                         android:id="@+id/home_my_page_purchased_detail_info"

@@ -99,8 +99,8 @@ public class HomeMyPagePurchasedDetail extends Activity {
 					//TODO detail enter
 					detail.setText(json.getString("information"));
 					
-					new DownloadImageTask(productImg).execute("http://todpop.co.kr/uploads/coupon/image/" + json.getString("image"));
-					new DownloadImageTask(barcode).execute("http://todpop.co.kr/uploads/coupon/image/" + json.getString("barcode"));
+					new DownloadImageTask(productImg).execute("http://todpop.co.kr" + json.getJSONObject("image").getJSONObject("image").getJSONObject("thumb").getString("url"));
+					new DownloadImageTask(barcode).execute("http://todpop.co.kr" + json.getString("barcode"));
 				}
 				else{
 					Log.e("STEVEN", "detail set text");

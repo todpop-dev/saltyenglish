@@ -176,7 +176,7 @@ public class HomeMyPageSaving extends Activity {
 						}
 						
 					}		
-					savingListViewAdapter = new SavingListViewAdapter(getApplicationContext(), R.layout.home_my_page_purchased_list_item_view, itemArray);
+					savingListViewAdapter = new SavingListViewAdapter(getApplicationContext(), R.layout.home_my_page_save_list_item_view, itemArray);
 			    	listView.setAdapter(savingListViewAdapter);
 				}
 			} catch (Exception e) {

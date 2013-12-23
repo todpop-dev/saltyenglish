@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
@@ -105,8 +106,7 @@ public class RgRegisterEmail extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.rgregisteremail_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 	}
 		

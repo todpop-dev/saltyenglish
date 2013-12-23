@@ -28,6 +28,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -55,9 +56,8 @@ public class HomeMoreAcountChangePw extends Activity {
 		rgInfo = getSharedPreferences("rgInfo",0);
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.home_more_account_changepw_main);
-		popupview = View.inflate(this, R.layout.popup_studyfinish_coupon_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(180*density),true);
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
 		currentPw = (EditText)findViewById(R.id.home_more_account_change_pw_current);

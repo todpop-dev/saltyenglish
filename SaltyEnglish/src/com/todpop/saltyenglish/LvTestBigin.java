@@ -574,6 +574,7 @@ public class LvTestBigin extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 		imageTimeBlindAni.resume();
 	    //imageTimeBlindAni.start();
 	    

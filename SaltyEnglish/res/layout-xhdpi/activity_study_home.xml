@@ -195,22 +195,23 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="954"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp" > <!-- page bg -->
+            android:paddingRight="6dp" > <!-- page bg -->
 
             <RelativeLayout
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
                 android:background="@drawable/home_image_rankingbox"
-                android:padding="25dp" >
+                android:paddingBottom="25dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="33dp" 
+                android:paddingTop="25dp">
 
                 <ListView
                     android:id="@+id/studyhome_id_listview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/home_bgimg_whitebar"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="5dp"
                     android:divider="@drawable/home_image_scrollline"
                     android:dividerHeight="15dp" />
@@ -219,10 +220,9 @@
 
                 <ImageView
                     android:id="@+id/home_bgimg_whitebar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/home_image_myrankingbox"
-                    android:layout_centerHorizontal="true"
                     android:layout_marginBottom="5dp"
                     android:src="@drawable/home_bgimg_whitebar" />
 
@@ -231,7 +231,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
                     android:background="@drawable/home_image_myrankingbox"
                     android:gravity="center_vertical"
                     android:orientation="horizontal" > <!-- my rank -->
@@ -248,7 +247,7 @@
                         android:layout_weight="79"
                         android:gravity="center"
                         android:textColor="#000000"
-                        android:textSize="14sp" />
+                        android:textSize="14dp" />
                     <!-- wrap, wrap, 60dp, 493dp, 19sp -->
 
                     <View
@@ -276,7 +275,7 @@
                         android:layout_weight="141"
                         android:gravity="left|center_vertical"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
                     <!-- 180dp, 493dp, 17sp -->
 
                     <View
@@ -291,7 +290,7 @@
                         android:layout_weight="141"
                         android:gravity="center_vertical|right"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <View
                         android:layout_width="0dp"

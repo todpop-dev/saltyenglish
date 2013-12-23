@@ -30,6 +30,8 @@ import android.widget.VideoView;
 public class StudyTestFinish extends Activity {
 	
 	Button skipBtn;	
+	ImageView marking;
+	ImageView markingDone;
 	SharedPreferences rgInfo;
 	private int video_length =0;
 	private VideoView video;
@@ -44,6 +46,8 @@ public class StudyTestFinish extends Activity {
 		skipBtn = (Button)findViewById(R.id.testfinish_id_skip_btn);
 		rgInfo = getSharedPreferences("rgInfo",0);
 		video = (VideoView)findViewById(R.id.test_video_view);
+		marking = (ImageView)findViewById(R.id.testfinish_id_marking);
+		markingDone = (ImageView)findViewById(R.id.testfinish_id_marking_completed);
 		new GetCPDM().execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="+rgInfo.getString("mem_id", "0"));
 
 		
@@ -65,6 +69,8 @@ public class StudyTestFinish extends Activity {
 
 	private Runnable mLaunchTaskMain = new Runnable() {
 		public void run() {
+			marking.setVisibility(View.INVISIBLE);
+			markingDone.setVisibility(View.VISIBLE);
 			skipBtn.setEnabled(true);
 			skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 		}

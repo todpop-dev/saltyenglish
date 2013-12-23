@@ -121,7 +121,7 @@ public class HomeWordList extends Activity {
 		popupview.setFocusable(true); 
 		popupview.setFocusableInTouchMode(true);
 		density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(180*density),true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupWindow.setFocusable(true);
 		
 		popupview.setOnKeyListener(new OnKeyListener() {
@@ -178,6 +178,7 @@ public class HomeWordList extends Activity {
     {
         super.onResume();
 
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 		cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 		cardAni.setDuration(500);
 		cardAni.start();

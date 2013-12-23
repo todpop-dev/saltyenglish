@@ -93,9 +93,8 @@ public class HomeDownload extends Activity {
 //		couponBtn.setOnClickListener(radio_listener);
 
 		//popupview
-		cpxPopupview = View.inflate(this, R.layout.popup_studyfinish_coupon_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		cpxPopupWindow = new PopupWindow(cpxPopupview,(int)(300*density),(int)(180*density),true);
+		cpxPopupview = View.inflate(this, R.layout.popup_view, null);
+		cpxPopupWindow = new PopupWindow(cpxPopupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		cpxPopupText = (TextView)cpxPopupview.findViewById(R.id.popup_id_text);
 		
 		cpiArray = new ArrayList<CpiListViewItem>();
@@ -129,7 +128,7 @@ public class HomeDownload extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 		getList();
 		//cpiListViewAdapter.notifyDataSetChanged();
 		

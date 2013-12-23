@@ -176,8 +176,7 @@ public class StudyLearn extends FragmentActivity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.study_learn_activity_id_relative);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(100*density),true);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT, true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
  		
 		new SendPivotTime().execute("http://todpop.co.kr/api/app_infos/get_fast_pivot_time.json");
@@ -879,6 +878,7 @@ public class StudyLearn extends FragmentActivity {
 	public void onResume() 
 	{
 		super.onResume();
+		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
 	}
 	
 	@Override

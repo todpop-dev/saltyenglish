@@ -149,9 +149,8 @@ public class StudyBegin extends FragmentActivity {
 		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.studybegin_id_main_activity);;
-		popupview = View.inflate(this, R.layout.popup_studyfinish_coupon_view, null);
-		float density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,(int)(300*density),(int)(180*density),true);
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
 		
