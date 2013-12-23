@@ -73,10 +73,10 @@ public class LvTestResult extends Activity {
 		// Save level info to StudyInfo
 		// Save category & stage_acc info to StudyInfo by cys ------------------------
 		int currentCategory = 1;
-		if      (myLevel > 120) {currentCategory = 4;}
-		else if (myLevel > 60)	{currentCategory = 3;}
-		else if (myLevel > 15)	{currentCategory = 2;}
-		else                    {currentCategory = 1;}
+		if      (myLevel > 120) {currentCategory = 4;studyInfoEdit.putInt("levelLast4", myLevel);}
+		else if (myLevel > 60)	{currentCategory = 3;studyInfoEdit.putInt("levelLast3", myLevel);}
+		else if (myLevel > 15)	{currentCategory = 2;studyInfoEdit.putInt("levelLast2", myLevel);}
+		else                    {currentCategory = 1;studyInfoEdit.putInt("levelLast1", myLevel);}
 
 		studyInfoEdit.putInt("currentCategory", currentCategory);
 		studyInfoEdit.putInt("currentStageAccumulated", myLevel*10-9);
