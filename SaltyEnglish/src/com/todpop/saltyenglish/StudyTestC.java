@@ -63,6 +63,7 @@ public class StudyTestC extends Activity {
 	static int tmpStageAccumulated;
 	static int testSetCount;
 	static int cardCount;
+	static boolean flipAll;
 	int finalAnswerForRequest = 0;
 
 	
@@ -145,6 +146,7 @@ public class StudyTestC extends Activity {
 		
 		testSetCount = 0;
 		cardCount = 12;
+		flipAll = false;
 		boolean introFlag = false;
 		// Show Introduction in first launch
 		introBtn = (ImageButton)findViewById(R.id.study_test_c_id_intro_button);
@@ -238,9 +240,32 @@ public class StudyTestC extends Activity {
 			 policeManAni.setRepeatCount(0);
 			 policeMan.setAnimation(policeManAni);
 			 
-			 startTimeCount(startTime);
+			startTimeCount(startTime);
+			 
+			Handler delayBeforeFlipAll = new Handler();
+			delayBeforeFlipAll.postDelayed(flipAllCards, 500);
 		 }	 
 	}
+	private Runnable flipAllCards = new Runnable() {
+		public void run(){
+			flipAll = true;
+
+			card1_1.performClick();
+			card1_2.performClick();
+			card1_3.performClick();
+			card1_4.performClick();
+			card2_1.performClick();
+			card2_2.performClick();
+			card2_3.performClick();
+			card2_4.performClick();
+			card3_1.performClick();
+			card3_2.performClick();
+			card3_3.performClick();
+			card3_4.performClick();
+		
+			flipAll = false;
+		}
+	};
 	private class PoliceAnim extends TranslateAnimation {
 		
 		public PoliceAnim(int fromXType, float fromXValue, int toXType,
@@ -485,7 +510,6 @@ public class StudyTestC extends Activity {
 			Log.i("STEVEN", "button clicked cardCheck = " +cardCheck);
 			cardId = v.getId();
 			
-			
 			animation = AnimationUtils.loadAnimation(StudyTestC.this, R.drawable.studytestc_drawable_flip_card_back_scale); 
 			animation.setAnimationListener(new Animation.AnimationListener() { 
 				@Override 
@@ -557,8 +581,19 @@ public class StudyTestC extends Activity {
 				} 
 			});
 
-
-			if(cardCheck<2) {
+			if(flipAll){
+				v.startAnimation(animation);
+				final Button tempView = (Button)findViewById(v.getId());
+				Handler reFlipAllHandler = new Handler();
+				reFlipAllHandler.postDelayed(new Runnable(){
+					public void run(){
+						tempView.setTag(TAG_FRONT);
+						setCardFlip(tempView,"");
+						tempView.setTag(TAG_BACK);
+					}
+				}, 3000);
+			}
+			else if(cardCheck<2) {
 				
 				if((Integer)v.getTag() == TAG_BACK) {
 					if ((select1 == null) || (select1.getId() != v.getId())) {
@@ -664,7 +699,6 @@ public class StudyTestC extends Activity {
 			startActivity(intent);
 			finish();
 		} else {
-			
 			card1_1.setVisibility(View.VISIBLE);
 			card1_2.setVisibility(View.VISIBLE);
 			card1_3.setVisibility(View.VISIBLE);
@@ -679,6 +713,10 @@ public class StudyTestC extends Activity {
 			card3_4.setVisibility(View.VISIBLE);
 			
 			cardCount = 12;
+
+
+			Handler delayBeforeFlipAll = new Handler();
+			delayBeforeFlipAll.postDelayed(flipAllCards, 500);
 		}
 	}
 	

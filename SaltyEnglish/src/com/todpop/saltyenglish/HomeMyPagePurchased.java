@@ -159,9 +159,6 @@ public class HomeMyPagePurchased extends Activity {
     		convertView.setOnClickListener(new OnClickListener(){
     			@Override
     			public void onClick(View v){
-    				String toastMessage = couponId + " is selected.";
-    				Toast.makeText(getApplicationContext(), toastMessage,
-    						Toast.LENGTH_SHORT).show();
 
     				Intent intent = new Intent(getApplicationContext(), HomeMyPagePurchasedDetail.class);
     				intent.putExtra("couponId", couponId);

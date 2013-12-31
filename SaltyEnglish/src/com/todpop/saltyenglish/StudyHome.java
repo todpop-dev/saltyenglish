@@ -195,9 +195,8 @@ public class StudyHome extends Activity {
 
         pagerAdapter = new StudyHomePagerAdapter(this);
 		categoryPager.setAdapter(pagerAdapter);
-		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
 
-		//categoryPager.setOffscreenPageLimit(5);
+		categoryPager.setOffscreenPageLimit(8);
 		/*
 		size = new Point();
 		Display display = getWindowManager().getDefaultDisplay();
@@ -322,6 +321,8 @@ public class StudyHome extends Activity {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+
+		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
 		//category view pager setting done
 		
 		// CPX View
@@ -430,8 +431,8 @@ public class StudyHome extends Activity {
 					studyInfoEdit.commit();
 					
 					rankingList.setAdapter(rankingListAdapterMonth);
-					myRank.setText(myRankInfo.getString("weekRank", "null"));
-					myScore.setText(myRankInfo.getString("weekScore", "null"));
+					myRank.setText(myRankInfo.getString("monthRank", "null"));
+					myScore.setText(myRankInfo.getString("monthScore", "null"));
 					break;
 				}
 				categoryPager.getAdapter().notifyDataSetChanged();
@@ -474,11 +475,15 @@ public class StudyHome extends Activity {
 		Log.e("STEVEN", "ON RESUME GETINFO!");
 
 
-		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
+		//if current page is not current category setting, get different between two and change page
+		if(categoryPager.getCurrentItem() % 4 != (studyInfo.getInt("currentCategory", 1) - 1)){
+			int different = categoryPager.getCurrentItem() % 4 - (studyInfo.getInt("currentCategory", 1) - 1);
+			categoryPager.setCurrentItem(categoryPager.getCurrentItem() - different, false);
+		}
+		Log.i("STEVEN", "478");
+		//getInfo();
 		
-		getInfo();
-		
-		pagerAdapter.notifyDataSetChanged();
+		//pagerAdapter.notifyDataSetChanged();
 		// Get CPX Info onResume
 
 		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -494,7 +499,10 @@ public class StudyHome extends Activity {
 		cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
 		
 		// Download CPX Image and update UI
-		new DownloadImageTask().execute(cpxAdImageUrl);
+		if(cpxAdType != 0){
+			Log.i("STEVEN", "download image task called");
+			new DownloadImageTask().execute(cpxAdImageUrl);
+		}
 		//cpxAdType = 0;
 		cpxInfo.edit().clear().commit();
 		if (cpxAdType == 301) {
@@ -844,10 +852,10 @@ public class StudyHome extends Activity {
 
 					if(studyInfo.getInt("currentPeriod", 1) == 1){
 						rankingList.setAdapter(rankingListAdapterWeek);
+						myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
+						myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
 					}
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"), myImage);
-					myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-					myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
 					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
 				}
 
@@ -906,6 +914,8 @@ public class StudyHome extends Activity {
 					
 					if(studyInfo.getInt("currentPeriod", 1) == 2){
 						rankingList.setAdapter(rankingListAdapterMonth);
+						myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
+						myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
 					}
 					
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);

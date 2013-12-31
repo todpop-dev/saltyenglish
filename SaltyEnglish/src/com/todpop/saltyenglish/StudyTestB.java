@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -22,16 +21,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -410,19 +405,19 @@ public class StudyTestB extends Activity {
 		balloonBlue.setX(blueRandomX);
 		balloonGreen.setX(greenRandomX);
 		
-		//balloon position adjustment
+		/*//balloon position adjustment
 		int balloonSpacing;
-		balloonSpacing = (int)(balloonHeight * 0.65);
+		balloonSpacing = (int)(balloonHeight * 0.65);*/
 		
 		int pinkStartPosition = metrics.heightPixels;
-		int yellowStartPosition = pinkStartPosition + balloonSpacing;
-		int greenStartPosition = yellowStartPosition + balloonSpacing;
-		int blueStartPosition = greenStartPosition + balloonSpacing;
+		int yellowStartPosition = pinkStartPosition + balloonHeight;
+		int greenStartPosition = yellowStartPosition + balloonHeight;
+		int blueStartPosition = greenStartPosition + balloonHeight;
 
 		int blueEndPosition = -balloonHeight;
-		int greenEndPosition = blueEndPosition - balloonSpacing;
-		int yellowEndPosition = greenEndPosition - balloonSpacing;
-		int pinkEndPosition = yellowEndPosition - balloonSpacing;
+		int greenEndPosition = blueEndPosition - balloonHeight;
+		int yellowEndPosition = greenEndPosition - balloonHeight;
+		int pinkEndPosition = yellowEndPosition - balloonHeight;
 		
 		Log.i("STEVEN BALLOON POSTION Y", "pos"+pinkStartPosition+" "+pinkEndPosition+" "+yellowStartPosition+" "+yellowEndPosition);
 		pinkAni = ObjectAnimator.ofFloat(balloonPink, "y", pinkStartPosition, pinkEndPosition);

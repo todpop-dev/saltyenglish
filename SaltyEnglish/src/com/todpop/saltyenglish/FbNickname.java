@@ -124,7 +124,16 @@ public class FbNickname extends Activity {
 					{
 						params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", null)));
 					}
-					
+				}
+				
+				if(rgInfo.getString("fbBDay", null) != null){
+					params.add(new BasicNameValuePair("birth", rgInfo.getString("fbBDay", null)));
+				}
+				if(rgInfo.getString("fbGender", null) != null){
+					params.add(new BasicNameValuePair("sex", rgInfo.getString("fbGender", null)));
+				}
+				if(rgInfo.getString("fbLocation", null) != null){
+					params.add(new BasicNameValuePair("address", rgInfo.getString("fbLocation", null)));
 				}
 
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);

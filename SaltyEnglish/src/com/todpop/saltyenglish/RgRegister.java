@@ -425,10 +425,15 @@ public class RgRegister extends Activity {
 		            	Log.d("facebook -------------------------%s", userInfo);
 		            	
 		            	// Check if facebook id exist
-
-		    		    Log.i("STEVEN", "Check facebook id exist "+ fbEmail);
-		        		new CheckFacebookExistAPI().execute("http://todpop.co.kr/api/users/check_facebook_exist.json?facebook="+fbEmail);
-		            	
+		            	if(fbEmail == "null"){
+		            		popupText.setText(R.string.rg_register_facebook_email_null);
+		            		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		            		popupWindow.showAsDropDown(rgCheckbox);
+		            	}
+		            	else{
+		            		Log.i("STEVEN", "Check facebook id exist "+ fbEmail);
+		            		new CheckFacebookExistAPI().execute("http://todpop.co.kr/api/users/check_facebook_exist.json?facebook="+fbEmail);
+		            	}
 		            }
 		        }
 		    }).executeAsync();
@@ -493,12 +498,23 @@ public class RgRegister extends Activity {
 					    
 						rgInfoEdit.putString("facebook", fbEmail);
 						rgInfoEdit.putString("fbName", fbName);
+						String y = fbBDay.substring(6, 10);
+						String m = fbBDay.substring(0, 2);
+						String d = fbBDay.substring(3, 5);
+						fbBDay = y + "-" + m + "-" + d;
 						rgInfoEdit.putString("fbBDay", fbBDay);
 						rgInfoEdit.putString("fbLocation", fbLocation);
-						rgInfoEdit.putString("fbGender", fbGender);		
+						if(fbGender.equals("male")){
+							rgInfoEdit.putString("fbGender", "1");		
+						}
+						else if(fbGender.equals("female")){
+							rgInfoEdit.putString("fbGender", "2");
+						}
+							
 						rgInfoEdit.commit();
 						
 						Log.i("STEVEN", rgInfo.getString("fbLocation", "NO"));
+						Log.i("STEVEN", rgInfo.getString("fbBDay", "NO"));
 					    
 						Intent intent = new Intent(getApplicationContext(), FbNickname.class);
 //						intent.putExtra("fbEmail",fbEmail);

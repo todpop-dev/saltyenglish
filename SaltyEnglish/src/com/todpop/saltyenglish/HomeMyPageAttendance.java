@@ -78,15 +78,16 @@ public class HomeMyPageAttendance extends Activity {
 			try {
 				if(json.getBoolean("status")==true)
 				{
+					setAttendanceView(json.getJSONObject("data").getInt("attendance_time"));
 					attendancDay.setText(json.getJSONObject("data").getString("attendance_time"));
 					attendanceReward.setText(json.getJSONObject("data").getString("attendance_reward"));
-					for(int i=0;i<json.getJSONObject("data").getInt("attendance_time") ;i++)
+					/*for(int i=0;i<json.getJSONObject("data").getInt("attendance_time") ;i++)
 					{
 						Resources res = getResources();
 						int id = res.getIdentifier("home_mypage_attendance_id_btn"+i, "id",getApplicationContext().getPackageName());
 						adDay = (Button)findViewById(id);
 						adDay.setEnabled(true);
-					}
+					}*/
 				}else{
 					
 				}				
@@ -96,6 +97,56 @@ public class HomeMyPageAttendance extends Activity {
 		}
 	}
 
+	private void setAttendanceView(int attInARow){
+		int divTen = attInARow / 10;
+		Resources res = getResources();
+		
+		//if attendance days are less than 30 days
+		if(divTen < 3){
+			for(int i = 0; i < attInARow; i++)
+			{
+				int id = res.getIdentifier("home_mypage_attendance_id_btn" + i, "id", getApplicationContext().getPackageName());
+				adDay = (Button)findViewById(id);
+				adDay.setEnabled(true);
+			}
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 4, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_chick);
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 9, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_chicken);
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 19, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_cat);
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 29, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_dinosaur);
+		}
+		else{
+			int calVal = 20 + (attInARow % 10);
+			if(divTen == 3){	//if 30~39
+				adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 9, "id", getApplicationContext().getPackageName()));
+				adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_cat);
+			}
+			else{
+				adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 9, "id", getApplicationContext().getPackageName()));
+				adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_dinosaur);
+			}
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 19, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_dinosaur);
+			adDay = (Button)findViewById(res.getIdentifier("home_mypage_attendance_id_btn" + 29, "id", getApplicationContext().getPackageName()));
+			adDay.setBackgroundResource(R.drawable.homemypageattendance_drawable_btn_dinosaur);
+			for(int i = 0; i < 30; i++){
+				int id = res.getIdentifier("home_mypage_attendance_id_btn" + i, "id", getApplicationContext().getPackageName());
+				adDay = (Button)findViewById(id);
+				if(i % 10 != 9){
+					adDay.setText(String.valueOf((i + 1) + ((divTen - 2) * 10)));
+				}
+				else{
+					adDay.setText("");
+				}
+				if(i < calVal){
+					adDay.setEnabled(true);
+				}
+			}
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

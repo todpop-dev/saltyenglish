@@ -55,7 +55,7 @@ public class HomeMyPage extends FragmentActivity {
 	int myAttendance = 0;
 	int myPoint = 0;
 	int myRemainPoint = 0;
-	int myRewardTotay = 0;
+	int myRewardToday = 0;
 	int myRewardCurrent = 0;
 	int myRewardTotal = 0;
 
@@ -65,7 +65,7 @@ public class HomeMyPage extends FragmentActivity {
 	Button attendanceBtn;
 	TextView PointBox;
 	TextView remainBox;
-	TextView rewardTotayBox;
+	TextView rewardTodayBox;
 	TextView rewardcurrentBox;
 	TextView rewardTotalBox;
 	TextView myNicknameBox;
@@ -97,7 +97,7 @@ public class HomeMyPage extends FragmentActivity {
 		attendanceBtn = (Button)findViewById(R.id.home_mypage_id_attendance_btn);
 		PointBox = (TextView)findViewById(R.id.home_mypage_id_mypoint_text);
 		remainBox = (TextView)findViewById(R.id.home_mypage_id_myremain_text);
-		rewardTotayBox = (TextView)findViewById(R.id.home_mypage_id_rewardtotay_text);
+		rewardTodayBox = (TextView)findViewById(R.id.home_mypage_id_rewardtotay_text);
 		rewardcurrentBox = (TextView)findViewById(R.id.home_mypage_id_rewardcurrent_text);
 		rewardTotalBox = (TextView)findViewById(R.id.home_mypage_id_rewardtotal_text);
 		myNicknameBox = (TextView)findViewById(R.id.home_mypage_id_my_nickname);
@@ -278,7 +278,7 @@ public class HomeMyPage extends FragmentActivity {
 					myAttendance = json.getJSONObject("data").getInt("attendance");
 					myPoint = json.getJSONObject("data").getInt("my_point");
 					myRemainPoint = json.getJSONObject("data").getInt("remain_point");
-					myRewardTotay = json.getJSONObject("data").getInt("reward_today");
+					myRewardToday = json.getJSONObject("data").getInt("reward_today");
 					myRewardCurrent = json.getJSONObject("data").getInt("reward_current");
 					myRewardTotal = json.getJSONObject("data").getInt("reward_total");
 			
@@ -290,7 +290,7 @@ public class HomeMyPage extends FragmentActivity {
 					attendanceBtn.setText(atdText1+myAttendance+atdText2);
 					PointBox.setText(Integer.toString(myPoint)+getString(R.string.testname7));
 					remainBox.setText(Integer.toString(myRemainPoint)+getString(R.string.testname7));
-					rewardTotayBox.setText(Integer.toString(myRewardTotay)+getString(R.string.testname8));
+					rewardTodayBox.setText(Integer.toString(myRewardToday)+getString(R.string.testname8));
 					rewardcurrentBox.setText(Integer.toString(myRewardCurrent)+getString(R.string.testname8));
 					rewardTotalBox.setText(Integer.toString(myRewardTotal)+getString(R.string.testname8));
 					

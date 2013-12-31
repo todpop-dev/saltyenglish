@@ -253,6 +253,7 @@ public class StudyTestResult extends Activity {
 
 			if (tmpStageAccumulated%10 == 0) {
 				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
+				
 				Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 				if (cursor.getCount() > 0) {
 					while(cursor.moveToNext()) {
@@ -260,11 +261,8 @@ public class StudyTestResult extends Activity {
 						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
 						arItem.add(mi);
 					}
-					
 					db.delete("flip", null, null);
 				}
-
-
 			} else {
 				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
 

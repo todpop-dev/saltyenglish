@@ -75,7 +75,6 @@ public class HomeMyPageSaving extends Activity {
     	LayoutInflater Inflater;
     	ArrayList<SavingListViewItem> arSrc;
     	int layout;
-    	int count = 0;
 
     	public SavingListViewAdapter(Context context,int alayout,ArrayList<SavingListViewItem> aarSrc)
     	{
@@ -101,7 +100,6 @@ public class HomeMyPageSaving extends Activity {
 
     	public View getView(int position,View convertView,ViewGroup parent)
     	{
-    		count++;
     		if(convertView == null)
     		{
     			convertView = Inflater.inflate(layout, parent,false);
@@ -118,7 +116,7 @@ public class HomeMyPageSaving extends Activity {
     		TextView coinText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coins);
     		coinText.setText(arSrc.get(position).coin);
 
-    		if (count%2 == 1) {
+    		if (position%2 == 1) {
     			convertView.setBackgroundResource(R.drawable.store_32_image_separatebox_white);
     		} else {
     			convertView.setBackgroundResource(R.drawable.store_32_image_separatebox_pink);
