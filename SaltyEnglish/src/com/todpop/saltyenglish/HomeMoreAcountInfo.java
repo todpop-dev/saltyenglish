@@ -71,11 +71,7 @@ public class HomeMoreAcountInfo extends Activity {
 			setContentView(R.layout.activity_home_more_acount_info_fb);
 			relative = (RelativeLayout)findViewById(R.id.home_more_acount_info_id_main_fb_activity);
 			setPwBtn = (Button)findViewById(R.id.home_more_accoun_setpw_btn);
-			if(rgInfo.getString("password", "NO").equals("1"))
-			{
-				setPwBtn.setEnabled(false);
-				
-			}
+			// if(rgInfo.getString("password", "NO").equals("1")) {setPwBtn.setEnabled(false);}    // not needed by CYS
 		}
 		
 
