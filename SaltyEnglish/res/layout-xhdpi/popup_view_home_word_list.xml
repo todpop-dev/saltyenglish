@@ -11,7 +11,7 @@
         android:layout_marginTop="35dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/homewordlist_drawable_btn_test_15"
-        android:onClick="homeWordTest"
+        android:onClick="homeWordTest15"
         />
     
     <Button 
@@ -20,6 +20,7 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/homewordlist_drawable_btn_test_30"
+        android:onClick="homeWordTest30"
         />
     
     <Button 
@@ -28,6 +29,7 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/homewordlist_drawable_btn_test_total"
+        android:onClick="homeWordTestAll"
         />
     
 

@@ -87,6 +87,8 @@ public class MainActivity extends Activity
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		try {
 			Log.e("STEVEN", "Main Activity line 98");
+			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
 			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
@@ -256,6 +258,8 @@ public class MainActivity extends Activity
 		"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, xo TEXT);");
 		}
 		
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -263,6 +267,7 @@ public class MainActivity extends Activity
 			db.execSQL("DROP TABLE IF EXISTS flip");
 			db.execSQL("DROP TABLE IF EXISTS mywords");
 			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
+			db.execSQL("DROP TABLE IF EXISTS mywordtest");
 			onCreate(db);
 		}
 	}

@@ -1,0 +1,137 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_blue" >
+
+    <RelativeLayout
+        android:layout_width="360dp"
+        android:layout_height="640dp"
+        android:layout_centerInParent="true" >
+
+        <ImageView
+            android:id="@+id/wordlist_test_id_image_timeblind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-360dp"
+            android:layout_marginTop="45dp"
+            android:src="@drawable/common_image_timeblind" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="320dp"
+            android:layout_marginTop="10.5dp"
+            android:background="@drawable/studytesta_drawable_btn_onpause"
+            android:onClick="pauseTestCB" />
+
+        <TextView
+            android:id="@+id/wordlist_test_id_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="50dp"
+            android:gravity="right"
+            android:textColor="#EEF7D4"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="180.5dp"
+            android:src="@drawable/lvtest_3_image_wordbar" />
+
+        <ImageView
+            android:id="@+id/wordlist_test_id_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10.5dp"
+            android:src="@drawable/common_bgimg_wordtest" />
+
+        <TextView
+            android:id="@+id/wordlist_test_id_enword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="143dp"
+            android:textColor="#000000"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/wordlist_test_id_select1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="253dp"
+            android:background="@drawable/lvtest_begin_drawable_select_btn"
+            android:text="자동차" />
+
+        <Button
+            android:id="@+id/wordlist_test_id_select2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="320dp"
+            android:background="@drawable/lvtest_begin_drawable_select_btn"
+            android:text="자동차" />
+
+        <Button
+            android:id="@+id/wordlist_test_id_select3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="387dp"
+            android:background="@drawable/lvtest_begin_drawable_select_btn"
+            android:text="자동차" />
+
+        <Button
+            android:id="@+id/wordlist_test_id_select4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="454dp"
+            android:background="@drawable/lvtest_begin_drawable_select_btn"
+            android:text="자동차" />
+
+        <ImageView
+            android:id="@+id/wordlist_test_id_crocodile_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="554.5dp" />
+
+        <RelativeLayout
+            android:id="@+id/wordlist_test_id_pause_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/test_19_bg_fisherman">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="14dp"
+                android:src="@drawable/common_bgimg_test" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="260dp"
+                android:background="@drawable/lvtestpuse_btn_continue"
+                android:onClick="pauseViewContinueTest" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="320dp"
+                android:background="@drawable/lvtestpuse_btn_testfinish"
+                android:onClick="pauseViewFinishTest" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

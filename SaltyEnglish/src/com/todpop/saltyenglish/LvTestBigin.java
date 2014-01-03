@@ -141,6 +141,8 @@ public class LvTestBigin extends Activity {
 						"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT, mean TEXT, xo TEXT);");
 			Log.e("STEVEN", "Main Activity line 107");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -734,6 +736,8 @@ public class LvTestBigin extends Activity {
 		"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
+			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+		"name TEXT, mean TEXT, xo TEXT);");
 		}
 		
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -741,6 +745,7 @@ public class LvTestBigin extends Activity {
 			db.execSQL("DROP TABLE IF EXISTS flip");
 			db.execSQL("DROP TABLE IF EXISTS mywords");
 			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
+			db.execSQL("DROP TABLE IF EXISTS mywordtest");
 			onCreate(db);
 		}
 	}

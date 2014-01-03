@@ -73,6 +73,8 @@ public class HomeWordList extends Activity {
 	
 	ArrayList<Boolean> boolList = new ArrayList<Boolean>();  
 	
+	int wordListSize = 0;
+	
 	static int count = 0;
 	
 	static boolean isSelectAll = false;
@@ -161,6 +163,7 @@ public class HomeWordList extends Activity {
 		try {
 			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
 			Log.d("db count ------ ", Integer.toString(c.getCount()));
+			wordListSize = c.getCount();
 			while (c.moveToNext()) {
 				Log.d("name --- ", c.getString(0));
 				Log.d("mean --- ", c.getString(1));
@@ -433,13 +436,41 @@ public class HomeWordList extends Activity {
 	}
 	
 	
-	public void homeWordTest(View v)
+	public void homeWordTest15(View v)
 	{
-		Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
+		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+		if(wordListSize >= 15){
+			intent.putExtra("testListSize", 15);
+		}
+		else{
+			intent.putExtra("testListSize", wordListSize);
+		}
+		popupWindow.dismiss();
 		startActivity(intent);
 	}
 	
+	public void homeWordTest30(View v)
+	{
+		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+		if(wordListSize >= 30){
+			intent.putExtra("testListSize", 30);
+		}
+		else{
+			intent.putExtra("testListSize", wordListSize);
+		}
+		popupWindow.dismiss();
+		startActivity(intent);
+	}
+	
+	public void homeWordTestAll(View v)
+	{
+		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+		intent.putExtra("testListSize", wordListSize);
 
+		popupWindow.dismiss();
+		startActivity(intent);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -567,6 +598,7 @@ public class HomeWordList extends Activity {
 		
 		try {
 			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+			wordListSize = c.getCount();
 			while (c.moveToNext()) {
 				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
 				listArray.add(mHomeWordViewItem);
