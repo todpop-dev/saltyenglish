@@ -18,14 +18,16 @@
         android:textStyle="bold" />
 
     <TextView
+        android:layout_centerHorizontal="true"
         android:id="@+id/popup_notice_id_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/popup_notice_id_title"
         android:layout_marginTop="10dp"
         android:textColor="#000000"
-        android:textSize="15sp" />
-
+        android:textSize="15sp" 
+        android:gravity="center"/>
+    
     <Button
         android:id="@+id/popup_notice_id_btn"
         android:layout_width="wrap_content"
