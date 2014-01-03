@@ -201,6 +201,21 @@
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name="com.todpop.saltyenglish.WordListTest"
+            android:label="@string/title_activity_wordlist_test"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.WordListTestFinish"
+            android:label="@string/title_activity_wordlist_test_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.WordListTestResult"
+            android:label="@string/title_activity_wordlist_test_result"
+            android:screenOrientation="portrait" >
+        </activity>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
