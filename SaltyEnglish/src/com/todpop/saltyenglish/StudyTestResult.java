@@ -523,6 +523,7 @@ public class StudyTestResult extends Activity {
 					String packageName = adDetails.getString("package_name");
 					String confirmUrl = adDetails.getString("confirm_url");
 					int reward = adDetails.getInt("reward");
+					int point = adDetails.getInt("point");
 					int questionCount = adDetails.getInt("n_question");
 
 					SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -535,6 +536,7 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);
 					cpxInfoEditor.putInt("reward", reward);
+					cpxInfoEditor.putInt("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 					
 					cpxInfoEditor.commit();

@@ -154,13 +154,14 @@ public class HomeDownload extends Activity {
 
 	class CpiListViewItem 
 	{
-		CpiListViewItem(int aId, int aad_type, String aImage,String aName,String aCoin, int aState)
+		CpiListViewItem(int aId, int aad_type, String aImage, String aName, String aCoin, String aPoint, int aState)
 		{
 			id = aId;
 			ad_type = aad_type;
 			image = aImage;
 			name = aName;
 			coin = aCoin;
+			point = aPoint;
 			state = aState;
 		}
 		int id;
@@ -168,6 +169,7 @@ public class HomeDownload extends Activity {
 		String image;
 		String name;
 		String coin;
+		String point;
 		int state;
 	}
 
@@ -215,7 +217,14 @@ public class HomeDownload extends Activity {
 			name1Text.setText(arSrc.get(position).name);
 
 			TextView name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
-			name2Text.setText(arSrc.get(position).coin);
+			ImageView coinImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_imagecoin);
+			if(arSrc.get(position).point.equals("0"))
+				name2Text.setText(arSrc.get(position).coin);
+			else{
+				name2Text.setText(arSrc.get(position).point);
+				coinImg.setImageResource(R.drawable.common_image_smallpoint);
+			}
+				
 			final Button getRewardBut = (Button)convertView.findViewById(R.id.homedownload_list_item_id_btn);
 			
 			switch(arSrc.get(position).state){
@@ -453,7 +462,8 @@ public class HomeDownload extends Activity {
 					for(int i=0;i<jsonArray.length();i++) {
 						mCpiListItem = new CpiListViewItem(jsonArray.getJSONObject(i).getInt("ad_id"), jsonArray.getJSONObject(i).getInt("ad_type"),
 								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),
-								jsonArray.getJSONObject(i).getString("reward"),jsonArray.getJSONObject(i).getInt("act"));
+								jsonArray.getJSONObject(i).getString("reward"),jsonArray.getJSONObject(i).getString("point"),
+								jsonArray.getJSONObject(i).getInt("act"));
 						cpiArray.add(mCpiListItem);
 
 					}	
@@ -541,6 +551,7 @@ public class HomeDownload extends Activity {
 					String confirmUrl = adDetails.getString("confirm_url");
 					
 					int reward = adDetails.getInt("reward");
+					int point = adDetails.getInt("point");
 					int questionCount = adDetails.getInt("n_question=");
 
 			
@@ -553,6 +564,7 @@ public class HomeDownload extends Activity {
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);
 					cpxInfoEditor.putInt("reward", reward);
+					cpxInfoEditor.putInt("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 
 					Log.i("STEVEN", "line 511");

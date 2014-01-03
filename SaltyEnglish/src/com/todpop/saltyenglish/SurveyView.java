@@ -58,6 +58,7 @@ public class SurveyView extends Activity {
 
 	int adId;
 	String rewardAmount;
+	String pointAmount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,8 @@ public class SurveyView extends Activity {
 						+ cpxInfo.getInt("adId", 0));
 
 		rewardAmount = String.valueOf(cpxInfo.getInt("reward", 0));
+		pointAmount = String.valueOf(cpxInfo.getInt("point", 0));
+		
 		cpxInfo.edit().clear().commit();
 	}
 
@@ -262,8 +265,16 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.survey_id_top_text);
 					TextView rewardText = (TextView) convertView
 							.findViewById(R.id.surey_id_save);
+					ImageView coinOrPoint = (ImageView) convertView
+							.findViewById(R.id.survey_id_coin);
 					topText.setText(arSrc.get(position).question);
-					rewardText.setText(rewardAmount);
+					if(!rewardAmount.equals("0")){
+						rewardText.setText(rewardAmount);
+					}
+					else{
+						coinOrPoint.setImageResource(R.drawable.common_image_smallpoint);
+						rewardText.setText(pointAmount);
+					}
 
 					listViewHolder.put(position, convertView);
 					return convertView;
