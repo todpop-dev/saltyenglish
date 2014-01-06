@@ -218,8 +218,9 @@ public class HomeDownload extends Activity {
 
 			TextView name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
 			ImageView coinImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_imagecoin);
-			if(arSrc.get(position).point.equals("0"))
+			if(arSrc.get(position).point.equals("null") || arSrc.get(position).point.equals("0")){
 				name2Text.setText(arSrc.get(position).coin);
+			}
 			else{
 				name2Text.setText(arSrc.get(position).point);
 				coinImg.setImageResource(R.drawable.common_image_smallpoint);
@@ -309,12 +310,14 @@ public class HomeDownload extends Activity {
 			try {
 				// show The Image
 				String imgUrl = arSrc.get(position).image;
-				URL url = new URL(imgUrl);
-				Log.d("url ------ ", url.toString());
+				//URL url = new URL(imgUrl);
+				//Log.d("url ------ ", url.toString());
 				new DownloadImageTask(itemImg)
-				.execute(url.toString());
+				.execute("http://todpop.co.kr"
+						+ imgUrl);
 			} catch (Exception e) {
-
+				Log.i("STEVEN", "error catch on 318");
+				e.printStackTrace();
 			} 
 
 			if (cpiCount%2 == 1) {
