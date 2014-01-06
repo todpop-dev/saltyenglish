@@ -268,7 +268,7 @@ public class SurveyView extends Activity {
 					ImageView coinOrPoint = (ImageView) convertView
 							.findViewById(R.id.survey_id_coin);
 					topText.setText(arSrc.get(position).question);
-					if(!rewardAmount.equals("0")){
+					if(pointAmount.equals("0") || pointAmount.equals("null")){
 						rewardText.setText(rewardAmount);
 					}
 					else{
