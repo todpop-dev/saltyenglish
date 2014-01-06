@@ -3,10 +3,21 @@ package com.todpop.saltyenglish;
 
 
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
@@ -29,6 +40,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -437,69 +450,73 @@ public class StudyTestC extends Activity {
 		
 
 		
-		Log.d("Array Size: ----- ", Integer.toString(englishWords.size()));
-		
-		
-		//flipDb.rawQuery("DELETE FROM flip IF EXISTS", null);
-		try {
-			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT, mean TEXT, xo TEXT);");
-			db.delete("flip", null, null);
-		} catch (Exception e) {
-			
+		if (englishWords.size() < 36) {
+			new GetWord().execute("http://todpop.co.kr/api/studies/get_level_words.json?level=" + (tmpStageAccumulated / 10) + "&stage=10");
 		}
+		else{
 		
-
-
-		for (int i=0; i<englishWords.size(); i++) {
-			
+			Log.d("Array Size: ----- ", Integer.toString(englishWords.size()));
+		
+		
+			//flipDb.rawQuery("DELETE FROM flip IF EXISTS", null);
 			try {
-				// Save to Flip DB
-				ContentValues cv = new ContentValues();
-				cv.put("name", englishWords.get(i));
-				cv.put("mean", englishMeans.get(i));
-				cv.put("xo", "X");
-				db.insert("flip", null, cv);
+				db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"name TEXT, mean TEXT, xo TEXT);");
+				db.delete("flip", null, null);
 			} catch (Exception e) {
-				e.printStackTrace();
+			
 			}
+		
+			for (int i=0; i<englishWords.size(); i++) {
+			
+				try {
+					// Save to Flip DB
+					ContentValues cv = new ContentValues();
+					cv.put("name", englishWords.get(i));
+					cv.put("mean", englishMeans.get(i));
+					cv.put("xo", "X");
+					db.insert("flip", null, cv);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 			
-			// Randomize
-			if (i<6) {
-				randomArrange1.add(englishWords.get(i));
-				randomArrange1.add(englishMeans.get(i));
-			} else if (i<12) {
-				randomArrange2.add(englishWords.get(i));
-				randomArrange2.add(englishMeans.get(i));
-			} else if (i<18) {
-				randomArrange3.add(englishWords.get(i));
-				randomArrange3.add(englishMeans.get(i));
-			} else if (i<24) {
-				randomArrange4.add(englishWords.get(i));
-				randomArrange4.add(englishMeans.get(i));
-			} else if (i<30) {
-				randomArrange5.add(englishWords.get(i));
-				randomArrange5.add(englishMeans.get(i));
-			} else if (i<36) {
-				randomArrange6.add(englishWords.get(i));
-				randomArrange6.add(englishMeans.get(i));
-			}
+				// Randomize
+				if (i<6) {
+					randomArrange1.add(englishWords.get(i));
+					randomArrange1.add(englishMeans.get(i));
+				} else if (i<12) {
+					randomArrange2.add(englishWords.get(i));
+					randomArrange2.add(englishMeans.get(i));
+				} else if (i<18) {
+					randomArrange3.add(englishWords.get(i));
+					randomArrange3.add(englishMeans.get(i));
+				} else if (i<24) {
+					randomArrange4.add(englishWords.get(i));
+					randomArrange4.add(englishMeans.get(i));
+				} else if (i<30) {
+					randomArrange5.add(englishWords.get(i));
+					randomArrange5.add(englishMeans.get(i));
+				} else if (i<36) {
+					randomArrange6.add(englishWords.get(i));
+					randomArrange6.add(englishMeans.get(i));
+				}
 
-		}
+			}
 		
-		long seed = System.nanoTime();
-		Collections.shuffle(randomArrange1, new Random(seed));
-		 seed = System.nanoTime();
-		Collections.shuffle(randomArrange2, new Random(seed));
-		 seed = System.nanoTime();
-		Collections.shuffle(randomArrange3, new Random(seed));
-		 seed = System.nanoTime();
-		Collections.shuffle(randomArrange4, new Random(seed));
-		 seed = System.nanoTime();
-		Collections.shuffle(randomArrange5, new Random(seed));
-		 seed = System.nanoTime();
-		Collections.shuffle(randomArrange6, new Random(seed));
+			long seed = System.nanoTime();
+			Collections.shuffle(randomArrange1, new Random(seed));
+			seed = System.nanoTime();
+			Collections.shuffle(randomArrange2, new Random(seed));
+			seed = System.nanoTime();
+			Collections.shuffle(randomArrange3, new Random(seed));
+			seed = System.nanoTime();
+			Collections.shuffle(randomArrange4, new Random(seed));
+			seed = System.nanoTime();
+			Collections.shuffle(randomArrange5, new Random(seed));
+			seed = System.nanoTime();
+			Collections.shuffle(randomArrange6, new Random(seed));
+		}
 		
 	}
 	
@@ -808,7 +825,122 @@ public class StudyTestC extends Activity {
 		getMenuInflater().inflate(R.menu.study_test_c, menu);
 		return true;
 	}
-	
+	private class GetWord extends AsyncTask<String, Void, JSONObject> 
+	{
+		DefaultHttpClient httpClient ;
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try {
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				int timeoutConnection = 5000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 5000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					//Log.d("RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getBoolean("status")==true) {
+					Log.d("Get Word JSON RESPONSE ---- ", json.toString());				        	
+					
+					SQLiteDatabase db = mHelper.getWritableDatabase();
+					
+					JSONArray spareWords = json.getJSONArray("spare");
+					
+					for(int i = 0; englishWords.size() < 36; i++) {
+						englishWords.add(spareWords.getJSONObject(i).get("name").toString());
+						englishMeans.add(spareWords.getJSONObject(i).get("mean").toString());
+					}
+					Log.d("Array Size: ----- ", Integer.toString(englishWords.size()));
+					
+					
+					//flipDb.rawQuery("DELETE FROM flip IF EXISTS", null);
+					try {
+						db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+							"name TEXT, mean TEXT, xo TEXT);");
+						db.delete("flip", null, null);
+					} catch (Exception e) {
+					
+					}
+				
+					for (int i=0; i<englishWords.size(); i++) {
+					
+						try {
+							// Save to Flip DB
+							ContentValues cv = new ContentValues();
+							cv.put("name", englishWords.get(i));
+							cv.put("mean", englishMeans.get(i));
+							cv.put("xo", "X");
+							db.insert("flip", null, cv);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					
+						// Randomize
+						if (i<6) {
+							randomArrange1.add(englishWords.get(i));
+							randomArrange1.add(englishMeans.get(i));
+						} else if (i<12) {
+							randomArrange2.add(englishWords.get(i));
+							randomArrange2.add(englishMeans.get(i));
+						} else if (i<18) {
+							randomArrange3.add(englishWords.get(i));
+							randomArrange3.add(englishMeans.get(i));
+						} else if (i<24) {
+							randomArrange4.add(englishWords.get(i));
+							randomArrange4.add(englishMeans.get(i));
+						} else if (i<30) {
+							randomArrange5.add(englishWords.get(i));
+							randomArrange5.add(englishMeans.get(i));
+						} else if (i<36) {
+							randomArrange6.add(englishWords.get(i));
+							randomArrange6.add(englishMeans.get(i));
+						}
+
+					}
+				
+					long seed = System.nanoTime();
+					Collections.shuffle(randomArrange1, new Random(seed));
+					seed = System.nanoTime();
+					Collections.shuffle(randomArrange2, new Random(seed));
+					seed = System.nanoTime();
+					Collections.shuffle(randomArrange3, new Random(seed));
+					seed = System.nanoTime();
+					Collections.shuffle(randomArrange4, new Random(seed));
+					seed = System.nanoTime();
+					Collections.shuffle(randomArrange5, new Random(seed));
+					seed = System.nanoTime();
+					Collections.shuffle(randomArrange6, new Random(seed));
+				} else {		        
+				}
+
+			} catch (Exception e) {
+				Log.d("Exception: ", e.toString());
+			}
+		}
+	}
 	
 	
 	//------- Database Operation ------------------

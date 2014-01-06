@@ -656,7 +656,7 @@ public class StudyBegin extends FragmentActivity {
 							}
 						}
 						
-						if (jsonWords.length()<10) {
+						if (jsonWords.length() < 10) {
 							String overlap = "";
 							for(int i = jsonWords.length()-1; i >=7 ; i-- ) {
 								overlap += "'"+jsonWords.getJSONObject(i).getString("name")+"'";
@@ -668,7 +668,7 @@ public class StudyBegin extends FragmentActivity {
 							Cursor otherCursor2 = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 									"xo=\'O\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated-1) + 
 									" AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
-							if (otherCursor2.getCount()>0) {
+							if (otherCursor2.getCount() > 0) {
 								while(otherCursor2.moveToNext()) {
 									JSONObject jsonObj= new JSONObject();
 									jsonObj.put("id", 0);
@@ -699,7 +699,30 @@ public class StudyBegin extends FragmentActivity {
 							}
 
 						}
-						
+						if(jsonWords.length() < 10){
+
+							JSONArray spareWords = json.getJSONArray("spare");
+							for(int i = 0; jsonWords.length() < 10; i++) {
+
+								if(i > 2)
+									i = 0;
+								Log.i("STEVEN", "count testing");
+								jsonWords.put(spareWords.getJSONObject(i));
+							
+								ContentValues row = new ContentValues();
+								row.put("name", spareWords.getJSONObject(i).get("name").toString());
+								row.put("mean", spareWords.getJSONObject(i).get("mean").toString());
+								row.put("example_en", spareWords.getJSONObject(i).get("example_en").toString());
+								row.put("example_ko", spareWords.getJSONObject(i).get("example_ko").toString());
+								row.put("phonetics", spareWords.getJSONObject(i).get("phonetics").toString());
+								row.put("picture", (Integer)(spareWords.getJSONObject(i).get("picture")));
+								row.put("image_url", spareWords.getJSONObject(i).get("image_url").toString());
+								row.put("stage", tmpStageAccumulated);
+								row.put("xo", "X");
+
+								db.insert("dic", null, row);
+							}
+						}
 						
 						Log.d("-----------***********-----------", jsonWords.toString());
 						Log.d("jsonArray length: ", Integer.toString(jsonWords.length()));
