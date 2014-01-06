@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class RgRegisterProvision extends Activity {
@@ -22,12 +23,14 @@ public class RgRegisterProvision extends Activity {
 		setContentView(R.layout.activity_rg_register_provision);
 		ImageView provisionImage = (ImageView)this.findViewById(R.id.provisionImage);
 		TextView textViewField = (TextView)this.findViewById(R.id.textViewField);
+		LinearLayout provisionforCPS = (LinearLayout)this.findViewById(R.id.rg_register_provision_id_forCPS);
 		Intent intent = getIntent();
 		int state = intent.getIntExtra("wButton", 0);
 		
 		if(state == 1){
 			provisionImage.setImageResource(R.drawable.register_28_bgimg_agreement);
 			textViewField.setText(R.string.userAgreement);
+			provisionforCPS.setVisibility(View.GONE);
 		}
 		else{
 			provisionImage.setImageResource(R.drawable.register_28_bgimg_personalinfo);

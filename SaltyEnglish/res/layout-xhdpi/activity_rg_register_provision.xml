@@ -4,62 +4,278 @@
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_darkyellowpattern" >
 
-     <RelativeLayout
+    <RelativeLayout
         android:layout_width="360dp"
         android:layout_height="640dp"
         android:layout_centerInParent="true" >
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/common_bgimg_register" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.5dp"
+            android:layout_marginTop="10.5dp"
+            android:background="@drawable/rg_drawable_btn_back"
+            android:onClick="onClickBack" />
 
+        <ImageView
+            android:layout_width="343dp"
+            android:layout_height="578dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="57.5dp"
+            android:src="@drawable/register_28_image_textbox" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/common_bgimg_register" />
+        <ImageView
+            android:id="@+id/provisionImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="33.5dp"
+            android:layout_marginTop="76dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:background="@drawable/rg_drawable_btn_back"
-        android:onClick="onClickBack" />
+        <ScrollView
+            android:layout_width="294.5dp"
+            android:layout_height="493.5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="111.5dp"
+            android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
+            android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" >
 
-    <ImageView
-        android:layout_width="343dp"
-        android:layout_height="578dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="57.5dp"
-        android:src="@drawable/register_28_image_textbox" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/provisionImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="33.5dp"
-        android:layout_marginTop="76dp" />
+                <TextView
+                    android:id="@+id/textViewField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000" />
 
-    <ScrollView
-        android:layout_width="294.5dp"
-        android:layout_height="493.5dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="111.5dp"
-        android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
-        android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" >
+                <LinearLayout
+                    android:id="@+id/rg_register_provision_id_forCPS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewField"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#000000" />
-    </ScrollView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rg_register_provision_CPS_1"
+                        android:textColor="#000000" />
 
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/cell_shape"
+                        android:shrinkColumns="0,1" >
 
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_2_1"
+                                android:textColor="#000" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_2_2"
+                                android:textColor="#000" />
 
-     </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_2_3"
+                                android:textColor="#000" />
+                        </TableRow>
 
+                        <TableRow>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_3_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_3_2"
+                                android:textColor="#000" />
+                        </TableRow>
+
+                        <TableRow>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_4_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_4_2"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_3_3"
+                                android:textColor="#000" />
+                        </TableRow>
+
+                        <TableRow>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_5_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_5_2"
+                                android:textColor="#000" />
+                        </TableRow>
+
+                        <TableRow>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_6_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_6_2"
+                                android:textColor="#000" />
+                        </TableRow>
+                    </TableLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rg_register_provision_CPS_7"
+                        android:textColor="#000000" />
+
+                    <TableLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/cell_shape"
+                        android:shrinkColumns="0,1" >
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_8_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_8_2"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_8_3"
+                                android:textColor="#000" />
+                        </TableRow>
+
+                        <TableRow>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_9_1"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_9_2"
+                                android:textColor="#000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@drawable/cell_shape"
+                                android:gravity="center_vertical"
+                                android:padding="3dp"
+                                android:text="@string/rg_register_provision_CPS_9_3"
+                                android:textColor="#000" />
+                        </TableRow>
+                    </TableLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
 </RelativeLayout>
