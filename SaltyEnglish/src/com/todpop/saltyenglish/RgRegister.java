@@ -425,7 +425,7 @@ public class RgRegister extends Activity {
 		            	Log.d("facebook -------------------------%s", userInfo);
 		            	
 		            	// Check if facebook id exist
-		            	if(fbEmail == "null"){
+		            	if(fbEmail.equals("null")){
 		            		popupText.setText(R.string.rg_register_facebook_email_null);
 		            		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		            		popupWindow.showAsDropDown(rgCheckbox);

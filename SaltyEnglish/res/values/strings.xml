@@ -149,7 +149,7 @@
     <string name="title_activity_study_test_result">StudyTestResult</string>
     <string name="home_list_score_string">점</string>
     <string name="rg_register_facebook_duplicate">이미 가입된 Facebook 계정이예요</string>
-    <string name="rg_register_facebook_email_null">페이스북 이메일 주소를 읽어오는 데 실패했습니다.\n페이스북 가입 시 기재한 이메일 주소를 승인했는지 확인해 주세요.\n 예를 들어 saltyenglish@gmail.com으로 페이스북에 가입하시면 페이스북이 Gmail 계정으로 전송하는 확인 메일에 "계정 인증" 버튼을 누르셔야 사용할 수 있습니다. </string>
+    <string name="rg_register_facebook_email_null">페이스북 이메일 주소를 읽어오는 데 실패했습니다.\n1) 페이스북 가입시 기재한 이메일 주소를 승인했는지 확인해 주세요.\n 예를 들어 saltyenglish@gmail.com으로 페이스북에 가입하셨다면 페이스북이 Gmail 계정으로 전송하는 확인 메일에 "계정 인증" 버튼을 누르셔야 정상적으로 사용할 수 있습니다.\n2) 혹은 페이스북의 설정-계정설정-이메일 값이 올바르게 보이는지 확인해 주세요.\n </string>
     <string name="home_more_acount_change_pw_current">기존의 패스워드를 정확하게 입력해 주세요</string>
     <string name="home_more_acount_change_pw_check">변경할 패스워드가 서로 일치하지 않아요</string>
     <string name="home_more_acount_change_pw_length">변경할 6자리 이상의 패스워드를 입력해 주세요</string>

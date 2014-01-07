@@ -352,12 +352,18 @@ public class RgLogin extends Activity {
 		            if (user != null) {
 		                // Display the parsed user info
 		            	userInfo = buildUserInfoDisplay(user);
-		            	Log.d("facebook ------------------------- ", userInfo);
-		            	
-		            	// try login to SaltyEnglish server with obtained fbEmail
-		        		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
-		            	
+
+		            	if(fbEmail.equals("null")){
+		            		popupText.setText(R.string.rg_register_facebook_email_null);
+		            		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		            		popupWindow.showAsDropDown(loginBtn);
+		            	}
+		            	else{
+		            		// try login to SaltyEnglish server with obtained fbEmail
+		            		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
+		            	}
 		            }
+		            else {Log.e("fbEmail 222---------------------- ","");}
 		        }
 		    }).executeAsync();
 		}
