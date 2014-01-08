@@ -72,7 +72,8 @@
         android:layout_marginLeft="186dp"
         android:layout_marginTop="220.5dp"
         android:background="@drawable/store_52_btn_setting_off"
-        android:button="@drawable/homemoresetting_drawable_checkbox" />
+        android:button="@drawable/homemoresetting_drawable_checkbox"
+        android:enabled="false"  />
     <!-- set alarmbell -->
 
     <ImageView
@@ -88,7 +89,8 @@
         android:layout_marginLeft="186dp"
         android:layout_marginTop="285.5dp"
         android:background="@drawable/store_52_btn_setting_off"
-        android:button="@drawable/homemoresetting_drawable_checkbox" />
+        android:button="@drawable/homemoresetting_drawable_checkbox" 
+        android:enabled="false" />
 
     <!-- set background music -->
 
@@ -105,7 +107,8 @@
         android:layout_marginLeft="186dp"
         android:layout_marginTop="350dp"
         android:background="@drawable/store_52_btn_setting_off"
-        android:button="@drawable/homemoresetting_drawable_checkbox" />
+        android:button="@drawable/homemoresetting_drawable_checkbox" 
+        android:enabled="false" />
 
     <!-- set sound -->
 
@@ -122,7 +125,8 @@
         android:layout_marginLeft="186dp"
         android:layout_marginTop="415.5dp"
         android:background="@drawable/store_52_btn_setting_off"
-        android:button="@drawable/homemoresetting_drawable_checkbox" />
+        android:button="@drawable/homemoresetting_drawable_checkbox" 
+        android:enabled="false" />
 
     <ImageView
         android:layout_width="wrap_content"
