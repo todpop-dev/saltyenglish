@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.saltyenglish.StudyBegin.StudyStartFragment;
 import com.todpop.saltyenglish.StudyBegin.StudyStartFragment.BtnFlipListener;
 
@@ -82,9 +83,10 @@ public class StudyHome extends Activity {
 	boolean isOnSlide = false;
 
 	// CPI View show in return from study test
-	RelativeLayout cpiView;
-	ImageView cpiAdImageView;
-	TextView cpiAdTextView;
+	RelativeLayout cpxView;
+	ImageView cpxAdImageView;
+	TextView cpxAdTextView;
+	ImageView cpxAdInfoTitle;
 
 	// Home Ranking List
 	static ListView rankingList;
@@ -136,7 +138,8 @@ public class StudyHome extends Activity {
 	String cpxTargetUrl;
 	String cpxPackageName;
 	String cpxConfirmUrl;
-	int cpxReward;
+	String cpxReward;
+	String cpxPoint;
 	int cpxQuestionCount;
 	boolean cpxHistoryFlag;
 	
@@ -154,6 +157,7 @@ public class StudyHome extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("Study Home");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -161,6 +165,7 @@ public class StudyHome extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 	
 	@Override
@@ -326,9 +331,10 @@ public class StudyHome extends Activity {
 		//category view pager setting done
 		
 		// CPX View
-		cpiView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
-		cpiAdImageView = (ImageView)findViewById(R.id.study_home_id_cpi_ad_image);
-		cpiAdTextView = (TextView)findViewById(R.id.study_home_id_cpi_ad_text);
+		cpxView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
+		cpxAdImageView = (ImageView)findViewById(R.id.study_home_id_cpi_ad_image);
+		cpxAdTextView = (TextView)findViewById(R.id.study_home_id_cpi_ad_text);
+		cpxAdInfoTitle = (ImageView)findViewById(R.id.study_home_id_infotitle);
 		
 		//popupview
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
@@ -495,12 +501,16 @@ public class StudyHome extends Activity {
 		cpxTargetUrl = cpxInfo.getString("targetUrl", "");
 		cpxPackageName = cpxInfo.getString("packageName", "");
 		cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
-		cpxReward = cpxInfo.getInt("reward", 0);
+		cpxReward = cpxInfo.getString("reward", "0");
+		cpxPoint = cpxInfo.getString("point", "0");
 		cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
 		
 		// Download CPX Image and update UI
 		if(cpxAdType != 0){
 			Log.i("STEVEN", "download image task called");
+			if(cpxReward.equals("0") || cpxReward.equals("null")){
+				cpxAdInfoTitle.setBackgroundResource(R.drawable.test_27_image_pointinfotitle);
+			}
 			new DownloadImageTask().execute(cpxAdImageUrl);
 		}
 		//cpxAdType = 0;
@@ -508,7 +518,7 @@ public class StudyHome extends Activity {
 		if (cpxAdType == 301) {
 
 			FlurryAgent.logEvent("CPI");
-			cpiView.setVisibility(View.VISIBLE);
+			cpxView.setVisibility(View.VISIBLE);
 			
 			// Send CPX Log
 			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
@@ -526,7 +536,7 @@ public class StudyHome extends Activity {
 			}
 		}else if(cpxAdType == 303){
 			FlurryAgent.logEvent("CPA");
-			cpiView.setVisibility(View.VISIBLE);
+			cpxView.setVisibility(View.VISIBLE);
 			
 			SharedPreferences.Editor cpxInfoEditor;
 			cpxInfoEditor = cpxInfo.edit();
@@ -544,7 +554,7 @@ public class StudyHome extends Activity {
 			new CheckCPA().execute(cpxConfirmUrl + "?mobile=" + mobile);
 		} else if (cpxAdType == 305) {
 			FlurryAgent.logEvent("CPS");
-			cpiView.setVisibility(View.VISIBLE);
+			cpxView.setVisibility(View.VISIBLE);
 			
 			SharedPreferences.Editor cpxInfoEditor;
 			cpxInfoEditor = cpxInfo.edit();
@@ -563,7 +573,7 @@ public class StudyHome extends Activity {
 			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 			boolean goMyDownload = cpxInstallInfo.getBoolean("cpxGoMyDownload", false);
 			
-			cpiView.setVisibility(View.GONE);			
+			cpxView.setVisibility(View.GONE);			
 			
 			if (goMyDownload == true) {
 				// Save to DB and JUMP to HomwDownload activity
@@ -681,8 +691,8 @@ public class StudyHome extends Activity {
 	    protected void onPostExecute(Bitmap result) 
 	    {	        
 	    	// Update UI
-	    	cpiAdImageView.setImageBitmap(result);
-	    	cpiAdTextView.setText(cpxAdText);
+	    	cpxAdImageView.setImageBitmap(result);
+	    	cpxAdTextView.setText(cpxAdText);
 	    }
 	}
 	// ******************** End of CPX UTILITY CLASS *************************
@@ -1173,7 +1183,7 @@ public class StudyHome extends Activity {
 		SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 		cpxInfo.edit().clear().commit();
 		cpxSInstallInfo.edit().clear().commit();
-		cpiView.setVisibility(View.GONE);
+		cpxView.setVisibility(View.GONE);
 	}
 	public void cpxGoReward(View v)
 	{	
@@ -1221,6 +1231,11 @@ public class StudyHome extends Activity {
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(cpxTargetUrl)));
 			}
 		}else if (cpxAdType == 305) {
+			SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+			SharedPreferences.Editor cpxInfoEditor = cpxInfo.edit();
+			cpxInfoEditor.putString("reward", cpxReward);
+			cpxInfoEditor.putString("point", cpxPoint);
+			cpxInfoEditor.commit();
 			Intent intent = new Intent(getApplicationContext(), SurveyView.class);
 			startActivity(intent);
 		}
@@ -1281,13 +1296,13 @@ public class StudyHome extends Activity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			
-			if(cpiView.isShown()){
+			if(cpxView.isShown()){
 				FlurryAgent.logEvent("Intall Later");
 				SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
 				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 				cpxInfo.edit().clear().commit();
 				cpxSInstallInfo.edit().clear().commit();
-				cpiView.setVisibility(View.GONE);
+				cpxView.setVisibility(View.GONE);
 			}
 			if(isOnSlide == true){
 				FlurryAgent.logEvent("Slide Button Clicked (Off)");
@@ -1371,7 +1386,7 @@ public class StudyHome extends Activity {
 				popupWindow.showAsDropDown(rankingList);
 			}
 			cpxPopupWindow.dismiss();
-			cpiView.setVisibility(View.GONE);
+			cpxView.setVisibility(View.GONE);
 		}
 	}
 	
