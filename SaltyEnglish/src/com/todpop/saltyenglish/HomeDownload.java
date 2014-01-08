@@ -13,6 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.playmobs.crosswalk.*;
+import com.playmobs.crosswalk.PlaymobsAgent.ErrorListener;
+import com.playmobs.crosswalk.PlaymobsAgent.ResponseListener;
 
 
 import android.net.Uri;
@@ -54,6 +58,11 @@ public class HomeDownload extends Activity {
 	final int CPI_SAVING_COMP = 3;
 	final int CPI_SAVING_NO = 4;
 	final int CPI_SAVING_EXHAUS = 9;
+
+	//for cross walk
+	PlaymobsAgent pm;
+	ResponseListener listener;
+	ErrorListener errorListner;
 	
 	CpiListViewAdapter cpiListViewAdapter;
 	ArrayList<CpiListViewItem> cpiArray;
@@ -62,16 +71,9 @@ public class HomeDownload extends Activity {
 	int cpiCount = 0;
 
 	RelativeLayout homeDownload;
-//	CouponListViewAdapter couponListViewAdapter;
-//	ArrayList<CouponListViewItem> couponArray;
-//	CouponListViewItem mCouponListViewItem;
-//	ListView couponListView;
 //	int couponCount = 0;
 
 	ImageView noCPIimage;
-//	TextView currentReward;
-//	RadioButton cpiBtn;
-//	RadioButton couponBtn;
 
 	//popup
 	PopupWindow cpxPopupWindow;
@@ -86,11 +88,6 @@ public class HomeDownload extends Activity {
 		setContentView(R.layout.activity_home_download);
 		homeDownload = (RelativeLayout)findViewById(R.id.home_download);
 		noCPIimage = (ImageView)findViewById(R.id.homedownloal_id_nopci);
-//		currentReward = (TextView)findViewById(R.id.homedownload_id_current_reward);
-//		cpiBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_cpi);
-//		couponBtn = (RadioButton) findViewById(R.id.homedownload_id_btn_coupon);
-//		cpiBtn.setOnClickListener(radio_listener);
-//		couponBtn.setOnClickListener(radio_listener);
 
 		//popupview
 		cpxPopupview = View.inflate(this, R.layout.popup_view, null);
@@ -100,15 +97,7 @@ public class HomeDownload extends Activity {
 		cpiArray = new ArrayList<CpiListViewItem>();
 		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
 
-//		couponArray = new ArrayList<CouponListViewItem>();
-//		couponListView=(ListView)findViewById(R.id.homedownload_id_listiew_coupon);
-//		for(int i=0;i<20;i++) {
-//			mCouponListViewItem = new CouponListViewItem(R.drawable.store_33_image_dinosaur_on,"seoga & cook 20% sale");
-//			couponArray.add(mCouponListViewItem);
-//		}
-//		couponListViewAdapter = new CouponListViewAdapter(this,R.layout.home_download_list_item_coupon, couponArray);
-//		couponListView.setAdapter(couponListViewAdapter);
-		
+
 		//get phone number
 		try {
 			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
@@ -122,6 +111,29 @@ public class HomeDownload extends Activity {
 		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
 		cpxInstallInfoEditor.commit();
 		
+		//crosswalk
+		listener = new ResponseListener() {
+			@Override
+			public void OnResponse(CrossPromotionData data) {
+				Toast.makeText(HomeDownload.this,"±¤°í¸í "+ data.getCampaign_title(), Toast.LENGTH_LONG).show();
+				Toast.makeText(HomeDownload.this,"±¤°í ÀÎµ¦½º :  "+ data.getCampaign_index(), Toast.LENGTH_LONG).show();
+				Toast.makeText(HomeDownload.this,"uid : "+ data.getUid(), Toast.LENGTH_LONG).show();
+				
+				Log.d("tag", data.getReward());
+			}
+		};
+		
+		errorListner = new ErrorListener() {
+			
+			@Override
+			public void OnErrorResponse(CrossPromotionError error) {
+				Log.d("errorcode", Integer.toString(error.getErrorCode()));
+			}
+		};
+		
+		pm = new PlaymobsAgent("testing", "691824", this,listener,errorListner);
+		
+		pm.setDefaultToast(true);
 	}
 	
 	@Override
@@ -206,6 +218,7 @@ public class HomeDownload extends Activity {
 		{
 			cpiCount++;
 			final int id = arSrc.get(position).id;
+			final int type = arSrc.get(position).ad_type;
 			Log.i("STEVEN", "ID = " + id);
 			
 			if(convertView == null)
@@ -236,63 +249,16 @@ public class HomeDownload extends Activity {
 				Log.i("STEVEN", "ad type!!!! = " + arSrc.get(position).ad_type);
 				getRewardBut.setOnClickListener(new Button.OnClickListener(){
 					public void onClick(View V){
-						getRewardBut.setEnabled(false);
-						getRewardBut.setBackgroundResource(R.drawable.store_36_btn_saving_ing);
-						new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
+						if(type==901){
+							pm.OpenSession();
+						}
+						else{
+							getRewardBut.setEnabled(false);
+							getRewardBut.setBackgroundResource(R.drawable.store_36_btn_saving_ing);
+							new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
+						}
 					}
 				});
-				
-				/*if(arSrc.get(position).ad_type == 301){		//CPI
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-							getRewardBut.setEnabled(false);
-							new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
-						//TODO AlertDialog dialog = createDialogBox();
-						//dialog.show();
-						}
-					});
-				}
-				else if(arSrc.get(position).ad_type == 302){	//CPL
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-						//TODO AlertDialog dialog = createDialogBox();
-						//dialog.show();
-						}
-					});
-				}
-				else if(arSrc.get(position).ad_type == 303){	//CPA
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-							getRewardBut.setEnabled(false);
-							new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
-						}
-					});
-				}
-				else if(arSrc.get(position).ad_type == 304){	//CPE
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-						//TODO AlertDialog dialog = createDialogBox();
-						//dialog.show();
-						}
-					});
-				}
-				else if(arSrc.get(position).ad_type == 305){	//CPS
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-							getRewardBut.setEnabled(false);
-							new GetCPXInfo().execute("http://todpop.co.kr/api/advertises/show_cpx_ad.json?ad_id="+id);
-							
-						}
-					});
-				}
-				else if(arSrc.get(position).ad_type == 306){	//CPC
-					getRewardBut.setOnClickListener(new Button.OnClickListener(){
-						public void onClick(View V){
-						//TODO AlertDialog dialog = createDialogBox();
-						//dialog.show();
-						}
-					});
-				}*/
 				break;
 			case 3:
 				getRewardBut.setBackgroundResource(R.drawable.store_36_btn_savingcomplete);
@@ -553,8 +519,8 @@ public class HomeDownload extends Activity {
 					String packageName = adDetails.getString("package_name");
 					String confirmUrl = adDetails.getString("confirm_url");
 					
-					int reward = adDetails.getInt("reward");
-					int point = adDetails.getInt("point");
+					String reward = adDetails.getString("reward");
+					String point = adDetails.getString("point");
 					int questionCount = adDetails.getInt("n_question=");
 
 			
@@ -566,8 +532,8 @@ public class HomeDownload extends Activity {
 					cpxInfoEditor.putString("targetUrl", targetUrl);
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);
-					cpxInfoEditor.putInt("reward", reward);
-					cpxInfoEditor.putInt("point", point);
+					cpxInfoEditor.putString("reward", reward);
+					cpxInfoEditor.putString("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 
 					Log.i("STEVEN", "line 511");
@@ -746,6 +712,7 @@ public class HomeDownload extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("Download Right now");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -753,15 +720,19 @@ public class HomeDownload extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 	public void getList(){
-
 		cpiArray.clear();
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
-		
-		new GetCPX().execute("http://todpop.co.kr/api/etc/" + userId + "/show_cpx_list.json");
 
+		//TODO
+		/*mCpiListItem = new CpiListViewItem(901, 901,
+				"/uploads/cpd_advertisement/back_image/1/images.jpg", "Ãß°¡ ·©Å· Æ÷ÀÎÆ®!",
+				"0", "°Ç´ç 10P", 2);
+		cpiArray.add(mCpiListItem);*/
+		new GetCPX().execute("http://todpop.co.kr/api/etc/" + userId + "/show_cpx_list.json");
 	}
 	//----button onClick----
 	public void closePopup(View v)
