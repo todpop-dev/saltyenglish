@@ -31,6 +31,7 @@ import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 import android.app.Activity;
@@ -168,6 +169,7 @@ public class RgLogin extends Activity {
         			settingEdit.putString("isLogin","YES");
         			settingEdit.putString("loginType", "email");
         			settingEdit.commit();
+        			Log.i("STEVEN RGLONGIN 172", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
 
         			// email, facebook skip (not needed)
         			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
@@ -178,8 +180,6 @@ public class RgLogin extends Activity {
         			rgInfoEdit.commit();
     			
         			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));        			
-
-        			finish();
         		}
         		else
         		{
@@ -256,13 +256,20 @@ public class RgLogin extends Activity {
 				Log.d("R L","255");
 				
 				if(json.getBoolean("status")) {
-					
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
 					studyInfoEdit.commit();
 					
-	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-	    				startActivity(intent);
+					if(rgInfo.getString("level", "0").equals("0")){
+        				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
+        				startActivity(intent);
+        				finish();
+					}
+					else{
+						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+						startActivity(intent);
+						finish();
+					}
 				}
 				else
 				{
@@ -270,7 +277,7 @@ public class RgLogin extends Activity {
 				}
 				
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
@@ -353,10 +360,18 @@ public class RgLogin extends Activity {
 		                // Display the parsed user info
 		            	userInfo = buildUserInfoDisplay(user);
 		            	Log.d("facebook ------------------------- ", userInfo);
-		            	
-		            	// try login to SaltyEnglish server with obtained fbEmail
-		        		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
-		            	
+
+		            	Log.d("facebook -----EMAIL------------- ", fbEmail);
+		            	// Check if facebook id exist
+		            	if(fbEmail.equals("null")){
+		            		popupText.setText(R.string.rg_register_facebook_email_null);
+		            		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		        			popupWindow.showAsDropDown(loginBtn);
+		            	}
+		            	else{
+		            		// try login to SaltyEnglish server with obtained fbEmail
+		            		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
+		            	}
 		            }
 		        }
 		    }).executeAsync();
@@ -420,7 +435,6 @@ public class RgLogin extends Activity {
 
         			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
         			
-        			finish();
         		}
         		else
         		{
@@ -496,6 +510,7 @@ public class RgLogin extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 	    FlurryAgent.logEvent("Login");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 		 
 	@Override
@@ -503,6 +518,7 @@ public class RgLogin extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }
 
