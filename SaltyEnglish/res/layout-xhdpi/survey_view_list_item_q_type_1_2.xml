@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="20dp"
-        android:gravity="center"
+        android:gravity="right"
         android:text="1."
         android:textColor="#000000"
         android:textSize="18sp" />
@@ -24,7 +24,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:gravity="left"
         android:textColor="#000000"
         android:textSize="18sp" />
 
@@ -51,7 +50,9 @@
             android:id="@+id/survey_id_btn_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:button="@drawable/rgregister_drawable_checkbox"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button="@null"
+            android:paddingLeft="40dp"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -60,7 +61,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:button="@drawable/rgregister_drawable_checkbox"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button="@null"
+            android:paddingLeft="40dp"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -69,7 +72,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:button="@drawable/rgregister_drawable_checkbox"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button="@null"
+            android:paddingLeft="40dp"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -78,7 +83,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:button="@drawable/rgregister_drawable_checkbox"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button="@null"
+            android:paddingLeft="40dp"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -87,7 +94,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:button="@drawable/rgregister_drawable_checkbox"
+            android:background="@drawable/survey_drawable_checkbox"
+            android:button="@null"
+            android:paddingLeft="40dp"
             android:textColor="#000000"
             android:textSize="18sp" />
     </RadioGroup>

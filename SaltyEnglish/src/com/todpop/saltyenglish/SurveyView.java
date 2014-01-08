@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -86,8 +87,8 @@ public class SurveyView extends Activity {
 				.execute("http://todpop.co.kr/api/advertises/get_cps_questions.json?ad_id="
 						+ cpxInfo.getInt("adId", 0));
 
-		rewardAmount = String.valueOf(cpxInfo.getInt("reward", 0));
-		pointAmount = String.valueOf(cpxInfo.getInt("point", 0));
+		rewardAmount = cpxInfo.getString("reward", "0");
+		pointAmount = cpxInfo.getString("point", "0");
 		
 		cpxInfo.edit().clear().commit();
 	}
@@ -609,12 +610,14 @@ public class SurveyView extends Activity {
 	protected void onStart() {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 
 }
