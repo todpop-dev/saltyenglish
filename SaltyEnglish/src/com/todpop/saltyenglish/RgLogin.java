@@ -359,9 +359,7 @@ public class RgLogin extends Activity {
 		            if (user != null) {
 		                // Display the parsed user info
 		            	userInfo = buildUserInfoDisplay(user);
-		            	Log.d("facebook ------------------------- ", userInfo);
-
-		            	Log.d("facebook -----EMAIL------------- ", fbEmail);
+		            	
 		            	// Check if facebook id exist
 		            	if(fbEmail.equals("null")){
 		            		popupText.setText(R.string.rg_register_facebook_email_null);
@@ -373,6 +371,7 @@ public class RgLogin extends Activity {
 		            		new SignInWithFacebookAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
 		            	}
 		            }
+		            else {Log.e("fbEmail 222---------------------- ","");}
 		        }
 		    }).executeAsync();
 		}
