@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
@@ -69,6 +70,12 @@ public class HomeWordList extends Activity {
  	WordDBHelper mHelper;
 	EditText searchText;
 	
+	// popup view for no word
+
+	PopupWindow noWordPopupWindow;
+	View noWordPopupView;
+	TextView noWordPopupText;
+	
 	SharedPreferences myWord;
 	
 	ArrayList<Boolean> boolList = new ArrayList<Boolean>();  
@@ -125,6 +132,11 @@ public class HomeWordList extends Activity {
 		density = getResources().getDisplayMetrics().density;
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupWindow.setFocusable(true);
+		
+		//popupview for no word
+		noWordPopupView = View.inflate(this, R.layout.popup_view, null);
+		noWordPopupWindow = new PopupWindow(noWordPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		noWordPopupText = (TextView)noWordPopupView.findViewById(R.id.popup_id_text);
 		
 		popupview.setOnKeyListener(new OnKeyListener() {
 			@Override
@@ -192,7 +204,10 @@ public class HomeWordList extends Activity {
 		homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray);
 		listView.setAdapter(homeWordViewAdapter);
     }
-	
+	public void closePopup(View v)
+	{
+		noWordPopupWindow.dismiss();
+	}
 	
 	
 	class HomeWordViewItem 
@@ -432,7 +447,13 @@ public class HomeWordList extends Activity {
 	
 	public void testBtn(View v)
 	{
-		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		if(wordListSize != 0){
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		}
+		else{
+			noWordPopupText.setText(R.string.word_list_test_no_word);
+			noWordPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		}
 	}
 	
 	
@@ -641,6 +662,7 @@ public class HomeWordList extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("My Word List");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -648,5 +670,6 @@ public class HomeWordList extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }
