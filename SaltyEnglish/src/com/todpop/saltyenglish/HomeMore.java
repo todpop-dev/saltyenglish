@@ -10,6 +10,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 import android.os.AsyncTask;
@@ -141,6 +142,7 @@ public class HomeMore extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("See More");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -148,5 +150,6 @@ public class HomeMore extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

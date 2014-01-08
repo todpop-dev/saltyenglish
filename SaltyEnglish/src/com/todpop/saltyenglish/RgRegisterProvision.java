@@ -1,6 +1,7 @@
 package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,6 +66,7 @@ public class RgRegisterProvision extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -72,5 +74,6 @@ public class RgRegisterProvision extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -284,6 +286,7 @@ public class MainActivity extends Activity
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -291,5 +294,6 @@ public class MainActivity extends Activity
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

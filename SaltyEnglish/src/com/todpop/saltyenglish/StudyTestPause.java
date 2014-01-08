@@ -1,6 +1,7 @@
 package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -41,6 +42,7 @@ public class StudyTestPause extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -48,5 +50,6 @@ public class StudyTestPause extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

@@ -44,6 +44,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 
@@ -425,7 +426,7 @@ public class RgRegister extends Activity {
 		            	Log.d("facebook -------------------------%s", userInfo);
 		            	
 		            	// Check if facebook id exist
-		            	if(fbEmail == "null"){
+		            	if(fbEmail.equals("null")){
 		            		popupText.setText(R.string.rg_register_facebook_email_null);
 		            		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		            		popupWindow.showAsDropDown(rgCheckbox);
@@ -579,6 +580,7 @@ public class RgRegister extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("Register");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -586,5 +588,6 @@ public class RgRegister extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

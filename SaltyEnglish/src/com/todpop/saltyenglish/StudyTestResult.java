@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 
 import android.os.AsyncTask;
@@ -89,45 +90,7 @@ public class StudyTestResult extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 
-			
-			// Save to Flip DB
-//			ContentValues cv = new ContentValues();
-//			cv.put("name", englishWords.get(i));
-//			cv.put("mean", englishMeans.get(i));
-//			cv.put("xo", "X");
-//			db.insert("flip", null, cv);
-		
-//		for(int i=0;i<20;i++)
-//		{
-//			mi = new MyItem(pref.getString("enWord"+i, "N"),pref.getString("krWord"+i, "N"),pref.getString("check"+i, "N"));
-//			arItem.add(mi);
-//		}
-		
-		
-		
-//			mi = new MyItem("i",R.string.kr1,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("few",R.string.kr2,"N");
-//			arItem.add(mi);
-//			mi = new MyItem("building",R.string.kr3,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("million",R.string.kr4,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("sunny",R.string.kr5,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("straight",R.string.kr6,"N");
-//			arItem.add(mi);
-//			mi = new MyItem("ring",R.string.kr7,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("today",R.string.kr8,"Y");
-//			arItem.add(mi);
-//			mi = new MyItem("too",R.string.kr9,"N");
-//			arItem.add(mi);
-//			mi = new MyItem("oh",R.string.kr10,"Y");
-//			arItem.add(mi);
-//		
 
 		{
 			Log.e("STEVEN", "line 135");
@@ -522,8 +485,8 @@ public class StudyTestResult extends Activity {
 					String targetUrl = adDetails.getString("target_url");
 					String packageName = adDetails.getString("package_name");
 					String confirmUrl = adDetails.getString("confirm_url");
-					int reward = adDetails.getInt("reward");
-					int point = adDetails.getInt("point");
+					String reward = adDetails.getString("reward");
+					String point = adDetails.getString("point");
 					int questionCount = adDetails.getInt("n_question");
 
 					SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
@@ -535,8 +498,8 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.putString("targetUrl", targetUrl);
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);
-					cpxInfoEditor.putInt("reward", reward);
-					cpxInfoEditor.putInt("point", point);
+					cpxInfoEditor.putString("reward", reward);
+					cpxInfoEditor.putString("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 					
 					cpxInfoEditor.commit();
@@ -591,6 +554,7 @@ public class StudyTestResult extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -598,5 +562,6 @@ public class StudyTestResult extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

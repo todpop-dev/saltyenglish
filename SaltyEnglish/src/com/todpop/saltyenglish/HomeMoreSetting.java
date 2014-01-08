@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 import java.util.Calendar;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -244,6 +245,7 @@ public class HomeMoreSetting extends Activity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("Setting");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -251,5 +253,6 @@ public class HomeMoreSetting extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

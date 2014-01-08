@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
-    android:versionCode="12"
-    android:versionName="1.2.3" >
+    android:versionCode="14"
+    android:versionName="1.2.7" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -11,8 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -200,7 +200,6 @@
             android:label="@string/title_activity_home_word_list"
             android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name="com.todpop.saltyenglish.WordListTest"
             android:label="@string/title_activity_wordlist_test"
@@ -216,6 +215,7 @@
             android:label="@string/title_activity_wordlist_test_result"
             android:screenOrientation="portrait" >
         </activity>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
@@ -268,6 +268,17 @@
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
 
                 <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        
+        <!-- Used for install referral measurement -->
+        <service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />
+
+        <receiver
+            android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
     </application>

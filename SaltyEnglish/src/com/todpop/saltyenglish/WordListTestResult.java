@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.saltyenglish.StudyTestResult.MyItem;
 
 import android.os.Bundle;
@@ -323,11 +324,13 @@ public class WordListTestResult extends Activity {
 	protected void onStart() {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }

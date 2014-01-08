@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -232,6 +233,7 @@ public class HomeMoreAcountInfo extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 
 	@Override
@@ -239,5 +241,6 @@ public class HomeMoreAcountInfo extends Activity {
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
+	    EasyTracker.getInstance(this).activityStop(this);
 	}
 }
