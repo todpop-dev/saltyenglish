@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,15 +17,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.saltyenglish.StudyBegin.StudyStartFragment;
-import com.todpop.saltyenglish.StudyBegin.StudyStartFragment.BtnFlipListener;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -38,7 +33,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,14 +41,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -62,9 +53,9 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
+import android.view.View.OnTouchListener;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -72,8 +63,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -93,11 +84,21 @@ public class StudyHome extends Activity {
 	
 	// Ranking Item and Adaptor
 	RankingListItem rankingItem;
-	ArrayList<RankingListItem> rankingItemArrayWeek;
-	ArrayList<RankingListItem> rankingItemArrayMonth;
+	ArrayList<RankingListItem> rankingItemArray_basicWeek;
+	ArrayList<RankingListItem> rankingItemArray_basicMonth;
+	ArrayList<RankingListItem> rankingItemArray_middleWeek;
+	ArrayList<RankingListItem> rankingItemArray_middleMonth;
+	ArrayList<RankingListItem> rankingItemArray_highWeek;
+	ArrayList<RankingListItem> rankingItemArray_highMonth;
+	ArrayList<RankingListItem> rankingItemArray_toeicWeek;
+	ArrayList<RankingListItem> rankingItemArray_toeicMonth;
+	ListView testList;
+	String[] myRankArray;
+	String[] myScoreArray;
+	
+	
 	ArrayList<String> noticeList;
-	RankingListAdapter rankingListAdapterWeek;
-	RankingListAdapter rankingListAdapterMonth;
+	RankingListAdapter rankingListAdapter;
 
 	TextView myRank;
 	ImageView myImage;
@@ -105,6 +106,7 @@ public class StudyHome extends Activity {
 	TextView myScore;
 	
 	ImageView categoryWhiteBox;
+	View otherSideView;
 	
 	//declare define popup view
 	PopupWindow popupWindow;
@@ -122,11 +124,14 @@ public class StudyHome extends Activity {
 	SharedPreferences pref;
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
-	SharedPreferences myRankInfo;
+	//SharedPreferences myRankInfo;
 	
 	ViewPager categoryPager;
 	StudyHomePagerAdapter pagerAdapter;
-	Point size;
+	
+	int scrollState;
+	
+	EdgeSwipe edgeSwipe;
 	
 	int category, period;
 	
@@ -148,7 +153,7 @@ public class StudyHome extends Activity {
 	View cpxPopupView;
 	RelativeLayout cpxPopupRelative;
 	TextView cpxPopupText;
-	
+    
  	// Database
  	WordDBHelper mHelper;
 	@Override
@@ -173,11 +178,12 @@ public class StudyHome extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_home);
 		
-		myRankInfo = getSharedPreferences("myRankInfo", 0);
+		//myRankInfo = getSharedPreferences("myRankInfo", 0);
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
 		pref = getSharedPreferences("rgInfo",0);
 		userId = pref.getString("mem_id", "0");
+		
 		mHelper = new WordDBHelper(this);
 
 		myRank = (TextView)findViewById(R.id.studyhome_id_my_rank);
@@ -186,134 +192,44 @@ public class StudyHome extends Activity {
 		myScore = (TextView)findViewById(R.id.studyhome_id_my_rank_fraction);
 		//categoryWhiteBox = (ImageView)findViewById(R.id.bgimg_whitebox);
 
-		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
-		rankingItemArrayWeek = new ArrayList<RankingListItem>();
-		rankingItemArrayMonth = new ArrayList<RankingListItem>();
+		otherSideView = (View)findViewById(R.id.studyhome_id_emptyview);
+		
+		//rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
+		myRankArray = new String[8];
+		myScoreArray = new String[8];
+
+		rankingItemArray_basicWeek = new ArrayList<RankingListItem>();
+		rankingItemArray_basicMonth = new ArrayList<RankingListItem>();
+		rankingItemArray_middleWeek = new ArrayList<RankingListItem>();
+		rankingItemArray_middleMonth = new ArrayList<RankingListItem>();
+		rankingItemArray_highWeek = new ArrayList<RankingListItem>();
+		rankingItemArray_highMonth = new ArrayList<RankingListItem>();
+		rankingItemArray_toeicWeek = new ArrayList<RankingListItem>();
+		rankingItemArray_toeicMonth = new ArrayList<RankingListItem>();
+		
 		noticeList = new ArrayList<String>();
 		
 		studyInfoEdit = studyInfo.edit();
 		studyInfoEdit.putInt("currentPeriod", 1);
 		studyInfoEdit.commit();
 
-		//setting category view pager.
+		//setting category ViewPager.
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
 
         pagerAdapter = new StudyHomePagerAdapter(this);
 		categoryPager.setAdapter(pagerAdapter);
 
-		categoryPager.setOffscreenPageLimit(8);
-		/*
-		size = new Point();
-		Display display = getWindowManager().getDefaultDisplay();
+		categoryPager.setOffscreenPageLimit(3);
+
+		/*categoryPager.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                rankListPager.onTouchEvent(event);
+                return false;
+            }
+        });*/
+		//categoryPager.setOnTouchListener(onTouch);
 		
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2){
-			display.getSize(size);
-			categoryPager.setPageMargin(-size.x/2);
-		}
-		else{
-			categoryPager.setPageMargin(-display.getWidth()/2);
-		}
-		categoryPager.setOnTouchListener(new View.OnTouchListener() {
-
-			private float mLastX;
-			private float mFirstX;
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				// TODO Auto-generated method stub
-				switch (event.getAction()){
-					case MotionEvent.ACTION_DOWN:
-						mFirstX = event.getX();
-						mLastX = event.getX();
-						Log.i("STEVEN ACTION_DOWN", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
-						//categoryWhiteBox.setVisibility(View.INVISIBLE);
-					break;
-					case MotionEvent.ACTION_MOVE:
-							categoryPager.scrollBy((int)((mLastX-event.getX())/2), 0);
-							categoryPager.invalidate();
-							mLastX = event.getX();
-							Log.i("STEVEN ACTION_MOVE", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
-						break;
-					case MotionEvent.ACTION_UP:
-						Log.i("STEVEN ACTION_UP", "mFirstX :" + mFirstX +"mLastX : " +mLastX);
-						if(mFirstX != mLastX){
-							if((mFirstX - mLastX) > size.x/6){
-								categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
-							}else if((mLastX - mFirstX) > size.x/6){
-								categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
-							}
-							else{
-								categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
-								categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
-							}
-						}
-						//categoryWhiteBox.setVisibility(View.VISIBLE);
-						break;
-					default:
-						break;
-				}
-				return true;
-			}
-		});*/
-		categoryPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			
-			@Override
-			public void onPageSelected(int arg0) {
-				
-				if(arg0%4 == 0){ //basic
-					Log.i("STEVEN", "basic category");
-    				/*period =1;
-    				studyInfoEdit.putInt("currentPeriod", 1);*/
-    				studyInfoEdit.putInt("currentCategory", 1);
-    				studyInfoEdit.commit();
-
-					Log.i("STEVEN", "basic 265");
-    				getInfo();
-    				
-    				Log.i("TESTING", "id_week getInfo() called");
-				}
-				else if(arg0%4 == 1){		//middle
-					Log.i("STEVEN", "middle category");
-    				/*period =1;
-    				studyInfoEdit.putInt("currentPeriod", 1);*/
-    				studyInfoEdit.putInt("currentCategory", 2);
-    				studyInfoEdit.commit();
-    				
-    				getInfo();
-    				
-    				Log.i("TESTING", "id_moon getInfo() called");
-				}
-				else if(arg0%4 == 2){		//high
-					Log.i("STEVEN", "high category");
-    				/*period =1;
-    				studyInfoEdit.putInt("currentPeriod", 1);*/
-    				studyInfoEdit.putInt("currentCategory", 3);
-    				studyInfoEdit.commit();
-    				getInfo();
-    				
-    				Log.i("TESTING", "id_moon getInfo() called");
-				}
-				else{		//toiec
-					Log.i("STEVEN", "toiec category");
-    				/*period =1;
-    				studyInfoEdit.putInt("currentPeriod", 1);*/
-    				studyInfoEdit.putInt("currentCategory", 4);
-    				studyInfoEdit.commit();
-    				getInfo();
-    				
-    				Log.i("TESTING", "id_moon getInfo() called");
-				}
-			}
-			
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
-			}
-			
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				
-			}
-		});
 		try {
 			Field mScroller = ViewPager.class.getDeclaredField("mScroller");
 			mScroller.setAccessible(true);
@@ -328,7 +244,159 @@ public class StudyHome extends Activity {
 		}
 
 		categoryPager.setCurrentItem(1073741819 + studyInfo.getInt("currentCategory", 1));
-		//category view pager setting done
+		//category ViewPager setting done
+		
+		//rank list  setting
+		rankingList = (ListView)findViewById(R.id.studyhome_id_listview);
+		
+		
+		categoryPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageSelected(int arg0) {
+				Log.i("STEVEN=========A", "categoryPager onPageSelected");
+				if(arg0%4 == 0){ //basic
+					Log.i("STEVEN up", "basic category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 1);
+    				studyInfoEdit.commit();
+    				
+    				if(studyInfo.getInt("currentPeriod", 1) == 1){
+    					if(rankingItemArray_basicWeek.isEmpty()){
+    						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								1+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicWeek);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[0]);
+    						myScore.setText(myScoreArray[0]);
+    					}
+    				}
+    				else{
+    					if(rankingItemArray_basicMonth.isEmpty()){
+    						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								1+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicMonth);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[4]);
+    						myScore.setText(myScoreArray[4]);
+    					}
+    				}
+				}
+				else if(arg0%4 == 1){		//middle
+					Log.i("STEVEN up", "middle category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 2);
+    				studyInfoEdit.commit();
+    				
+    				if(studyInfo.getInt("currentPeriod", 1) == 1){
+    					if(rankingItemArray_middleWeek.isEmpty()){
+    						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								2+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleWeek);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[1]);
+    						myScore.setText(myScoreArray[1]);
+    					}
+    				}
+    				else{
+    					if(rankingItemArray_middleMonth.isEmpty()){
+    						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								2+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleMonth);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[5]);
+    						myScore.setText(myScoreArray[5]);
+    					}
+    				}
+				}
+				else if(arg0%4 == 2){		//high
+					Log.i("STEVEN up", "high category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 3);
+    				studyInfoEdit.commit();
+    				
+    				if(studyInfo.getInt("currentPeriod", 1) == 1){
+    					if(rankingItemArray_highWeek.isEmpty()){
+    						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								3+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highWeek);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[2]);
+    						myScore.setText(myScoreArray[2]);
+    					}
+    				}
+    				else{
+    					if(rankingItemArray_highMonth.isEmpty()){
+    						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								3+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highMonth);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[6]);
+    						myScore.setText(myScoreArray[6]);
+    					}
+    				}
+				}
+				else{		//toiec
+					Log.i("STEVEN up", "toiec category");
+    				/*period =1;
+    				studyInfoEdit.putInt("currentPeriod", 1);*/
+    				studyInfoEdit.putInt("currentCategory", 4);
+    				studyInfoEdit.commit();
+    				
+    				if(studyInfo.getInt("currentPeriod", 1) == 1){
+    					if(rankingItemArray_toeicWeek.isEmpty()){
+    						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								4+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicWeek);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[3]);
+    						myScore.setText(myScoreArray[3]);
+    					}
+    				}
+    				else{
+    					if(rankingItemArray_toeicMonth.isEmpty()){
+    						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    								4+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    					}
+    					else{
+    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicMonth);
+    						rankingList.setAdapter(rankingListAdapter);
+    						myRank.setText(myRankArray[7]);
+    						myScore.setText(myScoreArray[7]);
+    					}
+    				}
+				}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});		
 		
 		// CPX View
 		cpxView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
@@ -342,6 +410,8 @@ public class StudyHome extends Activity {
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
 		
+		edgeSwipe = new EdgeSwipe();
+		mainLayout.setOnTouchListener(edgeSwipe);
 		
 		// CPX Popup view
 		//cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);
@@ -352,13 +422,125 @@ public class StudyHome extends Activity {
 		//TODO 
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
+	}		
+
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
+
+		//if current page is not current category setting, get different between two and change page
+		if(categoryPager.getCurrentItem() % 4 != (studyInfo.getInt("currentCategory", 1) - 1)){
+			int different = categoryPager.getCurrentItem() % 4 - (studyInfo.getInt("currentCategory", 1) - 1);
+			categoryPager.setCurrentItem(categoryPager.getCurrentItem() - different, false);
+		}
+		else{
+			getInfo();
+		}
+		//pagerAdapter.notifyDataSetChanged();
 		
-		//Log.d("S H ----","196");
-		//Log.d("stageInfo",studyInfo.getString("stageInfo", null));
-		//Log.d("S H ----","198");
+		// Get CPX Info onResume
+
+		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
+
+		cpxAdId = cpxInfo.getInt("adId", 0);
+		cpxAdType = cpxInfo.getInt("adType", 0);	
+		cpxAdImageUrl = cpxInfo.getString("adImageUrl", "");
+		cpxAdText = cpxInfo.getString("adText", "");
+		cpxTargetUrl = cpxInfo.getString("targetUrl", "");
+		cpxPackageName = cpxInfo.getString("packageName", "");
+		cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
+		cpxReward = cpxInfo.getString("reward", "0");
+		cpxPoint = cpxInfo.getString("point", "0");
+		cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
 		
-	
+		// Download CPX Image and update UI
+		if(cpxAdType != 0){
+			Log.i("STEVEN", "download image task called");
+			if(cpxReward.equals("0") || cpxReward.equals("null")){
+				cpxAdInfoTitle.setBackgroundResource(R.drawable.test_27_image_pointinfotitle);
+			}
+			new DownloadImageTask().execute(cpxAdImageUrl);
+		}
+		//cpxAdType = 0;
+		cpxInfo.edit().clear().commit();
+		if (cpxAdType == 301) {
+
+			FlurryAgent.logEvent("CPI");
+			cpxView.setVisibility(View.VISIBLE);
+			
+			// Send CPX Log
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+			if (this.checkIsAppInstalled(cpxPackageName)) {
+				cpxHistoryFlag = true;
+				// App Installed Send act=4 to server
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
+			} else {
+				cpxHistoryFlag = false;
+				// Process CPI
+				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");	
+			}
+		}else if(cpxAdType == 303){
+			FlurryAgent.logEvent("CPA");
+			cpxView.setVisibility(View.VISIBLE);
+			
+			SharedPreferences.Editor cpxInfoEditor;
+			cpxInfoEditor = cpxInfo.edit();
+
+			cpxInfoEditor.putInt("adId", cpxAdId);
+			cpxInfoEditor.commit();
+			
+			// Send CPX Log
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+
+			//get phone number
+			String mobile;
+			try {
+				TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+				mobile =phoneMgr.getLine1Number().toString();
+				mobile = mobile.replace("+82", "0");
+			} catch(Exception e) {
+				mobile = "010test0000";
+			}
+			
+			new CheckCPA().execute(cpxConfirmUrl + "?mobile=" + mobile);
+		} else if (cpxAdType == 305) {
+			FlurryAgent.logEvent("CPS");
+			cpxView.setVisibility(View.VISIBLE);
+			
+			SharedPreferences.Editor cpxInfoEditor;
+			cpxInfoEditor = cpxInfo.edit();
+
+			cpxInfoEditor.putInt("adId", cpxAdId);
+			cpxInfoEditor.commit();
+			
+			// Send CPX Log
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
+			
+			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
+					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
+		} else {
+			
+			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
+			boolean goMyDownload = cpxInstallInfo.getBoolean("cpxGoMyDownload", false);
+			
+			cpxView.setVisibility(View.GONE);			
+			
+			if (goMyDownload == true) {
+				// Save to DB and JUMP to HomwDownload activity
+				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
+				startActivity(intent);
+			} 
+		}
 	}
+	
 	public class StudyHomePagerAdapter extends PagerAdapter{
 		private LayoutInflater mInflater;
 		
@@ -427,164 +609,144 @@ public class StudyHome extends Activity {
 				case R.id.study_home_category_week:
 					studyInfoEdit.putInt("currentPeriod", 1);
 					studyInfoEdit.commit();
+					switch(categoryPager.getCurrentItem() % 4){
+						case 0:
+							if(rankingItemArray_basicWeek.isEmpty()){
+	    						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								1+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicWeek);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[0]);
+	    						myScore.setText(myScoreArray[0]);
+	    					}
+							break;
+						case 1:
+							if(rankingItemArray_middleWeek.isEmpty()){
+	    						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								2+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleWeek);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[1]);
+	    						myScore.setText(myScoreArray[1]);
+	    					}
+							break;
+						case 2:
+							if(rankingItemArray_highWeek.isEmpty()){
+	    						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								3+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highWeek);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[2]);
+	    						myScore.setText(myScoreArray[2]);
+	    					}
+							break;
+						case 3:
+							if(rankingItemArray_toeicWeek.isEmpty()){
+	    						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								4+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicWeek);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[3]);
+	    						myScore.setText(myScoreArray[3]);
+	    					}
+							break;
+					}
 					
-					rankingList.setAdapter(rankingListAdapterWeek);
-					myRank.setText(myRankInfo.getString("weekRank", "null"));
-					myScore.setText(myRankInfo.getString("weekScore", "null"));
 					break;
 				case R.id.study_home_category_month:
 					studyInfoEdit.putInt("currentPeriod", 2);
 					studyInfoEdit.commit();
+					switch(categoryPager.getCurrentItem() % 4){
+						case 0:
+	    					if(rankingItemArray_basicMonth.isEmpty()){
+	    						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								1+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicMonth);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[4]);
+	    						myScore.setText(myScoreArray[4]);
+	    					}
+							break;
+						case 1:
+	    					if(rankingItemArray_middleMonth.isEmpty()){
+	    						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								2+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleMonth);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[5]);
+	    						myScore.setText(myScoreArray[5]);
+	    					}
+							break;
+						case 2:
+	    					if(rankingItemArray_highMonth.isEmpty()){
+	    						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								3+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highMonth);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[6]);
+	    						myScore.setText(myScoreArray[6]);
+	    					}
+							break;
+						case 3:
+	    					if(rankingItemArray_toeicMonth.isEmpty()){
+	    						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+	    								4+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    					}
+	    					else{
+	    						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicMonth);
+	    						rankingList.setAdapter(rankingListAdapter);
+	    						myRank.setText(myRankArray[7]);
+	    						myScore.setText(myScoreArray[7]);
+	    					}
+							break;
+					}
 					
-					rankingList.setAdapter(rankingListAdapterMonth);
-					myRank.setText(myRankInfo.getString("monthRank", "null"));
-					myScore.setText(myRankInfo.getString("monthScore", "null"));
 					break;
 				}
 				categoryPager.getAdapter().notifyDataSetChanged();
 			}
 		};
-	}
+	}	
+	
+	
+	
 	public void goLeft(View v){
 		Log.i("STEVEN", "go left");
-		categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1);
+		categoryPager.setCurrentItem(categoryPager.getCurrentItem()+1, true);
 		Log.i("STEVEN", "go left done");
 	}
 	public void goRight(View v){
 		Log.i("STEVEN", "go right");
-		categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1);
+		categoryPager.setCurrentItem(categoryPager.getCurrentItem()-1, true);
 		Log.i("STEVEN", "go right done");
 	}
 	
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-
-
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
-		// Facebook Logout
-		Session session = Session.getActiveSession();
-		if (session != null) {
-			if (!session.isClosed()) {
-				session.closeAndClearTokenInformation();
-				//clear your preferences if saved
-			}
-		} else {
-			session = new Session(getApplicationContext());
-			Session.setActiveSession(session);
-
-			session.closeAndClearTokenInformation();
-			//clear your preferences if saved
-		}
-
-		Log.e("STEVEN", "ON RESUME GETINFO!");
-
-
+	/*@Override
+	public void onRestart(){
+		super.onRestart();
 		//if current page is not current category setting, get different between two and change page
 		if(categoryPager.getCurrentItem() % 4 != (studyInfo.getInt("currentCategory", 1) - 1)){
 			int different = categoryPager.getCurrentItem() % 4 - (studyInfo.getInt("currentCategory", 1) - 1);
 			categoryPager.setCurrentItem(categoryPager.getCurrentItem() - different, false);
 		}
-		Log.i("STEVEN", "478");
-		//getInfo();
-		
-		//pagerAdapter.notifyDataSetChanged();
-		// Get CPX Info onResume
-
-		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
-
-		cpxAdId = cpxInfo.getInt("adId", 0);
-		cpxAdType = cpxInfo.getInt("adType", 0);	
-		cpxAdImageUrl = cpxInfo.getString("adImageUrl", "");
-		cpxAdText = cpxInfo.getString("adText", "");
-		cpxTargetUrl = cpxInfo.getString("targetUrl", "");
-		cpxPackageName = cpxInfo.getString("packageName", "");
-		cpxConfirmUrl = cpxInfo.getString("confirmUrl", "");
-		cpxReward = cpxInfo.getString("reward", "0");
-		cpxPoint = cpxInfo.getString("point", "0");
-		cpxQuestionCount = cpxInfo.getInt("questionCount", 0);
-		
-		// Download CPX Image and update UI
-		if(cpxAdType != 0){
-			Log.i("STEVEN", "download image task called");
-			if(cpxReward.equals("0") || cpxReward.equals("null")){
-				cpxAdInfoTitle.setBackgroundResource(R.drawable.test_27_image_pointinfotitle);
-			}
-			new DownloadImageTask().execute(cpxAdImageUrl);
+		else{
+			getInfo();
 		}
-		//cpxAdType = 0;
-		cpxInfo.edit().clear().commit();
-		if (cpxAdType == 301) {
-
-			FlurryAgent.logEvent("CPI");
-			cpxView.setVisibility(View.VISIBLE);
-			
-			// Send CPX Log
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
-			if (this.checkIsAppInstalled(cpxPackageName)) {
-				cpxHistoryFlag = true;
-				// App Installed Send act=4 to server
-				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=4");
-			} else {
-				cpxHistoryFlag = false;
-				// Process CPI
-				new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-						"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");	
-			}
-		}else if(cpxAdType == 303){
-			FlurryAgent.logEvent("CPA");
-			cpxView.setVisibility(View.VISIBLE);
-			
-			SharedPreferences.Editor cpxInfoEditor;
-			cpxInfoEditor = cpxInfo.edit();
-
-			cpxInfoEditor.putInt("adId", cpxAdId);
-			cpxInfoEditor.commit();
-			
-			// Send CPX Log
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
-
-			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
-			String mobile =phoneMgr.getLine1Number().toString();
-			
-			new CheckCPA().execute(cpxConfirmUrl + "?mobile=" + mobile);
-		} else if (cpxAdType == 305) {
-			FlurryAgent.logEvent("CPS");
-			cpxView.setVisibility(View.VISIBLE);
-			
-			SharedPreferences.Editor cpxInfoEditor;
-			cpxInfoEditor = cpxInfo.edit();
-
-			cpxInfoEditor.putInt("adId", cpxAdId);
-			cpxInfoEditor.commit();
-			
-			// Send CPX Log
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=1");
-			
-			new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+cpxAdId+
-					"&ad_type=" + cpxAdType +"&user_id=" + userId + "&act=2");
-		} else {
-			
-			SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
-			boolean goMyDownload = cpxInstallInfo.getBoolean("cpxGoMyDownload", false);
-			
-			cpxView.setVisibility(View.GONE);			
-			
-			if (goMyDownload == true) {
-				// Save to DB and JUMP to HomwDownload activity
-				Intent intent = new Intent(getApplicationContext(), HomeDownload.class);
-				startActivity(intent);
-			} 
-		
-		}
-		
-		
-	}
+	}*/
 	// ******************** CPA signed up Check *************************
 		private class CheckCPA extends AsyncTask<String, Void, JSONObject> {
 			@Override
@@ -709,12 +871,23 @@ public class StudyHome extends Activity {
 		period = studyInfo.getInt("currentPeriod", 1);
 		
 		Log.e("STEVEN", "current category is " + category + "and period is " + period);
+		
+		//clear every list
+		rankingItemArray_basicWeek.clear();
+		rankingItemArray_basicMonth.clear();
+		rankingItemArray_middleWeek.clear();
+		rankingItemArray_middleMonth.clear();
+		rankingItemArray_highWeek.clear();
+		rankingItemArray_highMonth.clear();
+		rankingItemArray_toeicWeek.clear();
+		rankingItemArray_toeicMonth.clear();
+		
 		//get weekly, monthly rank
-		new GetRankWeek().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-					category+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+		new GetRank(category).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+				category+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
 		Log.e("STEVEN", "609");
-		new GetRankMonth().execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-				category+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+		/*new GetRank(category + 4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+				category+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));*/
 	}
 
 	class RankingListItem{
@@ -805,13 +978,16 @@ public class StudyHome extends Activity {
 				fraction.setTextColor(Color.parseColor("#000000"));
 				fraction.setText(arSrc.get(position).fraction+getResources().getString(R.string.home_list_score_string));
 			}
-
 			return convertView;
 		}
 	}
 
-
-	private class GetRankWeek extends AsyncTask<String, Void, JSONObject> {
+	private class GetRank extends AsyncTask<String, Void, JSONObject> {
+		int category_period;
+		
+		public GetRank(int input){
+			category_period = input;
+		}
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -845,26 +1021,114 @@ public class StudyHome extends Activity {
 
 			try {
 				if	(result.getBoolean("status")==true) {
-
-					rankingItemArrayWeek.clear();
 					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
-					for(int i=0;i<6;i++) {
-						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
-								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
-						rankingItemArrayWeek.add(rankingItem);
-					}	
-					SharedPreferences.Editor myRankInfoEdit = myRankInfo.edit();
-					myRankInfoEdit.putString("weekRank", result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-					myRankInfoEdit.putString("weekScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
-					myRankInfoEdit.commit();
-
-					rankingListAdapterWeek = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayWeek);
-
-					if(studyInfo.getInt("currentPeriod", 1) == 1){
-						rankingList.setAdapter(rankingListAdapterWeek);
-						myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-						myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
-					}
+					
+					switch(category_period){
+					case 1:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_basicWeek.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicWeek);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[0] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[0] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[0]);
+						myScore.setText(myScoreArray[0]);
+						break;
+					case 2:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_middleWeek.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleWeek);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[1] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[1] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[1]);
+						myScore.setText(myScoreArray[1]);
+						break;
+					case 3:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_highWeek.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highWeek);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[2] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[2] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[2]);
+						myScore.setText(myScoreArray[2]);
+						break;
+					case 4:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_toeicWeek.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicWeek);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[3] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[3] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[3]);
+						myScore.setText(myScoreArray[3]);
+						break;
+					case 5:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_basicMonth.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_basicMonth);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[4] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[4] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[4]);
+						myScore.setText(myScoreArray[4]);
+						break;
+					case 6: 
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_middleMonth.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_middleMonth);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[5] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[5] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[5]);
+						myScore.setText(myScoreArray[5]);
+						break;
+					case 7:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_highMonth.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_highMonth);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[6] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[6] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[6]);
+						myScore.setText(myScoreArray[6]);
+						break;
+					case 8:
+						for(int i=0; i<6; i++) {
+							rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
+									jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
+							rankingItemArray_toeicMonth.add(rankingItem);
+						}	
+						rankingListAdapter = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArray_toeicMonth);
+						rankingList.setAdapter(rankingListAdapter);
+						myRankArray[7] = result.getJSONObject("data").getJSONObject("mine").getString("rank");
+						myScoreArray[7] = result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string);
+						myRank.setText(myRankArray[7]);
+						myScore.setText(myScoreArray[7]);
+						break;
+					}					
 					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"), myImage);
 					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
 				}
@@ -874,70 +1138,6 @@ public class StudyHome extends Activity {
 			}
 		}
 	}	
-	private class GetRankMonth extends AsyncTask<String, Void, JSONObject> {
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try
-			{
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL);
-				HttpResponse httpResponse = httpClient.execute(httpGet);
-				HttpEntity resEntity = httpResponse.getEntity();
-
-				if (resEntity != null)
-				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			return result;
-
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject result) 
-		{
-
-			try {
-				if	(result.getBoolean("status")==true) {
-					rankingItemArrayMonth.clear();
-					JSONArray jsonArray = result.getJSONObject("data").getJSONArray("score");
-					for(int i=0;i<6;i++) {
-						rankingItem = new RankingListItem(jsonArray.getJSONObject(i).getString("rank"),
-								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),jsonArray.getJSONObject(i).getString("score"));
-						rankingItemArrayMonth.add(rankingItem);
-					}	
-					SharedPreferences.Editor myRankInfoEdit = myRankInfo.edit();
-					myRankInfoEdit.putString("monthRank", result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-					myRankInfoEdit.putString("monthScore", result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
-					myRankInfoEdit.commit();
-
-					rankingListAdapterMonth = new RankingListAdapter(StudyHome.this,R.layout.home_rank_list_item_view, rankingItemArrayMonth);
-					
-					if(studyInfo.getInt("currentPeriod", 1) == 2){
-						rankingList.setAdapter(rankingListAdapterMonth);
-						myRank.setText(result.getJSONObject("data").getJSONObject("mine").getString("rank"));
-						myScore.setText(result.getJSONObject("data").getJSONObject("mine").getString("score")+getResources().getString(R.string.home_list_score_string));
-					}
-					
-					setRankImage(result.getJSONObject("data").getJSONObject("mine").getString("image"),myImage);
-					myName.setText(result.getJSONObject("data").getJSONObject("mine").getString("name"));
-					
-				}
-
-			} catch (Exception e) {
-
-			}
-		}
-	}
 	
 	public void setRankImage(String imageID,ImageView mRankImage)
 	{		
@@ -982,37 +1182,46 @@ public class StudyHome extends Activity {
 	// Sidebar Menu Callback
 	public void slideMenuBtnCB(View v) {
 		if (isOnSlide == false) {
-
 			FlurryAgent.logEvent("Slide Button Clicked (On)");
-			isOnSlide = true;
-
-			float density = getResources().getDisplayMetrics().density;
-			ObjectAnimator slideAni;
-			LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
-			slideAni = ObjectAnimator.ofFloat(rl, "x",0*density, (173/2)*density);
-
-			slideAni.addListener(mAnimationListener);
-
-			slideAni.setDuration(300);
-			slideAni.start();
+			slideOn();
 		} else {
-
 			FlurryAgent.logEvent("Slide Button Clicked (Off)");
-			isOnSlide = false;
-
-			float density = getResources().getDisplayMetrics().density;
-			ObjectAnimator slideAni;
-			LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
-			slideAni = ObjectAnimator.ofFloat(rl, "x", (173/2)*density,0*density);
-
-			slideAni.addListener(mAnimationListener);
-
-			slideAni.setDuration(300);
-			slideAni.start();
+			slideOff();
 		}
-
 	}
+	public void otherSide(View v){
+		slideOff();
+	}
+	public void slideOn(){
+		isOnSlide = true;
+		otherSideView.setVisibility(View.VISIBLE);
 
+		float density = getResources().getDisplayMetrics().density;
+		
+		ObjectAnimator slideAni;
+		LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
+		slideAni = ObjectAnimator.ofFloat(rl, "x",0*density, (173/2)*density);
+
+		slideAni.addListener(mAnimationListener);
+
+		slideAni.setDuration(300);
+		slideAni.start();
+	}
+	public void slideOff(){
+		isOnSlide = false;
+		otherSideView.setVisibility(View.GONE);
+
+		float density = getResources().getDisplayMetrics().density;
+		
+		ObjectAnimator slideAni;
+		LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
+		slideAni = ObjectAnimator.ofFloat(rl, "x", (173/2)*density,0*density);
+
+		slideAni.addListener(mAnimationListener);
+
+		slideAni.setDuration(300);
+		slideAni.start();
+	}
 	//--- request class ---
 	private class GetKakao extends AsyncTask<String, Void, JSONObject> 
 	{
@@ -1126,7 +1335,7 @@ public class StudyHome extends Activity {
 				Log.i("STEVEN", "just before pop");
 				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				Log.i("STEVNE", "just before drop down");
-				popupWindow.showAsDropDown(rankingList);
+				popupWindow.showAsDropDown(null);
 			} catch (Exception e) {
 
 				Log.e("STEVEN", "app version check and notice something wrong");
@@ -1194,7 +1403,7 @@ public class StudyHome extends Activity {
 				// App Installed 
 				cpxPopupText.setText(R.string.cpi_popup_text);
 				cpxPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-				cpxPopupWindow.showAsDropDown(rankingList);
+				cpxPopupWindow.showAsDropDown(null);
 			} else {
 				// Process CPI
 				try {
@@ -1220,7 +1429,7 @@ public class StudyHome extends Activity {
 				// already signed up
 				cpxPopupText.setText(R.string.cpa_popup_text);
 				cpxPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-				cpxPopupWindow.showAsDropDown(rankingList);
+				cpxPopupWindow.showAsDropDown(null);
 			}else{
 				SharedPreferences cpxSInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 				SharedPreferences.Editor cpxInstallInfoEditor = cpxSInstallInfo.edit();
@@ -1262,6 +1471,7 @@ public class StudyHome extends Activity {
 
 	public void kakaoInvitefriend(View v)throws NameNotFoundException
 	{
+		slideOff();
 		KakaoLink kakaoLink = KakaoLink.getLink(getApplicationContext());
 
 		// check, intent is available.
@@ -1305,18 +1515,8 @@ public class StudyHome extends Activity {
 				cpxView.setVisibility(View.GONE);
 			}
 			if(isOnSlide == true){
-				FlurryAgent.logEvent("Slide Button Clicked (Off)");
-				isOnSlide = false;
-
-				float density = getResources().getDisplayMetrics().density;
-				ObjectAnimator slideAni;
-				LinearLayout rl = (LinearLayout)findViewById(R.id.frag_home_rela_id);
-				slideAni = ObjectAnimator.ofFloat(rl, "x", (173/2)*density,0*density);
-
-				slideAni.addListener(mAnimationListener);
-
-				slideAni.setDuration(300);
-				slideAni.start();
+				FlurryAgent.logEvent("Back Btn slide off");
+				slideOff();
 			}
 			else{
 				final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
@@ -1383,7 +1583,7 @@ public class StudyHome extends Activity {
 				popupText.setText(noticeList.get(0));
 				noticeList.remove(0);
 				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-				popupWindow.showAsDropDown(rankingList);
+				popupWindow.showAsDropDown(null);
 			}
 			cpxPopupWindow.dismiss();
 			cpxView.setVisibility(View.GONE);
@@ -1515,5 +1715,59 @@ public class StudyHome extends Activity {
 	        // Ignore received duration, use fixed one instead
 	        super.startScroll(startX, startY, dx, dy, mDuration);
 	    }
+	}
+	public class EdgeSwipe implements OnTouchListener{
+		
+	    private final GestureDetector gestureDetector = new GestureDetector(new GestureListener());
+
+		@Override
+		public boolean onTouch(final View view, final MotionEvent motionEvent) {
+			// TODO Auto-generated method stub
+			return gestureDetector.onTouchEvent(motionEvent);
+		}
+		private final class GestureListener extends SimpleOnGestureListener {
+
+	        private static final int SWIPE_THRESHOLD = 100;
+	        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+	        @Override
+	        public boolean onDown(MotionEvent e) {
+	        	Log.i("STEVEN", "onDown " + String.valueOf(e.getX()));
+	            return true;
+	        }
+
+	        @Override
+	        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	        	Log.i("STEVEN", "onFling");
+	            boolean result = false;
+	            try {
+	                float diffY = e2.getY() - e1.getY();
+	                float diffX = e2.getX() - e1.getX();
+		        	Log.i("STEVEN", String.valueOf(diffX));
+		        	Log.i("STEVEN", "e1.getX() = " + String.valueOf(e1.getX()) + "   5.0f = "+ 50f);
+	                if(e1.getX() < 50f){
+			        	Log.i("STEVEN", "Edge Left");
+	                	 if (Math.abs(diffX) > Math.abs(diffY)) {
+	                         if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+	     			        	Log.i("STEVEN", "SWIPE_THERSHOLD");
+	                             if (diffX > 0) {
+	                                 onSwipeRight();
+	                             }
+	                         }
+	                	 }
+	                }
+	            } catch (Exception exception) {
+	                exception.printStackTrace();
+	            }
+	            return result;
+	        }
+	    }
+
+	    public void onSwipeRight() {
+			if (isOnSlide == false) {
+				FlurryAgent.logEvent("StudyHome Edge Slide(On)");
+				slideOn();
+			}
+	    }	
 	}
 }
