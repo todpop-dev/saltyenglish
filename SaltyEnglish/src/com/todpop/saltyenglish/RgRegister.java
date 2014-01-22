@@ -527,6 +527,22 @@ public class RgRegister extends Activity {
 						popupText.setText(R.string.rg_register_facebook_duplicate);
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						popupWindow.showAsDropDown(rgCheckbox);
+						
+	        		    Session session = Session.getActiveSession();
+	        		    if (session != null) {
+
+	        		        if (!session.isClosed()) {
+	        		            session.closeAndClearTokenInformation();
+	        		            //clear your preferences if saved
+	        		        }
+	        		    } else {
+
+	        		        session = new Session(getApplicationContext());
+	        		        Session.setActiveSession(session);
+
+	        		        session.closeAndClearTokenInformation();
+	        		            //clear your preferences if saved
+	        		    }
 					}
 				} else {
 					// Should never be here TODO: Popup
@@ -543,7 +559,7 @@ public class RgRegister extends Activity {
     protected void onResume() 
     {
         super.onResume();
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
         uiHelper.onResume();
     }
     

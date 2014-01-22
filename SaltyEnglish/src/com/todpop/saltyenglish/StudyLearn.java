@@ -1,10 +1,5 @@
 package com.todpop.saltyenglish;
 
-
-
-
-
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -879,7 +874,7 @@ public class StudyLearn extends FragmentActivity {
 	public void onResume() 
 	{
 		super.onResume();
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 	}
 	
 	@Override

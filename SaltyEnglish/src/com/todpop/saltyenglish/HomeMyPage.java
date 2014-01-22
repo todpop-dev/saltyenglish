@@ -140,7 +140,7 @@ public class HomeMyPage extends FragmentActivity {
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		new CheckCharater().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/character.json");
 		
 		

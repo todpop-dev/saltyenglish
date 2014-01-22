@@ -41,7 +41,7 @@ public class HomeMore extends Activity {
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		new CheckPw().execute("http://todpop.co.kr/api/users/"+rgInfo.getString("mem_id", "NO")+"/is_set_facebook_password.json");
 		
 		

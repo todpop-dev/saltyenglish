@@ -13,10 +13,11 @@
     <string name="title_activity_rg_register_finish">RgRegisterFinish</string>
     <string name="popup_nickname_no">중복된 닉네임이 있어요. </string>
     <string name="popup_nickname_no_blank">빈칸은 사용할 수 없어요</string>
+    <string name="popup_nickname_no_backslash">"\\" 혹은 요상한 문자는 사용할 수 없어요</string>
     <string name="popup_nickname_reserved">사용할 수 없어요 (예약된 닉네임)</string>
     <string name="popup_recom_no">추천인 닉네임이 잘못되었어요</string>
     <string name="popup_email_pwd_wrong">이메일 혹은 패스워드를 확인해 주세요</string>
-    <string name="app_id">539574922799801</string>
+    <string name="app_id">218233231697811</string>
     <string name="popup_email_format_wrong">잘못된 이메일 포맷입니다</string>
     <string name="popup_pwd_check_wrong">비밀번호가 일치하지 않아요</string>
     <string name="popup_pwd_length_wrong">비밀번호는 6자리 이상으로 입력하세요</string>
@@ -51,6 +52,7 @@
     <string name="title_activity_study_bigin">StudyBigin</string>
     <string name="title_activity_study_test_finish">StudyTestFinish</string>
     <string name="title_activity_home_store">HomeStore</string>
+    <string name="title_activity_home_store_purchase">HomeStorePurchase</string>
     <string name="title_activity_home_more">HomeMore</string>
     <string name="title_activity_home_more_setting">HomeMoreSetting</string>
     <string name="title_activity_home_more_help">HomeMoreHelp</string>
@@ -238,6 +240,16 @@
     <string name="home_download_dialog_check">적립확인</string>
     <string name="home_download_install_confirmed">어플리케이션 설치 확인 및 적립이 완료되었습니다.</string>
     <string name="home_download_action_confirmed">내역 확인 및 적립이 완료되었습니다.</string>
+    <string name="home_download_crosswalk_success">추가 랭킹포인트가 지급되었습니다.</string>
+    <string name="home_download_crosswalk_error">추가 랭킹포인트 지급 과정에 문제가 생겼습니다.\n 해당 증상이 계속될 경우 smile@todpop.co.kr로 문의해 주세요.</string>
+    <string name="home_download_crosswalk_error_002">에러 발생!\n유효하지 않은 계정입니다.</string>
+    <string name="home_download_crosswalk_error_003">에러 발생!\n잘못된 publish key입니다.</string>
+    <string name="home_download_crosswalk_error_004">에러 발생!\n유효하지 않은 publish key 입니다.</string>
+    <string name="home_download_crosswalk_error_005">에러 발생!\n잘못된 접근입니다.</string>
+    <string name="home_download_crosswalk_error_006">에러 발생!\n유효하지 않은 광고입니다.</string>
+    <string name="home_download_crosswalk_error_007">에러 발생!\n참여 가능한 광고가 없습니다.</string>
+    <string name="home_download_crosswalk_error_010">에러 발생!\n이미 참여한 광고입니다.</string>
+    <string name="home_download_crosswalk_error_011">에러 발생!\n현재 종료된 광고입니다.</string>
     <string name="cpi_install_notification">[짭짤한영어] 내 다운로드함에서 적립확인을 받으셔야 적립이 완료됩니다.</string>
     <string name="cpa_install_notice">사용 중이신 휴대전화와 동일한 번호로 회원가입을 완료하셔야 적립이 가능합니다.</string>
     <string name="home_more_help_info">[짭짤한 영어]\nE-mail = smile@todpop.co.kr\nTel. 070-4814-4688\n\n(주)토드팝</string>
@@ -266,5 +278,9 @@
     <string name="rg_register_provision_CPS_9_1">제휴사의 이메일 발송 및 TM, 문자서비스 등을 활용한 제품 및 서비스 마케팅 활동</string>
     <string name="rg_register_provision_CPS_9_2">이름, 성별, 이메일, 관심사, 전화번호, 회원가입일, 설문조사 내용</string>
     <string name="rg_register_provision_CPS_9_3">회원 탈퇴시 까지</string>
-
+    <string name="popup_view_home_store_purchase_done">상품구매가 완료되었습니다!\n[내페이지 - 주머니 - 구매함]에\n저장되었습니다</string>
+    <string name="temp_list_angel_info">-교환 유효기간은 발행일로부터 60일입니다.\n-본 쿠폰은 타 쿠폰(모바일쿠폰, 제품교환권 포함)과 중복사용이 불가합니다.\n-본 쿠폰을 사용하실 때 추가할인, 포인트적립 및 할인카드 적용이 되지 않습니다.\n-추가금을 내시더라도 다른 제품으로 교환 및 사이즈 업그레이드는 되지 않습니다.\n-수신인에게 동일 상품을 여러개 보낼 경우 기프티콘은 1개만 다운로드 받으시면 되며, 교환시에는 단품(한개씩)으로는 교환불가능합니다.\n\n[교환시 유의사항]\n-전 점포 사용가능합니다.\n-단, 특설매장(휴게소 및 리조트, 일부 Take out점, 위락시설 內 등)은 사용이 제한됩니다.</string>
+	<string name="not_enough_reward">장학금이 부족합니다.</string>
+	<string name="home_purchased_detail_info_null">상세설명이 없습니다.</string>
+	<string name="temp_search_being_prepare">검색 기능은 준비중입니다.</string>
 </resources>

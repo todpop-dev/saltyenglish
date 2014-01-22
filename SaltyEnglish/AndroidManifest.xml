@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
-    android:versionCode="14"
-    android:versionName="1.2.7" >
+    android:versionCode="15"
+    android:versionName="1.2.9" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -133,6 +133,11 @@
         <activity
             android:name="com.todpop.saltyenglish.HomeStore"
             android:label="@string/title_activity_home_store"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeStorePurchase"
+            android:label="@string/title_activity_home_store_purchase"
             android:screenOrientation="portrait" >
         </activity>
         <activity

@@ -91,7 +91,7 @@ public class HomeMoreAcountInfo extends Activity {
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		isLogoutBtn = false;
 		isDeleteAccountBtn = false;
 		isSetPwBtn = false;
@@ -161,7 +161,7 @@ public class HomeMoreAcountInfo extends Activity {
 			settingsEditor.putString("isLogin","NO");
 			settingsEditor.putString("loginType", "NO");
 			settingsEditor.commit();
-
+			/*
 			Session session = Session.getActiveSession();
 			if (session != null) {
 				if (!session.isClosed()) {
@@ -174,7 +174,7 @@ public class HomeMoreAcountInfo extends Activity {
 
 				session.closeAndClearTokenInformation();
 				//clear your preferences if saved
-			}
+			}*/
 
 			Intent intent = new Intent();
 			intent.setClass(HomeMoreAcountInfo.this, MainActivity.class);    

@@ -193,7 +193,7 @@ public class HomeWordList extends Activity {
     {
         super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 		cardAni.setDuration(500);
 		cardAni.start();
