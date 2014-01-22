@@ -2,79 +2,62 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <ImageView 
+
+    <ImageView
         android:id="@+id/home_store_list_item_id_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_width="52.5dp"
+        android:layout_height="52.5dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        />
-    
-    <TextView 
+        android:layout_marginLeft="10dp"
+        android:scaleType="fitCenter" />
+
+    <TextView
         android:id="@+id/home_store_list_item_id_name1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="13dp"
-        android:textColor="#000000"
-        android:textSize="18sp"
         android:layout_toRightOf="@id/home_store_list_item_id_item"
-        android:layout_alignParentTop="true"
-        />
-    
-    <TextView 
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/home_store_list_item_id_name2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_below="@id/home_store_list_item_id_name1"
-        android:textColor="#000000"
-        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/home_store_list_item_id_item"
-       />
-    
-    
-    
-    
-    
-    
-    
-    
+        android:textColor="#000000"
+        android:textSize="15sp" />
 
-    
-    <ImageView 
+    <ImageView
         android:id="@+id/home_store_list_item_id_coin_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="255.5dp"
-        android:src="@drawable/common_image_smallcoin"/>
-    
-    
-    <TextView 
+        android:src="@drawable/common_image_smallcoin" />
+
+    <TextView
         android:id="@+id/home_store_list_item_id_coins"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="15sp"
-        android:gravity="left"
-        android:layout_marginLeft="271.5dp"
         android:layout_centerVertical="true"
-        android:text="3,000"/>
-    
-    
-    
-    
-    <ImageView 
+        android:layout_marginLeft="271.5dp"
+        android:gravity="left"
+        android:text="3,000"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <ImageView
         android:id="@+id/indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="333dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/store_2_image_pinkarrow"/>
-    
-   
+        android:layout_marginLeft="333dp"
+        android:src="@drawable/store_2_image_pinkarrow" />
 
 </RelativeLayout>

@@ -93,13 +93,6 @@
                 android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
             </ListView>
 
-            <ImageView
-                android:id="@+id/homedownloal_id_nopci"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/store_41_image_nocpi"
-                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 

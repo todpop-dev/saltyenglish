@@ -1,5 +1,6 @@
 package com.todpop.saltyenglish;
 
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -18,10 +19,14 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,15 +38,17 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class HomeStore extends Activity {
-
+	RelativeLayout mainLayout;
+	
 	RadioButton eduationBtn;
 	RadioButton foodBtn;
 	RadioButton cafeBtn;
@@ -59,22 +66,35 @@ public class HomeStore extends Activity {
 	EditText refund_account_no;
 	EditText refund_password;
 	
-	
 	StoreListViewAdapter storeListViewAdapter;
 	ArrayList<StoreListViewItem> itemArray;
 	StoreListViewItem mStoreListItem;
 	ListView storeListView;
 	int count = 0;
+	String curReward;
 
 	RelativeLayout listItemView;
 	ScrollView refundView;
 
+	PopupWindow pwdPopupWindow;
+	View pwdPopupView;
+	TextView pwdPopupText;
+	
+	PopupWindow searchTempPopupWindow;
+	View searchTempPopupView;
+	TextView searchTempPopupText;
+	
 	SharedPreferences rgInfo;
+	SharedPreferences.Editor rgInfoEdit;
+	
+	ProgressBar loadingProgressBar;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_store);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
+		
+		mainLayout = (RelativeLayout)findViewById(R.id.home_store_id_mainLayout);
 		
 		eduationBtn = (RadioButton) findViewById(R.id.homestore_id_btn_education);
 		foodBtn = (RadioButton) findViewById(R.id.homestore_id_btn_food);
@@ -87,7 +107,17 @@ public class HomeStore extends Activity {
 		
 		listItemView = (RelativeLayout) findViewById(R.id.home_store_id_list_view);
 		refundView = (ScrollView) findViewById(R.id.home_store_id_refund_view);
-
+		
+		loadingProgressBar = (ProgressBar)findViewById(R.id.loadingProgressBar);
+		
+		pwdPopupView = View.inflate(this, R.layout.popup_view_home_more_acount_info, null);
+		pwdPopupWindow = new PopupWindow(pwdPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		pwdPopupText = (TextView)pwdPopupView.findViewById(R.id.popup_id_text);
+		
+		searchTempPopupView = View.inflate(this, R.layout.popup_view, null);
+		searchTempPopupWindow = new PopupWindow(searchTempPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		searchTempPopupText = (TextView)searchTempPopupView.findViewById(R.id.popup_id_text);
+		
 		eduationBtn.setOnClickListener(radio_listener);
 		foodBtn.setOnClickListener(radio_listener);
 		cafeBtn.setOnClickListener(radio_listener);
@@ -104,20 +134,19 @@ public class HomeStore extends Activity {
 		
 		itemArray = new ArrayList<StoreListViewItem>();
 		storeListView = (ListView) findViewById(R.id.homestore_id_listiew);
-		storeListView.setOnItemClickListener(listViewItemListener);
-		for (int i = 0; i < 20; i++) {
-			mStoreListItem = new StoreListViewItem(
-					R.drawable.store_33_image_dinosaur_on,
-					getString(R.string.home_store_prep), "", "");
-			itemArray.add(mStoreListItem);
-		}
+		storeListView.setOnItemClickListener(item_listener);
 
-		//should move to onClickListener homestore_id_btn_refund case. This function stays here for store's current reward amount.
-		new RefundCheck().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/refund_info.json");
-		
+		new AccessCheck().execute("http://todpop.co.kr/api/qpcon_coupons/can_shopping.json?user_id=" + rgInfo.getString("mem_id", "NO"));
+		//TODO get category list and add category id at GetCoupon
+		new GetCoupons().execute("http://todpop.co.kr/api/qpcon_coupons.json");
+
 		listItemView.setVisibility(View.VISIBLE);
 		storeListView.setVisibility(View.VISIBLE);
-		this.updateListView();
+	}
+	public void onResume(){
+		super.onResume();
+		//should move to onClickListener homestore_id_btn_refund case. This function stays here for store's current reward amount.
+		new RefundCheck().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/refund_info.json");
 	}
 
 	public void updateListView() {
@@ -126,19 +155,21 @@ public class HomeStore extends Activity {
 		storeListView.setAdapter(storeListViewAdapter);
 	}
 
-	OnItemClickListener listViewItemListener = new OnItemClickListener() {
-		public void onItemClick(AdapterView<?> parentView, View clickedView,
-				int position, long id) {
-			// String toastMessage =
-			// ((TextView)clickedView).getText().toString() +
-			// " is selected."+position;
-			String toastMessage = " is selected." + position;
-			Toast.makeText(getApplicationContext(), toastMessage,
-					Toast.LENGTH_SHORT).show();
-
+	OnItemClickListener item_listener = new OnItemClickListener(){
+		@Override
+		public void onItemClick(AdapterView<?> parentView, View clickedView, int position,
+				long id) {
+			StoreListViewItem item = (StoreListViewItem)parentView.getAdapter().getItem(position);
+			Intent intent = new Intent(getApplicationContext(), HomeStorePurchase.class);
+			intent.putExtra("productId", item.id);
+			intent.putExtra("title", item.title);
+			intent.putExtra("provider", item.provider);
+			intent.putExtra("price", item.price);
+			intent.putExtra("imgUrl", item.mSizeImg);
+			intent.putExtra("curReward", curReward);
+			startActivity(intent);
 		}
 	};
-
 	OnClickListener radio_listener = new OnClickListener() {
 		public void onClick(View v) {
 			switch (v.getId()) {
@@ -147,12 +178,6 @@ public class HomeStore extends Activity {
 				refundView.setVisibility(ScrollView.GONE);
 				count = 0;
 				itemArray.clear();
-				for (int i = 0; i < 20; i++) {
-					mStoreListItem = new StoreListViewItem(
-							R.drawable.store_33_image_dinosaur_on,
-							getString(R.string.home_store_prep), "", "");
-					itemArray.add(mStoreListItem);
-				}
 				updateListView();
 				break;
 			case R.id.homestore_id_btn_food:
@@ -160,16 +185,16 @@ public class HomeStore extends Activity {
 				refundView.setVisibility(ScrollView.GONE);
 				count = 0;
 				itemArray.clear();
-				for (int i = 0; i < 20; i++) {
-					mStoreListItem = new StoreListViewItem(
-							R.drawable.store_33_image_dinosaur_on,
-							getString(R.string.home_store_prep), "", "");
-					itemArray.add(mStoreListItem);
-				}
+				
 				updateListView();
 				break;
 			case R.id.homestore_id_btn_cafe:
+				listItemView.setVisibility(RelativeLayout.VISIBLE);
 				refundView.setVisibility(ScrollView.GONE);
+				count = 0;
+				itemArray.clear();
+				
+				updateListView();
 				break;
 			case R.id.homestore_id_btn_convenient:
 				refundView.setVisibility(ScrollView.GONE);
@@ -188,17 +213,21 @@ public class HomeStore extends Activity {
 	};
 
 	class StoreListViewItem {
-		StoreListViewItem(int aItem, String aName1, String aName2, String aCoin) {
-			item = aItem;
-			name1 = aName1;
-			name2 = aName2;
-			coin = aCoin;
+		StoreListViewItem(String aId, String aImg, String aTitle, String aProvider, String aPrice, String mImg) {
+			id = aId;
+			img = aImg;
+			title = aTitle;
+			provider = aProvider;
+			price = aPrice;
+			mSizeImg = mImg;
 		}
 
-		int item;
-		String name1;
-		String name2;
-		String coin;
+		String id;
+		String img;
+		String title;
+		String provider;
+		String price;
+		String mSizeImg;
 	}
 
 	class StoreListViewAdapter extends BaseAdapter {
@@ -220,8 +249,8 @@ public class HomeStore extends Activity {
 			return arSrc.size();
 		}
 
-		public String getItem(int position) {
-			return arSrc.get(position).name1;
+		public StoreListViewItem getItem(int position) {
+			return arSrc.get(position);
 		}
 
 		public long getItemId(int position) {
@@ -233,27 +262,33 @@ public class HomeStore extends Activity {
 			if (convertView == null) {
 				convertView = Inflater.inflate(layout, parent, false);
 			}
-			ImageView itemImg = (ImageView) convertView
-					.findViewById(R.id.home_store_list_item_id_item);
-			itemImg.setImageResource(arSrc.get(position).item);
 
 			TextView name1Text = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_name1);
-			name1Text.setText(arSrc.get(position).name1);
+			name1Text.setText(arSrc.get(position).title);
 
 			TextView name2Text = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_name2);
-			name2Text.setText(arSrc.get(position).name2);
+			name2Text.setText(arSrc.get(position).provider);
 			TextView coinText = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_coins);
-			coinText.setText(arSrc.get(position).coin);
-
+			coinText.setText(arSrc.get(position).price);
+			
+			ImageView itemImg = (ImageView) convertView
+					.findViewById(R.id.home_store_list_item_id_item);
+			
+			try {
+				// show The Image
+				new DownloadImageTask(itemImg).execute(arSrc.get(position).img);
+			} catch (Exception e) {
+				Log.i("STEVEN", "error catch on download img line 326");
+				e.printStackTrace();
+			} 
+			
 			if (count % 2 == 1) {
-				convertView
-						.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
+				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
 			} else {
-				convertView
-						.setBackgroundResource(R.drawable.store_2_image_separatebox_yellow);
+				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_yellow);
 			}
 			return convertView;
 		}
@@ -287,7 +322,7 @@ public class HomeStore extends Activity {
 
 			try {
 				if (json.getBoolean("status") == true) {
-					String curReward = json.getJSONObject("data").getString("current_reward");
+					curReward = json.getJSONObject("data").getString("current_reward");
 					store_main_curReward.setText(curReward);
 					refund_curReward.setText(curReward);
 					refund_notice.setText(json.getJSONObject("data").getString("content"));
@@ -383,9 +418,135 @@ public class HomeStore extends Activity {
 
 		}
 	}
+	
+	// --- request class ---
+	private class AccessCheck extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
 
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE ---- ", result.toString());
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			loadingProgressBar.setVisibility(View.GONE);
+			try {
+				if (json.getBoolean("status") == false) {
+					pwdPopupText.setText(json.getString("msg"));
+					pwdPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+					pwdPopupWindow.showAsDropDown(null);
+				} else {
+					Log.d("-----------------------", "Pwd is Set");
+				}
+				
+			} catch (Exception e) {
+
+			}
+
+		}
+	}	
+	
+	private class GetCoupons extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE ---- ", result.toString());
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			loadingProgressBar.setVisibility(View.GONE);
+			try {
+				if (json.getBoolean("status") == true) {
+					itemArray.clear();
+					JSONArray jsonArray = json.getJSONArray("data");
+					for(int i = 0; i < jsonArray.length(); i++){
+						mStoreListItem = new StoreListViewItem(
+								jsonArray.getJSONObject(i).getString("id"),
+								jsonArray.getJSONObject(i).getString("img_url_70"),
+								jsonArray.getJSONObject(i).getString("product_name"),
+								jsonArray.getJSONObject(i).getString("change_market_name"),
+								jsonArray.getJSONObject(i).getString("market_cost"),
+								jsonArray.getJSONObject(i).getString("img_url_150"));
+						itemArray.add(mStoreListItem);
+					}
+					updateListView();
+				} else {
+					Log.d("-----------------------", "get coupons something wrong");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+	
+	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		ImageView bmImage;
+
+		public DownloadImageTask(ImageView bmImage) {
+			this.bmImage = bmImage;
+		}
+		protected Bitmap doInBackground(String... urls) {
+			String urldisplay = urls[0];
+			Bitmap mIcon11 = null;
+			try {
+				InputStream in = new java.net.URL(urldisplay).openStream();
+				mIcon11 = BitmapFactory.decodeStream(in);
+				//Bitmap.createScaledBitmap(mIcon11, int dstWidth, int dstHeight, false);
+			} catch (Exception e) {
+				Log.e("Error", e.getMessage());
+				e.printStackTrace();
+			}
+			return mIcon11;
+		}
+
+		protected void onPostExecute(Bitmap result) {
+			bmImage.setImageBitmap(result);
+		}
+	}
+	
 	public void onClickBack(View view) {
 		finish();
+	}
+	public void onClickSearch(View view){
+		searchTempPopupText.setText(getResources().getString(R.string.temp_search_being_prepare));
+		searchTempPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+		searchTempPopupWindow.showAsDropDown(null);
+	}
+	public void closePopup(View view){
+		searchTempPopupWindow.dismiss();
 	}
 
 	public class MySpinnerAdapter extends ArrayAdapter<String> {
@@ -408,6 +569,10 @@ public class HomeStore extends Activity {
 		public int getCount() {
 			return super.getCount() - 1;
 		}
+	}
+	
+	public void confirmPopup(View view){
+		pwdPopupWindow.dismiss();
 	}
 	
 	public void onClickOk(View view){
