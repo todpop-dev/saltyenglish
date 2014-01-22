@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -17,8 +19,16 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
+import com.facebook.Request;
+import com.facebook.RequestAsyncTask;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -58,6 +68,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class StudyBegin extends FragmentActivity {
 	// popup view
@@ -89,7 +100,7 @@ public class StudyBegin extends FragmentActivity {
 	// Infomation for send CPD cound
 	static int adId;
 	static int adType;
-	static int couponId;
+	static String couponId;
 	static String userId;
 	static int adAct;
 	static int picNull;
@@ -118,6 +129,7 @@ public class StudyBegin extends FragmentActivity {
  	// CPD image view
  	static ImageView cpdView;
  	static Button cpdCoupon;
+ 	static Button cpdFbShare;
  	 	
  	SharedPreferences studyInfo;
  	
@@ -129,7 +141,18 @@ public class StudyBegin extends FragmentActivity {
  	
  	// Database
  	WordDBHelper mHelper;
-
+ 	
+	String reward;
+	String point;
+	String name;
+	String caption;
+	String description;
+	String link;
+	String picture;
+	
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private boolean pendingPublishReauthorization = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -153,13 +176,11 @@ public class StudyBegin extends FragmentActivity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
-
 		
 	 	// word change
 		word1 = (TextView)findViewById(R.id.study_word_tv);
 		word2 = (TextView)findViewById(R.id.study_word_pron_tv);
 		word3 = (TextView)findViewById(R.id.study_word_ex_tv);
-		
 
 		//page point
 		point1 = (ImageView)findViewById(R.id.studybigin_id_point1);
@@ -282,7 +303,7 @@ public class StudyBegin extends FragmentActivity {
 				case 10:
 					if(cpdLogSent == false){
 						Log.d("------- send info -----", "info");
-						new SendCPD_CouponDown_Info().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
+						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
 						cpdLogSent = true;
 					}
 					break;
@@ -398,14 +419,19 @@ public class StudyBegin extends FragmentActivity {
 				rootView = inflater.inflate(R.layout.fragment_study_begin_finish, container, false);
 				cpdView = (ImageView)rootView.findViewById(R.id.studyfinish_id_pop);
 				cpdCoupon = (Button)rootView.findViewById(R.id.studyfinish_id_coupon);
+				cpdFbShare = (Button)rootView.findViewById(R.id.studyfinish_id_facebook_share);
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
-				if(adType != 102){
-					FlurryAgent.logEvent("CPD (without Coupon)");
-					cpdCoupon.setVisibility(View.INVISIBLE);
+				if(adType == 102){
+					FlurryAgent.logEvent("CPD (Coupon)");
+					cpdCoupon.setVisibility(View.VISIBLE);
+				}
+				else if(adType == 103){
+					FlurryAgent.logEvent("CPD (Facebook)");
+					cpdFbShare.setVisibility(View.VISIBLE);
 				}
 				else{
-					FlurryAgent.logEvent("CPD (with Coupon)");
+					FlurryAgent.logEvent("CPD (none)");
 				}
 				
 				if (cpdFrontImage == null || cpdBackImage == null) {
@@ -845,12 +871,15 @@ public class StudyBegin extends FragmentActivity {
 					adId = cpdJsonObj.getInt("ad_id");
 					adType = cpdJsonObj.getInt("ad_type");
 					
-					try{
-						couponId = cpdJsonObj.getInt("coupon");
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-						
+					couponId = cpdJsonObj.getString("coupon");
+
+					reward = cpdJsonObj.getString("reward");
+					point = cpdJsonObj.getString("point");
+					name = cpdJsonObj.getString("name");
+					caption = cpdJsonObj.getString("caption");
+					description = cpdJsonObj.getString("description");
+					link = cpdJsonObj.getString("link");
+					picture = cpdJsonObj.getString("picture");
 					
 					try {
 						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
@@ -909,7 +938,7 @@ public class StudyBegin extends FragmentActivity {
 		}		
 	}
 	
-	private class SendCPD_CouponDown_Info extends AsyncTask<String, Void, JSONObject> 
+	private class SendLog extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;
 		@Override
@@ -955,6 +984,105 @@ public class StudyBegin extends FragmentActivity {
 			}
 		}		
 	}
+	
+	
+	/*
+	 * for facebook share
+	 */
+	public void publishAdBtn(View v) {
+		Session session = Session.getActiveSession();
+		if (session == null || session.isClosed()) {
+			Log.i("STEVEN", "publishAdBtn if");
+			Session.openActiveSession(this, true, callback);
+		} else {
+			Log.i("STEVEN", "publishAdBtn else");
+			publishAd();
+		}
+	}
+
+	public void publishAd() {
+		Session session = Session.getActiveSession();
+		List<String> permissions = session.getPermissions();
+		if (!isSubsetOf(PERMISSIONS, permissions)) {
+			Log.i("STEVEN", "line 1014");
+			pendingPublishReauthorization = true;
+			Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
+					this, PERMISSIONS);
+			session.requestNewPublishPermissions(newPermissionsRequest);
+			return;
+		} else {
+			Log.i("STEVEN", "line 1014");
+			Bundle postParams = new Bundle();
+			postParams.putString("link", link);
+			if(!name.equals("null"))
+				postParams.putString("name", name);
+			if(!caption.equals("null"))
+				postParams.putString("caption", caption);
+			if(!description.equals("null"))
+				postParams.putString("description", description);
+			if(!picture.equals("null"))
+				postParams.putString("picture", picture);
+
+			Request.Callback callback = new Request.Callback() {
+				public void onCompleted(Response response) {
+					JSONObject graphResponse = response.getGraphObject()
+							.getInnerJSONObject();
+					String postId = null;
+					try {
+						postId = graphResponse.getString("id");
+					} catch (JSONException e) {
+						Log.i("Facebook StudyTestFinish",
+								"JSON error " + e.getMessage());
+					}
+					FacebookRequestError error = response.getError();
+					if (error != null) {
+						Toast.makeText(getApplicationContext(),
+								error.getErrorMessage(), Toast.LENGTH_SHORT)
+								.show();
+					} else {
+						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);
+						Toast.makeText(getApplicationContext(), postId,
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			};
+
+			Request request = new Request(Session.getActiveSession(),
+					"me/feed", postParams, HttpMethod.POST, callback);
+
+			RequestAsyncTask task = new RequestAsyncTask(request);
+			task.execute();
+		}
+	}
+	private boolean isSubsetOf(Collection<String> subset,
+			Collection<String> superset) {
+		for (String string : subset) {
+			if (!superset.contains(string)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Session.StatusCallback callback = new Session.StatusCallback() {
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			onSessionStateChange(session, state, exception);
+		}
+	};
+
+	private void onSessionStateChange(Session session, SessionState state,
+			Exception exception) {
+		Log.i("STEVEN", "onSessionStateChange");
+		if (state.isOpened()) {
+			Log.i("STEVEN", "1079");
+			if(!pendingPublishReauthorization)
+				Log.i("STEVEN", "1081");
+				publishAd();
+		}
+	}
+	
 	//----button onClick----
 	
 	
@@ -970,7 +1098,7 @@ public class StudyBegin extends FragmentActivity {
 	public void showCouponPopView(View v)
 	{
 		FlurryAgent.logEvent("Coupon Get");
-		new SendCPD_CouponDown_Info().execute("http://todpop.co.kr/api/advertises/get_coupons.json?user_id=" + userId + "&coupon_id=" + couponId);
+		new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&coupon_id=" + couponId);
 		popupText.setText(R.string.study_finish_popup_text);
 		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		popupWindow.showAsDropDown(null);

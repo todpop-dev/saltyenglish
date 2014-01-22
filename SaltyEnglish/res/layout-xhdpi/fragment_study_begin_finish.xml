@@ -75,7 +75,18 @@
                 android:layout_above="@id/studyfinish_id_gotest"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/studyfinish_drawable_btn_coupon"
-                android:onClick="showCouponPopView" />
+                android:onClick="showCouponPopView" 
+                android:visibility="invisible"/>
+            
+            <Button
+                android:id="@+id/studyfinish_id_facebook_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/studyfinish_id_gotest"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/studytestfinish_drawable_btn_facebook_share"
+                android:onClick="publishAdBtn" 
+                android:visibility="invisible"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
