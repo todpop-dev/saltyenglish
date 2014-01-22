@@ -126,6 +126,11 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(checkNickname);
 		}
+		else if(tmpNickname.contains("\\")){
+			popupText.setText(R.string.popup_nickname_no_backslash);
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			popupWindow.showAsDropDown(checkNickname);
+		}
 		else if(tmpNickname.length()<3||tmpNickname.length()>8){
 			Log.e("RRE-string","1212");
 			rgInfoEdit.putString("nickname","no");

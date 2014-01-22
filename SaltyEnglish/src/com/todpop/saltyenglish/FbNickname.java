@@ -272,6 +272,10 @@ public class FbNickname extends Activity {
 				popupText.setText(R.string.popup_nickname_no_blank);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
+			else if(tmpNickname.contains("\\")){
+				popupText.setText(R.string.popup_nickname_no_backslash);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
 			else if(tmpNickname.length()<3||tmpNickname.length()>8){
 				popupText.setText(R.string.popup_nickname_length);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
@@ -437,7 +441,8 @@ public class FbNickname extends Activity {
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
+		/*
 		// Facebook Logout Forcely
 		Session session = Session.getActiveSession();
 		if (session != null) {
@@ -451,7 +456,7 @@ public class FbNickname extends Activity {
 
 			session.closeAndClearTokenInformation();
 			//clear your preferences if saved
-		}
+		}*/
 	}
 
 
