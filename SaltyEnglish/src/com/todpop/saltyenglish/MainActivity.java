@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
+
+import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -27,9 +29,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity 
 {
@@ -40,6 +46,8 @@ public class MainActivity extends Activity
 	SharedPreferences.Editor settingEdit;
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
+	
+	TextView totalReward;
 	
 	WordDBHelper mHelper;
 
@@ -55,15 +63,17 @@ public class MainActivity extends Activity
 		studyInfo = getSharedPreferences("studyInfo", 0);
 		studyInfoEdit = studyInfo.edit();
 		
-	
 		mHelper = new WordDBHelper(this);
 
-
+		totalReward = (TextView)findViewById(R.id.main_id_total_reward_amount);
+		new GetTotalRewardAPI().execute("http://todpop.co.kr/api/etc/show_service_stat.json");
+		
+		
 		//loading animation
-		ImageView rocketImage = (ImageView) findViewById(R.id.main_id_loading);
+		/*ImageView rocketImage = (ImageView) findViewById(R.id.main_id_loading);
 		rocketImage.setBackgroundResource(R.drawable.main_drawable_loading);
 		mainLoading = (AnimationDrawable) rocketImage.getBackground();
-		mainLoading.start();
+		mainLoading.start();*/
 
 		if(setting.getString("check","NO").equals("YES"))												// want to quit
 		{
@@ -72,17 +82,34 @@ public class MainActivity extends Activity
 
 			finish();
 		} else {
-			Log.d("[Register-1]","New service started");
-			
-			if(setting.getString("isLogin","NO").equals("YES")) {										// already logged in
-				// update user info (only level)
-				new SignInAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
-			} else {																					// not logged in yet
-				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
-				startActivity(intent);
-			}
-		}
+			Handler handler = new Handler();
+	        handler.postDelayed(new Runnable() {
+	        	@Override
+	            public void run() {
+	    			if(setting.getString("isLogin","NO").equals("YES")) {										// already logged in
+	    				// update user info (only level)
+	    				new SignInAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
+	    			} else {																					// not logged in yet
+	        		    Session session = Session.getActiveSession();
+	        		    if (session != null) {
+	        		        if (!session.isClosed()) {
+	        		            session.closeAndClearTokenInformation();
+	        		            //clear your preferences if saved
+	        		        }
+	        		    } else {
+	        		        session = new Session(getApplicationContext());
+	        		        Session.setActiveSession(session);
 
+	        		        session.closeAndClearTokenInformation();
+	        		            //clear your preferences if saved
+	        		    }
+	    				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
+	    				startActivity(intent);
+	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	    			}
+	            }
+	        }, 2000);
+		}
 		
 		// Force create Database
 		
@@ -156,6 +183,7 @@ public class MainActivity extends Activity
         			{
         				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
         				startActivity(intent);
+	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         			}
         		} else {
         			// something wrong (ex: user deleted) = logout
@@ -219,6 +247,7 @@ public class MainActivity extends Activity
 					
     				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
     				startActivity(intent);
+    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 				}
 				else
 				{
@@ -230,7 +259,50 @@ public class MainActivity extends Activity
 			}
 		}
 	}
-	
+	// -------------- get total reward amount from server ---------------------------------------------------------------
+
+	private class GetTotalRewardAPI extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try
+			{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					return result;
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getBoolean("status")) {
+					totalReward.setText(json.getString("total_reward_amount") + getResources().getString(R.string.testname8));
+				}
+				else
+				{
+				}
+				
+			} catch (Exception e) {
+
+			}
+		}
+	}
 
 	// --------------------------------------------------------------------------------------------------------------
 	
