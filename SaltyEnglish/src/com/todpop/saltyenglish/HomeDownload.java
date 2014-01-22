@@ -3,11 +3,18 @@ package com.todpop.saltyenglish;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -73,7 +80,6 @@ public class HomeDownload extends Activity {
 	RelativeLayout homeDownload;
 //	int couponCount = 0;
 
-	ImageView noCPIimage;
 
 	//popup
 	PopupWindow cpxPopupWindow;
@@ -87,7 +93,6 @@ public class HomeDownload extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_download);
 		homeDownload = (RelativeLayout)findViewById(R.id.home_download);
-		noCPIimage = (ImageView)findViewById(R.id.homedownloal_id_nopci);
 
 		//popupview
 		cpxPopupview = View.inflate(this, R.layout.popup_view, null);
@@ -115,23 +120,42 @@ public class HomeDownload extends Activity {
 		listener = new ResponseListener() {
 			@Override
 			public void OnResponse(CrossPromotionData data) {
-				Toast.makeText(HomeDownload.this,"±¤°í¸í "+ data.getCampaign_title(), Toast.LENGTH_LONG).show();
-				Toast.makeText(HomeDownload.this,"±¤°í ÀÎµ¦½º :  "+ data.getCampaign_index(), Toast.LENGTH_LONG).show();
-				Toast.makeText(HomeDownload.this,"uid : "+ data.getUid(), Toast.LENGTH_LONG).show();
-				
-				Log.d("tag", data.getReward());
+				pm.CloseSession();
+				Log.i("tag", data.getReward());
+				//Log.i("STEVEN", "data.getUid() = "+ data.getUid() + "    data.getCampaign_index() = " + data.getCampaign_index() + " data.getCampaign_title() = " + data.getCampaign_title());
+				//new SendCrossWalkLog(data.getUid(), data.getCampaign_index(), data.getCampaign_title()).execute("http://todpop.co.kr/api/advertises/set_crosswalk_log.json");
 			}
 		};
 		
 		errorListner = new ErrorListener() {
-			
 			@Override
 			public void OnErrorResponse(CrossPromotionError error) {
-				Log.d("errorcode", Integer.toString(error.getErrorCode()));
+				switch(error.getErrorCode()){
+				case 002:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_002);
+				case 003:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_003);
+				case 004:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_004);
+				case 005:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_005);
+				case 006:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_006);
+				case 007:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_007);
+				case 010:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_010);
+				case 011:
+					cpxPopupText.setText(R.string.home_download_crosswalk_error_011);
+				}
+				cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
+				cpxPopupWindow.showAsDropDown(null);
 			}
 		};
-		
-		pm = new PlaymobsAgent("testing", "691824", this,listener,errorListner);
+
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String userId = pref.getString("mem_id", "0");
+		pm = new PlaymobsAgent(userId, "691824", this,listener,errorListner);
 		
 		pm.setDefaultToast(true);
 	}
@@ -140,29 +164,12 @@ public class HomeDownload extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-		com.facebook.AppEventsLogger.activateApp(this, "539574922799801");
+		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		getList();
 		//cpiListViewAdapter.notifyDataSetChanged();
 		
 	}
 	
-	/*
-	OnClickListener radio_listener = new OnClickListener (){
-		public void onClick(View v) {
-			switch(v.getId())
-			{
-			case R.id.homedownload_id_btn_cpi:
-				cpiListView.setVisibility(RelativeLayout.VISIBLE);
-				couponListView.setVisibility(RelativeLayout.GONE);
-				break;
-			case R.id.homedownload_id_btn_coupon:
-				cpiListView.setVisibility(RelativeLayout.GONE);
-				couponListView.setVisibility(RelativeLayout.VISIBLE);
-				break;
-			}
-		}
-	};
-	 */
 
 	class CpiListViewItem 
 	{
@@ -295,93 +302,6 @@ public class HomeDownload extends Activity {
 		}
 	 
 	}
-	/*
-	private AlertDialog creatDialogBox(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.home_download_dialog_info);
-		builder.setPositiveButton(R.string.home_download_dialog_action, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}
-		})
-		.setNegativeButton(R.string.home_download_dialog_check, new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-		return builder.create();
-	}*/
-	
-	//class CouponListViewItem 
-	//{
-	//	CouponListViewItem(int aItem,String aName)
-	//	{
-	//		item = aItem;
-	//		name = aName;
-	//	}
-	//	int item;
-	//	String name;
-	//}
-	
-/*
-	class CouponListViewAdapter extends BaseAdapter
-	{
-		Context maincon;
-		LayoutInflater Inflater;
-		ArrayList<CouponListViewItem> arSrc;
-		int layout;
-
-		public CouponListViewAdapter(Context context,int alayout,ArrayList<CouponListViewItem> aarSrc)
-		{
-			maincon = context;
-			Inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			arSrc = aarSrc;
-			layout = alayout;
-		}
-		public int getCount()
-		{
-			return arSrc.size();
-		}
-
-		public String getItem(int position)
-		{
-			return arSrc.get(position).name;
-		}
-
-		public long getItemId(int position)
-		{
-			return position;
-		}
-
-		public View getView(int position,View convertView,ViewGroup parent)
-		{
-			couponCount++;
-			if(convertView == null)
-			{
-				convertView = Inflater.inflate(layout, parent,false);
-			}
-			ImageView itemImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_coupon_id_image);
-			itemImg.setImageResource(arSrc.get(position).item);
-
-			TextView name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_coupon_id_name);
-			name1Text.setText(arSrc.get(position).name);
-			
-			
-			if (couponCount%2 == 1) {
-				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
-			} else {
-				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_yellow);
-			}
-			return convertView;
-		}
-	}
-	*/
 
 	// request 
 	private class GetCPX extends AsyncTask<String, Void, JSONObject> 
@@ -419,12 +339,6 @@ public class HomeDownload extends Activity {
 		{
 			try {
 				if	(result.getBoolean("status")==true) {
-
-					if(result.getString("msg").equals("not exist log")) {
-						noCPIimage.setVisibility(View.VISIBLE);
-					} else {
-						noCPIimage.setVisibility(View.GONE);
-					}
 					
 					JSONArray jsonArray = result.getJSONArray("data");
 					
@@ -434,12 +348,9 @@ public class HomeDownload extends Activity {
 								jsonArray.getJSONObject(i).getString("reward"),jsonArray.getJSONObject(i).getString("point"),
 								jsonArray.getJSONObject(i).getInt("act"));
 						cpiArray.add(mCpiListItem);
-
 					}	
-
 					cpiListViewAdapter = new CpiListViewAdapter(HomeDownload.this,R.layout.home_download_list_item_cpi, cpiArray);
 					cpiListView.setAdapter(cpiListViewAdapter);
-
 				}
 			} catch (Exception e) {
 
@@ -669,7 +580,76 @@ public class HomeDownload extends Activity {
 				e.printStackTrace();
 			}
 		}
-	}
+	}	
+	
+	/*---- send info -----
+	private class SendCrossWalkLog extends AsyncTask<String, Void, JSONObject> {
+		JSONObject result = null;
+		String uid;
+		String camp_idx;
+		String camp_title;
+		
+		public SendCrossWalkLog(String in_uid, String in_camp_idx, String in_camp_title){
+			uid = in_uid;
+			camp_idx = in_camp_idx;
+			camp_title = in_camp_title;
+		}
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			try
+			{
+				HttpClient client = new DefaultHttpClient();  
+				String postURL = urls[0];
+				HttpPost post = new HttpPost(postURL); 
+				List<NameValuePair> params = new ArrayList<NameValuePair>();
+				
+				params.add(new BasicNameValuePair("uid", uid));
+				params.add(new BasicNameValuePair("campaign_idx", camp_idx));
+				params.add(new BasicNameValuePair("campaign_title", camp_title));
+						
+				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
+				post.setEntity(ent);
+				HttpResponse responsePOST = client.execute(post);  
+				HttpEntity resEntity = responsePOST.getEntity();
+
+				if (resEntity != null)
+				{    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject result) {
+			//System.out.print(result);
+			//textView.setText(result);
+			try {
+				if (result.getBoolean("status")==true) {
+					cpxPopupText.setText(R.string.home_download_crosswalk_success);
+					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
+					cpxPopupWindow.showAsDropDown(null);
+				} else {
+					cpxPopupText.setText(R.string.home_download_crosswalk_error);
+					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
+					cpxPopupWindow.showAsDropDown(null);
+				}
+
+			} catch (Exception e) {
+
+			}
+
+		}
+
+	}*/
 	// Check if Application is installed
     private boolean checkIsAppInstalled (String uri)
     {
@@ -724,14 +704,17 @@ public class HomeDownload extends Activity {
 	}
 	public void getList(){
 		cpiArray.clear();
+		cpiCount = 0;
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
 
 		//TODO
 		/*mCpiListItem = new CpiListViewItem(901, 901,
 				"/uploads/cpd_advertisement/back_image/1/images.jpg", "Ãß°¡ ·©Å· Æ÷ÀÎÆ®!",
-				"0", "°Ç´ç 10P", 2);
-		cpiArray.add(mCpiListItem);*/
+				"0", "¼³Ä¡ 1È¸ 10P", 2);
+		cpiArray.add(mCpiListItem);
+		cpiListViewAdapter = new CpiListViewAdapter(HomeDownload.this,R.layout.home_download_list_item_cpi, cpiArray);
+		cpiListView.setAdapter(cpiListViewAdapter);*/
 		new GetCPX().execute("http://todpop.co.kr/api/etc/" + userId + "/show_cpx_list.json");
 	}
 	//----button onClick----
