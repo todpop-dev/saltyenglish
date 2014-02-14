@@ -45,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeStore extends Activity {
 	RelativeLayout mainLayout;
@@ -108,7 +109,7 @@ public class HomeStore extends Activity {
 		listItemView = (RelativeLayout) findViewById(R.id.home_store_id_list_view);
 		refundView = (ScrollView) findViewById(R.id.home_store_id_refund_view);
 		
-		loadingProgressBar = (ProgressBar)findViewById(R.id.loadingProgressBar);
+		//loadingProgressBar = (ProgressBar)findViewById(R.id.loadingProgressBar);
 		
 		pwdPopupView = View.inflate(this, R.layout.popup_view_home_more_acount_info, null);
 		pwdPopupWindow = new PopupWindow(pwdPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
@@ -134,12 +135,21 @@ public class HomeStore extends Activity {
 		
 		itemArray = new ArrayList<StoreListViewItem>();
 		storeListView = (ListView) findViewById(R.id.homestore_id_listiew);
-		storeListView.setOnItemClickListener(item_listener);
+		//storeListView.setOnItemClickListener(item_listener);
+		
+		storeListView.setOnItemClickListener(listViewItemListener);
+		for (int i = 0; i < 20; i++) {
+			mStoreListItem = new StoreListViewItem(
+					R.drawable.store_33_image_dinosaur_on,
+					getString(R.string.home_store_prep), "", "");
+			itemArray.add(mStoreListItem);
+		}
 
+/*
 		new AccessCheck().execute("http://todpop.co.kr/api/qpcon_coupons/can_shopping.json?user_id=" + rgInfo.getString("mem_id", "NO"));
 		//TODO get category list and add category id at GetCoupon
 		new GetCoupons().execute("http://todpop.co.kr/api/qpcon_coupons.json");
-
+*/
 		listItemView.setVisibility(View.VISIBLE);
 		storeListView.setVisibility(View.VISIBLE);
 	}
@@ -154,7 +164,21 @@ public class HomeStore extends Activity {
 				R.layout.home_store_list_item_view, itemArray);
 		storeListView.setAdapter(storeListViewAdapter);
 	}
+	
+	OnItemClickListener listViewItemListener = new OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parentView, View clickedView,
+				int position, long id) {
+			// String toastMessage =
+			// ((TextView)clickedView).getText().toString() +
+			// " is selected."+position;
+			String toastMessage = " is selected." + position;
+			Toast.makeText(getApplicationContext(), toastMessage,
+					Toast.LENGTH_SHORT).show();
+		}
+	};
 
+
+/*
 	OnItemClickListener item_listener = new OnItemClickListener(){
 		@Override
 		public void onItemClick(AdapterView<?> parentView, View clickedView, int position,
@@ -169,7 +193,7 @@ public class HomeStore extends Activity {
 			intent.putExtra("curReward", curReward);
 			startActivity(intent);
 		}
-	};
+	};*/
 	OnClickListener radio_listener = new OnClickListener() {
 		public void onClick(View v) {
 			switch (v.getId()) {
@@ -213,21 +237,17 @@ public class HomeStore extends Activity {
 	};
 
 	class StoreListViewItem {
-		StoreListViewItem(String aId, String aImg, String aTitle, String aProvider, String aPrice, String mImg) {
-			id = aId;
-			img = aImg;
-			title = aTitle;
-			provider = aProvider;
-			price = aPrice;
-			mSizeImg = mImg;
-		}
+			StoreListViewItem(int aItem, String aName1, String aName2, String aCoin) {
+				item = aItem;
+				name1 = aName1;
+				name2 = aName2;
+				coin = aCoin;
+			}
+			int item;
+			String name1;
+			String name2;
+			String coin;
 
-		String id;
-		String img;
-		String title;
-		String provider;
-		String price;
-		String mSizeImg;
 	}
 
 	class StoreListViewAdapter extends BaseAdapter {
@@ -249,8 +269,8 @@ public class HomeStore extends Activity {
 			return arSrc.size();
 		}
 
-		public StoreListViewItem getItem(int position) {
-			return arSrc.get(position);
+		public String getItem(int position) {
+			return arSrc.get(position).name1;
 		}
 
 		public long getItemId(int position) {
@@ -262,28 +282,21 @@ public class HomeStore extends Activity {
 			if (convertView == null) {
 				convertView = Inflater.inflate(layout, parent, false);
 			}
+			ImageView itemImg = (ImageView) convertView
+					.findViewById(R.id.home_store_list_item_id_item);
+			itemImg.setImageResource(arSrc.get(position).item);
 
 			TextView name1Text = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_name1);
-			name1Text.setText(arSrc.get(position).title);
+			
+			name1Text.setText(arSrc.get(position).name1);
 
 			TextView name2Text = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_name2);
-			name2Text.setText(arSrc.get(position).provider);
+			name2Text.setText(arSrc.get(position).name2);
 			TextView coinText = (TextView) convertView
 					.findViewById(R.id.home_store_list_item_id_coins);
-			coinText.setText(arSrc.get(position).price);
-			
-			ImageView itemImg = (ImageView) convertView
-					.findViewById(R.id.home_store_list_item_id_item);
-			
-			try {
-				// show The Image
-				new DownloadImageTask(itemImg).execute(arSrc.get(position).img);
-			} catch (Exception e) {
-				Log.i("STEVEN", "error catch on download img line 326");
-				e.printStackTrace();
-			} 
+			coinText.setText(arSrc.get(position).coin);
 			
 			if (count % 2 == 1) {
 				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
@@ -461,7 +474,7 @@ public class HomeStore extends Activity {
 		}
 	}	
 	
-	private class GetCoupons extends AsyncTask<String, Void, JSONObject> {
+	/*private class GetCoupons extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) {
 			JSONObject result = null;
@@ -510,8 +523,8 @@ public class HomeStore extends Activity {
 			}
 
 		}
-	}
-	
+	}*/
+	/*
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 		ImageView bmImage;
 
@@ -535,7 +548,7 @@ public class HomeStore extends Activity {
 		protected void onPostExecute(Bitmap result) {
 			bmImage.setImageBitmap(result);
 		}
-	}
+	}*/
 	
 	public void onClickBack(View view) {
 		finish();

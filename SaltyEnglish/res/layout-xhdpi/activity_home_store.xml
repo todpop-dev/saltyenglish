@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home_store_id_mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/common_bg_darkyellowpattern" >
@@ -11,7 +10,6 @@
         android:layout_centerInParent="true" >
 
         <ImageView
-            android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -19,7 +17,6 @@
             android:background="@drawable/common_bgimg_store" />
 
         <Button
-            android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10.5dp"
@@ -31,8 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:scrollbars="none"
-            android:visibility="gone">
+            android:scrollbars="none" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,12 +44,12 @@
                     android:orientation="horizontal" >
 
                     <RadioButton
-                        android:id="@+id/homestore_id_btn_cafe"
+                        android:id="@+id/homestore_id_btn_education"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
                         android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_cafe"
+                        android:button="@drawable/homestore_drawable_btn_education"
                         android:checked="true" />
 
                     <RadioButton
@@ -65,12 +61,12 @@
                         android:button="@drawable/homestore_drawable_btn_food" />
 
                     <RadioButton
-                        android:id="@+id/homestore_id_btn_education"
+                        android:id="@+id/homestore_id_btn_cafe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_education" />
+                        android:button="@drawable/homestore_drawable_btn_cafe" />
 
                     <RadioButton
                         android:id="@+id/homestore_id_btn_convenient"
@@ -106,10 +102,9 @@
             android:id="@+id/home_store_id_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:focusableInTouchMode="true" 
-            android:layout_marginTop="50dp">
+            android:layout_marginTop="105dp"
+            android:focusableInTouchMode="true" >
 
-            <!-- android:layout_marginTop="105dp"-->
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -148,8 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="311dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/homestore_drawable_btn_search" 
-                android:onClick="onClickSearch"/>
+                android:background="@drawable/homestore_drawable_btn_search" />
 
             <ListView
                 android:id="@+id/homestore_id_listiew"
@@ -161,8 +155,6 @@
                 android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
             </ListView>
         </RelativeLayout>
-
-        <!-- refund view -->
 
         <ScrollView
             android:id="@+id/home_store_id_refund_view"
@@ -332,39 +324,8 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="390dp"
                     android:background="@drawable/common_image_opacitytextbox" />
-
-                <TextView
-                    android:id="@+id/home_store_refund_notice"
-                    android:layout_width="259.5dp"
-                    android:layout_height="252dp"
-                    android:layout_marginLeft="38dp"
-                    android:layout_marginTop="399dp"
-                    android:textColor="#000000" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_marginTop="690dp"
-                    android:background="@drawable/homestore_drawable_refund_btn_ok"
-                    android:onClick="onClickOk" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="170dp"
-                    android:layout_marginTop="690dp"
-                    android:background="@drawable/homestore_drawable_refund_btn_cancel" />
             </RelativeLayout>
         </ScrollView>
-
-        <ProgressBar
-            android:id="@+id/loadingProgressBar"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
-
     </RelativeLayout>
 
 </RelativeLayout>

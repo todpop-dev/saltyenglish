@@ -1355,8 +1355,9 @@ public class StudyHome extends Activity {
 
 	public void showHomeStore(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(),HomeStore.class);
-		startActivity(intent);
+		popupText.setText(R.string.temp_store_closed);
+		popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+		
 	}
 
 	public void showMore(View view)
