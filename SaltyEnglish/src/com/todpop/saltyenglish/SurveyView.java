@@ -90,7 +90,7 @@ public class SurveyView extends Activity {
 		rewardAmount = cpxInfo.getString("reward", "0");
 		pointAmount = cpxInfo.getString("point", "0");
 		
-		cpxInfo.edit().clear().commit();
+		cpxInfo.edit().clear().apply();
 	}
 
 	// on click

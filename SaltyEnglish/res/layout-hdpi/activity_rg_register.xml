@@ -35,7 +35,19 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="169.06dp"
         android:textSize="14sp" />
-
+    
+    <TextView
+        android:id="@+id/register_17_no_mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="169.06dp"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:text="짭짤한영어는 현재 공기계에서\n회원가입이 불가능합니다."
+        android:textSize="14sp"
+        android:visibility="invisible"/>
+    
     <com.facebook.widget.LoginButton
         xmlns:fb="http://schemas.android.com/apk/res-auto"
         android:id="@+id/register_id_facebook_btn"

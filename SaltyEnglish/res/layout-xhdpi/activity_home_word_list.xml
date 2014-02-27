@@ -97,7 +97,7 @@
                         android:layout_marginRight="3dp"
                         android:layout_toLeftOf="@id/home_word_list_id_switch_word_btn"
                         android:background="@drawable/homewordlist_drawable_btn_search"
-                        android:onClick="searchEnWord" />
+                        android:onClick="searchWord" />
 
                     <EditText
                         android:id="@+id/my_word_id_edittext"

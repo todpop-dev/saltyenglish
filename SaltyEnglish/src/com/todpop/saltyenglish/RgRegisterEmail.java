@@ -127,7 +127,7 @@ public class RgRegisterEmail extends Activity {
 			popupWindow.showAsDropDown(checkNickname);
 		}
 		else if(tmpNickname.contains("\\")){
-			popupText.setText(R.string.popup_nickname_no_backslash);
+			popupText.setText(R.string.popup_nickname_no_error);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(checkNickname);
 		}
@@ -160,7 +160,7 @@ public class RgRegisterEmail extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("nickname", result.getString("result"));				        	
+					Log.d("nickname", result.toString());				        	
 					return result;
 
 				}
@@ -177,20 +177,27 @@ public class RgRegisterEmail extends Activity {
 			Log.e("RRE-string",nickname.getText().toString());
 			Log.e("RRE-length",String.valueOf(nickname.getText().toString().length()));
 			try {
-				if(json.getJSONObject("data").getBoolean("result")){
-					Log.e("RRE-string","3434");
-					rgInfoEdit.putString("nickname",nickname.getText().toString());
-					popupText.setText(R.string.popup_nickname_yes);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					popupWindow.showAsDropDown(checkNickname);
-				}else{
-					Log.e("RRE-string","5656");
-					rgInfoEdit.putString("nickname","no");
-					popupText.setText(R.string.popup_nickname_no);
+				if(json.getBoolean("status")){
+					if(json.getJSONObject("data").getBoolean("result")){
+						Log.e("RRE-string","3434");
+						rgInfoEdit.putString("nickname",nickname.getText().toString());
+						popupText.setText(R.string.popup_nickname_yes);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						popupWindow.showAsDropDown(checkNickname);
+					}else{
+						Log.e("RRE-string","5656");
+						rgInfoEdit.putString("nickname","no");
+						popupText.setText(R.string.popup_nickname_no);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						popupWindow.showAsDropDown(checkNickname);
+					}
+					rgInfoEdit.apply();
+				}
+				else{
+					popupText.setText(R.string.popup_nickname_no_error);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(checkNickname);
 				}
-				rgInfoEdit.commit();
 			} catch (Exception e) {
 				Log.e("RRE","asdf");
 			}
@@ -208,7 +215,7 @@ public class RgRegisterEmail extends Activity {
 		}
 		else{
 			rgInfoEdit.putString("recommend",null);
-			rgInfoEdit.commit();
+			rgInfoEdit.apply();
 			showRgRegisterEmailInfoActivity();
 		}
 		
@@ -231,7 +238,7 @@ public class RgRegisterEmail extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("recommender nickname", result.getString("result"));				        	
+					Log.d("recommender nickname", result.toString());				        	
 					return result;
 
 				}
@@ -254,7 +261,7 @@ public class RgRegisterEmail extends Activity {
 					rgInfoEdit.putString("recommend",null);
 					Log.i("STEVEN-----", "NO");
 				}
-				rgInfoEdit.commit();
+				rgInfoEdit.apply();
 				showRgRegisterEmailInfoActivity();
 			} catch (Exception e) {
 
@@ -343,7 +350,7 @@ public class RgRegisterEmail extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("email", result.getString("result"));				        	
+					Log.d("email", result.toString());				        	
 					return result;
 				}
 			}
@@ -373,7 +380,7 @@ public class RgRegisterEmail extends Activity {
 					popupWindow.showAsDropDown(doneBtn);
 
 				}
-				rgInfoEdit.commit();
+				rgInfoEdit.apply();
 			} catch (Exception e) {
 
 			}

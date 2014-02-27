@@ -42,7 +42,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="227.5dp"
                 android:background="@drawable/store_64_image_pinktextbox"
-                android:hint="패스워드를 입력해주세요"
+                android:hint="@string/home_more_acount_delete_pw_insert"
                 android:inputType="textPassword"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"

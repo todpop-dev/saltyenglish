@@ -217,7 +217,7 @@ public class HomeMyPagePurchased extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE JSON---- ", result.toString());				        	
 				}
 				return result;
 			}

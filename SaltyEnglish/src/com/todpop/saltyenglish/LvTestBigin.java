@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -112,7 +113,6 @@ public class LvTestBigin extends Activity {
 		rgInfoEdit = rgInfo.edit();
 		
 		userId = rgInfo.getString("mem_id", "NO");
-		Log.d("-----------mem_id  info-------------- ", rgInfo.getString("mem_id", "NO"));
 
 		introView = (RelativeLayout)findViewById(R.id.lvtestbigin_id_introView);
 
@@ -133,7 +133,6 @@ public class LvTestBigin extends Activity {
 		
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		try {
-			Log.e("STEVEN", "Main Activity line 98");
 			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
 			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
@@ -144,7 +143,8 @@ public class LvTestBigin extends Activity {
 					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
 			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, xo TEXT);");
-			Log.e("STEVEN", "Main Activity line 107");
+			db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -204,18 +204,15 @@ public class LvTestBigin extends Activity {
 
 				imageTimeAni.stop();
 
-				Log.e("STEVEN", "LINE 177");
 				imageTimeBlindAni.start();
 
 				lvTextWordEdit.putString("check"+(count-1), "N");
-				Log.d("LvTesting", "line 211" + enWord.getText().toString()+select1.getText().toString());
-				lvTextWordEdit.commit();
+				lvTextWordEdit.apply();
 				checkRW = "x";
 
 				count++;
 				if(count == 21)
 				{
-					Log.d("finel level: ", level);
 					new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
 					endView.setVisibility(View.VISIBLE);
 					imageTestendAni.start();
@@ -284,38 +281,6 @@ public class LvTestBigin extends Activity {
 			mPaused = false;
 		}
 	}
-	/*
-	private  AnimatorListener mAnimationListener = new AnimatorListenerAdapter() {
-		public void onAnimationEnd(Animator animation) 
-		{
-			count++;
-			imageTimeAni.stop();
-			imageTimeBlindAni.start();
-
-			lvTextWordEdit.putString("enWord"+(count-2), enWord.getText().toString());
-			lvTextWordEdit.putString("krWord"+(count-2), select1.getText().toString());
-			lvTextWordEdit.putString("check"+(count-2), "N");
-			lvTextWordEdit.commit();
-			checkRW = "x";
-
-			if(count == 21)
-			{
-				Log.d("finel level: ", level);
-				new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
-				endView.setVisibility(View.VISIBLE);
-				imageTestendAni.start();
-//				Handler goNextHandler = new Handler();
-//				goNextHandler.postDelayed(GoNextHandler, 1000);
-			}else{
-				new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?step="+count+"&level="+level+"&ox="+checkRW);
-			}
-
-	
-		}
-		public void onAnimationCancel(Animator animation) {}
-		public void onAnimationRepeat(Animator animation) {}
-		public void onAnimationStart(Animator animation) {}
-	};*/
 
 	private class ButtonListener implements OnClickListener{
 		public void onClick(View v)
@@ -330,8 +295,7 @@ public class LvTestBigin extends Activity {
 			if(buttonTag == correctOption){
 
 				lvTextWordEdit.putString("check"+(count-1), "Y");
-				Log.d("LvTesting", "line 334" + enWord.getText().toString()+select1.getText().toString());
-				lvTextWordEdit.commit();			
+				lvTextWordEdit.apply();			
     			
 				correct++;
     			checkRW = "o";
@@ -339,15 +303,13 @@ public class LvTestBigin extends Activity {
 			else{
 
 				lvTextWordEdit.putString("check"+(count-1), "N");
-				Log.d("LvTesting", "line 346" + enWord.getText().toString()+select1.getText().toString());
-				lvTextWordEdit.commit();
+				lvTextWordEdit.apply();
     			checkRW = "x";
 			}
 
 			count++;
 			if(count == 21)
 			{
-				Log.d("final level: ---------------- ", level);
 				new GetWord().execute("http://todpop.co.kr/api/studies/get_level_test_words.json?user_id="+userId+"&step="+21+"&level="+level+"&ox="+checkRW);
 				endView.setVisibility(View.VISIBLE);
 				imageTestendAni.start();
@@ -409,20 +371,18 @@ public class LvTestBigin extends Activity {
 					for(int i=0;i<jsonArray.length();i++)
 					{
 						 list.add( jsonArray.getString(i) );
-						 Log.d("123111111111111111 ---- ", jsonArray.getString(i));
 					}	
         			
 
 					lvTextWordEdit.putString("enWord"+(count-1), result.getJSONObject("data").getString("word"));
 					lvTextWordEdit.putString("krWord"+(count-1), result.getJSONObject("data").getString("mean"));
-					lvTextWordEdit.commit();
+					lvTextWordEdit.apply();
 					
         			enWord.setText(result.getJSONObject("data").getString("word"));
         			select1.setText(result.getJSONObject("data").getString("mean"));
         			level = result.getJSONObject("data").getString("level");
 
-        			int ran = (int)(Math.random() * 4);
-        			Log.d("ran number ------ ", Integer.toString(ran));
+        			int ran = new Random().nextInt(4);
         			
         			if (ran == 0) {
         				select1.setText(result.getJSONObject("data").getString("mean"));
@@ -461,7 +421,6 @@ public class LvTestBigin extends Activity {
         				
         				if(checkAni == true){
         					imageTimeAni.start();
-        					Log.e("STEVEN", "LINE 429");
         				    imageTimeBlindAni.start();
         				}
         				
@@ -528,8 +487,6 @@ public class LvTestBigin extends Activity {
 
         				}
         			}else{
-        				Log.d("------------------------- ", "finish_________________");
-        				
         				imageTestendAni.stop();
         				
         				SharedPreferences studyInfo = getSharedPreferences("studyInfo",0);
@@ -540,7 +497,7 @@ public class LvTestBigin extends Activity {
 	            			String stageInfo = result.getJSONObject("data").getString("stage_info");
         					studyInfoEdit.putString("myLevel", level);
 	            			studyInfoEdit.putString("stageInfo", stageInfo);
-	            			studyInfoEdit.commit();
+	            			studyInfoEdit.apply();
 	            			
         				}
 
@@ -617,63 +574,6 @@ public class LvTestBigin extends Activity {
     }
     
     
-    /*public class JSONParser {
-    	 
-        InputStream is = null;
-        JSONObject jObj = null;
-        String json = "";
-     
-        // constructor
-        public JSONParser() {
-     
-        }
-     
-        public JSONObject getJSONFromUrl(String url) {
-     
-            // Making HTTP request
-            try {
-                // defaultHttpClient
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url);
-     
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                is = httpEntity.getContent();           
-     
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-             
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(
-                        is, "iso-8859-1"), 8);
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                is.close();
-                json = sb.toString();
-            } catch (Exception e) {
-                Log.e("Buffer Error", "Error converting result " + e.toString());
-            }
-     
-            // try parse the string to a JSON object
-            try {
-                jObj = new JSONObject(json);
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-            }
-     
-            // return JSON String
-            return jObj;
-     
-        }
-    }*/
     public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
 		// TODO Auto-generated method stub
@@ -691,7 +591,7 @@ public class LvTestBigin extends Activity {
 						SharedPreferences settings = getSharedPreferences("setting", 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putString("check","YES");
-						editor.commit();
+						editor.apply();
 						
 						Intent intent = new Intent();
 				        intent.setClass(LvTestBigin.this, MainActivity.class);    
@@ -723,33 +623,5 @@ public class LvTestBigin extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
 		return false;
-	}
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT NOT NULL UNIQUE, mean TEXT);");
-			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
-			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			db.execSQL("DROP TABLE IF EXISTS flip");
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
-			db.execSQL("DROP TABLE IF EXISTS mywordtest");
-			onCreate(db);
-		}
 	}
 }

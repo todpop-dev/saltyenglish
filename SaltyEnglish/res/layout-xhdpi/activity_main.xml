@@ -3,7 +3,7 @@
     android:id="@+id/main_activity_id_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/new_year_opening" >
+    android:background="@drawable/com_main_bg" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,13 +13,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1056" >
+            android:layout_weight="1073" >
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="224" >
+            android:layout_weight="207" >
 
             <TextView
                 android:id="@+id/main_id_total_reward_amount"
@@ -27,8 +27,9 @@
                 android:layout_height="22.5dp"
                 android:layout_centerHorizontal="true"
                 android:gravity="right|center_vertical"
+                android:text="Loading..."
                 android:textColor="#ECF1CA"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <!--

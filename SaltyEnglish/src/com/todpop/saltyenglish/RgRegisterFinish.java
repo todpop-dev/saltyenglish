@@ -142,7 +142,7 @@ public class RgRegisterFinish extends Activity {
 						SharedPreferences settings = getSharedPreferences("setting", 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putString("check","YES");
-						editor.commit();
+						editor.apply();
 						
 						Intent intent = new Intent();
 				        intent.setClass(RgRegisterFinish.this, MainActivity.class);    

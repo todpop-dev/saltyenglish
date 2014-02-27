@@ -326,7 +326,7 @@ public class StudyTestC extends Activity {
 				SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 				SharedPreferences.Editor editor = levelPref.edit();
 				editor.putString("testResult", Integer.toString(finalAnswerForRequest));
-				editor.commit();
+				editor.apply();
 				
 				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 				startActivity(intent);
@@ -393,7 +393,7 @@ public class StudyTestC extends Activity {
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putString("introTestCOk", "Y");
-			editor.commit();
+			editor.apply();
 			
 			progress = (ProgressBar)findViewById(R.id.study_testc_id_progress_bar);
 			progress.setMax(180000);;
@@ -711,7 +711,7 @@ public class StudyTestC extends Activity {
 			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 			SharedPreferences.Editor editor = levelPref.edit();
 			editor.putString("testResult", Integer.toString(finalAnswerForRequest));
-			editor.commit();
+			editor.apply();
 			
 			Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 			startActivity(intent);
@@ -942,29 +942,7 @@ public class StudyTestC extends Activity {
 			}
 		}
 	}
-	
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-			
-			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			db.execSQL("DROP TABLE IF EXISTS flip");
 
-			onCreate(db);
-		}
-	}
 	@Override
 	protected void onStart()
 	{

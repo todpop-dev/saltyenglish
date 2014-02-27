@@ -1,9 +1,9 @@
 package com.todpop.saltyenglish;
 
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,11 +32,13 @@ import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
-
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.PowerManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -56,7 +58,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -81,6 +82,7 @@ public class StudyBegin extends FragmentActivity {
 	static int tmpStageAccumulated = 1;
 	static int tmpLevel = 1;
 	static int tmpStage = 1;
+	static int tmpCategory = 1;
 	
 	// Slide Level Page
 	ViewPager studyStartPageView;
@@ -98,12 +100,12 @@ public class StudyBegin extends FragmentActivity {
 	static Bitmap cpdBackImage;
 	
 	// Infomation for send CPD cound
-	static int adId;
+	int adId;
 	static int adType;
-	static String couponId;
-	static String userId;
-	static int adAct;
-	static int picNull;
+	String couponId;
+	String userId;
+	int adAct;
+	int picNull;
 	
 	// page point
  	ImageView point1;
@@ -135,12 +137,13 @@ public class StudyBegin extends FragmentActivity {
  	
  	static ArrayList<View> rootViewArr = new ArrayList<View>();
  	
- 	static boolean isCardBack = false;
+ 	boolean isCardBack = false;
  	
  	boolean cpdLogSent = false;
  	
  	// Database
  	WordDBHelper mHelper;
+ 	SQLiteDatabase db;
  	
 	String reward;
 	String point;
@@ -150,16 +153,18 @@ public class StudyBegin extends FragmentActivity {
 	String link;
 	String picture;
 	
-	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+	private final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_begin);
-
+		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		
 		studyInfo = getSharedPreferences("studyInfo",0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
+		tmpCategory = studyInfo.getInt("tmpCategory", 1);
 		Log.d("current stage ------------ ", Integer.toString(tmpStageAccumulated));
 		
 		tmpLevel = (tmpStageAccumulated-1)/10+1;
@@ -243,7 +248,7 @@ public class StudyBegin extends FragmentActivity {
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		SharedPreferences.Editor editor = pref.edit();
 		editor.putString("introOk", "Y");
-		editor.commit();
+		editor.apply();
 	}
 
 	public void setupPagerView()
@@ -345,8 +350,6 @@ public class StudyBegin extends FragmentActivity {
 		View rootView;
 		Animation animation;
 		
-		
-	 	
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -594,7 +597,7 @@ public class StudyBegin extends FragmentActivity {
 				if(json.getBoolean("status")==true) {
 					Log.d("Get Word JSON RESPONSE ---- ", json.toString());				        	
 					
-					SQLiteDatabase db = mHelper.getWritableDatabase();
+					db = mHelper.getWritableDatabase();
 					try {
 						db.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
 					} catch (Exception e) {
@@ -884,12 +887,10 @@ public class StudyBegin extends FragmentActivity {
 					try {
 						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
 						URL url = new URL(imgUrl);
-						Log.d("CPD front image url ------ ", url.toString());
 						new DownloadImageTask("FRONT").execute(url.toString());
 						
 						String imgUrl2 = "http://todpop.co.kr" + cpdJsonObj.getString("back_image");
 						URL url2 = new URL(imgUrl2);
-						Log.d("CPD back image url ------ ", url2.toString());
 						new DownloadImageTask("BACK").execute(url2.toString());
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -961,7 +962,8 @@ public class StudyBegin extends FragmentActivity {
 
 				if (resEntity != null)
 				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE ---- ", result.toString());				  
 				}
 				return result;
 			} catch (Exception e) {
@@ -985,7 +987,119 @@ public class StudyBegin extends FragmentActivity {
 		}		
 	}
 	
+	public void readItForMe(View v){
+		Log.i("STEVEN", "readItForMe");
+		String word = null;
+		String version = null;
+		try {
+			word = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("name");
+			version = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("version");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		Cursor find = db.rawQuery("SELECT word, version, category FROM wordSound WHERE word=\'" + word + "\'", null);
+		//TODO Testing
+
+		Log.i("STEVEN", "find.getCount() = " + find.getCount());
+		if(find.getCount() > 0){
+			Log.i("STEVEN", "inside if find.getCount() > 0");
+			/*if(!version.equals(find.getString(1))){
+
+				Log.i("STEVEN", "1");
+				db.delete("wordSound", "word='" + word + "'", null);
+				new DownloadTask().execute(word, version);
+			}
+			else{*/
+				Log.i("STEVEN", "2");
+				pronouncePlay(word);
+			//}
+		}
+		else{
+			Log.i("STEVEN", "3");
+			new DownloadTask().execute(word, version);
+		}
+	}	
+	public void pronouncePlay(String word){
+		SoundPool mSoundPool =  new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+		mSoundPool.setOnLoadCompleteListener (new OnLoadCompleteListener() {
+		    @Override
+		    public void onLoadComplete(SoundPool soundPool, int soundId, int status) {
+		         soundPool.play(soundId, 100, 100, 1, 0, 1.0f); 
+		    }
+		});
+		mSoundPool.load(getFilesDir() + "/" + word, 1);
+	}
+	private class DownloadTask extends AsyncTask<String, String, String> {
+		String word;
+		String version;
+		 
+	    @Override
+	    protected String doInBackground(String... param) {
+	    	try {
+	    		word = param[0];
+	    		version = param[1];
+	    		InputStream input = null;
+			    OutputStream output = null;
+			    HttpURLConnection connection = null;
+		        try {
+		            //TODO testing
+		            //URL url = new URL("http://www.todpop.co.kr/uploads/word/sound/" + downloadWordList.get(current).getWord());
+		            URL url = new URL("https://ssl.gstatic.com/dictionary/static/sounds/de/0/" + word + ".mp3");
+		            connection = (HttpURLConnection) url.openConnection();
+		            connection.connect();
 	
+		            // expect HTTP 200 OK, so we don't mistakenly save error report 
+		            // instead of the file
+		            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
+		                 return getResources().getString(R.string.popup_view_download_progressbar_error) 
+		                    		 + "Server returned HTTP " + connection.getResponseCode() 
+		                    		 + " " + connection.getResponseMessage();
+	
+		            // download the file
+		            input = connection.getInputStream();
+		            output = openFileOutput(word, Context.MODE_PRIVATE);
+	
+		                byte data[] = new byte[1024];
+		                int count;
+		                while ((count = input.read(data)) != -1) {
+		                    output.write(data, 0, count);
+		            }
+		        } catch (Exception e) {
+		                return getResources().getString(R.string.popup_view_download_progressbar_error) + e.toString();
+		        } finally {
+		            try {
+		                if (output != null)
+		                        output.close();
+		                if (input != null)
+		                        input.close();
+		                } 
+		                catch (IOException ignored) { }
+	
+		                if (connection != null)
+		                    connection.disconnect();
+		        }
+	    	}catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	        return null;
+	    }    
+	    @Override
+	    protected void onPostExecute(String result) {
+	        if (result != null){
+	            Toast.makeText(StudyBegin.this,"Download error: "+result, Toast.LENGTH_LONG).show();
+	        }
+	        else{
+		        ContentValues row = new ContentValues();
+				row.put("word", word);
+				row.put("version", version);
+				row.put("category", tmpCategory);
+
+				db.insert("wordSound", null, row);
+
+				pronouncePlay(word);
+	        }
+	    }
+	}
 	/*
 	 * for facebook share
 	 */
@@ -1004,14 +1118,12 @@ public class StudyBegin extends FragmentActivity {
 		Session session = Session.getActiveSession();
 		List<String> permissions = session.getPermissions();
 		if (!isSubsetOf(PERMISSIONS, permissions)) {
-			Log.i("STEVEN", "line 1014");
 			pendingPublishReauthorization = true;
 			Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
 					this, PERMISSIONS);
 			session.requestNewPublishPermissions(newPermissionsRequest);
 			return;
 		} else {
-			Log.i("STEVEN", "line 1014");
 			Bundle postParams = new Bundle();
 			postParams.putString("link", link);
 			if(!name.equals("null"))
@@ -1022,7 +1134,7 @@ public class StudyBegin extends FragmentActivity {
 				postParams.putString("description", description);
 			if(!picture.equals("null"))
 				postParams.putString("picture", picture);
-
+	
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
 					JSONObject graphResponse = response.getGraphObject()
@@ -1036,23 +1148,25 @@ public class StudyBegin extends FragmentActivity {
 					}
 					FacebookRequestError error = response.getError();
 					if (error != null) {
-						Toast.makeText(getApplicationContext(),
+							Toast.makeText(getApplicationContext(),
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
 					} else {
+						cpdFbShare.setClickable(false);
+						popupText.setText(R.string.facebook_share_done);							
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);
-						Toast.makeText(getApplicationContext(), postId,
-								Toast.LENGTH_LONG).show();
 					}
 				}
 			};
-
+	
 			Request request = new Request(Session.getActiveSession(),
 					"me/feed", postParams, HttpMethod.POST, callback);
-
+	
 			RequestAsyncTask task = new RequestAsyncTask(request);
 			task.execute();
 		}
+		
 	}
 	private boolean isSubsetOf(Collection<String> subset,
 			Collection<String> superset) {
@@ -1074,18 +1188,25 @@ public class StudyBegin extends FragmentActivity {
 
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
-		Log.i("STEVEN", "onSessionStateChange");
 		if (state.isOpened()) {
-			Log.i("STEVEN", "1079");
-			if(!pendingPublishReauthorization)
-				Log.i("STEVEN", "1081");
+			if(!pendingPublishReauthorization){
 				publishAd();
+			}
+			else{
+				popupText.setText(R.string.facebook_login_done);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
 		}
 	}
 	
 	//----button onClick----
 	
-	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode,
+				resultCode, data);
+	}
 
 	public void onClickBack(View view)
 	{
@@ -1111,15 +1232,10 @@ public class StudyBegin extends FragmentActivity {
 	
 	public void showTestActivity(View view)
 	{		
-		/*
-		Log.d("------- send info -----", "info");
-		new SendCPDInfo().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
-		*/
 		if(tmpStage==1 || tmpStage==2 || tmpStage==4 || tmpStage==5 || tmpStage==7 || tmpStage==8) {
 			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
 			startActivity(intent);
 			finish();
-			
 		} else if(tmpStage==3 || tmpStage==6 || tmpStage==9) {
 			Intent intent = new Intent(getApplicationContext(), StudyTestB.class);
 			startActivity(intent);
@@ -1145,26 +1261,10 @@ public class StudyBegin extends FragmentActivity {
 	{
 		super.onDestroy();
 		mHelper.close();
+		bitmapArr.clear();
+		rootViewArr.clear();
 	}
-	
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper 
-	{
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			onCreate(db);
-		}
-	}
+
 	@Override
 	protected void onStart()
 	{

@@ -78,7 +78,7 @@ public class MainActivity extends Activity
 		if(setting.getString("check","NO").equals("YES"))												// want to quit
 		{
 			settingEdit.putString("check","NO");
-			settingEdit.commit();
+			settingEdit.apply();
 
 			finish();
 		} else {
@@ -116,6 +116,8 @@ public class MainActivity extends Activity
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		try {
 			Log.e("STEVEN", "Main Activity line 98");
+			db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
@@ -189,7 +191,7 @@ public class MainActivity extends Activity
         			// something wrong (ex: user deleted) = logout
         			settingEdit = setting.edit();
         			settingEdit.putString("isLogin","NO");
-        			settingEdit.commit();
+        			settingEdit.apply();
         			
         			finish();
         		}
@@ -243,7 +245,7 @@ public class MainActivity extends Activity
 					
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
-					studyInfoEdit.commit();
+					studyInfoEdit.apply();
 					
     				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
     				startActivity(intent);
@@ -315,37 +317,6 @@ public class MainActivity extends Activity
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT NOT NULL UNIQUE, mean TEXT);");
-			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
-			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			db.execSQL("DROP TABLE IF EXISTS flip");
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			db.execSQL("DROP TABLE IF EXISTS cpxInfo");
-			db.execSQL("DROP TABLE IF EXISTS mywordtest");
-			onCreate(db);
-		}
-	}
-
 
 	@Override
 	public void onDestroy()

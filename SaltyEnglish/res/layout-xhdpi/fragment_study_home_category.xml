@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragment_study_begin_id_mainview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/store_34_image_carouselbar"
-    android:orientation="horizontal" >
-
-    <Button
-        android:id="@+id/study_home_category_left"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="48"
-        android:background="@android:color/transparent"
-        android:onClick="goLeft" />
+    android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:layout_width="0dp"
+        android:id="@+id/fragment_study_home_category_id_linear"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="624" >
+        android:background="@drawable/home_image_carousel2" >
 
         <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" 
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:orientation="horizontal" >
 
             <RadioButton
                 android:id="@+id/study_home_category_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="275"
-                android:background="@drawable/home_text_subtitle_basicmonth_pink"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:background="@drawable/home_text_subtitle_empty"
                 android:button="@drawable/studyhome_drawable_ranklist_btn_basicweek" />
 
             <RadioButton
                 android:id="@+id/study_home_category_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="275"
-                android:background="@drawable/home_text_subtitle_basicmonth_pink"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:background="@drawable/home_text_subtitle_empty"
                 android:button="@drawable/studyhome_drawable_ranklist_btn_basicmonth" />
         </RadioGroup>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/study_home_category_right"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="48"
-        android:background="@android:color/transparent"
-        android:onClick="goRight" />
+        android:layout_below="@id/fragment_study_home_category_id_linear"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp" >
 
-</LinearLayout>
+        <ProgressBar
+            android:id="@+id/studyhome_id_progressBar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ListView
+            android:id="@+id/studyhome_id_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/home_image_scrollline"
+            android:dividerHeight="15dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

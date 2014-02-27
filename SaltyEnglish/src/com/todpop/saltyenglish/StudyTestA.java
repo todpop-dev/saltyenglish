@@ -5,6 +5,8 @@ package com.todpop.saltyenglish;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -162,35 +164,6 @@ public class StudyTestA extends Activity {
 		// Get Pivot Time
 		SharedPreferences prefs = getSharedPreferences("rgInfo",0);
 		pivotTime = prefs.getInt("pivotTime", 0);
-
-		
-		// Get Json
-//		SharedPreferences sp = getSharedPreferences("wordList", 0);
-//		String jsonString = sp.getString("wordsJson", "");
-//		JSONObject json = null;
-//		try {
-//			json = new JSONObject(jsonString);
-//			
-//			if(json.getBoolean("status")==true)
-//			{			
-//				JSONArray jsonWords = json.getJSONArray("data");
-//				for(int i=0;i<jsonWords.length();i++) {												
-//					englishWords.add(jsonWords.getJSONObject(i).get("name").toString());
-//				}
-//			}else{		        
-//			}
-//		} catch (Exception e) {
-//			
-//		}
-
-
-		
-		//learn world
-		//enWords =new String[] {"i", "few", "building", "million", "sunny","straight","ring","today","too","oh"};
-//		meanWords = new int[]{R.string.kr1,R.string.kr2,R.string.kr3,R.string.kr4,R.string.kr5,R.string.kr6,R.string.kr7,R.string.kr8,R.string.kr9,R.string.kr10};
-//		krWords1 = new int[]{R.string.kr1_1,R.string.kr1_2,R.string.kr1_3,R.string.kr1_4,R.string.kr1_5,R.string.kr1_6,R.string.kr1_7,R.string.kr1_8,R.string.kr1_9,R.string.kr1_10};
-//		krWords2 = new int[]{R.string.kr2_1,R.string.kr2_2,R.string.kr2_3,R.string.kr2_4,R.string.kr2_5,R.string.kr2_6,R.string.kr2_7,R.string.kr2_8,R.string.kr2_9,R.string.kr2_10};
-//		krWords3 = new int[]{R.string.kr3_1,R.string.kr3_2,R.string.kr3_3,R.string.kr3_4,R.string.kr3_5,R.string.kr3_6,R.string.kr3_7,R.string.kr3_8,R.string.kr3_9,R.string.kr3_10};
 		
 		//set first test word
 		setupTestWords(0);
@@ -412,7 +385,7 @@ public class StudyTestA extends Activity {
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
 		try {
-			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
+			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " ORDER BY RANDOM();", null);
 			
 			if (cursor.getCount()>0) {
 				while(cursor.moveToNext()) {
@@ -497,7 +470,7 @@ public class StudyTestA extends Activity {
 				SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
 				SharedPreferences.Editor editor = sp.edit();
 				editor.putString("testResult", finalAnswerForRequest);
-				editor.commit();
+				editor.apply();
 				
 				stopTimeCount();
 				isTestFinish = true;
@@ -516,8 +489,8 @@ public class StudyTestA extends Activity {
 	{
 		enWordText.setText(englishWords.get(count));
 		
-		int ran = (int)(Math.random() * 4);
-		Log.d("ran number ------ ", Integer.toString(ran));
+		int ran = new Random().nextInt(4);
+		Log.e("ran number ------ ", Integer.toString(ran));
 		
 		if (ran == 0) {
 			select1.setText(optionOne.get(count));
@@ -553,22 +526,6 @@ public class StudyTestA extends Activity {
 		mHelper.close();
 	}
 	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			onCreate(db);
-		}
-	}
 	@Override
 	protected void onStart()
 	{

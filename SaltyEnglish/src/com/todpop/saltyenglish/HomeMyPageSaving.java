@@ -147,7 +147,7 @@ public class HomeMyPageSaving extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("REWARD HISTORY JSON ---- ", result.toString());				        	
+					Log.d("RESPONSE JSON ---- ", result.toString());				        	
 				}
 				return result;
 			}

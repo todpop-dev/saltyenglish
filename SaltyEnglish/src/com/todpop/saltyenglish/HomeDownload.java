@@ -114,15 +114,18 @@ public class HomeDownload extends Activity {
 		SharedPreferences cpxInstallInfo = getSharedPreferences("cpxInstallInfo",0);
 		SharedPreferences.Editor cpxInstallInfoEditor = cpxInstallInfo.edit();
 		cpxInstallInfoEditor.putBoolean("cpxGoMyDownload", false);
-		cpxInstallInfoEditor.commit();
+		cpxInstallInfoEditor.apply();
 		
 		//crosswalk
 		listener = new ResponseListener() {
 			@Override
 			public void OnResponse(CrossPromotionData data) {
 				pm.CloseSession();
-				Log.i("tag", data.getReward());
+				//Log.i("tag", data.getReward());
 				//Log.i("STEVEN", "data.getUid() = "+ data.getUid() + "    data.getCampaign_index() = " + data.getCampaign_index() + " data.getCampaign_title() = " + data.getCampaign_title());
+				cpxPopupText.setText(R.string.home_download_crosswalk_success);
+				cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
+				cpxPopupWindow.showAsDropDown(null);
 				//new SendCrossWalkLog(data.getUid(), data.getCampaign_index(), data.getCampaign_title()).execute("http://todpop.co.kr/api/advertises/set_crosswalk_log.json");
 			}
 		};
@@ -155,7 +158,7 @@ public class HomeDownload extends Activity {
 
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
-		pm = new PlaymobsAgent(userId, "691824", this,listener,errorListner);
+		pm = new PlaymobsAgent(userId, "691824", this, listener, errorListner);
 		
 		pm.setDefaultToast(true);
 	}
@@ -226,7 +229,6 @@ public class HomeDownload extends Activity {
 			cpiCount++;
 			final int id = arSrc.get(position).id;
 			final int type = arSrc.get(position).ad_type;
-			Log.i("STEVEN", "ID = " + id);
 			
 			if(convertView == null)
 			{
@@ -253,7 +255,6 @@ public class HomeDownload extends Activity {
 				//TODO ad act 1 add
 			case 2:
 				getRewardBut.setBackgroundResource(R.drawable.homedownload_drawable_btn_saving);
-				Log.i("STEVEN", "ad type!!!! = " + arSrc.get(position).ad_type);
 				getRewardBut.setOnClickListener(new Button.OnClickListener(){
 					public void onClick(View V){
 						if(type==901){
@@ -289,7 +290,6 @@ public class HomeDownload extends Activity {
 				.execute("http://todpop.co.kr"
 						+ imgUrl);
 			} catch (Exception e) {
-				Log.i("STEVEN", "error catch on 318");
 				e.printStackTrace();
 			} 
 
@@ -424,7 +424,6 @@ public class HomeDownload extends Activity {
 					JSONObject adDetails = result.getJSONObject("data");
 					int adId = adDetails.getInt("ad_id");
 					int adType = adDetails.getInt("ad_type");
-					Log.d("CPX Type: ---------- ", Integer.toString(adType));
 					
 					String targetUrl = adDetails.getString("target_url");
 					String packageName = adDetails.getString("package_name");
@@ -447,14 +446,12 @@ public class HomeDownload extends Activity {
 					cpxInfoEditor.putString("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 
-					Log.i("STEVEN", "line 511");
-					cpxInfoEditor.commit();
-					
-					Log.i("STEVEN", "after button clicked adType == " + adType);
+					cpxInfoEditor.apply();
+
+					SharedPreferences pref = getSharedPreferences("rgInfo",0);
+					String userId = pref.getString("mem_id", "0");
 					if(adType == 301){
-						SharedPreferences pref = getSharedPreferences("rgInfo",0);
-						String userId = pref.getString("mem_id", "0");
-						cpxInfo.edit().clear().commit();
+						cpxInfo.edit().clear().apply();
 						if(checkIsAppInstalled(packageName)){
 							new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id=" + adId + "&ad_type=301&user_id=" + userId + "&act=3");
 
@@ -478,9 +475,13 @@ public class HomeDownload extends Activity {
 						startActivity(intent);
 						finish();
 					}
+					else if(adType == 306){
+						new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id=" + adId + "&ad_type=306&user_id=" + userId + "&act=3");
+						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)));
+					}
 				}
 			} catch (Exception e) {
-				Log.e("STEVEN", "catch Error !!!!");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -523,23 +524,21 @@ public class HomeDownload extends Activity {
 					new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id=" + cpxInfo.getString("adId", "") +
 							"&ad_type=" + cpxInfo.getString("adType", "") +"&user_id=" + userId + "&act=3");
 
-					cpxInfo.edit().clear().commit();
+					cpxInfo.edit().clear().apply();
 
 					cpxPopupText.setText(R.string.home_download_action_confirmed);
 					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
 					cpxPopupWindow.showAsDropDown(null);
 
-					
-					Log.d("CPX LOG:  ---- ", "Send CPX Log OK!");
 				} else {
 					Toast toast = Toast.makeText(getApplicationContext(), R.string.cpa_install_notice, Toast.LENGTH_LONG);
 					toast.show();
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(cpxInfo.getString("targetUrl", ""))));
-					cpxInfo.edit().clear().commit();
+					cpxInfo.edit().clear().apply();
 				}
 
 			} catch (Exception e) {
-				Log.e("STEVEN", "line 631");
+				e.printStackTrace();
 			}
 		}
 	}
@@ -571,9 +570,9 @@ public class HomeDownload extends Activity {
 
 			try {
 				if (result.getBoolean("status") == true) {
-					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
+					//Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
 				} else {
-					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
+					//Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
 				}
 
 			} catch (Exception e) {
@@ -582,74 +581,6 @@ public class HomeDownload extends Activity {
 		}
 	}	
 	
-	/*---- send info -----
-	private class SendCrossWalkLog extends AsyncTask<String, Void, JSONObject> {
-		JSONObject result = null;
-		String uid;
-		String camp_idx;
-		String camp_title;
-		
-		public SendCrossWalkLog(String in_uid, String in_camp_idx, String in_camp_title){
-			uid = in_uid;
-			camp_idx = in_camp_idx;
-			camp_title = in_camp_title;
-		}
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			try
-			{
-				HttpClient client = new DefaultHttpClient();  
-				String postURL = urls[0];
-				HttpPost post = new HttpPost(postURL); 
-				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				
-				params.add(new BasicNameValuePair("uid", uid));
-				params.add(new BasicNameValuePair("campaign_idx", camp_idx));
-				params.add(new BasicNameValuePair("campaign_title", camp_title));
-						
-				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
-				post.setEntity(ent);
-				HttpResponse responsePOST = client.execute(post);  
-				HttpEntity resEntity = responsePOST.getEntity();
-
-				if (resEntity != null)
-				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject result) {
-			//System.out.print(result);
-			//textView.setText(result);
-			try {
-				if (result.getBoolean("status")==true) {
-					cpxPopupText.setText(R.string.home_download_crosswalk_success);
-					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
-					cpxPopupWindow.showAsDropDown(null);
-				} else {
-					cpxPopupText.setText(R.string.home_download_crosswalk_error);
-					cpxPopupWindow.showAtLocation(homeDownload, Gravity.CENTER, 0, 0);
-					cpxPopupWindow.showAsDropDown(null);
-				}
-
-			} catch (Exception e) {
-
-			}
-
-		}
-
-	}*/
 	// Check if Application is installed
     private boolean checkIsAppInstalled (String uri)
     {
@@ -674,12 +605,6 @@ public class HomeDownload extends Activity {
 		finish();
 	}
 	
-	/*public void SavingCPI(View v)
-	{
-		Button savingBtin = (Button)v;
-		savingBtin.setEnabled(false);
-	}*/
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -711,7 +636,7 @@ public class HomeDownload extends Activity {
 		//TODO
 		/*mCpiListItem = new CpiListViewItem(901, 901,
 				"/uploads/cpd_advertisement/back_image/1/images.jpg", "추가 랭킹 포인트!",
-				"0", "설치 1회 10P", 2);
+				"0", "설치시 랭킹 포인트 지급!", 2);
 		cpiArray.add(mCpiListItem);
 		cpiListViewAdapter = new CpiListViewAdapter(HomeDownload.this,R.layout.home_download_list_item_cpi, cpiArray);
 		cpiListView.setAdapter(cpiListViewAdapter);*/
@@ -722,7 +647,6 @@ public class HomeDownload extends Activity {
 	{
 		getList();
 		cpxPopupWindow.dismiss();
-		Log.i("STEVEN", "cpxPopupWindow dismiss done");
 	}
 	
 }

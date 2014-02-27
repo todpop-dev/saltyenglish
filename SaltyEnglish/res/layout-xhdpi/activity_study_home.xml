@@ -149,6 +149,7 @@
                 android:src="@drawable/home_bgimg_home" />
         </RelativeLayout>
 
+        <!--
         <RelativeLayout
             android:id="@+id/horiScrollView"
             android:layout_width="match_parent"
@@ -157,13 +158,8 @@
             android:layout_weight="88"
             android:background="@drawable/home_image_carousel" >
 
-            <android.support.v4.view.ViewPager
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/study_home_id_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
         </RelativeLayout>
-        <!--
+        
             <RadioGroup
                 android:id="@+id/homestore_id_week_moon_rank_group"
                 android:layout_width="match_parent"
@@ -194,7 +190,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="954"
+            android:layout_weight="1042"
             android:paddingLeft="15dp"
             android:paddingRight="6dp" > <!-- page bg -->
 
@@ -203,19 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/home_image_rankingbox"
-                android:paddingBottom="25dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="33dp"
-                android:paddingTop="25dp" >
-
-                <ListView
-                    android:id="@+id/studyhome_id_listview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/home_bgimg_whitebar"
-                    android:layout_marginBottom="5dp"
-                    android:divider="@drawable/home_image_scrollline"
-                    android:dividerHeight="15dp" />
+                android:paddingBottom="25dp" >
 
                 <!-- bg -->
 
@@ -225,13 +209,26 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/home_image_myrankingbox"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="33dp"
                     android:src="@drawable/home_bgimg_whitebar" />
+
+                <android.support.v4.view.ViewPager
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/study_home_id_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/home_bgimg_whitebar"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="8dp" />
 
                 <LinearLayout
                     android:id="@+id/home_image_myrankingbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="33dp"
                     android:background="@drawable/home_image_myrankingbox"
                     android:gravity="center_vertical"
                     android:orientation="horizontal" > <!-- my rank -->
@@ -450,7 +447,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
-                        android:text="INFO"
+                        android:text="Loading..."
                         android:textColor="#000000"
                         android:textSize="18sp" />
                 </RelativeLayout>
@@ -462,6 +459,7 @@
                 android:layout_weight="135" />
         </LinearLayout>
     </RelativeLayout>
+
 
     <View
         android:id="@+id/studyhome_id_emptyview"

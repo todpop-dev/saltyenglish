@@ -137,7 +137,6 @@ public class HomeMyPagePurchasedDetail extends Activity {
 						barcode_text.setText(json.getString("bar_code"));
 					}
 				} else {
-					Log.e("STEVEN", "detail set text");
 					detail.setText(R.string.get_coupon_error);
 				}
 			} catch (Exception e) {
@@ -222,7 +221,6 @@ public class HomeMyPagePurchasedDetail extends Activity {
 						barcode_text.setText(json.getString("bar_code"));
 					}
 				} else {
-					Log.e("STEVEN", "detail set text");
 					detail.setText(R.string.get_coupon_error);
 				}
 			} catch (Exception e) {

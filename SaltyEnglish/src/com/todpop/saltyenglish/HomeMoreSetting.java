@@ -39,8 +39,10 @@ public class HomeMoreSetting extends Activity {
 	static int targetMinute;
 	
 	CheckBox alarmCheckBox;
+	//CheckBox popupCheckBox;
 	
 	NotificationManager notificationManager;
+	AlarmManager alarmManager;
 	
 	SharedPreferences stdInfo;
 	SharedPreferences.Editor stdInfoEdit;
@@ -64,54 +66,74 @@ public class HomeMoreSetting extends Activity {
 		minute = stdInfo.getInt("alarmMinute", 0);
 		targetHour = hour;
 		targetMinute = minute;
-		
 
-        
-		Log.d("hour - ", Integer.toString(hour));
-		Log.d("minute - ", Integer.toString(minute));
-		
+		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+		alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
 		setAlarm.setText("      "+pad(hour)+"         "+pad(minute));
 		
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
+		//popupCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_popup_box);
+		
 		if(stdInfo.getBoolean("alarm", false)){
 			alarmCheckBox.setChecked(true);
+			//popupCheckBox.setEnabled(true);
+			if(stdInfo.getBoolean("popupAlarm", false)){
+				//popupCheckBox.setChecked(true);
+			}
 		}
 		else{
+			stdInfoEdit.putBoolean("popupAlarm", false);
+			stdInfoEdit.apply();
+			//popupCheckBox.setChecked(false);
+			//popupCheckBox.setEnabled(false);
 			alarmCheckBox.setChecked(false);
 		}
+		
 		alarmCheckBox.setOnCheckedChangeListener(
+			new CompoundButton.OnCheckedChangeListener() {
+
+				@SuppressLint("NewApi")
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) 
+				{
+					if (isChecked == true) {
+						//popupCheckBox.setChecked(true);
+						//popupCheckBox.setEnabled(true);
+						stdInfoEdit.putBoolean("popupAlarm", true);
+						stdInfoEdit.putBoolean("alarm", true);
+						stdInfoEdit.apply();
+						setAlarm();
+					} else {
+						//popupCheckBox.setChecked(false);
+						//popupCheckBox.setEnabled(false);
+						stdInfoEdit.putBoolean("popupAlarm", false);
+						stdInfoEdit.putBoolean("alarm", false);
+						stdInfoEdit.apply();
+						cancelAlarm();
+					}
+				}
+		});
+		
+		/*popupCheckBox.setOnCheckedChangeListener(
 				new CompoundButton.OnCheckedChangeListener() {
 
 					@SuppressLint("NewApi")
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) 
 					{
-						notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-					    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-					    
-					    Intent intent = new Intent(getApplicationContext(), ReminderService.class);
-					    PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
-
-						if (isChecked == true) {
-							stdInfoEdit.putBoolean("alarm", true);
-							stdInfoEdit.commit();
-							// Setup Alarm
-						    Calendar calendar =  Calendar.getInstance();
-						    calendar.set(Calendar.HOUR_OF_DAY, targetHour);
-						    calendar.set(Calendar.MINUTE, targetMinute);
-						    long when = calendar.getTimeInMillis();         // notification time
-
-						    //alarmManager.set(AlarmManager.RTC, when, pendingIntent);
-						    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntent);
-						} else {
-							stdInfoEdit.putBoolean("alarm", false);
-							stdInfoEdit.commit();
-							notificationManager.cancelAll();
-							alarmManager.cancel(pendingIntent);
+						if (isChecked == true){
+							stdInfoEdit.putBoolean("popupAlarm", true);
+							stdInfoEdit.apply();
+							setAlarm();
+						}
+						else{
+							stdInfoEdit.putBoolean("popupAlarm", false);
+							stdInfoEdit.apply();
+							setAlarm();							
 						}
 					}
-				});
-		
+			});*/
 		RadioGroup rb1 = (RadioGroup)findViewById(R.id.home_more_radioGrop);
         RadioButton rbBasic =(RadioButton)findViewById(R.id.home_more_radiobtn_basic);
         RadioButton rbMiddle =(RadioButton)findViewById(R.id.home_more_radiobtn_middle);
@@ -142,31 +164,27 @@ public class HomeMoreSetting extends Activity {
         			case R.id.home_more_radiobtn_basic:
         				FlurryAgent.logEvent("Category set basic");
         				stdInfoEdit.putInt("currentCategory", 1);
-        				Log.d("!!!!!!!!!!!!!!","1111111111111111");
         			break;
         			
         			case R.id.home_more_radiobtn_middle:
         				FlurryAgent.logEvent("Category set middle");
-        				stdInfoEdit.putInt("currentCategory", 2);        				
-        				Log.d("222222222222222","2222222222222");
+        				stdInfoEdit.putInt("currentCategory", 2);      
         			break;
         			
         			case R.id.home_more_radiobtn_high:
         				FlurryAgent.logEvent("Category set high");
         				stdInfoEdit.putInt("currentCategory", 3);
-        				Log.d("222222222222222","2222222222222");
         			break;
         			
         			case R.id.home_more_radiobtn_toeic:
         				FlurryAgent.logEvent("Category set toiec");
         				stdInfoEdit.putInt("currentCategory", 4);
-        				Log.d("222222222222222","2222222222222");
         			break;
         			
         			default:
         			break;
         		}
-	        	stdInfoEdit.commit();
+	        	stdInfoEdit.apply();
 	        }
 	    });
 
@@ -199,27 +217,50 @@ public class HomeMoreSetting extends Activity {
 			targetMinute = selectedMinute;
 			stdInfoEdit.putInt("alarmHour", selectedHour);
 			stdInfoEdit.putInt("alarmMinute", selectedMinute);
-			stdInfoEdit.commit();
+			stdInfoEdit.apply();
 			
-			if(alarmCheckBox.isChecked()){
-				notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-			    AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-			    
-			    Intent intent = new Intent(getApplicationContext(), ReminderService.class);
-			    PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
-
-				notificationManager.cancelAll();
-				alarmManager.cancel(pendingIntent);
-				// Setup Alarm
-				Calendar calendar =  Calendar.getInstance();
-				calendar.set(Calendar.HOUR_OF_DAY, targetHour);
-				calendar.set(Calendar.MINUTE, targetMinute);
-				long when = calendar.getTimeInMillis();         // notification time
-
-				alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntent);
-			}
+			if(alarmCheckBox.isChecked())
+				setAlarm();
 		}
 	};
+	
+	private void setAlarm(){		    
+		Intent intentService = new Intent(getApplicationContext(), ReminderService.class);
+		PendingIntent pendingIntentService = PendingIntent.getService(getApplicationContext(), 0, intentService, 0);
+		
+		Intent intentActivity = new Intent("com.todpop.saltyenglish.popupnotification");
+		PendingIntent pendingIntentActivity = PendingIntent.getActivity(getApplicationContext(), 0, intentActivity, Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		//cancel all
+		notificationManager.cancelAll();
+		alarmManager.cancel(pendingIntentService);
+		alarmManager.cancel(pendingIntentActivity);
+
+		// Setup Alarm
+		Calendar calendar =  Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, targetHour);
+		calendar.set(Calendar.MINUTE, targetMinute);
+		long when = calendar.getTimeInMillis();         // notification time
+		
+		/*if(popupCheckBox.isChecked())
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntentActivity);*/
+		
+		//else
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntentService);		
+	}
+	
+	private void cancelAlarm(){
+		Intent intentService = new Intent(getApplicationContext(), ReminderService.class);
+		PendingIntent pendingIntentService = PendingIntent.getService(getApplicationContext(), 0, intentService, 0);
+		
+		Intent intentActivity = new Intent("com.todpop.saltyenglish.PopupNotification");
+		PendingIntent pendingIntentActivity = PendingIntent.getActivity(getApplicationContext(), 0, intentActivity, Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		//cancel all
+		notificationManager.cancelAll();
+		alarmManager.cancel(pendingIntentService);
+		alarmManager.cancel(pendingIntentActivity);
+	}
 	
 	private static String pad(int c) {
 		if (c >= 10)

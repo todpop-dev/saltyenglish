@@ -51,8 +51,8 @@ public class HomeMore extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_more, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_more, menu);
+		return false;
 	}
 	
 	private class CheckPw extends AsyncTask<String, Void, JSONObject> 
@@ -73,7 +73,7 @@ public class HomeMore extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE JSON ---- ", result.toString());				        	
 				}
 				return result;
 			}
@@ -96,7 +96,7 @@ public class HomeMore extends Activity {
 					}else{
 						rgInfoEdit.putString("password", "0");
 					}
-					rgInfoEdit.commit();
+					rgInfoEdit.apply();
 				}else{
 					
 				}
@@ -134,6 +134,11 @@ public class HomeMore extends Activity {
 	public void showHelpActivity(View view)
 	{
 		Intent intent = new Intent(getApplicationContext(), HomeMoreHelp.class);
+		startActivity(intent);
+	}
+	
+	public void showPronounceActivity(View view){
+		Intent intent = new Intent(getApplicationContext(), HomeMorePronounce.class);
 		startActivity(intent);
 	}
 	@Override

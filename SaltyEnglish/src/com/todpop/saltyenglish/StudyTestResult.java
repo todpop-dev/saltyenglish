@@ -116,7 +116,7 @@ public class StudyTestResult extends Activity {
 			else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);Log.e("STR2",String.valueOf(level));}
 			else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);Log.e("STR3",String.valueOf(level));}
 			else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
-			studyInfoEdit.commit();
+			studyInfoEdit.apply();
 			// ----------------------------
 			
 			if (tmpStageAccumulated%10 != 0) {
@@ -188,7 +188,7 @@ public class StudyTestResult extends Activity {
 
             			String stageInfo = resultObj.getString("stage_info");		// stageInfo
             			studyInfoEdit.putString("stageInfo", stageInfo);
-            			studyInfoEdit.commit();
+            			studyInfoEdit.apply();
 					
 						rewardView.setText(resultReward);
 						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
@@ -401,7 +401,7 @@ public class StudyTestResult extends Activity {
 						SharedPreferences settings = getSharedPreferences("setting", 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putString("check","YES");
-						editor.commit();
+						editor.apply();
 						
 						Intent intent = new Intent();
 				        intent.setClass(StudyTestResult.this, MainActivity.class);    
@@ -502,7 +502,7 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.putString("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
 					
-					cpxInfoEditor.commit();
+					cpxInfoEditor.apply();
 					
 					// TODO: Add more CPX Support. Now only support CPI and CPS
 
@@ -522,26 +522,6 @@ public class StudyTestResult extends Activity {
 
 		}
 	}
-	
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			db.execSQL("DROP TABLE IF EXISTS flip");
-			onCreate(db);
-		}
-	}
-
 
 	@Override
 	public void onDestroy()

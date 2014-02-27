@@ -88,7 +88,7 @@ public class FbNickname extends Activity {
 		else
 		{
 			rgInfoEdit.putString("nickname", "no");
-			rgInfoEdit.commit();
+			rgInfoEdit.apply();
 			
 			isRegisterFailed = false;
 		}
@@ -108,7 +108,7 @@ public class FbNickname extends Activity {
 			{
 				HttpClient client = new DefaultHttpClient();  
 				String postURL = urls[0];
-				Log.d("URL ---- ", postURL);
+				//Log.d("URL ---- ", postURL);
 				HttpPost post = new HttpPost(postURL); 
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				
@@ -167,11 +167,11 @@ public class FbNickname extends Activity {
 					// Login OK
 					settingEdit.putString("isLogin", "YES");
 					settingEdit.putString("loginType", "fb");
-					settingEdit.commit();
+					settingEdit.apply();
 					
 					rgInfoEdit.putString("facebook",json.getJSONObject("data").getString("facebook"));
 					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("mem_id"));
-					rgInfoEdit.commit();
+					rgInfoEdit.apply();
 					
 					if(json.getJSONObject("data").getInt("level_test")==0)
 					{
@@ -203,8 +203,6 @@ public class FbNickname extends Activity {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
-			Log.d("F N","192");
-			
 			JSONObject result = null;
 			try
 			{
@@ -213,8 +211,6 @@ public class FbNickname extends Activity {
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
-
-				Log.d("F N","203");
 				
 				if (resEntity != null)
 				{    
@@ -227,8 +223,6 @@ public class FbNickname extends Activity {
 				e.printStackTrace();
 			}
 			
-			Log.d("F N","216");
-			
 			return result;
 		}
 
@@ -236,20 +230,17 @@ public class FbNickname extends Activity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				
-				Log.d("F N","225");
-				
 				if(json.getBoolean("status")) {
 					
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
-					studyInfoEdit.commit();
+					studyInfoEdit.apply();
 					
     				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
     				startActivity(intent);
 				}
 				else
 				{
-					Log.d("F N","238");
 				}
 				
 			} catch (Exception e) {
@@ -263,8 +254,6 @@ public class FbNickname extends Activity {
 	
 	public void checkNickName(View v)
 	{
-		Log.d("FbNickname","192");
-
 		try {
 			String tmpNickname = nickName.getText().toString();
 			if(tmpNickname.contains(" "))
@@ -273,7 +262,7 @@ public class FbNickname extends Activity {
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
 			else if(tmpNickname.contains("\\")){
-				popupText.setText(R.string.popup_nickname_no_backslash);
+				popupText.setText(R.string.popup_nickname_no_error);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
 			else if(tmpNickname.length()<3||tmpNickname.length()>8){
@@ -287,8 +276,7 @@ public class FbNickname extends Activity {
 		}
 		catch (Exception e)
 		{
-			Log.d("FbNickname","197");
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -297,7 +285,6 @@ public class FbNickname extends Activity {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
-			Log.d("FbNickname","210");
 			
 			JSONObject result = null;
 			try
@@ -307,13 +294,11 @@ public class FbNickname extends Activity {
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
-
-				Log.d("FbNickname","221");
 				
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("nickname", result.getString("result"));				        	
+					//Log.d("nickname", result.getString("result"));				        	
 					return result;
 
 				}
@@ -323,27 +308,29 @@ public class FbNickname extends Activity {
 				e.printStackTrace();
 			}
 			
-			Log.d("FbNickname","236");
-			
 			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				
-				Log.d("FbNickname","243");
-				
-				if(json.getJSONObject("data").getBoolean("result")){
-					rgInfoEdit.putString("nickname",nickName.getText().toString());
-					popupText.setText(R.string.popup_nickname_yes);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-				}else{
-					rgInfoEdit.putString("nickname","no");
-					popupText.setText(R.string.popup_nickname_no);
+				if(json.getBoolean("status")){
+					
+					if(json.getJSONObject("data").getBoolean("result")){
+						rgInfoEdit.putString("nickname",nickName.getText().toString());
+						popupText.setText(R.string.popup_nickname_yes);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					}else{
+						rgInfoEdit.putString("nickname","no");
+						popupText.setText(R.string.popup_nickname_no);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					}
+					rgInfoEdit.apply();
+				}	
+				else{
+					popupText.setText(R.string.popup_nickname_no_error);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}
-				rgInfoEdit.commit();
 			} catch (Exception e) {
 
 			}
@@ -355,12 +342,11 @@ public class FbNickname extends Activity {
 	
 	public void bridgeToShowLvTest(View v){
 		if(!nicknamerefre.getText().toString().isEmpty()){
-			Log.i("STEVEN----not empty", "right now nick is"+nicknamerefre.getText().toString());
 			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
 		}
 		else{
 			rgInfoEdit.putString("recommend",null);
-			rgInfoEdit.commit();
+			rgInfoEdit.apply();
 			showLvtest();
 		}
 	}
@@ -381,8 +367,7 @@ public class FbNickname extends Activity {
 
 				if (resEntity != null)
 				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("recommender nickname", result.getString("result"));				        	
+					result = new JSONObject(EntityUtils.toString(resEntity)); 			        	
 					return result;
 
 				}
@@ -399,13 +384,11 @@ public class FbNickname extends Activity {
 			try {
 				if(json.getJSONObject("data").getBoolean("result")){
 					rgInfoEdit.putString("recommend", nicknamerefre.getText().toString());
-					Log.i("STEVEN----", nicknamerefre.getText().toString());
 				}
 				else{
 					rgInfoEdit.putString("recommend",null);
-					Log.i("STEVEN-----", "NO");
 				}
-				rgInfoEdit.commit();
+				rgInfoEdit.apply();
 				showLvtest();
 			} catch (Exception e) {
 
@@ -422,7 +405,6 @@ public class FbNickname extends Activity {
 			popupText.setText(R.string.popup_nickname_needcheck);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		}else if(!nicknamerefre.getText().toString().isEmpty() && !rgInfo.getString("recommend","no").equals(nicknamerefre.getText().toString())){
-			Log.i("STEVEN----compare", "savedInfo = "+rgInfo.getString("recommend", null)+"rightnow is = "+nicknamerefre.getText().toString());
 			isOk = false;
 			popupText.setText(R.string.popup_recom_no);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);

@@ -83,7 +83,7 @@ public class HomeMoreHelp extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE---- ", result.toString());				        	
 				}
 				return result;
 			}

@@ -2,85 +2,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_pinkpattern" >
+    android:background="@drawable/common_bg_pinkpattern"
+    android:orientation="vertical" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal = "true"
-        android:layout_marginTop="12.5dp"
-        android:src="@drawable/common_bgimg_more" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/common_bgimg_more" />
+        </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:onClick="onClickBack"
-        android:background="@drawable/rg_drawable_btn_back"/>
-    
-    
-   
-    
-    
-    <!-- settings -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="207dp"
-        android:background="@drawable/homemore_drawable_btn_setting"
-        android:onClick="showSettingActivity"/>
-    <!-- summary -->
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="277dp"
-        android:background="@drawable/homemore_drawable_btn_notice"
-        android:onClick="showNoticeActivity"
-        />
-    <!-- acount info -->
-     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="347dp"
-        android:background="@drawable/homemore_drawable_btn_accountinfo"
-        android:onClick="showAccountInfoActivity"/>
-     <!-- help -->
-     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="417dp"
-        android:background="@drawable/homemore_drawable_btn_help"
-        android:onClick="showHelpActivity"/>
-     
-     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="62.5dp"
-        android:layout_marginTop="154.5dp"
-        android:src="@drawable/store_51_image_settingwoman" />
-     
-     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="256.5dp"
-        android:layout_marginTop="299.5dp"
-        android:src="@drawable/store_51_image_accountcouple" />
-    
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1190" >
 
+            <!-- acount info -->
 
+            <Button
+                android:id="@+id/homemore_id_accountinfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/homemore_drawable_btn_accountinfo"
+                android:onClick="showAccountInfoActivity" />
+            <!-- summary -->
 
-     </RelativeLayout>
+            <Button
+                android:id="@+id/homemore_id_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/homemore_id_accountinfo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/homemore_drawable_btn_notice"
+                android:onClick="showNoticeActivity" />
+            <!-- settings -->
+
+            <Button
+                android:id="@+id/homemore_id_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/homemore_id_notice"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/homemore_drawable_btn_setting"
+                android:onClick="showSettingActivity" />
+            <!-- help -->
+
+            <Button
+                android:id="@+id/homemore_id_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/homemore_id_accountinfo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/homemore_drawable_btn_help"
+                android:onClick="showHelpActivity" />
+            <!-- manage pronounce -->
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/homemore_id_help"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/homemore_drawable_btn_help"
+                android:onClick="showPronounceActivity" 
+                android:visibility="gone"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/homemore_id_setting"
+                android:layout_marginBottom="-20dp"
+                android:layout_marginLeft="60dp"
+                android:src="@drawable/store_51_image_settingwoman" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/homemore_id_accountinfo"
+                android:layout_alignRight="@id/homemore_id_accountinfo"
+                android:layout_marginBottom="-20dp"
+                android:layout_marginRight="40dp"
+                android:src="@drawable/store_51_image_accountcouple" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

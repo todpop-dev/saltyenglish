@@ -21,7 +21,6 @@ import com.facebook.RequestAsyncTask;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
-import com.facebook.UiLifecycleHelper;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -33,15 +32,25 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 public class StudyTestFinish extends Activity {
+	// popup view
+	PopupWindow popupWindow;
+	View popupview;
+	RelativeLayout relative;
+	TextView popupText;
+		
 
 	Button skipBtn;
 	ImageView marking;
@@ -70,6 +79,13 @@ public class StudyTestFinish extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_study_test_finish);
+
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.testfinish_id_main);;
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
 		skipBtn = (Button) findViewById(R.id.testfinish_id_skip_btn);
 		rgInfo = getSharedPreferences("rgInfo", 0);
 		video = (VideoView) findViewById(R.id.test_video_view);
@@ -80,7 +96,6 @@ public class StudyTestFinish extends Activity {
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
 						+ rgInfo.getString("mem_id", "0"));
-
 	}
 
 	private Runnable mLaunchTaskMain = new Runnable() {
@@ -157,7 +172,6 @@ public class StudyTestFinish extends Activity {
 	}
 
 	private class SetCPDMlog extends AsyncTask<String, Void, JSONObject> {
-
 		@Override
 		protected JSONObject doInBackground(String... urls) {
 			JSONObject result = null;
@@ -184,10 +198,12 @@ public class StudyTestFinish extends Activity {
 
 			try {
 				if (json.getBoolean("status") == true) {
-					Intent intent = new Intent(getApplicationContext(),
-							StudyTestResult.class);
-					startActivity(intent);
-					StudyTestFinish.this.finish();
+					if(ad_type != 202){
+						Intent intent = new Intent(getApplicationContext(),
+								StudyTestResult.class);
+						startActivity(intent);
+						StudyTestFinish.this.finish();
+					}
 				} else {
 				}
 			} catch (Exception e) {
@@ -309,6 +325,9 @@ public class StudyTestFinish extends Activity {
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
 					} else {
+						shareBtn.setClickable(false);
+						popupText.setText(R.string.facebook_share_done);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						new SetCPDMlog()
 								.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
 										+ ad_id
@@ -322,7 +341,7 @@ public class StudyTestFinish extends Activity {
 				}
 			};
 
-			Request request = new Request(Session.getActiveSession(),
+			Request request = new Request(session,
 					"me/feed", postParams, HttpMethod.POST, callback);
 
 			RequestAsyncTask task = new RequestAsyncTask(request);
@@ -354,9 +373,22 @@ public class StudyTestFinish extends Activity {
 		if (state.isOpened()) {
 			if(!pendingPublishReauthorization)
 				publishAd();
+			else{
+				popupText.setText(R.string.facebook_login_done);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
 		}
 	}
-
+	
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
+		Intent intent = new Intent(getApplicationContext(),
+				StudyTestResult.class);
+		startActivity(intent);
+		StudyTestFinish.this.finish();
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();

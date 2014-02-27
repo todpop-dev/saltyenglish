@@ -27,12 +27,10 @@ import com.google.analytics.tracking.android.EasyTracker;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -87,6 +85,7 @@ public class HomeStorePurchase extends Activity {
 	String price;
 	String curReward;
 	String nickName;
+	int remainRewardAmount;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +93,10 @@ public class HomeStorePurchase extends Activity {
 		setContentView(R.layout.activity_home_store_purchase);
 		Intent intent = getIntent();
 		productId = intent.getStringExtra("productId");
-		String title = intent.getStringExtra("title");
+		/*String title = intent.getStringExtra("title");
 		String provider = intent.getStringExtra("provider");
 		price = intent.getStringExtra("price");
-		String imgUrl = intent.getStringExtra("imgUrl");
+		String imgUrl = intent.getStringExtra("imgUrl");*/
 		curReward = intent.getStringExtra("curReward");
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
@@ -136,43 +135,90 @@ public class HomeStorePurchase extends Activity {
 		kickBackPopupWindow = new PopupWindow(kickBackPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		kickBackPopupText = (TextView)kickBackPopupView.findViewById(R.id.popup_id_text);
 		
-		productTitle.setText(title);
-		productPrice.setText(price);
-		place.setText(provider);
+		new GetQPConInfo().execute("http://todpop.co.kr/api/etc/get_qpcon_info.json?product_id=" + productId);
+		
+		validate.setText(getResources().getString(R.string.temp_store_validate_check_after_purchase));
 		currentReward.setText(curReward);
-		int remainRewardAmount = Integer.valueOf(curReward) - Integer.valueOf(price);
-		remainReward.setText(String.valueOf(remainRewardAmount));
-		
-		new DownloadImageTask(productImg).execute(imgUrl);
-		
 	}
-    
-	private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
+	
+	private class GetQPConInfo extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpParams httpParameters = new BasicHttpParams();
+				DefaultHttpClient httpClient = new DefaultHttpClient(
+						httpParameters);
+				HttpResponse response = httpClient.execute(httpGet);
+				HttpEntity resEntity = response.getEntity();
 
-		ImageView bmImage;
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE JSON ---- ", result.toString());
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-		public DownloadImageTask(ImageView bmImage) {
-			this.bmImage = bmImage;
-		}
-		protected Bitmap doInBackground(String... urls) 
-		{
-		    String urldisplay = urls[0];
-		    Bitmap mIcon11 = null;
-		    try {
-		        InputStream in = new java.net.URL(urldisplay).openStream();
-		        mIcon11 = BitmapFactory.decodeStream(in);
-		    } catch (Exception e) {
-		        Log.e("Error", e.getMessage());
-		        e.printStackTrace();
-		    }
-		    return mIcon11;
+			return result;
 		}
 
-		protected void onPostExecute(Bitmap result) 
-		{
-			bmImage.setImageBitmap(result);
+		@Override
+		protected void onPostExecute(JSONObject json) {
+
+			try {
+				if (json.getBoolean("status") == true) {
+
+					productTitle.setText(json.getString("name"));
+					productPrice.setText(json.getString("price"));
+					remainRewardAmount = Integer.valueOf(curReward) - Integer.valueOf(json.getString("price"));
+					remainReward.setText(String.valueOf(remainRewardAmount));
+					place.setText(json.getString("place"));
+					// TODO detail enter
+					if(json.getString("information").equals("null"))
+						detail.setText(getResources().getString(R.string.home_purchased_detail_info_null));
+					else
+						detail.setText(json.getString("information"));
+
+					new DownloadImageTask(productImg)
+							.execute(json.getString("image"));
+				} else {
+					detail.setText(R.string.get_coupon_error);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-	}		
+
+		private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+
+			ImageView bmImage;
+
+			public DownloadImageTask(ImageView bmImage) {
+				this.bmImage = bmImage;
+			}
+
+			protected Bitmap doInBackground(String... urls) {
+				String urldisplay = urls[0];
+				Bitmap mIcon11 = null;
+				try {
+					InputStream in = new java.net.URL(urldisplay).openStream();
+					mIcon11 = BitmapFactory.decodeStream(in);
+				} catch (Exception e) {
+					Log.e("Error", e.getMessage());
+					e.printStackTrace();
+				}
+				return mIcon11;
+			}
+
+			protected void onPostExecute(Bitmap result) {
+				bmImage.setImageBitmap(result);
+			}
+		}
+	}
 
 	
 	
@@ -183,7 +229,7 @@ public class HomeStorePurchase extends Activity {
 	}
 	
 	public void onClickPurchase(View v){
-		if(Integer.valueOf(curReward) > Integer.valueOf(price)){
+		if(remainRewardAmount > 0){
 			SharedPreferences rgInfo;
 			rgInfo = getSharedPreferences("rgInfo",0);
 			confirmPopupPrice.setText(price);
@@ -262,7 +308,7 @@ public class HomeStorePurchase extends Activity {
 	        	List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         		params.add(new BasicNameValuePair("user_id", rgInfo.getString("mem_id", "NO")));
-        		params.add(new BasicNameValuePair("coupon_id", productId));
+        		params.add(new BasicNameValuePair("product_id", productId));
         		params.add(new BasicNameValuePair("password", returnSHA512(confirmPopupPwd.getText().toString())));
 
         		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
@@ -272,8 +318,8 @@ public class HomeStorePurchase extends Activity {
 
         		if (resEntity != null)
         		{    
-        			json = new JSONObject(EntityUtils.toString(resEntity)); 
-        			Log.d("send request for purchase", json.toString());				        	
+        			json = new JSONObject(EntityUtils.toString(resEntity)); 	
+    				Log.d("RESPONSE ---- ", json.toString());
         			return json;
         		}
         		return json;
@@ -291,7 +337,6 @@ public class HomeStorePurchase extends Activity {
         	try {
         		confirmPopupWindow.dismiss();
         		if (result.getBoolean("status")==true) {
-        			Log.i("STEVEN purchase 228", "status true");
         			donePopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
         			donePopupWindow.showAsDropDown(null);
         			}
@@ -306,7 +351,6 @@ public class HomeStorePurchase extends Activity {
     			kickBackPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
     			kickBackPopupWindow.showAsDropDown(null);
         	}
-
         }
 	}
 	

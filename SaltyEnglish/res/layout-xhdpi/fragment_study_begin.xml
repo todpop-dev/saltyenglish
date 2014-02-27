@@ -16,15 +16,16 @@
         android:src="@drawable/study_8_image_engcard"/>
     
     <!-- speack btn -->
-    <!-- 
+
     <Button 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="65dp"
         android:background="@drawable/studybigin_drawable_btn_speaker"
+        android:onClick="readItForMe"
+        android:visibility="gone"
         />
-     -->
      
     <!-- word ON -->
     <ImageView 

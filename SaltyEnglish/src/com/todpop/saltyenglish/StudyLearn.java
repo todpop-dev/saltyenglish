@@ -59,7 +59,7 @@ public class StudyLearn extends FragmentActivity {
 	// Fragment attached to pageView
 	LevelFragment levelFragment;
 
-	static SharedPreferences studyInfo;
+	SharedPreferences studyInfo;
 	static SharedPreferences.Editor studyInfoEdit;
 	static String stageInfo;
 	SharedPreferences rgInfo;
@@ -78,7 +78,7 @@ public class StudyLearn extends FragmentActivity {
 	ImageView[] pointView;
 	int fregmentCount = 1;
 	
-	static SharedPreferences checkStageIsNew;
+	SharedPreferences checkStageIsNew;
 	
 	static String userId = "0";
 	static int category = 0;
@@ -218,7 +218,7 @@ public class StudyLearn extends FragmentActivity {
 				SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
 				SharedPreferences.Editor ed = rgInfo.edit();
 				ed.putInt("pivotTime", pivotTime);
-				ed.commit();
+				ed.apply();
 				
 			} catch (Exception e) {
 
@@ -370,7 +370,7 @@ public class StudyLearn extends FragmentActivity {
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
 						
 						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
-						studyInfoEdit.commit();
+						studyInfoEdit.apply();
 
 						try
 						{
@@ -510,7 +510,7 @@ public class StudyLearn extends FragmentActivity {
 						int selectedStageStatus = stageInfo.charAt(currentBtnClickStage-1);
 
 						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
-						studyInfoEdit.commit();
+						studyInfoEdit.apply();
 
 						try
 						{
@@ -665,7 +665,7 @@ public class StudyLearn extends FragmentActivity {
 						Log.d("============","===============");
 						
 						studyInfoEdit.putInt("tmpStageAccumulated", currentBtnClickStage);
-						studyInfoEdit.commit();
+						studyInfoEdit.apply();
 						
 						try
 						{
@@ -842,8 +842,8 @@ public class StudyLearn extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_learn, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.study_learn, menu);
+		return false;
 	}
 
 	//--- on click---
@@ -854,13 +854,6 @@ public class StudyLearn extends FragmentActivity {
 //		Intent intent = new Intent(getApplicationContext(), StudyCategory.class);
 //		startActivity(intent);
 		finish();
-	}
-
-	public void showStudyFinish(View view)
-	{
-		Intent intent = new Intent(getApplicationContext(), StudyFinish.class);
-		startActivity(intent);
-		//finish();
 	}
 	
 	public void goBackToHome(View v) 

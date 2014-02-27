@@ -2,6 +2,7 @@ package com.todpop.saltyenglish;
 
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -247,7 +248,7 @@ public class StudyTestB extends Activity {
 			SharedPreferences pref = getSharedPreferences("rgInfo",0);
 			SharedPreferences.Editor editor = pref.edit();
 			editor.putString("introTestBOk", "Y");
-			editor.commit();
+			editor.apply();
 			
 			balloonPink.setVisibility(View.VISIBLE);
 			balloonYellow.setVisibility(View.VISIBLE);
@@ -473,7 +474,7 @@ public class StudyTestB extends Activity {
 					SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
 					SharedPreferences.Editor editor = sp.edit();
 					editor.putString("testResult", finalAnswerForRequest);
-					editor.commit();
+					editor.apply();
 					
 					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
 					startActivity(intent);
@@ -620,7 +621,7 @@ public class StudyTestB extends Activity {
 	{
 		enWordView.setText(englishWords.get(count));
 		
-		int ran = (int)(Math.random() * 4);
+		int ran = new Random().nextInt(4);
 		Log.d("ran number ------ ", Integer.toString(ran));
 		
 		if (ran == 0) {
@@ -667,22 +668,6 @@ public class StudyTestB extends Activity {
 		return true;
 	}
 
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			onCreate(db);
-		}
-	}
 	@Override
 	protected void onStart()
 	{

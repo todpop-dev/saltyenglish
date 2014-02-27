@@ -75,6 +75,8 @@ public class RgRegisterEmailInfo extends Activity {
 	int checkCount = 0;
 	//sex select
 	int sex;
+	
+	boolean setBirth = false;
 
 	//declare define popup view
 	PopupWindow popupWindow;
@@ -118,7 +120,11 @@ public class RgRegisterEmailInfo extends Activity {
 		mYear = c.get(Calendar.YEAR);   
 		mMonth = c.get(Calendar.MONTH);   
 		mDay = c.get(Calendar.DAY_OF_MONTH);   
-		birthBtn.setText(mYear+"-"+(mMonth+1)+"-"+mDay); 
+		
+		birthBtn.setText(mYear + getResources().getString(R.string.rg_register_email_info_year) + " " + 
+				(mMonth+1) + getResources().getString(R.string.rg_register_email_info_month) + " " + 
+				mDay + getResources().getString(R.string.rg_register_email_info_day)); 
+		
 		//spinner city county
 		city =(Spinner)findViewById(R.id.rgregisteremailinfo_id_spinner_city);
 		city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -189,10 +195,13 @@ public class RgRegisterEmailInfo extends Activity {
 		@Override  
 		public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) 
 		{   
+			setBirth = true;
 			mYear =year;   
 			mMonth= monthOfYear;   
 			mDay= dayOfMonth;   
-			birthBtn.setText(mYear+"-"+(mMonth+1)+"-"+mDay);   
+			birthBtn.setText(mYear + getResources().getString(R.string.rg_register_email_info_year) + " " + 
+					(mMonth+1) + getResources().getString(R.string.rg_register_email_info_month) + " " + 
+					mDay + getResources().getString(R.string.rg_register_email_info_day));   
 		}   
 	};
 
@@ -405,11 +414,11 @@ public class RgRegisterEmailInfo extends Activity {
 					
 					settingEdit.putString("isLogin", "YES");
 					settingEdit.putString("loginType", "email");
-					settingEdit.commit();
+					settingEdit.apply();
 					
 					rgInfoEdit.putString("mem_id", result.getJSONObject("data").getString("mem_id"));
 					rgInfoEdit.putString("tempPassword", null);
-					rgInfoEdit.commit();
+					rgInfoEdit.apply();
 					
 					Log.d("RgRegisterEmailInfo","400");
 					Log.d("chk=",result.getJSONObject("data").getString("mem_id") + "     " + result.getJSONObject("data").getString("level_test"));
@@ -418,20 +427,24 @@ public class RgRegisterEmailInfo extends Activity {
 					{
 						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
 						startActivity(intent);
+						finish();
 					}
 					else
 					{
 						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
 					}
 					
-					finish();
 					
 				} else {
-
+					popupText.setText(R.string.popup_sign_up_fail);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					popupWindow.showAsDropDown(null);
 				}
 
 			} catch (Exception e) {
-
+				popupText.setText(R.string.popup_sign_up_fail);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(null);
 			}
 
 		}
@@ -483,10 +496,11 @@ public class RgRegisterEmailInfo extends Activity {
 					
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
-					studyInfoEdit.commit();
+					studyInfoEdit.apply();
 					
 	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 	    				startActivity(intent);
+						finish();
 				}
 				else
 				{
@@ -524,14 +538,21 @@ public class RgRegisterEmailInfo extends Activity {
 		if(haircut.isChecked())			{	checkCount++;	interest = interest +1000;	}
 		if(money.isChecked())			{	checkCount++;	interest = interest +4000;	}
 
-		if(checkCount>2)
-		{
-			Log.i("SETVEN", "INTEREST!!!-------"+interest);
-			new SignUp().execute("http://todpop.co.kr/api/users/sign_up.json");
-		}else{
-			popupText.setText(R.string.popup_interest_More_than_three);
+		if(setBirth){
+			if(checkCount>2)
+			{
+				Log.i("SETVEN", "INTEREST!!!-------"+interest);
+				new SignUp().execute("http://todpop.co.kr/api/users/sign_up.json");
+			}else{
+				popupText.setText(R.string.popup_interest_More_than_three);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(null);
+			}
+		}
+		else{
+			popupText.setText(R.string.popup_birth_not_selected);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-			popupWindow.showAsDropDown(doneBtn);
+			popupWindow.showAsDropDown(null);
 		}
 	}
 	

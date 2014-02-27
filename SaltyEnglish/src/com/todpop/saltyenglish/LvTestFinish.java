@@ -33,15 +33,26 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 public class LvTestFinish extends Activity {
+	// popup view
+	PopupWindow popupWindow;
+	View popupview;
+	RelativeLayout relative;
+	TextView popupText;
+		
 
 	Button skipBtn;
 	ImageView marking;
@@ -62,8 +73,7 @@ public class LvTestFinish extends Activity {
 	private int ad_id = -1;
 	private int ad_type;
 	int view_time = 0;
-	private static final List<String> PERMISSIONS = Arrays
-			.asList("publish_actions");
+	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 
 	@Override
@@ -71,6 +81,13 @@ public class LvTestFinish extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_study_test_finish);
+
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.testfinish_id_main);;
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
 		skipBtn = (Button) findViewById(R.id.testfinish_id_skip_btn);
 		rgInfo = getSharedPreferences("rgInfo", 0);
 		video = (VideoView) findViewById(R.id.test_video_view);
@@ -107,7 +124,7 @@ public class LvTestFinish extends Activity {
 
 				if (resEntity != null) {
 					result = new JSONObject(EntityUtils.toString(resEntity));
-					Log.d("CPDM RESPONSE ---- ", result.toString());
+					Log.d("RESPONSE ---- ", result.toString());
 				}
 				return result;
 			} catch (Exception e) {
@@ -170,7 +187,7 @@ public class LvTestFinish extends Activity {
 
 				if (resEntity != null) {
 					result = new JSONObject(EntityUtils.toString(resEntity));
-					Log.d("SET CPDM LOG RESPONSE ---- ", result.toString());
+					Log.d("RESPONSE ---- ", result.toString());
 				}
 				return result;
 			} catch (Exception e) {
@@ -203,7 +220,6 @@ public class LvTestFinish extends Activity {
 		@Override
 		public void onCompletion(MediaPlayer mp) {
 			skipBtn.setEnabled(false);
-			Log.d("cpdm view_time----", String.valueOf(video_length));
 			new SetCPDMlog()
 					.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
 							+ ad_id
@@ -220,8 +236,6 @@ public class LvTestFinish extends Activity {
 
 		@Override
 		public void onPrepared(MediaPlayer arg0) {
-
-			Log.e("cpdm----", "ready");
 
 			Handler mHandler = new Handler();
 			mHandler.postDelayed(mLaunchTaskMain, 5000); // exact 5000 timing
@@ -244,7 +258,6 @@ public class LvTestFinish extends Activity {
 		if(view_time == 0)
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 			
-		Log.d("cpdm view_time----", "" + view_time);
 		FlurryAgent.endTimedEvent("CPDM");
 		new SetCPDMlog()
 				.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
@@ -263,11 +276,9 @@ public class LvTestFinish extends Activity {
 	public void publishAdBtn(View v) {
 		Session session = Session.getActiveSession();
 		if (session == null || session.isClosed()) {
-			Log.i("STEVEN", "publishAdBtn if");
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 			Session.openActiveSession(this, true, callback);
 		} else {
-			Log.i("STEVEN", "publishAdBtn else");
 			publishAd();
 		}
 	}
@@ -310,6 +321,9 @@ public class LvTestFinish extends Activity {
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
 					} else {
+						shareBtn.setClickable(false);
+						popupText.setText(R.string.facebook_share_done);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						new SetCPDMlog()
 						.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
 								+ ad_id
@@ -351,13 +365,21 @@ public class LvTestFinish extends Activity {
 
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
-		Log.i("STEVEN", "onSessionStateChange");
 		if (state.isOpened()) {
 			if(!pendingPublishReauthorization)
 				publishAd();
+			else{
+				popupText.setText(R.string.facebook_login_done);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
 		}
 	}
 
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();

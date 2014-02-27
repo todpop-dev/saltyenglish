@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
-    android:versionCode="15"
-    android:versionName="1.2.9" >
+    android:versionCode="17"
+    android:versionName="1.2.20"  >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -98,11 +98,6 @@
         <activity
             android:name="com.todpop.saltyenglish.StudyLearn"
             android:label="@string/title_activity_study_learn"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.todpop.saltyenglish.StudyFinish"
-            android:label="@string/title_activity_study_finish"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -258,12 +253,29 @@
             android:label="@string/title_activity_cplview" >
         </activity>
 
-        <service android:name="com.todpop.saltyenglish.ReminderService" >
+        <service 
+            android:name="com.todpop.saltyenglish.ReminderService" >
         </service>
 
         <activity
             android:name="com.todpop.saltyenglish.LvTestPause"
             android:label="@string/title_activity_lv_test_pause" >
+        </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.HomeMorePronounce"
+            android:label="@string/title_activity_home_more_pronounce" >
+        </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.PopupNotification"
+            android:label="@string/title_activity_popup_notification" 
+            android:screenOrientation="portrait"
+        	android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter >
+                <action android:name="com.todpop.saltyenglish.popupnotification"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
 
         <receiver android:name="CpxPackageChangeReceiver" >

@@ -168,7 +168,7 @@ public class RgLogin extends Activity {
         			
         			settingEdit.putString("isLogin","YES");
         			settingEdit.putString("loginType", "email");
-        			settingEdit.commit();
+        			settingEdit.apply();
         			Log.i("STEVEN RGLONGIN 172", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
 
         			// email, facebook skip (not needed)
@@ -177,7 +177,7 @@ public class RgLogin extends Activity {
         			rgInfoEdit.putString("mobile", result.getJSONObject("data").getJSONObject("user").getString("mobile"));
         			rgInfoEdit.putString("level", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
         			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
-        			rgInfoEdit.commit();
+        			rgInfoEdit.apply();
     			
         			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));        			
         		}
@@ -258,7 +258,7 @@ public class RgLogin extends Activity {
 				if(json.getBoolean("status")) {
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
-					studyInfoEdit.commit();
+					studyInfoEdit.apply();
 					
 					if(rgInfo.getString("level", "0").equals("0")){
         				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
@@ -422,7 +422,7 @@ public class RgLogin extends Activity {
 
         			settingEdit.putString("isLogin","YES");
         			settingEdit.putString("loginType", "fb");
-        			settingEdit.commit();
+        			settingEdit.apply();
 
         			// email, facebook skip (not needed)
         			rgInfoEdit.putString("mem_id", result.getJSONObject("data").getJSONObject("user").getString("id"));
@@ -430,7 +430,7 @@ public class RgLogin extends Activity {
         			rgInfoEdit.putString("mobile", result.getJSONObject("data").getJSONObject("user").getString("mobile"));
         			rgInfoEdit.putString("level", result.getJSONObject("data").getJSONObject("user").getString("level_test"));
         			rgInfoEdit.putString("password", result.getJSONObject("data").getJSONObject("user").getString("is_set_facebook_password"));
-        			rgInfoEdit.commit();
+        			rgInfoEdit.apply();
 
         			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
         			

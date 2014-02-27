@@ -1,19 +1,19 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_pinkpattern" >
+    android:background="@drawable/common_bg_pinkpattern"
+    android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90" >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12.5dp"
+            android:layout_centerInParent="true"
             android:src="@drawable/common_bgimg_attendance" />
 
         <!-- back btn -->
@@ -21,40 +21,55 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10.5dp"
-            android:layout_marginTop="10.5dp"
             android:background="@drawable/rg_drawable_btn_back"
             android:onClick="onClickBack" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="324"
+        android:paddingLeft="21dp"
+        android:paddingRight="16dp" >
 
         <ImageView
+            android:id="@+id/home_my_page_attendance_id_peoplebar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginTop="56dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/store_33_image_peoplebar" />
+
+        <ImageView
+            android:id="@+id/home_my_page_attendance_id_textballoon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/home_my_page_attendance_id_peoplebar"
+            android:layout_alignLeft="@id/home_my_page_attendance_id_peoplebar"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/store_33_image_textballoon" />
         <!-- money -->
 
         <TextView
             android:id="@+id/home_my_page_attendance_reward"
-            android:layout_width="47dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="48.5dp"
-            android:layout_marginTop="104.5dp"
+            android:layout_alignBottom="@id/home_my_page_attendance_id_textballoon"
+            android:layout_alignLeft="@id/home_my_page_attendance_id_textballoon"
+            android:layout_alignRight="@id/home_my_page_attendance_id_textballoon"
+            android:layout_marginBottom="21dp"
+            android:layout_marginRight="5dp"
             android:gravity="right"
             android:textColor="#000000" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="147.5dp"
-            android:src="@drawable/store_33_image_peoplebar" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="208dp"
-            android:layout_marginTop="146dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@id/home_my_page_attendance_id_peoplebar"
+            android:layout_marginBottom="22dp"
             android:src="@drawable/store_33_text_attendance" />
         <!-- attendance day -->
 
@@ -62,24 +77,38 @@
             android:id="@+id/home_my_page_attendance_day"
             android:layout_width="112dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="135.5dp"
-            android:layout_marginTop="110dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@id/home_my_page_attendance_id_peoplebar"
+            android:layout_marginBottom="30dp"
+            android:layout_marginRight="86dp"
             android:gravity="right"
             android:textColor="#E6D153"
             android:textSize="50sp" />
+    </RelativeLayout>
 
-        <GridLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="220dp"
-            android:columnCount="5"
-            android:rowCount="6" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="866"
+        android:orientation="vertical"
+        android:paddingBottom="33dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="19dp"
+        android:paddingTop="9dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="1"
@@ -87,9 +116,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="2"
@@ -97,9 +127,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="3"
@@ -107,9 +138,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="4"
@@ -117,17 +149,28 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="6"
@@ -135,9 +178,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="7"
@@ -145,9 +189,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="8"
@@ -155,9 +200,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="9"
@@ -165,17 +211,28 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="11"
@@ -183,9 +240,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="12"
@@ -193,9 +251,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="13"
@@ -203,9 +262,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="14"
@@ -213,18 +273,29 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="15"
                 android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn15"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="16"
@@ -232,9 +303,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="17"
@@ -242,9 +314,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="18"
@@ -252,9 +325,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="19"
@@ -262,17 +336,28 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn19"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="21"
@@ -280,9 +365,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn21"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="22"
@@ -290,9 +376,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn22"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="23"
@@ -300,9 +387,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn23"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="24"
@@ -310,18 +398,29 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn24"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="25"
                 android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="115"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn25"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="26"
@@ -329,9 +428,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn26"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="27"
@@ -339,9 +439,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn27"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="28"
@@ -349,9 +450,10 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn28"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:text="29"
@@ -359,13 +461,14 @@
 
             <Button
                 android:id="@+id/home_mypage_attendance_id_btn29"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
+                android:layout_weight="1"
                 android:background="@drawable/homemypageattendance_drawable_btn_day"
                 android:enabled="false"
                 android:textSize="20sp" />
-        </GridLayout>
-    </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

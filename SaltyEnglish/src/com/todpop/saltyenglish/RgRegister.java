@@ -62,6 +62,7 @@ public class RgRegister extends Activity {
     String fbEmail = null;
 
     ImageView rgNotice;
+    TextView noMobile;
     Button fbCheckPointBtn;
     Button emailBtn;
     CheckBox rgCheckbox;
@@ -89,6 +90,7 @@ public class RgRegister extends Activity {
 		rgInfoEdit = rgInfo.edit();
 
 		rgNotice = (ImageView)findViewById(R.id.register_17_email_notice);
+		noMobile = (TextView)findViewById(R.id.register_17_no_mobile);
 		fbCheckPointBtn = (Button)findViewById(R.id.register_id_facebook_btn_checkPoint);
 		fbCheckPointBtn.setBackgroundResource(R.drawable.rgregister_drawable_btn_fb);
 		fb_btn = (LoginButton)findViewById(R.id.register_id_facebook_btn);
@@ -101,20 +103,19 @@ public class RgRegister extends Activity {
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
-		
 		//get phone number
 		try {
 			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 			mobile =phoneMgr.getLine1Number().toString();
 			mobile = mobile.replace("+82", "0");
+			new CheckMobileExist().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
 		} catch(Exception e) {
 			mobile = "010test0000";
+			noMobile.setVisibility(View.VISIBLE);
 		}
-		
+
 		uiHelper = new UiLifecycleHelper(this, callback);
 		uiHelper.onCreate(savedInstanceState);
-
-		new CheckMobileExist().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
 	}
 	
 	
@@ -175,7 +176,7 @@ public class RgRegister extends Activity {
 					rgInfoEdit.putString("recommend", null);
 					rgInfoEdit.putString("password", "0");
 					
-					rgInfoEdit.commit();
+					rgInfoEdit.apply();
 
 				} else {	
 					
@@ -196,7 +197,7 @@ public class RgRegister extends Activity {
 					if(json.getJSONObject("data").getString("email").equals("null")) {rgInfoEdit.putString("email",null);}
 					if(json.getJSONObject("data").getString("facebook").equals("null")) {rgInfoEdit.putString("facebook",null);}
 										
-					rgInfoEdit.commit();
+					rgInfoEdit.apply();
 
 				}
 
@@ -327,7 +328,7 @@ public class RgRegister extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.rg_register, menu);
-		return true;
+		return false;
 	}
 	
 	// Facebook delegates
@@ -512,7 +513,7 @@ public class RgRegister extends Activity {
 							rgInfoEdit.putString("fbGender", "2");
 						}
 							
-						rgInfoEdit.commit();
+						rgInfoEdit.apply();
 						
 						Log.i("STEVEN", rgInfo.getString("fbLocation", "NO"));
 						Log.i("STEVEN", rgInfo.getString("fbBDay", "NO"));

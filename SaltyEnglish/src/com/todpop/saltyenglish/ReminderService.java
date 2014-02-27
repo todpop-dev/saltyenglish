@@ -32,7 +32,6 @@ public class ReminderService extends IntentService {
             WakeLock wl_cpu = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MyCpuLock");
             wl_cpu.acquire(20000);
         }
-        long when = System.currentTimeMillis();         // notification time
         
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent , 0);

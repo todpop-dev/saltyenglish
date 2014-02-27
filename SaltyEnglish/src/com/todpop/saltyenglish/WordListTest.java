@@ -5,6 +5,8 @@ package com.todpop.saltyenglish;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -101,6 +103,8 @@ public class WordListTest extends Activity {
 	private long timeSpent = 0;
 	private long startTime = 10000;
 	private boolean isPause = false;
+
+	SharedPreferences lvTextWord;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,8 @@ public class WordListTest extends Activity {
 		FlurryAgent.logEvent("Word Test");
 		Intent intent = getIntent();
 		wordListSize = intent.getIntExtra("testListSize", 1);
+		
+		lvTextWord = getSharedPreferences("lvTextWord",0);
 		
 		//test word
 		enWordText = (TextView)findViewById(R.id.wordlist_test_id_enword);
@@ -366,6 +372,7 @@ public class WordListTest extends Activity {
 	private void getTestWords()
 	{
 		SQLiteDatabase db = mHelper.getReadableDatabase();
+		
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
 		try {
 			Cursor cursor = db.rawQuery("SELECT DISTINCT name,  mean FROM mywords ORDER BY RANDOM() LIMIT " + wordListSize, null);
@@ -376,12 +383,47 @@ public class WordListTest extends Activity {
 					optionOne.add(cursor.getString(1));
 					
 					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
-					otherCursor.moveToNext();
-					optionTwo.add(otherCursor.getString(0));
-					otherCursor.moveToNext();
-					optionThree.add(otherCursor.getString(0));
-					otherCursor.moveToNext();
-					optionFour.add(otherCursor.getString(0));
+					if(otherCursor.getCount() > 0){
+						otherCursor.moveToNext();
+						optionTwo.add(otherCursor.getString(0));
+						otherCursor.moveToNext();
+						optionThree.add(otherCursor.getString(0));
+						otherCursor.moveToNext();
+						optionFour.add(otherCursor.getString(0));
+					}
+					else{
+						int i = 0;
+						int two = -1;
+						int three = -1;
+						while(i < 3){
+							int rand = new Random().nextInt(20);
+							Log.i("STEVEN", "int i = " + i + "  rand = " + rand);
+							String temp = lvTextWord.getString("krWord" + rand, "N");
+							
+							switch(i){
+							case 0:
+								if(!temp.equals(cursor.getString(1))){
+									two = rand;
+									optionTwo.add(temp);
+									i++;
+								}
+								break;
+							case 1:
+								if(!temp.equals(cursor.getString(1)) && rand != two){
+									three = rand;
+									optionThree.add(temp);
+									i++;
+								}
+								break;
+							case 2:
+								if(!temp.equals(cursor.getString(1)) && (rand != two) && (rand != three)){
+									optionFour.add(temp);
+									i++;
+								}
+								break;
+							}
+						}
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -465,7 +507,8 @@ public class WordListTest extends Activity {
 	{
 		enWordText.setText(englishWords.get(count));
 		
-		int ran = (int)(Math.random() * 4);
+		//int ran = (int)(Math.random() * 4);
+		int ran = new Random().nextInt(4);
 		Log.d("ran number ------ ", Integer.toString(ran));
 		
 		if (ran == 0) {
@@ -501,29 +544,7 @@ public class WordListTest extends Activity {
 		super.onDestroy();
 		mHelper.close();
 	}
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT NOT NULL UNIQUE, mean TEXT);");
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT, mean TEXT, xo TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			db.execSQL("DROP TABLE IF EXISTS dic");
-			db.execSQL("DROP TABLE IF EXISTS mywordtest");
-			onCreate(db);
-		}
-	}
+
 	@Override
 	protected void onStart()
 	{

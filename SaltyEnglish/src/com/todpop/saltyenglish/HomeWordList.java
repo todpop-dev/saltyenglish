@@ -174,11 +174,8 @@ public class HomeWordList extends Activity {
 		
 		try {
 			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-			Log.d("db count ------ ", Integer.toString(c.getCount()));
 			wordListSize = c.getCount();
 			while (c.moveToNext()) {
-				Log.d("name --- ", c.getString(0));
-				Log.d("mean --- ", c.getString(1));
 				mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
 				listArray.add(mHomeWordViewItem);
 			}
@@ -500,7 +497,7 @@ public class HomeWordList extends Activity {
 	}
 	
 	// Search words
-	public void searchEnWord (View v) 
+	public void searchWord (View v) 
 	{
 		String sT = searchText.getText().toString();
 		if (sT.length() > 0) {
@@ -512,8 +509,11 @@ public class HomeWordList extends Activity {
 			try {
 				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name LIKE '%" + sT + "%'", null);
 				while (c.moveToNext()) {
-					Log.d("name --- ", c.getString(0));
-					Log.d("mean --- ", c.getString(1));
+					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+					listArray.add(mHomeWordViewItem);
+				}
+				c = db.rawQuery("SELECT name, mean FROM mywords WHERE mean LIKE '%" + sT + "%'", null);
+				while (c.moveToNext()) {
 					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
 					listArray.add(mHomeWordViewItem);
 				}
@@ -532,8 +532,6 @@ public class HomeWordList extends Activity {
 			try {
 				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
 				while (c.moveToNext()) {
-					Log.d("name --- ", c.getString(0));
-					Log.d("mean --- ", c.getString(1));
 					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
 					listArray.add(mHomeWordViewItem);
 				}
@@ -631,24 +629,6 @@ public class HomeWordList extends Activity {
 		selectAllBtn.setChecked(false);
 		updateListView();
 	}
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT NOT NULL UNIQUE, mean TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			onCreate(db);
-		}
-	}
-
 
 	@Override
 	public void onDestroy()

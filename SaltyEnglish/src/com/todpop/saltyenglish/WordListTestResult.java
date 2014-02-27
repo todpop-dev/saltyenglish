@@ -292,26 +292,8 @@ public class WordListTestResult extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.lvtest_result, menu);
-		return true;
-	}
-
-	// ------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, "
-					+ "name TEXT NOT NULL UNIQUE, mean TEXT);");
-		}
-
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			db.execSQL("DROP TABLE IF EXISTS mywordtest");
-			onCreate(db);
-		}
+		//getMenuInflater().inflate(R.menu.lvtest_result, menu);
+		return false;
 	}
 
 	@Override

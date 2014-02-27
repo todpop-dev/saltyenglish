@@ -81,7 +81,7 @@ public class LvTestResult extends Activity {
 
 		studyInfoEdit.putInt("currentCategory", currentCategory);
 		studyInfoEdit.putInt("currentStageAccumulated", myLevel*10-9);
-		studyInfoEdit.commit();
+		studyInfoEdit.apply();
 		// ----------------------------------------------------------------------------
 		
 		for(int i=0;i<20;i++) {
@@ -260,7 +260,7 @@ public class LvTestResult extends Activity {
 						SharedPreferences settings = getSharedPreferences("setting", 0);
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putString("check","YES");
-						editor.commit();
+						editor.apply();
 						
 						Intent intent = new Intent();
 				        intent.setClass(LvTestResult.this, MainActivity.class);    
@@ -300,7 +300,7 @@ public class LvTestResult extends Activity {
 			editor.putString("krWord", krArray.get(i));
 		}
 		
-		editor.commit();
+		editor.apply();
 	
 		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 		startActivity(intent);
@@ -313,25 +313,6 @@ public class LvTestResult extends Activity {
 		getMenuInflater().inflate(R.menu.lvtest_result, menu);
 		return true;
 	}
-
-	
-	//------- Database Operation ------------------
-	private class WordDBHelper extends SQLiteOpenHelper {
-		public WordDBHelper(Context context) {
-			super(context, "EngWord.db", null, 1);
-		}
-		
-		public void onCreate(SQLiteDatabase db) {
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-		"name TEXT NOT NULL UNIQUE, mean TEXT);");
-		}
-		
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS mywords");
-			onCreate(db);
-		}
-	}
-
 
 	@Override
 	public void onDestroy()

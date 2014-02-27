@@ -91,7 +91,7 @@ public class HomeMoreAccountDelete extends Activity {
 				params.add(new BasicNameValuePair("password", returnSHA512(inputPw.getText().toString())));
 				params.add(new BasicNameValuePair("mobile",rgInfo.getString("mobile", "NO") ));
 				
-				Log.d("params----------",""+inputPw.getText().toString()+""+rgInfo.getString("mobile", "NO")+rgInfo.getString("mem_id", "NO"));
+				//Log.d("params----------",""+inputPw.getText().toString()+""+rgInfo.getString("mobile", "NO")+rgInfo.getString("mem_id", "NO"));
 				
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
@@ -123,16 +123,16 @@ public class HomeMoreAccountDelete extends Activity {
 					
 					settingsEditor.putString("isLogin","NO");
 					settingsEditor.putString("loginType", "NO");
-					settingsEditor.commit();
+					settingsEditor.apply();
 					
 					Intent intent = new Intent();
 					intent.setClass(HomeMoreAccountDelete.this, MainActivity.class);    
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 					startActivity(intent);
-					rgInfo.edit().clear().commit(); 
-					settings.edit().clear().commit();
-					checkStageNew.edit().clear().commit();
-					studyLevelInfo.edit().clear().commit();
+					rgInfo.edit().clear().apply(); 
+					settings.edit().clear().apply();
+					checkStageNew.edit().clear().apply();
+					studyLevelInfo.edit().clear().apply();
 					
 					// Delete DB
 					getApplicationContext().deleteDatabase("EngWord.db");

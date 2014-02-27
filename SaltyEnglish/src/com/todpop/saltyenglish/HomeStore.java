@@ -162,10 +162,6 @@ public class HomeStore extends Activity {
 			StoreListViewItem item = (StoreListViewItem)parentView.getAdapter().getItem(position);
 			Intent intent = new Intent(getApplicationContext(), HomeStorePurchase.class);
 			intent.putExtra("productId", item.id);
-			intent.putExtra("title", item.title);
-			intent.putExtra("provider", item.provider);
-			intent.putExtra("price", item.price);
-			intent.putExtra("imgUrl", item.mSizeImg);
 			intent.putExtra("curReward", curReward);
 			startActivity(intent);
 		}
@@ -208,7 +204,6 @@ public class HomeStore extends Activity {
 				refundView.setVisibility(ScrollView.VISIBLE);
 				break;
 			}
-
 		}
 	};
 
@@ -281,7 +276,6 @@ public class HomeStore extends Activity {
 				// show The Image
 				new DownloadImageTask(itemImg).execute(arSrc.get(position).img);
 			} catch (Exception e) {
-				Log.i("STEVEN", "error catch on download img line 326");
 				e.printStackTrace();
 			} 
 			
@@ -355,7 +349,6 @@ public class HomeStore extends Activity {
 						amount.setFocusable(false);
 					}
 				} else {
-					Log.d("-----------------------", "Login Failed");
 				}
 			} catch (Exception e) {
 
@@ -392,13 +385,11 @@ public class HomeStore extends Activity {
 
 			try {
 				if (json.getBoolean("status") == true) {
-					Log.i("STEVEN", "json.getBoolean(" + "status" + ")==true");
 					JSONArray bankScr = json.getJSONObject("data")
 							.getJSONArray("bank_list");
 					List<String> list = new ArrayList<String>();
 					for (int i = 0; i < bankScr.length(); i++) {
 						list.add(bankScr.getString(i));
-						Log.i("STEVEN", bankScr.getString(i));
 					}
 					list.add("은행을 선택해주세요");
 					MySpinnerAdapter BankHintSpinner = new MySpinnerAdapter(
@@ -408,12 +399,10 @@ public class HomeStore extends Activity {
 							.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 					bank.setAdapter(BankHintSpinner);
 					bank.setSelection(BankHintSpinner.getCount());
-					Log.i("STEVEN", "DONE!!");
 				} else {
-					Log.d("-----------------------", "Login Failed");
 				}
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 
 		}
@@ -451,7 +440,6 @@ public class HomeStore extends Activity {
 					pwdPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 					pwdPopupWindow.showAsDropDown(null);
 				} else {
-					Log.d("-----------------------", "Pwd is Set");
 				}
 				
 			} catch (Exception e) {
@@ -492,7 +480,7 @@ public class HomeStore extends Activity {
 					JSONArray jsonArray = json.getJSONArray("data");
 					for(int i = 0; i < jsonArray.length(); i++){
 						mStoreListItem = new StoreListViewItem(
-								jsonArray.getJSONObject(i).getString("id"),
+								jsonArray.getJSONObject(i).getString("product_id"),
 								jsonArray.getJSONObject(i).getString("img_url_70"),
 								jsonArray.getJSONObject(i).getString("product_name"),
 								jsonArray.getJSONObject(i).getString("change_market_name"),
@@ -502,7 +490,7 @@ public class HomeStore extends Activity {
 					}
 					updateListView();
 				} else {
-					Log.d("-----------------------", "get coupons something wrong");
+					
 				}
 				
 			} catch (Exception e) {

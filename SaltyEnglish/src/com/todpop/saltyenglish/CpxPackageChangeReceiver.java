@@ -17,9 +17,9 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctx, Intent intent) {
     	Uri data = intent.getData();
-		Log.d("Receveir ---------- ", "Action: " + intent.getAction());
+		//Log.d("Receveir ---------- ", "Action: " + intent.getAction());
 		// data.getSchemeSpecificPart() is the package name
-		Log.d("Receveir ---------- ", "The DATA: " + data.getSchemeSpecificPart());
+		//Log.d("Receveir ---------- ", "The DATA: " + data.getSchemeSpecificPart());
 		String packageName = data.getSchemeSpecificPart();
 		
 		SharedPreferences cpxInstallInfo = ctx.getSharedPreferences("cpxInstallInfo",0);
@@ -36,7 +36,7 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
 			//String userId = pref.getString("mem_id", "0");
 			//new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id="+adId+
 			//		"&ad_type=" + adType +"&user_id=" + userId + "&act=3");
-			cpxInstallInfo.edit().clear().commit();
+			cpxInstallInfo.edit().clear().apply();
 		}
 			
     }
@@ -71,9 +71,9 @@ public class CpxPackageChangeReceiver extends BroadcastReceiver {
 
  			try {
  				if	(result.getBoolean("status")==true) {
- 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
+ 					//Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log OK!");
  				} else {
- 					Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
+ 					//Log.d("CPX LOG:  ---- ", "Send CPX act=3 Log Failed!");
  				}
 
  			} catch (Exception e) {

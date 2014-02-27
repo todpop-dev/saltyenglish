@@ -115,7 +115,7 @@ public class HomeMoreAcountInfo extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON CHECK MOBILE EXIST ---- ", result.toString());				        	
+					Log.d("RESPONSE ---- ", result.toString());				        	
 				}
 				return result;
 			}
@@ -160,7 +160,7 @@ public class HomeMoreAcountInfo extends Activity {
 		{
 			settingsEditor.putString("isLogin","NO");
 			settingsEditor.putString("loginType", "NO");
-			settingsEditor.commit();
+			settingsEditor.apply();
 			/*
 			Session session = Session.getActiveSession();
 			if (session != null) {
