@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +38,8 @@ public class HomeMyPageSaving extends Activity {
 	ArrayList<SavingListViewItem> itemArray;
 	SavingListViewItem mSavingListItem;
 	ListView listView;
+	
+	ImageView noSaving;
 	//int count = 0;
 	
 	SharedPreferences rgInfo;
@@ -48,6 +51,8 @@ public class HomeMyPageSaving extends Activity {
 		setContentView(R.layout.activity_home_my_page_saving);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
+		
+		noSaving = (ImageView)findViewById(R.id.home_mypage_saving_id_no_history);
 		
 		listView = (ListView)findViewById(R.id.home_mypage_saving_id_list_view);
 		itemArray = new ArrayList<SavingListViewItem>();
@@ -175,8 +180,11 @@ public class HomeMyPageSaving extends Activity {
 						}
 						
 					}		
-					savingListViewAdapter = new SavingListViewAdapter(getApplicationContext(), R.layout.home_my_page_save_list_item_view, itemArray);
-			    	listView.setAdapter(savingListViewAdapter);
+					if(!itemArray.isEmpty()){
+						noSaving.setVisibility(View.GONE);
+						savingListViewAdapter = new SavingListViewAdapter(getApplicationContext(), R.layout.home_my_page_save_list_item_view, itemArray);
+				    	listView.setAdapter(savingListViewAdapter);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
