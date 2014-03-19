@@ -4,12 +4,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/store_53_bg" >
 
-    <!--
-          <View
+    <android.support.v4.view.ViewPager
+        android:id="@+id/popup_notification_id_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1108"/>
-    -->
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -107,15 +105,11 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="2dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:progress="50"
             android:progressDrawable="@drawable/popup_noti_seekbar_progress"
             android:thumb="@drawable/store_53_btn_slide" />
     </RelativeLayout>
-    <!--
-         <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="32"/>
-    -->
 
 </RelativeLayout>

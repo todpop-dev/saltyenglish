@@ -39,7 +39,7 @@ public class HomeMoreSetting extends Activity {
 	static int targetMinute;
 	
 	CheckBox alarmCheckBox;
-	//CheckBox popupCheckBox;
+	CheckBox popupCheckBox;
 	
 	NotificationManager notificationManager;
 	AlarmManager alarmManager;
@@ -73,20 +73,20 @@ public class HomeMoreSetting extends Activity {
 		setAlarm.setText("      "+pad(hour)+"         "+pad(minute));
 		
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
-		//popupCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_popup_box);
+		popupCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_popup_box);
 		
 		if(stdInfo.getBoolean("alarm", false)){
 			alarmCheckBox.setChecked(true);
-			//popupCheckBox.setEnabled(true);
+			popupCheckBox.setEnabled(true);
 			if(stdInfo.getBoolean("popupAlarm", false)){
-				//popupCheckBox.setChecked(true);
+				popupCheckBox.setChecked(true);
 			}
 		}
 		else{
 			stdInfoEdit.putBoolean("popupAlarm", false);
 			stdInfoEdit.apply();
-			//popupCheckBox.setChecked(false);
-			//popupCheckBox.setEnabled(false);
+			popupCheckBox.setChecked(false);
+			popupCheckBox.setEnabled(false);
 			alarmCheckBox.setChecked(false);
 		}
 		
@@ -98,15 +98,15 @@ public class HomeMoreSetting extends Activity {
 				public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) 
 				{
 					if (isChecked == true) {
-						//popupCheckBox.setChecked(true);
-						//popupCheckBox.setEnabled(true);
+						popupCheckBox.setChecked(true);
+						popupCheckBox.setEnabled(true);
 						stdInfoEdit.putBoolean("popupAlarm", true);
 						stdInfoEdit.putBoolean("alarm", true);
 						stdInfoEdit.apply();
 						setAlarm();
 					} else {
-						//popupCheckBox.setChecked(false);
-						//popupCheckBox.setEnabled(false);
+						popupCheckBox.setChecked(false);
+						popupCheckBox.setEnabled(false);
 						stdInfoEdit.putBoolean("popupAlarm", false);
 						stdInfoEdit.putBoolean("alarm", false);
 						stdInfoEdit.apply();
@@ -115,7 +115,7 @@ public class HomeMoreSetting extends Activity {
 				}
 		});
 		
-		/*popupCheckBox.setOnCheckedChangeListener(
+		popupCheckBox.setOnCheckedChangeListener(
 				new CompoundButton.OnCheckedChangeListener() {
 
 					@SuppressLint("NewApi")
@@ -133,7 +133,7 @@ public class HomeMoreSetting extends Activity {
 							setAlarm();							
 						}
 					}
-			});*/
+			});
 		RadioGroup rb1 = (RadioGroup)findViewById(R.id.home_more_radioGrop);
         RadioButton rbBasic =(RadioButton)findViewById(R.id.home_more_radiobtn_basic);
         RadioButton rbMiddle =(RadioButton)findViewById(R.id.home_more_radiobtn_middle);
@@ -242,11 +242,12 @@ public class HomeMoreSetting extends Activity {
 		calendar.set(Calendar.MINUTE, targetMinute);
 		long when = calendar.getTimeInMillis();         // notification time
 		
-		/*if(popupCheckBox.isChecked())
-			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntentActivity);*/
-		
-		//else
+		if(popupCheckBox.isChecked()){
+			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntentActivity);
+		}
+		else{
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, when, AlarmManager.INTERVAL_DAY, pendingIntentService);		
+		}
 	}
 	
 	private void cancelAlarm(){
