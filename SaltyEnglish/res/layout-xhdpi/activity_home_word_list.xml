@@ -73,7 +73,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/homewordlist_drawable_btn_test"
-                        android:onClick="testBtn"/>
+                        android:onClick="testBtn" />
 
                     <!-- change word btn -->
 
@@ -116,8 +116,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:clickable="true"
                         android:background="@drawable/wordbook_16_image_searchresult"
+                        android:clickable="true"
                         android:visibility="gone" >
 
                         <CheckBox
@@ -154,6 +154,14 @@
                         android:fadeScrollbars="false"
                         android:scrollbarThumbVertical="@drawable/wordbook_1_drop_scroll"
                         android:scrollbarTrackVertical="@drawable/wordbook_1_drop_underbar" />
+
+                    <ImageView
+                        android:id="@+id/home_word_list_id_no_word"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/wordbook_1_img_noword" 
+                        android:visibility="gone"/>
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>

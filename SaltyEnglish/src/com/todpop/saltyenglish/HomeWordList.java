@@ -53,6 +53,8 @@ public class HomeWordList extends Activity {
 	Button card;
 	ObjectAnimator cardAni;
 	
+	ImageView noWord;
+	
 	boolean checkCardAni = false;
 	boolean checkChangeWord = false;
 	boolean checkEdit = false;
@@ -111,6 +113,8 @@ public class HomeWordList extends Activity {
             }
         });	
 
+		noWord = (ImageView)findViewById(R.id.home_word_list_id_no_word);
+		
 		Display display = getWindowManager().getDefaultDisplay();
 		size = new Point();
 		display.getSize(size);
@@ -197,9 +201,14 @@ public class HomeWordList extends Activity {
     }
 	public void updateListView()
     {
-		listView.setAdapter(null);
-		homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray);
-		listView.setAdapter(homeWordViewAdapter);
+		if(listArray.isEmpty()){
+			noWord.setVisibility(View.VISIBLE);
+		}
+		else{
+			listView.setAdapter(null);
+			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray);
+			listView.setAdapter(homeWordViewAdapter);
+		}
     }
 	public void closePopup(View v)
 	{
