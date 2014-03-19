@@ -96,12 +96,12 @@ public class HomeStore extends Activity {
 		
 		mainLayout = (RelativeLayout)findViewById(R.id.home_store_id_mainLayout);
 		
-		eduationBtn = (RadioButton) findViewById(R.id.homestore_id_btn_education);
+		/*eduationBtn = (RadioButton) findViewById(R.id.homestore_id_btn_education);
 		foodBtn = (RadioButton) findViewById(R.id.homestore_id_btn_food);
 		cafeBtn = (RadioButton) findViewById(R.id.homestore_id_btn_cafe);
 		convenientBtn = (RadioButton) findViewById(R.id.homestore_id_btn_convenient);
 		beautyBtn = (RadioButton) findViewById(R.id.homestore_id_btn_beauty);
-		reFundBtn = (RadioButton) findViewById(R.id.homestore_id_btn_refund);
+		reFundBtn = (RadioButton) findViewById(R.id.homestore_id_btn_refund);*/
 		
 		store_main_curReward = (TextView)findViewById(R.id.home_store_curReward);
 		
@@ -118,12 +118,12 @@ public class HomeStore extends Activity {
 		searchTempPopupWindow = new PopupWindow(searchTempPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		searchTempPopupText = (TextView)searchTempPopupView.findViewById(R.id.popup_id_text);
 		
-		eduationBtn.setOnClickListener(radio_listener);
+		/*eduationBtn.setOnClickListener(radio_listener);
 		foodBtn.setOnClickListener(radio_listener);
 		cafeBtn.setOnClickListener(radio_listener);
 		convenientBtn.setOnClickListener(radio_listener);
 		beautyBtn.setOnClickListener(radio_listener);
-		reFundBtn.setOnClickListener(radio_listener);
+		reFundBtn.setOnClickListener(radio_listener);*/
 
 		//Refund
 		refund_curReward = (TextView)findViewById(R.id.home_store_refund_curReward);
@@ -166,7 +166,7 @@ public class HomeStore extends Activity {
 			startActivity(intent);
 		}
 	};
-	OnClickListener radio_listener = new OnClickListener() {
+	/*OnClickListener radio_listener = new OnClickListener() {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.homestore_id_btn_education:
@@ -205,7 +205,7 @@ public class HomeStore extends Activity {
 				break;
 			}
 		}
-	};
+	};*/
 
 	class StoreListViewItem {
 		StoreListViewItem(String aId, String aImg, String aTitle, String aProvider, String aPrice, String mImg) {

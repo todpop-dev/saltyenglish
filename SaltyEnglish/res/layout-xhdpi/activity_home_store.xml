@@ -1,108 +1,117 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_store_id_mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_darkyellowpattern" >
+    android:background="@drawable/common_bg_darkyellowpattern"
+    android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12.5dp"
-            android:background="@drawable/common_bgimg_store" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="92" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.5dp"
-            android:layout_marginTop="10.5dp"
-            android:background="@drawable/rg_drawable_btn_back"
-            android:onClick="onClickBack" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/common_bgimg_store" />
 
-        <HorizontalScrollView
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
+        </RelativeLayout>
+
+        <!--
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:scrollbars="none"
+        android:visibility="gone" >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:scrollbars="none" >
+            android:background="@drawable/store_2_image_carouselbar"
+            android:orientation="horizontal" >
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <RadioGroup
+                android:id="@+id/homestore_id_sexgroup"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/store_2_image_carouselbar"
+                android:layout_gravity="center"
                 android:orientation="horizontal" >
 
-                <RadioGroup
-                    android:id="@+id/homestore_id_sexgroup"
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_education"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="horizontal" >
+                    android:layout_marginLeft="30dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_education"
+                    android:checked="true" />
 
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_education"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="30dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_education"
-                        android:checked="true" />
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_food"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_food" />
 
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_food"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_food" />
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_cafe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_cafe" />
 
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_cafe"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_cafe" />
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_convenient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_convenient" />
 
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_convenient"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_convenient" />
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_beauty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_beauty" />
 
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_beauty"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_beauty" />
-
-                    <RadioButton
-                        android:id="@+id/homestore_id_btn_refund"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="30dp"
-                        android:background="@drawable/store_2_btn_carousel_education_off"
-                        android:button="@drawable/homestore_drawable_btn_refund" />
-                </RadioGroup>
-            </LinearLayout>
-        </HorizontalScrollView>
-
+                <RadioButton
+                    android:id="@+id/homestore_id_btn_refund"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@drawable/store_2_btn_carousel_education_off"
+                    android:button="@drawable/homestore_drawable_btn_refund" />
+            </RadioGroup>
+        </LinearLayout>
+    </HorizontalScrollView>
+        -->
         <!-- ducation   food  cafe  convenient  view -->
 
         <RelativeLayout
             android:id="@+id/home_store_id_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="105dp"
+            android:layout_height="0dp"
+            android:layout_weight="1188"
             android:focusableInTouchMode="true" >
 
             <ImageView
@@ -136,14 +145,16 @@
                 android:background="@drawable/store_2_image_searchbox"
                 android:paddingLeft="20dp"
                 android:paddingRight="5dp"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:visibility="gone" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="311dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/homestore_drawable_btn_search" />
+                android:background="@drawable/homestore_drawable_btn_search"
+                android:visibility="gone" />
 
             <ListView
                 android:id="@+id/homestore_id_listiew"
@@ -154,178 +165,202 @@
                 android:scrollbarThumbVertical="@drawable/store_2_drop_scroll"
                 android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
             </ListView>
+
+            <ProgressBar
+                android:id="@+id/loadingProgressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
-        <ScrollView
-            android:id="@+id/home_store_id_refund_view"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="14.5dp"
-            android:layout_marginRight="14.5dp"
-            android:layout_marginTop="105dp"
-            android:background="@drawable/store_6_image_wholeyellowbox"
-            android:visibility="gone" >
+            android:layout_height="0dp"
+            android:layout_weight="1188"
+            android:paddingBottom="15dp"
+            android:paddingLeft="14.5dp"
+            android:paddingRight="14.5dp" 
+            android:visibility="gone">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+            <ScrollView
+                android:id="@+id/home_store_id_refund_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/store_6_image_wholeyellowbox" >
 
-                <ImageView
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="50dp"
-                    android:src="@drawable/store_6_bgimg_savingperson" />
+                    android:layout_height="wrap_content" >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="110dp"
-                    android:background="@drawable/store_6_bgimg_bank" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="50dp"
+                        android:src="@drawable/store_6_bgimg_savingperson" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="170dp"
-                    android:background="@drawable/store_6_bgimg_account" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="110dp"
+                        android:background="@drawable/store_6_bgimg_bank" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="230dp"
-                    android:background="@drawable/store_6_bgimg_price" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="170dp"
+                        android:background="@drawable/store_6_bgimg_account" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="290dp"
-                    android:background="@drawable/store_6_bgimg_password" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="230dp"
+                        android:background="@drawable/store_6_bgimg_price" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="350dp"
-                    android:background="@drawable/store_6_bgimg_balance"
-                    android:focusable="false"
-                    android:singleLine="true" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="290dp"
+                        android:background="@drawable/store_6_bgimg_password" />
 
-                <EditText
-                    android:id="@+id/home_store_refund_name"
-                    android:layout_width="216dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="95dp"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/common_image_textbox"
-                    android:hint="이름을 입력해주세요"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="350dp"
+                        android:background="@drawable/store_6_bgimg_balance"
+                        android:focusable="false"
+                        android:singleLine="true" />
 
-                <Spinner
-                    android:id="@+id/home_store_refund_bank"
-                    android:layout_width="216dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="95dp"
-                    android:layout_marginTop="85dp"
-                    android:background="@drawable/common_image_pinktrianglebox"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/home_store_refund_name"
+                        android:layout_width="216dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginTop="25dp"
+                        android:background="@drawable/common_image_textbox"
+                        android:hint="이름을 입력해주세요"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/home_store_refund_account"
-                    android:layout_width="216dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="95dp"
-                    android:layout_marginTop="145dp"
-                    android:background="@drawable/common_image_textbox"
-                    android:hint="-를 제외하고 입력해주세요"
-                    android:inputType="number"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    <Spinner
+                        android:id="@+id/home_store_refund_bank"
+                        android:layout_width="216dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginTop="85dp"
+                        android:background="@drawable/common_image_pinktrianglebox"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/home_store_refund_amount"
-                    android:layout_width="216dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="95dp"
-                    android:layout_marginTop="205dp"
-                    android:background="@drawable/common_image_textbox"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/home_store_refund_account"
+                        android:layout_width="216dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginTop="145dp"
+                        android:background="@drawable/common_image_textbox"
+                        android:hint="-를 제외하고 입력해주세요"
+                        android:inputType="number"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/home_store_refund_password"
-                    android:layout_width="216dp"
-                    android:layout_height="60dp"
-                    android:layout_marginLeft="95dp"
-                    android:layout_marginTop="265dp"
-                    android:background="@drawable/common_image_textbox"
-                    android:hint="짭짤한영어 비밀번호를 입력해주세요"
-                    android:inputType="textPassword"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:singleLine="true"
-                    android:textSize="16sp" />
+                    <Spinner
+                        android:id="@+id/home_store_refund_amount"
+                        android:layout_width="216dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginTop="205dp"
+                        android:background="@drawable/common_image_textbox"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/home_store_refund_curReward"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="125dp"
-                    android:layout_marginTop="345dp"
-                    android:gravity="right"
-                    android:textColor="#000000"
-                    android:textSize="17sp" />
+                    <EditText
+                        android:id="@+id/home_store_refund_password"
+                        android:layout_width="216dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="95dp"
+                        android:layout_marginTop="265dp"
+                        android:background="@drawable/common_image_textbox"
+                        android:hint="짭짤한영어 비밀번호를 입력해주세요"
+                        android:inputType="textPassword"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:singleLine="true"
+                        android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="86dp"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/store_6_image_savingman" />
+                    <TextView
+                        android:id="@+id/home_store_refund_curReward"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="125dp"
+                        android:layout_marginTop="345dp"
+                        android:gravity="right"
+                        android:textColor="#000000"
+                        android:textSize="17sp" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="293dp"
-                    android:layout_marginTop="200dp"
-                    android:src="@drawable/store_6_image_pricewoman" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="86dp"
+                        android:layout_marginTop="20dp"
+                        android:src="@drawable/store_6_image_savingman" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginTop="350dp"
-                    android:src="@drawable/common_image_bigcoin" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="293dp"
+                        android:layout_marginTop="200dp"
+                        android:src="@drawable/store_6_image_pricewoman" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="190dp"
-                    android:layout_marginTop="348dp"
-                    android:src="@drawable/store_6_bgimg_won" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="100dp"
+                        android:layout_marginTop="350dp"
+                        android:src="@drawable/common_image_bigcoin" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="390dp"
-                    android:background="@drawable/common_image_opacitytextbox" />
-            </RelativeLayout>
-        </ScrollView>
-    </RelativeLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="190dp"
+                        android:layout_marginTop="348dp"
+                        android:src="@drawable/store_6_bgimg_won" />
+
+                    <ScrollView
+                        android:paddingTop="17dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="390dp"
+                        android:background="@drawable/common_image_opacitytextbox" >
+
+                        <TextView
+                            android:id="@+id/home_store_refund_notice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+                    </ScrollView>
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>
