@@ -86,9 +86,8 @@
                 android:layout_below="@id/homemore_id_help"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/homemore_drawable_btn_help"
-                android:onClick="showPronounceActivity" 
-                android:visibility="gone"/>
+                android:background="@drawable/homemore_drawable_btn_pronounce"
+                android:onClick="showPronounceActivity"/>
 
             <ImageView
                 android:layout_width="wrap_content"

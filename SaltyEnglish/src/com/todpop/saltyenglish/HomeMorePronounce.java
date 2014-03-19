@@ -28,11 +28,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class HomeMorePronounce extends Activity {
+
+	private static final int NO = 0;
+	
 	private static final int BASIC = 1;
 	private static final int MIDDLE = 2;
 	private static final int HIGH = 3;
 	private static final int TOEIC = 4;
-	private static final int ALL = 5;
+	private static final int ALL = 0;
 	
 	LinearLayout mainLayout;
 	
@@ -94,8 +97,9 @@ public class HomeMorePronounce extends Activity {
 	}
 	
 	public void downBasic(View view){
+		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), BASIC, progressPopupView);
+		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, BASIC, progressPopupView);
 		downloadPronounce.execute("");
 	}
 
@@ -105,8 +109,9 @@ public class HomeMorePronounce extends Activity {
 	}
 	
 	public void downMiddle(View view){
+		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), MIDDLE, progressPopupView);
+		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, MIDDLE, progressPopupView);
 		downloadPronounce.execute("");
 		
 	}
@@ -117,8 +122,9 @@ public class HomeMorePronounce extends Activity {
 	}
 	
 	public void downHigh(View view){
+		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), HIGH, progressPopupView);
+		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, HIGH, progressPopupView);
 		downloadPronounce.execute("");
 		
 	}
@@ -129,8 +135,9 @@ public class HomeMorePronounce extends Activity {
 	}
 	
 	public void downToeic(View view){
+		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), TOEIC, progressPopupView);
+		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, TOEIC, progressPopupView);
 		downloadPronounce.execute("");
 		
 	}
@@ -141,8 +148,9 @@ public class HomeMorePronounce extends Activity {
 	}
 	
 	public void downAll(View view){
+		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), ALL, progressPopupView);
+		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, ALL, progressPopupView);
 		downloadPronounce.execute("");
 		
 	}
@@ -158,22 +166,31 @@ public class HomeMorePronounce extends Activity {
 			db = mHelper.getWritableDatabase();
 			noFile = true;
 			deletingFlag = true;
+
+			progressPopupProgBar.setVisibility(View.VISIBLE);
+	        progressPopupLoadProgBar.setVisibility(View.GONE);
+			progressPopupCountText.setVisibility(View.VISIBLE);
+	        progressPopupProgBar.setIndeterminate(false);
 		}
 		@Override
 		protected Boolean doInBackground(Integer... params) {
+
+			Log.i("STEVEN", "DELETE FILE starts!!!!!");
 			// TODO Auto-generated method stub
 			category = params[0];
-			if(category == 5){ //delete all
+			if(category == 0){ //delete all
 				for(int i = 1; i <= 4; i++){
-					Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + i + "\'", null);
+					final int current = i;
+					final Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + i + "\'", null);
 					if(find.getCount() > 0){
 						noFile = false;
-						progressPopupText.setText(getResources().getIdentifier("popup_view_download_progressbar_deleting_" + i, "string", getPackageName()));
-				        progressPopupProgBar.setIndeterminate(false);
-				        progressPopupProgBar.setMax(find.getCount());
-						progressPopupProgBar.setVisibility(View.VISIBLE);
-				        progressPopupLoadProgBar.setVisibility(View.GONE);
-						progressPopupCountText.setVisibility(View.VISIBLE);
+						runOnUiThread(new Runnable(){
+							@Override
+							public void run(){
+								progressPopupText.setText(getResources().getIdentifier("popup_view_download_progressbar_deleting_" + current, "string", getPackageName()));
+								progressPopupProgBar.setMax(find.getCount());
+							}
+						});
 						int count = 1;
 						while(find.moveToNext()){
 							if(isCancelled()){
@@ -183,6 +200,7 @@ public class HomeMorePronounce extends Activity {
 										cancelDeleteFunc();
 									}
 								});
+								deletingFlag = false;
 								return false;
 							}
 							publishProgress(count, find.getCount());
@@ -215,14 +233,15 @@ public class HomeMorePronounce extends Activity {
 				}
 			}
 			else{
-				Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + category + "\'", null);
+				final Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + category + "\'", null);
 				if(find.getCount() > 0){
-					progressPopupText.setText(getResources().getIdentifier("popup_view_download_progressbar_deleting_" + category, "string", getPackageName()));
-			        progressPopupProgBar.setIndeterminate(false);
-			        progressPopupProgBar.setMax(find.getCount());
-					progressPopupProgBar.setVisibility(View.VISIBLE);
-			        progressPopupLoadProgBar.setVisibility(View.GONE);
-					progressPopupCountText.setVisibility(View.VISIBLE);
+					runOnUiThread(new Runnable(){
+						@Override
+						public void run(){
+							progressPopupText.setText(getResources().getIdentifier("popup_view_download_progressbar_deleting_" + category, "string", getPackageName()));
+					        progressPopupProgBar.setMax(find.getCount());
+						}
+					});
 					int count = 1;
 					while(find.moveToNext()){
 						if(isCancelled()){
@@ -236,7 +255,7 @@ public class HomeMorePronounce extends Activity {
 						}
 						publishProgress(count, find.getCount());
 						String name = find.getString(0);
-						Log.i("STEVEN", "DELETE FILE name = " + name);
+						//Log.i("STEVEN", "DELETE FILE name = " + name);
 						if(!deleteFile(name)){ //if fail to delete file		
 							runOnUiThread(new Runnable(){
 								@Override
@@ -278,6 +297,22 @@ public class HomeMorePronounce extends Activity {
 				progressPopupText.setText(R.string.popup_view_download_progressbar_delete_done);
 				progressPopupCancel.setVisibility(View.GONE);
 				progressPopupDone.setVisibility(View.VISIBLE);
+				SharedPreferences.Editor studyInfoEdit = getSharedPreferences("studyInfo",0).edit();
+				switch(category){
+				case 1:
+					studyInfoEdit.putInt("basicCategorySound", NO);
+					break;
+				case 2:
+					studyInfoEdit.putInt("middleCategorySound", NO);
+					break;
+				case 3:
+					studyInfoEdit.putInt("highCategorySound", NO);
+					break;
+				case 4:
+					studyInfoEdit.putInt("toeicCategorySound", NO);
+					break;
+				}
+				studyInfoEdit.apply();
 			}
 			return;
 		}
@@ -312,11 +347,17 @@ public class HomeMorePronounce extends Activity {
 			Log.i("STEVEN", "inside flag");
 			deleteFile.cancel(true);
 		}
-		else
+		else{
 			downloadPronounce.cancel();
+			Log.i("STEVEn", "cancelDonwload function");
+		}
 	}
 	public void doneDownload(View view){
 		progressPopupWindow.dismiss();
+		progressPopupDone.setVisibility(View.GONE);
+		progressPopupCancel.setVisibility(View.VISIBLE);
+		progressPopupProgBar.setProgress(0);
+		progressPopupCountText.setText("");
 	}
 	
 	@Override

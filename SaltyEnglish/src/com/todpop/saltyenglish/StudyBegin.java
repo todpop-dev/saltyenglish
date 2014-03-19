@@ -66,6 +66,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -129,9 +130,13 @@ public class StudyBegin extends FragmentActivity {
  	ImageButton introBtn;
  	
  	// CPD image view
- 	static ImageView cpdView;
- 	static Button cpdCoupon;
- 	static Button cpdFbShare;
+ 	private static ImageView cpdView;
+ 	private static Button cpdCoupon;
+ 	private static Button cpdFbShare;
+ 	
+	private static RelativeLayout fbShareLayout;
+	private static TextView fbShareReward;
+	
  	 	
  	SharedPreferences studyInfo;
  	
@@ -145,8 +150,8 @@ public class StudyBegin extends FragmentActivity {
  	WordDBHelper mHelper;
  	SQLiteDatabase db;
  	
-	String reward;
-	String point;
+	static String reward;
+	static String point;
 	String name;
 	String caption;
 	String description;
@@ -423,6 +428,9 @@ public class StudyBegin extends FragmentActivity {
 				cpdView = (ImageView)rootView.findViewById(R.id.studyfinish_id_pop);
 				cpdCoupon = (Button)rootView.findViewById(R.id.studyfinish_id_coupon);
 				cpdFbShare = (Button)rootView.findViewById(R.id.studyfinish_id_facebook_share);
+				fbShareLayout = (RelativeLayout)rootView.findViewById(R.id.studyfinish_fb_share_layout);
+				fbShareReward = (TextView)rootView.findViewById(R.id.studyfinish_fb_share_reward);
+				
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
 				if(adType == 102){
@@ -432,6 +440,13 @@ public class StudyBegin extends FragmentActivity {
 				else if(adType == 103){
 					FlurryAgent.logEvent("CPD (Facebook)");
 					cpdFbShare.setVisibility(View.VISIBLE);
+					fbShareLayout.setVisibility(View.VISIBLE);
+					if(reward.equals("0") || reward.equals("null")){
+						fbShareReward.setText(point + " point");
+					}
+					else{
+						fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+					}
 				}
 				else{
 					FlurryAgent.logEvent("CPD (none)");
@@ -994,6 +1009,7 @@ public class StudyBegin extends FragmentActivity {
 		try {
 			word = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("name");
 			version = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("version");
+			Log.i("STEVEN", "version is : " + version);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -1043,17 +1059,16 @@ public class StudyBegin extends FragmentActivity {
 			    HttpURLConnection connection = null;
 		        try {
 		            //TODO testing
-		            //URL url = new URL("http://www.todpop.co.kr/uploads/word/sound/" + downloadWordList.get(current).getWord());
-		            URL url = new URL("https://ssl.gstatic.com/dictionary/static/sounds/de/0/" + word + ".mp3");
+		        	URL url = new URL("http://www.todpop.co.kr/uploads/voice/" + word + ".mp3");
 		            connection = (HttpURLConnection) url.openConnection();
 		            connection.connect();
 	
 		            // expect HTTP 200 OK, so we don't mistakenly save error report 
 		            // instead of the file
 		            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
-		                 return getResources().getString(R.string.popup_view_download_progressbar_error) 
-		                    		 + "Server returned HTTP " + connection.getResponseCode() 
-		                    		 + " " + connection.getResponseMessage();
+		                 return getResources().getString(R.string.popup_view_download_progressbar_error);
+		                    		 /*+ "Server returned HTTP " + connection.getResponseCode() 
+		                    		 + " " + connection.getResponseMessage();*/
 	
 		            // download the file
 		            input = connection.getInputStream();
@@ -1065,7 +1080,7 @@ public class StudyBegin extends FragmentActivity {
 		                    output.write(data, 0, count);
 		            }
 		        } catch (Exception e) {
-		                return getResources().getString(R.string.popup_view_download_progressbar_error) + e.toString();
+		                return getResources().getString(R.string.popup_view_download_progressbar_real_error) + e.toString();
 		        } finally {
 		            try {
 		                if (output != null)
@@ -1086,16 +1101,18 @@ public class StudyBegin extends FragmentActivity {
 	    @Override
 	    protected void onPostExecute(String result) {
 	        if (result != null){
-	            Toast.makeText(StudyBegin.this,"Download error: "+result, Toast.LENGTH_LONG).show();
+	            Toast.makeText(StudyBegin.this, result, Toast.LENGTH_LONG).show();
 	        }
 	        else{
 		        ContentValues row = new ContentValues();
+		        Log.i("STEVEN", "before save");
 				row.put("word", word);
 				row.put("version", version);
 				row.put("category", tmpCategory);
 
 				db.insert("wordSound", null, row);
 
+		        Log.i("STEVEN", "saved version is " + version);
 				pronouncePlay(word);
 	        }
 	    }
@@ -1152,7 +1169,7 @@ public class StudyBegin extends FragmentActivity {
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
 					} else {
-						cpdFbShare.setClickable(false);
+						cpdFbShare.setEnabled(false);
 						popupText.setText(R.string.facebook_share_done);							
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);

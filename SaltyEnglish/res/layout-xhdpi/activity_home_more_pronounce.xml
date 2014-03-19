@@ -30,162 +30,139 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1190"
+        android:gravity="center_horizontal"
         android:orientation="vertical" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/store_72_image_textline"
+            android:gravity="right"
+            android:orientation="vertical" >
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="기초"
-                android:textColor="#000000"
-                android:textSize="20sp" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/homemore_pronounce_id_basic_del"
+                <Button
+                    android:id="@+id/homemore_pronounce_id_basic_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_down"
+                    android:onClick="downBasic" />
+
+                <Button
+                    android:id="@+id/homemore_pronounce_id_basic_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_delete"
+                    android:onClick="deleteBasic" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:onClick="deleteBasic"
-                android:text="삭제" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/homemore_pronounce_id_basic_down"
+                <Button
+                    android:id="@+id/homemore_pronounce_id_middle_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_down"
+                    android:onClick="downMiddle" />
+
+                <Button
+                    android:id="@+id/homemore_pronounce_id_middle_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_delete"
+                    android:onClick="deleteMiddle" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/homemore_pronounce_id_basic_del"
-                android:onClick="downBasic"
-                android:text="받기" />
-        </RelativeLayout>
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+                <Button
+                    android:id="@+id/homemore_pronounce_id_high_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_down"
+                    android:onClick="downHigh" />
 
-            <TextView
+                <Button
+                    android:id="@+id/homemore_pronounce_id_high_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_delete"
+                    android:onClick="deleteHigh" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="중학"
-                android:textColor="#000000"
-                android:textSize="20sp" />
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
 
-            <Button
-                android:id="@+id/homemore_pronounce_id_middle_del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:onClick="deleteMiddle"
-                android:text="삭제" />
+                <Button
+                    android:id="@+id/homemore_pronounce_id_toeic_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_down"
+                    android:onClick="downToeic" />
 
-            <Button
-                android:id="@+id/homemore_pronounce_id_middle_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/homemore_pronounce_id_middle_del"
-                android:onClick="downMiddle"
-                android:text="받기" />
-        </RelativeLayout>
+                <Button
+                    android:id="@+id/homemore_pronounce_id_toeic_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/homemorepronounce_drawable_btn_delete"
+                    android:onClick="deleteToeic" />
+            </LinearLayout>
+        </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="수능"
-                android:textColor="#000000"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/homemore_pronounce_id_high_del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:onClick="deleteHigh"
-                android:text="삭제" />
-
-            <Button
-                android:id="@+id/homemore_pronounce_id_high_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/homemore_pronounce_id_high_del"
-                android:onClick="downHigh"
-                android:text="받기" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="토익"
-                android:textColor="#000000"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/homemore_pronounce_id_toeic_del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:onClick="deleteToeic"
-                android:text="삭제" />
-
-            <Button
-                android:id="@+id/homemore_pronounce_id_toeic_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/homemore_pronounce_id_toeic_del"
-                android:onClick="downToeic"
-                android:text="받기" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="전체"
-                android:textColor="#000000"
-                android:textSize="20sp" />
-
-            <Button
-                android:id="@+id/homemore_pronounce_id_all_del"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:onClick="deleteAll"
-                android:text="삭제" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/store_72_image_all"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/homemore_pronounce_id_all_down"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@+id/homemore_pronounce_id_all_del"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/homemorepronounce_drawable_btn_down"
                 android:onClick="downAll"
-                android:text="받기" />
-        </RelativeLayout>
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/homemore_pronounce_id_all_del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="7dp"
+                android:background="@drawable/homemorepronounce_drawable_btn_delete"
+                android:onClick="deleteAll" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -57,8 +57,9 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	
     private static DownloadPronounce downloadPronounce = null;
     private Context context;
+    private Activity activity;
     private int selectedCategoryInt;
-    private DownloadTask downLoadTask;
+    //private DownloadTask downLoadTask;
     private TextView progressPopupText;
     private TextView progressPopupCountText;
     private ProgressBar progressPopupLoadProgBar;
@@ -67,6 +68,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
     private Button progressPopupDone;
     private Boolean getWordFlag;
     private Boolean getSoundFlag;
+    private Boolean downloadCancel;
 
 	ArrayList<WordPair> wordList;
 	ArrayList<WordPair> downloadWordList;
@@ -90,8 +92,9 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		}
 	}
 	
-    private DownloadPronounce(Context context, int selectedCategoryInt, View progressPopupView){
+    public DownloadPronounce(Context context, Activity activity, int selectedCategoryInt, View progressPopupView){
     	this.context = context;
+    	this.activity = activity;
     	this.selectedCategoryInt = selectedCategoryInt;
     	progressPopupText = (TextView)progressPopupView.findViewById(R.id.popup_id_text);
     	progressPopupCountText = (TextView)progressPopupView.findViewById(R.id.popup_download_id_count);	
@@ -104,6 +107,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		mHelper = new WordDBHelper(context);
 		getWordFlag = false;
 		getSoundFlag = false;
+		downloadCancel = false;
     }
     /**
      * Return the default singleton instance
@@ -114,11 +118,11 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
      * 
      * @return DownloadPronounce instance.
      */
-    public static DownloadPronounce getTask(Context context, int selectedCategoryInt, View progressPopupView) {
+    public static DownloadPronounce getTask(Context context, Activity activity, int selectedCategoryInt, View progressPopupView) {
         if(downloadPronounce != null)
         	return downloadPronounce;
         
-        return new DownloadPronounce(context, selectedCategoryInt, progressPopupView);
+        return new DownloadPronounce(context, activity, selectedCategoryInt, progressPopupView);
     }
     
 	@Override
@@ -127,8 +131,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		try {
 			progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_list_loading));
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			//TODO add URL
-			String getURL = "http://www.todpop.co.kr/api/etc/getword/" + selectedCategoryInt;
+			String getURL = "http://www.todpop.co.kr/api/studies/voice.json?category=" + selectedCategoryInt;
 			HttpGet httpGet = new HttpGet(getURL);
 			HttpResponse httpResponse = httpClient.execute(httpGet);
 			HttpEntity resEntity = httpResponse.getEntity();
@@ -148,9 +151,10 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	protected void onPostExecute(JSONObject json) {
 		try {
 			if (json.getBoolean("status") == true) {
-				JSONArray jsonArray = json.getJSONObject("data").getJSONArray("words");
+				JSONArray jsonArray = json.getJSONObject("data").getJSONArray("list");
 				for(int i = 0; i < jsonArray.length(); i++){
-					wordList.add(new WordPair(jsonArray.getJSONObject(i).getString("word"), jsonArray.getJSONObject(i).getString("version")));
+					JSONArray inner = jsonArray.getJSONArray(i);
+					wordList.add(new WordPair(inner.getString(0), jsonArray.getString(1)));
 				}
 		        startDownload();
 			} else {
@@ -171,42 +175,288 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	}	
 	
 	private void startDownload(){
-		db = mHelper.getWritableDatabase();
+		int wordListSize;
+		wordListSize = wordList.size();
 		//find word from database and check version
-		for(int i = 0; i < wordList.size(); i++){
-			Cursor find = db.rawQuery("SELECT distinct word, version FROM wordSound WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
-			if(find.moveToFirst()){
-				if(!wordList.get(i).getVersion().equals(find.getString(1))){
-					db.delete("wordSound", "word='" + wordList.get(i).getWord() + "'", null);
-					downloadWordList.add(wordList.get(i));
-				}
-			}
-			else{
-				downloadWordList.add(wordList.get(i));
-			}
-		}
-        progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_downloading));
+        progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_list_checking));
         progressPopupLoadProgBar.setVisibility(View.GONE);
 		progressPopupProgBar.setVisibility(View.VISIBLE);
 		progressPopupCountText.setVisibility(View.VISIBLE);
-		downLoadTask = new DownloadTask();
-		downLoadTask.execute("");
         progressPopupProgBar.setIndeterminate(false);
-        progressPopupProgBar.setMax(downloadWordList.size());
-        progressPopupCountText.setText("1/" + downloadWordList.size());
+        progressPopupProgBar.setMax(wordListSize);
+        progressPopupProgBar.setProgress(1);
+        progressPopupCountText.setText("1/" + wordList.size());
+        
+        //new CheckExist().execute();
+        Runnable runnable = new Runnable(){
+			@Override
+			public void run(){			    
+				int wordListSize = wordList.size();
+				for(int i = 0; i < wordListSize; i++){
+					final int progress = i;
+                    if (downloadCancel){	//user cancel
+                    	activity.runOnUiThread(new Runnable(){
+		    				@Override
+		    				public void run(){
+		    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_canceled));
+		    					progressPopupCancel.setVisibility(View.GONE);
+		    					progressPopupDone.setVisibility(View.VISIBLE);
+		    				}
+	                	});	
+                    	return;
+                    }
+					db = mHelper.getWritableDatabase();
+					Cursor find = db.rawQuery("SELECT distinct word, version FROM wordSound WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
+					if(find.moveToFirst()){
+						if(!wordList.get(i).getVersion().equals(find.getString(1))){
+							db.delete("wordSound", "word='" + wordList.get(i).getWord() + "'", null);
+							downloadWordList.add(wordList.get(i));
+						}
+					}
+					else{
+						downloadWordList.add(wordList.get(i));
+					}
+			    	db.close();
+
+	                activity.runOnUiThread(new Runnable(){
+	    				@Override
+	    				public void run(){
+				        	progressPopupProgBar.setProgress(progress + 1);
+				        	progressPopupCountText.setText((progress + 1) + "/" + wordList.size());
+	    				}
+	    			});	
+				}
+
+                activity.runOnUiThread(new Runnable(){
+    				@Override
+    				public void run(){
+    		            progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_downloading));
+    		            progressPopupProgBar.setMax(downloadWordList.size());
+    		            progressPopupCountText.setText("1/" + downloadWordList.size());
+    				}
+                });
+	            startDownloadThread();
+		    }    
+		};
+		new Thread(runnable).start();
 	}
+
+	/*private class CheckExist extends AsyncTask<String, String, String> {
+	    private int current = 0;
+	    private int wordListSize = 0;
+	    @Override
+	    protected String doInBackground(String... sUrl) {
+	    	wordListSize = wordList.size();
+			for(int i = 0; i < wordListSize; i++){
+		        Log.i("STEVEN", "185");
+				db = mHelper.getWritableDatabase();
+				Cursor find = db.rawQuery("SELECT distinct word, version FROM wordSound WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
+				if(find.moveToFirst()){
+					if(!wordList.get(i).getVersion().equals(find.getString(1))){
+						db.delete("wordSound", "word='" + wordList.get(i).getWord() + "'", null);
+						downloadWordList.add(wordList.get(i));
+					}
+				}
+				else{
+					downloadWordList.add(wordList.get(i));
+				}
+		    	db.close();
+
+		        publishProgress(String.valueOf(current + 1));
+			}
+	        return null;
+	    }    
+	    
+	    @Override
+	    protected void onProgressUpdate(final String... progress) {
+	        super.onProgressUpdate(progress);
+	        activity.runOnUiThread(new Runnable(){
+				@Override
+				public void run(){
+		        	progressPopupProgBar.setProgress(Integer.valueOf(progress[0]));
+		        	progressPopupCountText.setText(progress[0] + "/" + wordListSize);
+				}
+			});	
+	    }
+	    @Override
+	    protected void onPostExecute(String result) {
+	        if (result != null){
+				progressPopupText.setText(result);
+				progressPopupCancel.setVisibility(View.GONE);
+				progressPopupDone.setVisibility(View.VISIBLE);
+	        }
+	        else{
+	            progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_downloading));
+	            progressPopupProgBar.setMax(downloadWordList.size());
+	            startDownloadThread();
+	    		/*downLoadTask = new DownloadTask();
+	    		downLoadTask.execute("");
+	            progressPopupCountText.setText("1/" + downloadWordList.size());
+	        }
+	    }
+	}*/
 	
 	public void cancel(){
 		Log.i("STEVEN", "down cancel 195");
 		progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_canceling));
 		if(!getWordFlag)
 			this.cancel(true);
-		else if(getSoundFlag)
-			downLoadTask.cancel(true);
+		else
+			downloadCancel = true;
+			//downLoadTask.cancel(true);
 	}
 	
-	private class DownloadTask extends AsyncTask<String, String, String> {
+	private void startDownloadThread(){
+		Runnable runnable = new Runnable(){
+			@Override
+			public void run(){			    
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+		        wl.acquire();
+
+				getSoundFlag = true;
+	        	progressPopupProgBar.setProgress(0);
+
+				Log.i("STEVEN", "start Downlaod");
+		        int length = downloadWordList.size();
+		        for(int i = 0; i < length; i++){
+		        	final int progress = i;
+			        try {
+			            InputStream input = null;
+			            OutputStream output = null;
+			            HttpURLConnection connection = null;
+			            try {
+			            	//Log.i("STEVEN", "downloading word is : " + downloadWordList.get(i).getWord());
+			            	URL url = new URL("http://www.todpop.co.kr/uploads/voice/" + downloadWordList.get(i).getWord() + ".mp3");
+			                connection = (HttpURLConnection) url.openConnection();
+			                connection.connect();
+		
+			                // expect HTTP 200 OK, so we don't mistakenly save error report 
+			                // instead of the file
+			                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK){
+			                	final int responseCode = connection.getResponseCode();
+			                	final String responseMessage = connection.getResponseMessage();
+			                	activity.runOnUiThread(new Runnable(){
+				    				@Override
+				    				public void run(){
+				    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error) 
+					                    		 + "Server returned HTTP " + responseCode
+					                    		 + " " + responseMessage);
+				    					progressPopupCancel.setVisibility(View.GONE);
+				    					progressPopupDone.setVisibility(View.VISIBLE);
+				    				}
+			                	});	
+			    	            wl.release();
+			                    return;
+			                }
+			                // download the file
+			                input = connection.getInputStream();
+			                output = context.openFileOutput(downloadWordList.get(i).getWord(), Context.MODE_PRIVATE);
+		
+			                byte data[] = new byte[1024];
+			                int count;
+			                while ((count = input.read(data)) != -1) {
+			                    // allow canceling with back button
+			                    if (downloadCancel){
+			                    	Log.i("STEVEN", "donwload canceled");
+			                    	activity.runOnUiThread(new Runnable(){
+					    				@Override
+					    				public void run(){
+					    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_canceled));
+					    					progressPopupCancel.setVisibility(View.GONE);
+					    					progressPopupDone.setVisibility(View.VISIBLE);
+					    				}
+				                	});	
+			        	            wl.release();
+			                    	return;
+			                    }
+			                    output.write(data, 0, count);
+			                }
+			            } catch (final Exception e) {
+		                    activity.runOnUiThread(new Runnable(){
+				    			@Override
+				    			public void run(){
+				    				progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error) + e.toString());
+				    				progressPopupCancel.setVisibility(View.GONE);
+				    				progressPopupDone.setVisibility(View.VISIBLE);
+				    			}
+			                });	
+		    	            wl.release();
+		                    return;
+			            } finally {
+			                try {
+			                    if (output != null)
+			                        output.close();
+			                    if (input != null)
+			                        input.close();
+			                } 
+			                catch (IOException ignored) { }
+		
+			                if (connection != null)
+			                    connection.disconnect();
+			                
+			                activity.runOnUiThread(new Runnable(){
+			    				@Override
+			    				public void run(){
+						        	progressPopupProgBar.setProgress(progress + 1);
+						        	progressPopupCountText.setText((progress + 1) + "/" + downloadWordList.size());
+
+			    				}
+			    			});	
+			                
+							db = mHelper.getWritableDatabase();
+					        ContentValues row = new ContentValues();
+							row.put("word", downloadWordList.get(i).getWord());
+							row.put("version", downloadWordList.get(i).getVersion());
+							row.put("category", selectedCategoryInt);
+
+							db.insert("wordSound", null, row);
+					    	db.close();
+			            }
+			        }catch(Exception e){
+			        	e.printStackTrace();
+			        }
+		        }
+	            wl.release();
+
+	            Log.i("STEVEN", "DONE");
+                activity.runOnUiThread(new Runnable(){
+    				@Override
+    				public void run(){
+    					progressPopupProgBar.setVisibility(View.INVISIBLE);
+    					progressPopupCountText.setVisibility(View.INVISIBLE);
+    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_done));
+    					progressPopupCancel.setVisibility(View.GONE);
+    					progressPopupDone.setVisibility(View.VISIBLE);
+
+    				}
+    			});	
+				SharedPreferences.Editor studyInfoEdit = context.getSharedPreferences("studyInfo",0).edit();
+				
+				switch(selectedCategoryInt){
+				case 1:
+					studyInfoEdit.putInt("basicCategorySound", YES);
+					break;
+				case 2:
+					studyInfoEdit.putInt("middleCategorySound", YES);
+					break;
+				case 3:
+					studyInfoEdit.putInt("highCategorySound", YES);
+					break;
+				case 4:
+					studyInfoEdit.putInt("toeicCategorySound", YES);
+					break;
+				}
+				studyInfoEdit.apply();
+				getSoundFlag = false;
+		    }    
+		};
+		new Thread(runnable).start();
+	}
+	
+	/*private class DownloadTask extends AsyncTask<String, String, String> {
 	    private int current = 0;
+	    private int lastPercent = 0;
 	    @Override
 	    protected String doInBackground(String... sUrl) {
 	        // take CPU lock to prevent CPU from going off if the user 
@@ -216,7 +466,9 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	        wl.acquire();
 
 			getSoundFlag = true;
-			
+        	progressPopupProgBar.setProgress(0);
+
+			Log.i("STEVEN", "line 222");
 	        int length = downloadWordList.size();
 	        while(current < length){
 		        try {
@@ -224,9 +476,8 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		            OutputStream output = null;
 		            HttpURLConnection connection = null;
 		            try {
-		            	//TODO testing
-		                //URL url = new URL("http://www.todpop.co.kr/uploads/word/sound/" + downloadWordList.get(current).getWord());
-		            	URL url = new URL("https://ssl.gstatic.com/dictionary/static/sounds/de/0/" + downloadWordList.get(current).getWord() + ".mp3");
+		            	Log.i("STEVEN", "downloading word is : " + downloadWordList.get(current).getWord());
+		            	URL url = new URL("http://www.todpop.co.kr/uploads/voice/" + downloadWordList.get(current).getWord() + ".mp3");
 		                connection = (HttpURLConnection) url.openConnection();
 		                connection.connect();
 	
@@ -276,19 +527,23 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	    @Override
 	    protected void onProgressUpdate(String... progress) {
 	        super.onProgressUpdate(progress);
-	        progressPopupProgBar.setProgress(Integer.valueOf(progress[0]));
-	        progressPopupCountText.setText(Integer.valueOf(progress[0]) + "/" + downloadWordList.size());
-	        
+	        int currentPercent =  (int)(Float.valueOf(progress[0]) / downloadWordList.size() * 100);
+	        if(currentPercent != lastPercent){
+	        	progressPopupProgBar.setProgress(currentPercent);
+	        	progressPopupCountText.setText(Integer.valueOf(progress[0]) + "/" + downloadWordList.size());
+	        	lastPercent = currentPercent;
+	        }
+			db = mHelper.getWritableDatabase();
 	        ContentValues row = new ContentValues();
 			row.put("word", progress[1]);
 			row.put("version", progress[2]);
 			row.put("category", selectedCategoryInt);
 
 			db.insert("wordSound", null, row);
+	    	db.close();
 	    }
 	    @Override
 	    protected void onPostExecute(String result) {
-	    	db.close();
 	        if (result != null){
 				progressPopupText.setText(result);
 				progressPopupCancel.setVisibility(View.GONE);
@@ -320,5 +575,5 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	        }
 		    getSoundFlag = false;
 	    }
-	}
+	}*/
 }
