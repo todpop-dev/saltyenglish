@@ -32,7 +32,7 @@
                 android:background="@drawable/rg_drawable_btn_back"
                 android:onClick="onClickBack" />
         </RelativeLayout>
-<!-- 
+        <!--
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -77,7 +77,8 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/homestore_drawable_btn_search" />
         </RelativeLayout>
--->
+        -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -93,6 +94,12 @@
                 android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
             </ListView>
 
+            <ImageView
+                android:id="@+id/homedownload_id_no_donwload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/store_41_img_nomoney" />
         </RelativeLayout>
     </LinearLayout>
 

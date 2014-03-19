@@ -343,123 +343,125 @@
         android:id="@+id/studyhome_cpi_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/test_27_bg_opacity"
         android:clickable="true"
-        android:visibility="gone" >
-
-        <!-- android:visibility="gone" -->
-
-        <Button
-            android:id="@+id/studyhome_id_go_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/studytest_drawable_btn_later"
-            android:onClick="cpxGoHome" />
-
-        <Button
-            android:id="@+id/studyhome_id_save_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/studyhome_id_go_home"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/studytest_drawable_btn_saving"
-            android:onClick="cpxGoReward" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/studyhome_id_save_now"
-            android:layout_alignRight="@id/studyhome_id_save_now"
-            android:layout_marginBottom="18dp"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/test_27_image_soldier" />
-        <!-- bg -->
+        android:paddingBottom="30dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="10dp"
+        android:paddingTop="35dp" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/studyhome_id_save_now"
-            android:orientation="horizontal" >
+            android:id="@+id/studyhome_cpi_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/test_27_popup_bg"
+            android:orientation="vertical" >
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="135" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="340" >
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="450"
-                android:orientation="vertical" >
+                <Button
+                    android:id="@+id/study_home_id_cpx_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/studyhome_cpxpopup_drawable_btn_close"
+                    android:onClick="closeCpxPopup" />
 
-                <RelativeLayout
+                <ImageView
+                    android:id="@+id/study_home_id_infotitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/test_27_img_money" />
+
+                <ImageView
+                    android:id="@+id/study_home_id_cpi_ad_image"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="216" >
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/study_home_id_infotitle"
+                    android:layout_below="@id/study_home_id_cpx_close"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="11dp"
+                    android:scaleType="fitCenter" />
+            </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="816" >
+
+                <Button
+                    android:id="@+id/studyhome_id_go_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="25dp"
+                    android:background="@drawable/studytest_drawable_btn_later"
+                    android:onClick="cpxGoHome" />
+
+                <Button
+                    android:id="@+id/studyhome_id_save_now"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/studyhome_id_go_home"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/studytest_drawable_btn_saving"
+                    android:onClick="cpxGoReward" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/studyhome_id_save_now"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/test_27_image_dogs" />
-                </RelativeLayout>
+                        android:layout_weight="1"
+                        android:gravity="right|center_vertical"
+                        android:paddingRight="10dp" >
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="456"
-                    android:background="@drawable/test_27_image_frame"
-                    android:padding="12dp" >
-
-                    <!-- ad image -->
-
-                    <ImageView
-                        android:id="@+id/study_home_id_cpi_ad_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="340" >
-
-                    <ImageView
-                        android:id="@+id/study_home_id_infotitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/test_27_image_infotitle" />
+                        <TextView
+                            android:id="@+id/study_home_id_cpx_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#41577F"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="3dp"
+                            android:text="Loading"
+                            android:textColor="#EEF5D3"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
 
                     <TextView
-                        android:id="@+id/study_home_id_cpi_ad_text"
-                        android:layout_width="match_parent"
+                        android:id="@+id/study_home_id_cpx_reward"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/study_home_id_infotitle"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center"
-                        android:text="Loading..."
-                        android:textColor="#000000"
-                        android:textSize="18sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="135" />
+                        android:layout_weight="1"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="3dp"
+                        android:text="..."
+                        android:textColor="#000000" />
+                </LinearLayout>
+            </RelativeLayout>
+            <!-- android:visibility="gone" -->
         </LinearLayout>
     </RelativeLayout>
-
 
     <View
         android:id="@+id/studyhome_id_emptyview"

@@ -482,6 +482,7 @@ public class StudyTestResult extends Activity {
 					
 					String adImageUrl = "http://todpop.co.kr/" + adDetails.getString("ad_image");
 					String adText = adDetails.getString("ad_text");
+					String adAction = adDetails.getString("ad_action");
 					String targetUrl = adDetails.getString("target_url");
 					String packageName = adDetails.getString("package_name");
 					String confirmUrl = adDetails.getString("confirm_url");
@@ -495,6 +496,7 @@ public class StudyTestResult extends Activity {
 					cpxInfoEditor.putInt("adType", adType);		
 					cpxInfoEditor.putString("adImageUrl", adImageUrl);
 					cpxInfoEditor.putString("adText", adText);
+					cpxInfoEditor.putString("adAction", adAction);
 					cpxInfoEditor.putString("targetUrl", targetUrl);
 					cpxInfoEditor.putString("packageName", packageName);
 					cpxInfoEditor.putString("confirmUrl", confirmUrl);

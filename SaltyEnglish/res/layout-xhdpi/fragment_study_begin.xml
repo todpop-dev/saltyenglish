@@ -24,7 +24,6 @@
         android:layout_marginTop="65dp"
         android:background="@drawable/studybigin_drawable_btn_speaker"
         android:onClick="readItForMe"
-        android:visibility="gone"
         />
      
     <!-- word ON -->
