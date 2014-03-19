@@ -57,8 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="530"
-            android:padding="12dp" 
-            android:background="@drawable/test_21_image_addbox">
+            android:background="@drawable/test_21_image_addbox"
+            android:padding="12dp" >
 
             <VideoView
                 android:id="@+id/test_video_view"
@@ -79,29 +79,57 @@
                 android:onClick="showTestFinishViewCB" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="360" >
+            android:layout_weight="360"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/testfinish_fb_share_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="27dp" 
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/test_30_img_addmoney" />
+
+                <TextView
+                    android:id="@+id/testfinish_fb_share_reward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/testfinish_fb_share_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/studytestfinish_drawable_btn_facebook_share"
                 android:onClick="publishAdBtn" 
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/common_image_bgcharacter5" />
-        </RelativeLayout>
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/common_image_bgcharacter5" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

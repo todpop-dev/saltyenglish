@@ -25,7 +25,8 @@
     <string name="popup_nickname_length">닉네임은 3~8자리까지 가능해요</string>
     <string name="popup_nickname_needcheck">닉네임 중복체크를 해주세요</string>
     <string name="popup_interest_More_than_three">관심사 3개 이상을 선택해 주세요</string>
-    <string name="popup_sign_up_fail">회원가입에 실패했습니다.\n잠시 뒤에 다시 시도해 주세요.\n\n(닉네임에 특수기호를 넣지 말아주세요)</string>
+    <string name="popup_sign_up_fail_false">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.\n\n혹시 닉네임에 특수문자가 포함되어 있지 않은지 확인해 주세요.</string>
+    <string name="popup_sign_up_fail">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.</string>
     <string name="popup_birth_not_selected">생년월일을 선택해주세요</string>
     <string name="popup_send_info_error">이미 가입된 이메일입니다</string>
     <string name="popup_emailogin_error">이메일 혹은 비밀번호가 올바르지 않아요</string>
@@ -113,6 +114,8 @@
     <string name="notificationSubject">짭짤한 영어</string>
     <string name="study_home_popup_notice">공지사항</string>
     <string name="study_home_popup_version_check">[짭짤한 영어] 새로운 버전이 출시되었습니다.\n\n지금 플레이 스토어에서 새 버전으로 업데이트 해주세요\n</string>
+    <string name="study_home_popup_version_current">현재 버전 :</string>
+    <string name="study_home_popup_version_latest">최신 버전 :</string>
     <string name="study_home_popup_nokakao">카카오톡이 없어요</string>
     <string name="study_result_score_text">점!</string>
     <string name="popup_register_agree">이용약관과 개인정보취급방침에\n동의하셔야 회원가입이 가능합니다</string>
@@ -147,7 +150,7 @@
     <string name="home_download_crosswalk_error_010">에러 발생!\n이미 참여한 광고입니다.</string>
     <string name="home_download_crosswalk_error_011">에러 발생!\n현재 종료된 광고입니다.</string>
     <string name="cpi_install_notification">[짭짤한영어] 내 다운로드함에서 적립확인을 받으셔야 적립이 완료됩니다.</string>
-    <string name="cpa_install_notice">사용 중이신 휴대전화와 동일한 번호로 회원가입을 완료하셔야 적립이 가능합니다.</string>
+    <string name="cpa_install_notice">과정을 완료하셔야 적립됩니다.</string>
     <string name="cpc_rewarded">적립이 완료되었습니다.</string>
     <string name="home_more_help_info">[짭짤한 영어]\nE-mail = smile@todpop.co.kr\nTel. 070-4814-4688\n\n(주)토드팝</string>
     <string name="get_coupon_error">쿠폰 정보를 읽어오는데 오류가 발생했습니다.\n다시 시도해 주세요.\n해당 증상이 지속될 경우 연락 부탁드립니다.\nE-mail = email@todpop.co.kr\nTel. 070-4814-4628\n(주)토드팝</string>
@@ -189,8 +192,10 @@
     <string name="facebook_login_done">페이스북 로그인 및 권한 설정 후\n공유하기 버튼을 다시 눌러 주셔야 공유가 완료됩니다.</string>
     <string name="facebook_share_done">페이스북 공유가 완료되었습니다.</string>
     <string name="popup_view_download_progressbar_list_loading">목록을 읽어오고 있습니다.</string>
+    <string name="popup_view_download_progressbar_list_checking">목록을 확인하고 있습니다.</string>
     <string name="popup_view_download_progressbar_downloading">다운로드 중입니다.</string>
-    <string name="popup_view_download_progressbar_error">오류가 발생했습니다.\n다시 시도해 주세요.\n</string>
+    <string name="popup_view_download_progressbar_error">이 단어는 현재 발음이 지원되지 않습니다.\n조금만 기다려 주세요 ^^</string>
+    <string name="popup_view_download_progressbar_real_error">발음 다운로드 중 문제가 발생하였습니다!\n 해당 단어를 알려주세요! smile@todpop.co.kr\n</string>
     <string name="popup_view_download_progressbar_done">다운로드가 완료되었습니다.</string>
     <string name="popup_view_download_progressbar_canceling">취소 중입니다.</string>
     <string name="popup_view_download_progressbar_canceled">취소되었습니다.</string>
@@ -205,5 +210,7 @@
     <string name="popup_view_prize_2nd">주간 2등에게만 제공됩니다.\n순위는 일요일에 결정됩니다.</string>
     <string name="popup_view_prize_3rd">주간 3등에게만 제공됩니다.\n순위는 일요일에 결정됩니다.</string>
     <string name="temp_set_store_coming_soon">스토어는 곧 개점 예정입니다.</string>
-
+	<string name="study_home_point"> point</string>
+	<string name="study_home_reward"> 장학금</string>
+	<string name="popup_pronounce_info">해당 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 30MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
 </resources>

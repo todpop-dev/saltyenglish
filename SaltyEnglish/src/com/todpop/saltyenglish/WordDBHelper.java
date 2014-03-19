@@ -28,7 +28,7 @@ public class WordDBHelper extends SQLiteOpenHelper {
 		db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 	"name TEXT, mean TEXT, xo TEXT);");
 		db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-			"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
+				"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

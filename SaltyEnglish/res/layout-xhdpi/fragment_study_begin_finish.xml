@@ -51,68 +51,104 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <RelativeLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="382" >
+            android:layout_weight="382" />
+    </LinearLayout>
 
-            <!-- Get Coupon Button -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-            <Button
-                android:id="@+id/studyfinish_id_gotest"
+        <!-- Get Coupon Button -->
+
+        <Button
+            android:id="@+id/studyfinish_id_gotest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/studybegin_drawable_btn_gotest"
+            android:onClick="showTestActivity" />
+
+        <Button
+            android:id="@+id/studyfinish_id_coupon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/studyfinish_id_gotest"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/studyfinish_drawable_btn_coupon"
+            android:onClick="showCouponPopView"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/studyfinish_id_facebook_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/studyfinish_id_gotest"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/studytestfinish_drawable_btn_facebook_share"
+            android:onClick="publishAdBtn"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:id="@+id/studyfinish_fb_share_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/studyfinish_id_facebook_share"
+            android:paddingBottom="15dp" 
+            android:visibility="gone">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/studybegin_drawable_btn_gotest"
-                android:onClick="showTestActivity" />
-
-            <Button
-                android:id="@+id/studyfinish_id_coupon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/studyfinish_id_gotest"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studyfinish_drawable_btn_coupon"
-                android:onClick="showCouponPopView" 
-                android:visibility="invisible"/>
-            
-            <Button
-                android:id="@+id/studyfinish_id_facebook_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/studyfinish_id_gotest"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studytestfinish_drawable_btn_facebook_share"
-                android:onClick="publishAdBtn" 
-                android:visibility="invisible"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@id/studyfinish_id_gotest"
+                android:gravity="center"
                 android:orientation="horizontal" >
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="535" />
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/test_30_img_addmoney" />
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="185" >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="9dp"
-                        android:src="@drawable/study_16_image_mananddog" />
-                </RelativeLayout>
+                <TextView
+                    android:id="@+id/studyfinish_fb_share_reward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:gravity="left|center_vertical"
+                    android:textColor="#000000"
+                    android:textSize="12sp" />
             </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/studyfinish_id_gotest"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="535" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="185" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="9dp"
+                    android:src="@drawable/study_16_image_mananddog" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

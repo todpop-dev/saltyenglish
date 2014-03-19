@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -56,6 +57,9 @@ public class StudyTestFinish extends Activity {
 	ImageView marking;
 	ImageView markingDone;
 	Button shareBtn;
+	
+	private LinearLayout fbShareLayout;
+	private TextView fbShareReward;
 	
 	String reward;
 	String point;
@@ -92,6 +96,9 @@ public class StudyTestFinish extends Activity {
 		marking = (ImageView) findViewById(R.id.testfinish_id_marking);
 		markingDone = (ImageView) findViewById(R.id.testfinish_id_marking_completed);
 		shareBtn = (Button) findViewById(R.id.testfinish_fb_share_btn);
+		
+		fbShareLayout = (LinearLayout)findViewById(R.id.testfinish_fb_share_layout);
+		fbShareReward = (TextView)findViewById(R.id.testfinish_fb_share_reward);
 		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
@@ -146,6 +153,7 @@ public class StudyTestFinish extends Activity {
 					
 					if(ad_type == 202){
 						shareBtn.setVisibility(View.VISIBLE);
+						fbShareLayout.setVisibility(View.VISIBLE);
 						reward = json.getJSONObject("data").getString("reward");
 						point = json.getJSONObject("data").getString("point");
 						name = json.getJSONObject("data").getString("name");
@@ -153,6 +161,12 @@ public class StudyTestFinish extends Activity {
 						description = json.getJSONObject("data").getString("description");
 						link = json.getJSONObject("data").getString("link");
 						picture = json.getJSONObject("data").getString("picture");
+						if(reward.equals("0") || reward.equals("null")){
+							fbShareReward.setText(point + " point");
+						}
+						else{
+							fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+						}
 					}
 					else{
 						video.setOnCompletionListener(cl);
@@ -325,7 +339,7 @@ public class StudyTestFinish extends Activity {
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
 					} else {
-						shareBtn.setClickable(false);
+						shareBtn.setEnabled(false);
 						popupText.setText(R.string.facebook_share_done);
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 						new SetCPDMlog()
