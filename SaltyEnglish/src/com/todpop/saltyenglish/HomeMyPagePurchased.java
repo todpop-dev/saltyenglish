@@ -49,6 +49,8 @@ public class HomeMyPagePurchased extends Activity {
 	RadioButton couponBtn;
 	RadioButton ticketBtn;
 	
+	ImageView noCoupon;
+	
 	RelativeLayout listItemView;
 	SharedPreferences rgInfo;
 	
@@ -61,6 +63,7 @@ public class HomeMyPagePurchased extends Activity {
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		listView = (ListView)findViewById(R.id.home_mypage_purchased_id_list_view);
+		noCoupon = (ImageView)findViewById(R.id.home_mypage_purchased_id_no_coupon);
 		couponList = new ArrayList<CouponListViewItem>();
 		
 		couponBtn = (RadioButton)findViewById(R.id.homemypagepurchased_id_btn_coupon);
@@ -100,10 +103,12 @@ public class HomeMyPagePurchased extends Activity {
 			switch(v.getId()){
 			case R.id.homemypagepurchased_id_btn_coupon:
 				couponList.clear();
+				noCoupon.setVisibility(View.VISIBLE);
 				new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
 				break;
 			case R.id.homemypagepurchased_id_btn_purchased:
 				couponList.clear();
+				noCoupon.setVisibility(View.VISIBLE);
 				new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
 				break;
 			}
@@ -245,8 +250,11 @@ public class HomeMyPagePurchased extends Activity {
 									jsonObject.getString("image"), time, jsonObject.getString("name"), jsonObject.getString("place"), jsonObject.getString("price"));
 							couponList.add(mCouponList);
 						}
-						purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
-				    	listView.setAdapter(purchasedListViewAdapter);
+						if(!couponList.isEmpty()){
+							noCoupon.setVisibility(View.GONE);
+							purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
+					    	listView.setAdapter(purchasedListViewAdapter);
+						}
 					}
 				}
 				else{

@@ -90,6 +90,13 @@
                     android:paddingRight="5dp"
                     android:scrollbarThumbVertical="@drawable/store_32_drop_scroll"
                     android:scrollbarTrackVertical="@drawable/store_32_drop_underbar" />
+
+                <ImageView
+                    android:id="@+id/home_mypage_purchased_id_no_coupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/store_34_img_nocoupon" />
             </RelativeLayout>
         </RelativeLayout>
 
