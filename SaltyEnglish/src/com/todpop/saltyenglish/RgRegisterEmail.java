@@ -199,6 +199,9 @@ public class RgRegisterEmail extends Activity {
 					popupWindow.showAsDropDown(checkNickname);
 				}
 			} catch (Exception e) {
+				popupText.setText(R.string.popup_nickname_no_error);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(checkNickname);
 				Log.e("RRE","asdf");
 			}
 			Log.e("RRE","qweasd");

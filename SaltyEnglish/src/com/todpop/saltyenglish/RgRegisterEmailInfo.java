@@ -347,11 +347,11 @@ public class RgRegisterEmailInfo extends Activity {
 				
 				Log.d("RgRegisterEmailInfo","335");
 				Log.d("chk=",rgInfo.getString("facebook","no") + "/" + rgInfo.getString("nickname","no") + "/" + rgInfo.getString("mem_id",null)+"/" );
-				
+				String birthDay = Integer.toString(mYear) + "-" + Integer.toString(mMonth + 1) + "-" + Integer.toString(mDay);
 				if(!rgInfo.getString("facebook","no").equals("no"))						// cross join (facebook->email)
 				{
 					params.add(new BasicNameValuePair("email", rgInfo.getString("email", null)));
-					params.add(new BasicNameValuePair("birth", birthBtn.getText().toString()));
+					params.add(new BasicNameValuePair("birth", birthDay));
 					params.add(new BasicNameValuePair("sex",Integer.toString(sex)));
 					params.add(new BasicNameValuePair("address", city.getSelectedItem().toString()+" "+county.getSelectedItem().toString()));
 					params.add(new BasicNameValuePair("interest",Integer.toString(interest)));
@@ -377,7 +377,7 @@ public class RgRegisterEmailInfo extends Activity {
 						params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", null)));
 					}
 					
-					params.add(new BasicNameValuePair("birth", birthBtn.getText().toString()));
+					params.add(new BasicNameValuePair("birth", birthDay));
 					params.add(new BasicNameValuePair("address", city.getSelectedItem().toString()+" "+county.getSelectedItem().toString()));
 					params.add(new BasicNameValuePair("interest",Integer.toString(interest)));
 					params.add(new BasicNameValuePair("sex",Integer.toString(sex)));
@@ -393,6 +393,7 @@ public class RgRegisterEmailInfo extends Activity {
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.d("send contents", params.toString());
 					Log.d("RESPONSE ---- ", result.toString());				        	
 				}
 				return result;
@@ -436,7 +437,7 @@ public class RgRegisterEmailInfo extends Activity {
 					
 					
 				} else {
-					popupText.setText(R.string.popup_sign_up_fail);
+					popupText.setText(R.string.popup_sign_up_fail_false);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(null);
 				}
