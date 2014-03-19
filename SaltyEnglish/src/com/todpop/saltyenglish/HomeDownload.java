@@ -76,6 +76,8 @@ public class HomeDownload extends Activity {
 	CpiListViewItem mCpiListItem;
 	ListView cpiListView;
 	int cpiCount = 0;
+	
+	ImageView noDownload;
 
 	RelativeLayout homeDownload;
 //	int couponCount = 0;
@@ -101,6 +103,8 @@ public class HomeDownload extends Activity {
 		
 		cpiArray = new ArrayList<CpiListViewItem>();
 		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
+		
+		noDownload = (ImageView)findViewById(R.id.homedownload_id_no_donwload);
 
 
 		//get phone number
@@ -349,8 +353,12 @@ public class HomeDownload extends Activity {
 								jsonArray.getJSONObject(i).getInt("act"));
 						cpiArray.add(mCpiListItem);
 					}	
-					cpiListViewAdapter = new CpiListViewAdapter(HomeDownload.this,R.layout.home_download_list_item_cpi, cpiArray);
-					cpiListView.setAdapter(cpiListViewAdapter);
+					
+					if(!cpiArray.isEmpty()){
+						noDownload.setVisibility(View.GONE);
+						cpiListViewAdapter = new CpiListViewAdapter(HomeDownload.this,R.layout.home_download_list_item_cpi, cpiArray);
+						cpiListView.setAdapter(cpiListViewAdapter);
+					}
 				}
 			} catch (Exception e) {
 
@@ -468,7 +476,21 @@ public class HomeDownload extends Activity {
 						}
 					}
 					else if(adType == 303){
-						new CheckCPA().execute(confirmUrl + "?mobile=" + mobile);
+						if(!confirmUrl.equals("")){
+							Log.i("STEVEN", "confirm url not null");
+							new CheckCPA().execute(confirmUrl + "?mobile=" + mobile);
+						}
+						else{
+							Toast toast = Toast.makeText(getApplicationContext(), R.string.cpa_install_notice, Toast.LENGTH_LONG);
+							toast.show();
+							if(targetUrl.contains("**ad_id**")){
+								targetUrl.replace("**ad_id**", String.valueOf(adId));
+							}
+							if(targetUrl.contains("**user_id**")){
+								targetUrl.replace("**user_id**", String.valueOf(userId));
+							}
+							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)));
+						}
 					}
 					else if(adType == 305){
 						Intent intent = new Intent(getApplicationContext(), SurveyView.class);
@@ -476,6 +498,8 @@ public class HomeDownload extends Activity {
 						finish();
 					}
 					else if(adType == 306){
+						Toast toast = Toast.makeText(getApplicationContext(), R.string.cpc_rewarded, Toast.LENGTH_LONG);
+						toast.show();
 						new SendCPXLog().execute("http://todpop.co.kr/api/advertises/set_cpx_log.json?ad_id=" + adId + "&ad_type=306&user_id=" + userId + "&act=3");
 						startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)));
 					}
@@ -601,7 +625,7 @@ public class HomeDownload extends Activity {
 	// on click
 	public void onClickBack(View view)
 	{
-		
+		getSharedPreferences("cpxInfo",0).edit().clear().apply();
 		finish();
 	}
 	
