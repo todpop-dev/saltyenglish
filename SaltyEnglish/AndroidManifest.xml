@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
-    android:versionCode="17"
-    android:versionName="1.2.20"  >
+    android:versionCode="18"
+    android:versionName="1.2.34"  >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -264,7 +265,8 @@
         
         <activity
             android:name="com.todpop.saltyenglish.HomeMorePronounce"
-            android:label="@string/title_activity_home_more_pronounce" >
+            android:label="@string/title_activity_home_more_pronounce"
+            android:screenOrientation="portrait" >
         </activity>
         
         <activity

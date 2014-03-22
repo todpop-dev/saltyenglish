@@ -16,6 +16,7 @@
     <string name="popup_nickname_no_error">닉네임에 사용할 수 없는 문자가\n포함되어있어요!</string>
     <string name="popup_nickname_reserved">사용할 수 없어요 (예약된 닉네임)</string>
     <string name="popup_recom_no">추천인 닉네임이 잘못되었어요</string>
+    <string name="popup_recom_error">추천인 닉네임에 사용할 수 없는 문자가\n포함되어있어요!</string>
     <string name="popup_email_pwd_wrong">이메일 혹은 패스워드를 확인해 주세요</string>
     <string name="app_id">218233231697811</string>
     <string name="popup_email_format_wrong">잘못된 이메일 포맷입니다</string>
@@ -191,6 +192,7 @@
     <string name="temp_store_validate_check_after_purchase">구매 후 확인</string>
     <string name="facebook_login_done">페이스북 로그인 및 권한 설정 후\n공유하기 버튼을 다시 눌러 주셔야 공유가 완료됩니다.</string>
     <string name="facebook_share_done">페이스북 공유가 완료되었습니다.</string>
+    <string name="facebook_share_error">페이스북 공유에 실패했습니다!\n\n다시 시도해주세요!</string>
     <string name="popup_view_download_progressbar_list_loading">목록을 읽어오고 있습니다.</string>
     <string name="popup_view_download_progressbar_list_checking">목록을 확인하고 있습니다.</string>
     <string name="popup_view_download_progressbar_downloading">다운로드 중입니다.</string>
@@ -212,5 +214,9 @@
     <string name="temp_set_store_coming_soon">스토어는 곧 개점 예정입니다.</string>
 	<string name="study_home_point"> point</string>
 	<string name="study_home_reward"> 장학금</string>
-	<string name="popup_pronounce_info">해당 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 30MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="popup_pronounce_info_basic">기초 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 15MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="popup_pronounce_info_middle">중학 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 45MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="popup_pronounce_info_high">수능 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="popup_pronounce_info_toeic">토익 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="facebook_share_history">이미 공유를 완료하셨습니다</string>
 </resources>
