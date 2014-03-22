@@ -252,9 +252,9 @@ public class HomeMyPagePurchased extends Activity {
 						}
 						if(!couponList.isEmpty()){
 							noCoupon.setVisibility(View.GONE);
-							purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
-					    	listView.setAdapter(purchasedListViewAdapter);
 						}
+						purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
+				    	listView.setAdapter(purchasedListViewAdapter);
 					}
 				}
 				else{
