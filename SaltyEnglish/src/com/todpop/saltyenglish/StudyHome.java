@@ -81,6 +81,7 @@ public class StudyHome extends Activity {
 	ImageView cpxAdInfoTitle;
 	Button cpxAdSaveNowBtn;
 	Button cpxAdNoButton;
+	ImageView cpxAdPlus;
 	
 	
 	boolean closeFlag = false;
@@ -364,6 +365,7 @@ public class StudyHome extends Activity {
 		cpxAdInfoTitle = (ImageView)findViewById(R.id.study_home_id_infotitle);
 		cpxAdSaveNowBtn = (Button)findViewById(R.id.studyhome_id_save_now);
 		cpxAdNoButton = (Button)findViewById(R.id.studyhome_id_go_home);
+		cpxAdPlus = (ImageView)findViewById(R.id.study_home_id_cpx_plus);
 		
 		//popupview
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
@@ -414,6 +416,11 @@ public class StudyHome extends Activity {
 		
 		// Download CPX Image and update UI
 		if(cpxAdType != 0){
+			cpxAdInfoTitle.setVisibility(View.VISIBLE);
+			cpxAdTextView.setVisibility(View.VISIBLE);
+			cpxAdTextReward.setVisibility(View.VISIBLE);
+			cpxAdSaveNowBtn.setVisibility(View.VISIBLE);
+			cpxAdPlus.setVisibility(View.VISIBLE);
 			Log.i("STEVEN", "download image task called");
 			if(cpxReward.equals("0") || cpxReward.equals("null")){
 				cpxAdInfoTitle.setBackgroundResource(R.drawable.test_27_img_point);
@@ -801,6 +808,7 @@ public class StudyHome extends Activity {
 						cpxAdTextView.setVisibility(View.VISIBLE);
 						cpxAdTextReward.setVisibility(View.VISIBLE);
 						cpxAdSaveNowBtn.setVisibility(View.VISIBLE);
+						cpxAdPlus.setVisibility(View.VISIBLE);
 						cpxAdTextView.setText(cpxAdAction);
 						if(cpxReward.equals("0") || cpxReward.equals("null")){
 					    	cpxAdTextReward.setText(cpxPoint + getResources().getString(R.string.study_home_point));
@@ -817,6 +825,7 @@ public class StudyHome extends Activity {
 						cpxAdTextView.setVisibility(View.INVISIBLE);
 						cpxAdTextReward.setVisibility(View.INVISIBLE);
 						cpxAdSaveNowBtn.setVisibility(View.INVISIBLE);
+						cpxAdPlus.setVisibility(View.INVISIBLE);
 						new DownloadImageTask().execute(cpxAdImageUrl);
 					}
 				} else {		   
