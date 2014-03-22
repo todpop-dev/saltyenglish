@@ -88,6 +88,7 @@ public class StudyCategory extends Activity {
 		selectedCategoryString = "basicCategorySound";
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
+			askPopupText.setText(R.string.popup_pronounce_info_basic);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -101,6 +102,7 @@ public class StudyCategory extends Activity {
 		selectedCategoryString = "middleCategorySound";
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
+			askPopupText.setText(R.string.popup_pronounce_info_middle);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -114,6 +116,7 @@ public class StudyCategory extends Activity {
 		selectedCategoryString = "highCategorySound";
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
+			askPopupText.setText(R.string.popup_pronounce_info_high);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -127,6 +130,7 @@ public class StudyCategory extends Activity {
 		selectedCategoryString = "toeicCategorySound";
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
+			askPopupText.setText(R.string.popup_pronounce_info_toeic);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{

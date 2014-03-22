@@ -343,6 +343,7 @@
         android:id="@+id/studyhome_cpi_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#7f000000"
         android:clickable="true"
         android:paddingBottom="30dp"
         android:paddingLeft="15dp"
@@ -379,7 +380,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="7dp"
-                    android:background="@drawable/test_27_img_money" />
+                    android:background="@drawable/test_27_img_money"
+                    android:visibility="invisible" />
 
                 <ImageView
                     android:id="@+id/study_home_id_cpi_ad_image"
@@ -389,7 +391,8 @@
                     android:layout_below="@id/study_home_id_cpx_close"
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="11dp"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/test_27_image_end" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -415,7 +418,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="7dp"
                     android:background="@drawable/studytest_drawable_btn_saving"
-                    android:onClick="cpxGoReward" />
+                    android:onClick="cpxGoReward" 
+                    android:visibility="invisible"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -443,8 +447,16 @@
                             android:text="Loading"
                             android:textColor="#EEF5D3"
                             android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:visibility="invisible" />
                     </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/study_home_id_cpx_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/test_27_img_plus"
+                        android:visibility="invisible" />
 
                     <TextView
                         android:id="@+id/study_home_id_cpx_reward"
@@ -456,7 +468,8 @@
                         android:paddingRight="10dp"
                         android:paddingTop="3dp"
                         android:text="..."
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:visibility="invisible" />
                 </LinearLayout>
             </RelativeLayout>
             <!-- android:visibility="gone" -->

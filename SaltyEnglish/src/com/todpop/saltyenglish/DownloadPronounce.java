@@ -129,7 +129,13 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	protected JSONObject doInBackground(String... urls) {
 		JSONObject result = null;
 		try {
-			progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_list_loading));
+			downloadCancel = false;
+			activity.runOnUiThread(new Runnable(){
+				@Override
+				public void run(){
+					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_list_loading));
+				}
+			});
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			String getURL = "http://www.todpop.co.kr/api/studies/voice.json?category=" + selectedCategoryInt;
 			HttpGet httpGet = new HttpGet(getURL);
@@ -158,18 +164,28 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 				}
 		        startDownload();
 			} else {
-				progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error));
-				progressPopupCancel.setVisibility(View.GONE);
-				progressPopupDone.setVisibility(View.VISIBLE);
-				progressPopupLoadProgBar.setVisibility(View.GONE);
+				activity.runOnUiThread(new Runnable(){
+					@Override
+					public void run(){
+						progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_real_error));
+						progressPopupCancel.setVisibility(View.GONE);
+						progressPopupDone.setVisibility(View.VISIBLE);
+						progressPopupLoadProgBar.setVisibility(View.GONE);
+						}
+				});
 				Log.d("STEVEN", "Get word list from server failed");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error));
-			progressPopupCancel.setVisibility(View.GONE);
-			progressPopupDone.setVisibility(View.VISIBLE);
-			progressPopupLoadProgBar.setVisibility(View.GONE);
+			activity.runOnUiThread(new Runnable(){
+				@Override
+				public void run(){
+					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_real_error));
+					progressPopupCancel.setVisibility(View.GONE);
+					progressPopupDone.setVisibility(View.VISIBLE);
+					progressPopupLoadProgBar.setVisibility(View.GONE);
+					}
+			});
 		}
 		getWordFlag = true;
 	}	
@@ -181,14 +197,17 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
         progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_list_checking));
         progressPopupLoadProgBar.setVisibility(View.GONE);
 		progressPopupProgBar.setVisibility(View.VISIBLE);
+		progressPopupCancel.setVisibility(View.VISIBLE);
+		progressPopupDone.setVisibility(View.GONE);
 		progressPopupCountText.setVisibility(View.VISIBLE);
         progressPopupProgBar.setIndeterminate(false);
         progressPopupProgBar.setMax(wordListSize);
         progressPopupProgBar.setProgress(1);
         progressPopupCountText.setText("1/" + wordList.size());
         
+        
         //new CheckExist().execute();
-        Runnable runnable = new Runnable(){
+        Runnable checkDB = new Runnable(){
 			@Override
 			public void run(){			    
 				int wordListSize = wordList.size();
@@ -206,6 +225,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
                     	return;
                     }
 					db = mHelper.getWritableDatabase();
+					Log.i("STEVEN", wordList.get(i).getWord());
 					Cursor find = db.rawQuery("SELECT distinct word, version FROM wordSound WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
 					if(find.moveToFirst()){
 						if(!wordList.get(i).getVersion().equals(find.getString(1))){
@@ -216,7 +236,9 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 					else{
 						downloadWordList.add(wordList.get(i));
 					}
+					find.close();
 			    	db.close();
+					Log.i("STEVEN", "DB closed");
 
 	                activity.runOnUiThread(new Runnable(){
 	    				@Override
@@ -238,7 +260,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	            startDownloadThread();
 		    }    
 		};
-		new Thread(runnable).start();
+		new Thread(checkDB).start();
 	}
 
 	/*private class CheckExist extends AsyncTask<String, String, String> {
@@ -307,7 +329,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	}
 	
 	private void startDownloadThread(){
-		Runnable runnable = new Runnable(){
+		Runnable download = new Runnable(){
 			@Override
 			public void run(){			    
 				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -339,7 +361,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 			                	activity.runOnUiThread(new Runnable(){
 				    				@Override
 				    				public void run(){
-				    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error) 
+				    					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_real_error) 
 					                    		 + "Server returned HTTP " + responseCode
 					                    		 + " " + responseMessage);
 				    					progressPopupCancel.setVisibility(View.GONE);
@@ -376,7 +398,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		                    activity.runOnUiThread(new Runnable(){
 				    			@Override
 				    			public void run(){
-				    				progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_error) + e.toString());
+				    				progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_real_error) + e.toString());
 				    				progressPopupCancel.setVisibility(View.GONE);
 				    				progressPopupDone.setVisibility(View.VISIBLE);
 				    			}
@@ -428,7 +450,6 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
     					progressPopupText.setText(context.getResources().getString(R.string.popup_view_download_progressbar_done));
     					progressPopupCancel.setVisibility(View.GONE);
     					progressPopupDone.setVisibility(View.VISIBLE);
-
     				}
     			});	
 				SharedPreferences.Editor studyInfoEdit = context.getSharedPreferences("studyInfo",0).edit();
@@ -451,7 +472,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 				getSoundFlag = false;
 		    }    
 		};
-		new Thread(runnable).start();
+		new Thread(download).start();
 	}
 	
 	/*private class DownloadTask extends AsyncTask<String, String, String> {
