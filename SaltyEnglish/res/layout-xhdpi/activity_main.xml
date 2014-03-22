@@ -28,7 +28,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="right|center_vertical"
                 android:text="Loading..."
-                android:textColor="#ECF1CA"
+                android:textColor="#FAF8DF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
