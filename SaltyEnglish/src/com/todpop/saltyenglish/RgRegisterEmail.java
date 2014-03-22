@@ -213,8 +213,15 @@ public class RgRegisterEmail extends Activity {
 	public void bridgeToEmailInfoActivity(View view)
 	{
 		if(!nicknameRefre.getText().toString().isEmpty() && passRecommend==0){
-			Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
-			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
+			if(nicknameRefre.getText().toString().contains("\\")){
+				popupText.setText(R.string.popup_recom_error);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				popupWindow.showAsDropDown(checkNickname);
+			}
+			else{
+				Log.i("STEVEN----not empty", "right now nick is"+nicknameRefre.getText().toString());
+				new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknameRefre.getText().toString());
+			}
 		}
 		else{
 			rgInfoEdit.putString("recommend",null);
@@ -267,6 +274,9 @@ public class RgRegisterEmail extends Activity {
 				rgInfoEdit.apply();
 				showRgRegisterEmailInfoActivity();
 			} catch (Exception e) {
+				rgInfoEdit.putString("recommend",null);
+				rgInfoEdit.apply();
+				showRgRegisterEmailInfoActivity();
 
 			}
 		}
