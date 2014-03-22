@@ -103,6 +103,7 @@ public class StudyBegin extends FragmentActivity {
 	// Infomation for send CPD cound
 	int adId;
 	static int adType;
+	static String sharedHistory;
 	String couponId;
 	String userId;
 	int adAct;
@@ -158,6 +159,7 @@ public class StudyBegin extends FragmentActivity {
 	String link;
 	String picture;
 	
+	private boolean shareTried = false;
 	private final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 	
@@ -441,11 +443,17 @@ public class StudyBegin extends FragmentActivity {
 					FlurryAgent.logEvent("CPD (Facebook)");
 					cpdFbShare.setVisibility(View.VISIBLE);
 					fbShareLayout.setVisibility(View.VISIBLE);
-					if(reward.equals("0") || reward.equals("null")){
-						fbShareReward.setText(point + " point");
+					if(sharedHistory.equals("0")){
+						cpdFbShare.setEnabled(false);
+						fbShareReward.setText(R.string.facebook_share_history);
 					}
 					else{
-						fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+						if(reward.equals("0") || reward.equals("null")){
+							fbShareReward.setText(point + " point");
+						}
+						else{
+							fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+						}
 					}
 				}
 				else{
@@ -889,6 +897,8 @@ public class StudyBegin extends FragmentActivity {
 					adId = cpdJsonObj.getInt("ad_id");
 					adType = cpdJsonObj.getInt("ad_type");
 					
+					sharedHistory = cpdJsonObj.getString("history");
+					
 					couponId = cpdJsonObj.getString("coupon");
 
 					reward = cpdJsonObj.getString("reward");
@@ -1008,7 +1018,7 @@ public class StudyBegin extends FragmentActivity {
 		String version = null;
 		try {
 			word = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("name");
-			version = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("version");
+			version = jsonWords.getJSONObject(studyStartPageView.getCurrentItem()).getString("voice");
 			Log.i("STEVEN", "version is : " + version);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -1121,6 +1131,10 @@ public class StudyBegin extends FragmentActivity {
 	 * for facebook share
 	 */
 	public void publishAdBtn(View v) {
+		shareTried = true;
+		
+		cpdFbShare.setEnabled(false);
+		
 		Session session = Session.getActiveSession();
 		if (session == null || session.isClosed()) {
 			Log.i("STEVEN", "publishAdBtn if");
@@ -1154,25 +1168,33 @@ public class StudyBegin extends FragmentActivity {
 	
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
-					JSONObject graphResponse = response.getGraphObject()
-							.getInnerJSONObject();
-					String postId = null;
-					try {
-						postId = graphResponse.getString("id");
-					} catch (JSONException e) {
-						Log.i("Facebook StudyTestFinish",
-								"JSON error " + e.getMessage());
-					}
-					FacebookRequestError error = response.getError();
-					if (error != null) {
+					Log.i("STEVEN", "callback response : " + response);
+					try{
+						JSONObject graphResponse = response.getGraphObject()
+								.getInnerJSONObject();
+						String postId = null;
+						try {
+							postId = graphResponse.getString("id");
+						} catch (JSONException e) {
+							Log.i("Facebook StudyTestFinish",
+									"JSON error " + e.getMessage());
+						}
+						FacebookRequestError error = response.getError();
+						if (error != null) {
+							popupText.setText(R.string.facebook_share_error);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);					
 							Toast.makeText(getApplicationContext(),
 								error.getErrorMessage(), Toast.LENGTH_SHORT)
 								.show();
-					} else {
-						cpdFbShare.setEnabled(false);
-						popupText.setText(R.string.facebook_share_done);							
-						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);
+						} else {
+							cpdFbShare.setEnabled(false);
+							popupText.setText(R.string.facebook_share_done);							
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);
+						}
+					}catch(Exception e){
+						popupText.setText(R.string.facebook_share_error);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);						
 					}
 				}
 			};
@@ -1210,8 +1232,6 @@ public class StudyBegin extends FragmentActivity {
 				publishAd();
 			}
 			else{
-				popupText.setText(R.string.facebook_login_done);
-				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
 		}
 	}
@@ -1272,7 +1292,22 @@ public class StudyBegin extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.study_bigin, menu);
 		return true;
 	}
-	
+
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		Log.i("STEVEN", "onRestart()");
+		if(shareTried){
+			Session session = Session.getActiveSession();
+			if (session == null || session.isClosed()) {
+				Log.i("STEVEN", "publishAdBtn if");
+				Session.openActiveSession(this, true, callback);
+			} else {
+				Log.i("STEVEN", "publishAdBtn else");
+				publishAd();
+			}
+		}
+	}
 	@Override
 	public void onDestroy()
 	{
