@@ -40,6 +40,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -75,7 +76,6 @@ public class HomeDownload extends Activity {
 	ArrayList<CpiListViewItem> cpiArray;
 	CpiListViewItem mCpiListItem;
 	ListView cpiListView;
-	int cpiCount = 0;
 	
 	ImageView noDownload;
 
@@ -180,7 +180,7 @@ public class HomeDownload extends Activity {
 
 	class CpiListViewItem 
 	{
-		CpiListViewItem(int aId, int aad_type, String aImage, String aName, String aCoin, String aPoint, int aState)
+		CpiListViewItem(int aId, int aad_type, String aImage, String aName, String aCoin, String aPoint, int aState, Bitmap aBitImg)
 		{
 			id = aId;
 			ad_type = aad_type;
@@ -189,6 +189,8 @@ public class HomeDownload extends Activity {
 			coin = aCoin;
 			point = aPoint;
 			state = aState;
+			bitImg = aBitImg;
+			tryDownImg = false;
 		}
 		int id;
 		int ad_type;
@@ -197,6 +199,8 @@ public class HomeDownload extends Activity {
 		String coin;
 		String point;
 		int state;
+		Bitmap bitImg;
+		Boolean tryDownImg;
 	}
 
 	class CpiListViewAdapter extends BaseAdapter
@@ -204,6 +208,7 @@ public class HomeDownload extends Activity {
 		Context maincon;
 		LayoutInflater Inflater;
 		ArrayList<CpiListViewItem> arSrc;
+        Drawable emptyImg = getResources().getDrawable(R.drawable.store_2_image_goodsimage);
 		int layout;
 
 		public CpiListViewAdapter(Context context,int alayout,ArrayList<CpiListViewItem> aarSrc)
@@ -230,31 +235,38 @@ public class HomeDownload extends Activity {
 
 		public View getView(int position,View convertView,ViewGroup parent)
 		{
-			cpiCount++;
+			ViewHolder holder;
 			final int id = arSrc.get(position).id;
 			final int type = arSrc.get(position).ad_type;
 			
 			if(convertView == null)
 			{
 				convertView = Inflater.inflate(layout, parent,false);
-			}
-			ImageView itemImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_image);
-			TextView name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_name);
-			name1Text.setText(arSrc.get(position).name);
-
-			TextView name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
-			ImageView coinImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_imagecoin);
-			if(arSrc.get(position).point.equals("null") || arSrc.get(position).point.equals("0")){
-				name2Text.setText(arSrc.get(position).coin);
+				holder = new ViewHolder();
+				holder.itemImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_image);
+				holder.name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_name);
+				holder.name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
+				holder.coinImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_imagecoin);
+				convertView.setTag(holder);
 			}
 			else{
-				name2Text.setText(arSrc.get(position).point);
-				coinImg.setImageResource(R.drawable.common_image_smallpoint);
+				holder = (ViewHolder)convertView.getTag();
+			}
+			
+			CpiListViewItem item = (CpiListViewItem) arSrc.get(position);
+			holder.name1Text.setText(item.name);
+
+			if(item.point.equals("null") || item.point.equals("0")){
+				holder.name2Text.setText(item.coin);
+			}
+			else{
+				holder.name2Text.setText(item.point);
+				holder.coinImg.setImageResource(R.drawable.common_image_smallpoint);
 			}
 				
 			final Button getRewardBut = (Button)convertView.findViewById(R.id.homedownload_list_item_id_btn);
 			
-			switch(arSrc.get(position).state){
+			switch(item.state){
 			case 1:
 				//TODO ad act 1 add
 			case 2:
@@ -285,19 +297,21 @@ public class HomeDownload extends Activity {
 				break;	
 			}
 			
-			try {
-				// show The Image
-				String imgUrl = arSrc.get(position).image;
-				//URL url = new URL(imgUrl);
-				//Log.d("url ------ ", url.toString());
-				new DownloadImageTask(itemImg)
-				.execute("http://todpop.co.kr"
-						+ imgUrl);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
+			if(holder.itemImg != null){
+				if(item.bitImg != null){
+					holder.itemImg.setImageBitmap(item.bitImg);
+				}
+				else{
+					holder.itemImg.setImageDrawable(emptyImg);
+					if(!item.tryDownImg){
+						item.tryDownImg = true;
+						new DownloadImageTask(position).execute("http://todpop.co.kr" + item.image);
+					}
+				}
+			}
+			
 
-			if (cpiCount%2 == 1) {
+			if (position % 2 == 0) {
 				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_white);
 			} else {
 				convertView.setBackgroundResource(R.drawable.store_2_image_separatebox_yellow);
@@ -305,6 +319,13 @@ public class HomeDownload extends Activity {
 			return convertView;
 		}
 	 
+	}
+	
+	public static class ViewHolder{
+		ImageView itemImg;
+		TextView name1Text;
+		TextView name2Text;
+		ImageView coinImg;
 	}
 
 	// request 
@@ -350,7 +371,7 @@ public class HomeDownload extends Activity {
 						mCpiListItem = new CpiListViewItem(jsonArray.getJSONObject(i).getInt("ad_id"), jsonArray.getJSONObject(i).getInt("ad_type"),
 								jsonArray.getJSONObject(i).getString("image"),jsonArray.getJSONObject(i).getString("name"),
 								jsonArray.getJSONObject(i).getString("reward"),jsonArray.getJSONObject(i).getString("point"),
-								jsonArray.getJSONObject(i).getInt("act"));
+								jsonArray.getJSONObject(i).getInt("act"), null);
 						cpiArray.add(mCpiListItem);
 					}	
 					
@@ -367,10 +388,10 @@ public class HomeDownload extends Activity {
 	}
 
 	private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-		ImageView bmImage;
+		int position;
 
-		public DownloadImageTask(ImageView bmImage) {
-			this.bmImage = bmImage;
+		public DownloadImageTask(int aPosition) {
+			this.position = aPosition;
 		}
 		protected Bitmap doInBackground(String... urls) {
 			String urldisplay = urls[0];
@@ -387,7 +408,8 @@ public class HomeDownload extends Activity {
 		}
 
 		protected void onPostExecute(Bitmap result) {
-			bmImage.setImageBitmap(result);
+			cpiArray.get(position).bitImg = result;
+			cpiListViewAdapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -484,11 +506,14 @@ public class HomeDownload extends Activity {
 							Toast toast = Toast.makeText(getApplicationContext(), R.string.cpa_install_notice, Toast.LENGTH_LONG);
 							toast.show();
 							if(targetUrl.contains("**ad_id**")){
-								targetUrl.replace("**ad_id**", String.valueOf(adId));
+								Log.i("STEVEN", "inside contain **ad_id**");
+								targetUrl = targetUrl.replace("**ad_id**", String.valueOf(adId));
 							}
 							if(targetUrl.contains("**user_id**")){
-								targetUrl.replace("**user_id**", String.valueOf(userId));
+								Log.i("STEVEN", "inside contain **user_id**");
+								targetUrl = targetUrl.replace("**user_id**", String.valueOf(userId));
 							}
+							Log.i("STEVEN", "cpx test url : "+targetUrl);
 							startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(targetUrl)));
 						}
 					}
@@ -653,7 +678,6 @@ public class HomeDownload extends Activity {
 	}
 	public void getList(){
 		cpiArray.clear();
-		cpiCount = 0;
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "0");
 

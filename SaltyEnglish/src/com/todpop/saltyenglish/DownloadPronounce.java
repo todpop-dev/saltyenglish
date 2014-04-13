@@ -108,6 +108,8 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		getWordFlag = false;
 		getSoundFlag = false;
 		downloadCancel = false;
+
+        System.setProperty("http.keepAlive", "false");
     }
     /**
      * Return the default singleton instance
