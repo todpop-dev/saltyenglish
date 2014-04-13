@@ -25,7 +25,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -34,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +46,7 @@ public class HomeMyPagePurchased extends Activity {
 	
 	PurchasedListViewAdapter purchasedListViewAdapter;
 	ArrayList<CouponListViewItem> couponList;
+	ArrayList<CouponListViewItem> ticketList;
 	CouponListViewItem mCouponList;
 	ListView listView;
 	
@@ -52,6 +56,13 @@ public class HomeMyPagePurchased extends Activity {
 	ImageView noCoupon;
 	
 	RelativeLayout listItemView;
+	
+	// declare define popup view
+	PopupWindow popupWindow;
+	View popupview;
+	RelativeLayout relative;
+	TextView popupText;
+	
 	SharedPreferences rgInfo;
 	
 	@Override
@@ -65,51 +76,73 @@ public class HomeMyPagePurchased extends Activity {
 		listView = (ListView)findViewById(R.id.home_mypage_purchased_id_list_view);
 		noCoupon = (ImageView)findViewById(R.id.home_mypage_purchased_id_no_coupon);
 		couponList = new ArrayList<CouponListViewItem>();
+		ticketList = new ArrayList<CouponListViewItem>();
 		
 		couponBtn = (RadioButton)findViewById(R.id.homemypagepurchased_id_btn_coupon);
 		ticketBtn = (RadioButton)findViewById(R.id.homemypagepurchased_id_btn_purchased);
 		couponBtn.setOnClickListener(radioButton);
 		ticketBtn.setOnClickListener(radioButton);
+		
+		// popupview
+		relative = (RelativeLayout) findViewById(R.id.homemypagepurchased_id_main_layout);
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+		popupText = (TextView) popupview.findViewById(R.id.popup_id_text);
+		
 		if(state == 0){
-			new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
+			new GetCoupons(0).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
 		}
 		else{
 			ticketBtn.setChecked(true);
-			new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
+			new GetCoupons(1).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
 		}
 	}
 	
 	class CouponListViewItem{
-		CouponListViewItem(String cId, int avail, String img, String creatTime, String couponName, String usePlace, String cPrice){
+		CouponListViewItem(String cId, Boolean cUsed, Boolean cExpired, Boolean cCanceled, String img, String creatTime, String couponName, String usePlace, String cPrice, Bitmap cBitmapImg){
 			couponId = cId;
-			availability = avail;
+			used = cUsed;
+			expired = cExpired;
+			canceled = cCanceled;
 			image = img;
 			created_at = creatTime;
 			name = couponName;
 			place = usePlace;
 			price = cPrice;
+			bitmapImg = cBitmapImg;
+			tryDownImg = false;
 		}
 		String couponId;
-		int availability;
+		Boolean used;
+		Boolean expired;
+		Boolean canceled;
 		String image;
 		String created_at;
 		String name;
 		String place;
 		String price;
+		Bitmap bitmapImg;
+		Boolean tryDownImg;
 	}
 	
 	OnClickListener radioButton = new OnClickListener(){
 		public void onClick(View v){
 			switch(v.getId()){
 			case R.id.homemypagepurchased_id_btn_coupon:
-				couponList.clear();
-				noCoupon.setVisibility(View.VISIBLE);
-				new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
+				purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
+				listView.setAdapter(purchasedListViewAdapter);
+				if(couponList.isEmpty()){
+					noCoupon.setVisibility(View.VISIBLE);
+					new GetCoupons(0).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
+				}
 				break;
 			case R.id.homemypagepurchased_id_btn_purchased:
-				couponList.clear();
-				noCoupon.setVisibility(View.VISIBLE);
-				new GetCoupons().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
+				purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, ticketList);
+			   	listView.setAdapter(purchasedListViewAdapter);
+				if(ticketList.isEmpty()){
+					noCoupon.setVisibility(View.VISIBLE);
+					new GetCoupons(1).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
+				}
 				break;
 			}
 		}
@@ -120,6 +153,8 @@ public class HomeMyPagePurchased extends Activity {
     	Context maincon;
     	LayoutInflater Inflater;
     	ArrayList<CouponListViewItem> arSrc;
+    	Drawable emptyImg = getResources().getDrawable(R.drawable.store_2_image_goodsimage);
+		
     	int layout;
 
     	public PurchasedListViewAdapter(Context context,int alayout,ArrayList<CouponListViewItem> aarSrc)
@@ -146,50 +181,92 @@ public class HomeMyPagePurchased extends Activity {
 
     	public View getView(int position,View convertView,ViewGroup parent)
     	{
-    		final String couponId = arSrc.get(position).couponId;
+    		ViewHolder holder;
+    		CouponListViewItem item = (CouponListViewItem)arSrc.get(position);
+    		final String couponId = item.couponId;
+    		final Boolean is_used = item.used;
+    		final Boolean is_expired = item.expired;
+    		final Boolean is_canceled = item.canceled;
+    		
     		if(convertView == null)
     		{
     			convertView = Inflater.inflate(layout, parent,false);
-    		}
-    		TextView timeText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_time);
-    		timeText.setText(arSrc.get(position).created_at);
-
-    		TextView name1Text = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_name1);
-    		name1Text.setText(arSrc.get(position).name);
-
-    		TextView name2Text = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_name2);
-    		name2Text.setText(arSrc.get(position).place);
-    		
-    		TextView coinText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coins);
-    		
-    		ImageView coinImage = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coin_image);
-
-    		ImageView image = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_item);
-    		
-    		if(couponBtn.isChecked()){
-    			coinImage.setVisibility(View.GONE);
-        		coinText.setVisibility(View.GONE);
-        		
-        		//image.setImageResource(arSrc.get(position).imageId);
-        		
-        		new DownloadImageTask(image).execute("http://todpop.co.kr" + arSrc.get(position).image);
+    			holder = new ViewHolder();
+    			holder.timeText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_time);
+    			holder.name1Text = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_name1);
+    			holder.name2Text = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_name2);
+    			holder.coinText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coins);
+        		holder.coinImage = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coin_image);
+        		holder.image = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_item);
+        		convertView.setTag(holder);
     		}
     		else{
-    			coinText.setText(arSrc.get(position).price);
-        		new DownloadImageTask(image).execute(arSrc.get(position).image);
+    			holder = (ViewHolder)convertView.getTag();
     		}
+    		
+    		holder.timeText.setText(item.created_at);
+    		holder.name1Text.setText(item.name);
+    		holder.name2Text.setText(item.place);
+    		
+    		if(couponBtn.isChecked()){
+    			holder.coinImage.setVisibility(View.GONE);
+        		holder.coinText.setVisibility(View.GONE);
+        		
+        		//image.setImageResource(arSrc.get(position).imageId);
+        		if(holder.image != null){
+        			if(item.bitmapImg != null){
+        				holder.image.setImageBitmap(item.bitmapImg);
+        			}
+        			else{
+        				holder.image.setImageDrawable(emptyImg);
+        				if(!item.tryDownImg){
+        					item.tryDownImg = true;
+        					new DownloadImageTask(position, 0).execute("http://todpop.co.kr" + item.image);
+        				}
+        			}
+        		}
+        	}
+    		else{
+    			holder.coinText.setText(item.price);
+        		if(holder.image != null){
+        			if(item.bitmapImg != null){
+        				holder.image.setImageBitmap(item.bitmapImg);        				
+        			}
+        			else{
+        				holder.image.setImageDrawable(emptyImg);
+        				if(!item.tryDownImg){
+        					item.tryDownImg = true;
+        					new DownloadImageTask(position, 1).execute(item.image);
+                	    }        				
+        			}
+        		}
+        	}
 
     		convertView.setOnClickListener(new OnClickListener(){
     			@Override
     			public void onClick(View v){
-    				Intent intent = new Intent(getApplicationContext(), HomeMyPagePurchasedDetail.class);
-    				intent.putExtra("couponId", couponId);
-    				if(ticketBtn.isChecked())
-    					intent.putExtra("isFree", false);
-    				else
-    					intent.putExtra("isFree", true);
-    				startActivity(intent);
-    				//new GetCouponsInfo().execute("http://todpop.co.kr/api/etc/" + couponId + "/get_coupon_free_info.json");
+    				if(is_used){
+						popupText.setText(R.string.home_my_page_purchased_used);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0,	0);
+    				}
+    				else if(is_canceled){
+						popupText.setText(R.string.home_my_page_purchased_canceled);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0,	0);    					
+    				}
+    				else if(is_expired){
+						popupText.setText(R.string.home_my_page_purchased_expired);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0,	0);    					
+    				}
+    				else{
+	    				Intent intent = new Intent(getApplicationContext(), HomeMyPagePurchasedDetail.class);
+	    				intent.putExtra("couponId", couponId);
+	    				if(ticketBtn.isChecked())
+	    					intent.putExtra("isFree", false);
+	    				else
+	    					intent.putExtra("isFree", true);
+	    				startActivity(intent);
+	    				//new GetCouponsInfo().execute("http://todpop.co.kr/api/etc/" + couponId + "/get_coupon_free_info.json");
+    				}
     			}
     		});
     		
@@ -203,8 +280,25 @@ public class HomeMyPagePurchased extends Activity {
     	}
     }
     
-    private class GetCoupons extends AsyncTask<String, Void, JSONObject> 
+    public static class ViewHolder{
+    	TextView timeText;
+    	TextView name1Text;
+		TextView name2Text;
+		TextView coinText;
+		ImageView coinImage;
+		ImageView image;
+    }
+    
+	public void closePopup(View v) {
+		popupWindow.dismiss();
+	}
+    
+	private class GetCoupons extends AsyncTask<String, Void, JSONObject> 
 	{
+		int type;
+		public GetCoupons(int aType){
+			type = aType;
+		}
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -241,20 +335,40 @@ public class HomeMyPagePurchased extends Activity {
 				if(json.getBoolean("status")==true){
 					if(json.getJSONObject("data").getJSONArray("product").length() > 0){
 						JSONArray product = json.getJSONObject("data").getJSONArray("product");
-						for(int i = 0; i < product.length(); i++){
-							JSONObject jsonObject = product.getJSONObject(i);
-							String time = jsonObject.getString("created_at");
-							time = time.substring(5, 16);
-							time = time.replace('T', ' ');
-							mCouponList = new CouponListViewItem(jsonObject.getString("coupon_id"), jsonObject.getInt("availability"), 
-									jsonObject.getString("image"), time, jsonObject.getString("name"), jsonObject.getString("place"), jsonObject.getString("price"));
-							couponList.add(mCouponList);
+						if(type == 0){
+							for(int i = 0; i < product.length(); i++){
+								JSONObject jsonObject = product.getJSONObject(i);
+								String time = jsonObject.getString("created_at");
+								time = time.substring(5, 16);
+								time = time.replace('T', ' ');
+								mCouponList = new CouponListViewItem(jsonObject.getString("order_id"), jsonObject.getBoolean("is_used"), jsonObject.getBoolean("is_expired"),
+										jsonObject.getBoolean("is_canceled"), jsonObject.getString("image"), time, jsonObject.getString("name"), jsonObject.getString("maker"),
+										jsonObject.getString("price"), null);
+								couponList.add(mCouponList);
+							}
+							if(!couponList.isEmpty()){
+								noCoupon.setVisibility(View.GONE);
+							}
+							purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
+					    	listView.setAdapter(purchasedListViewAdapter);
 						}
-						if(!couponList.isEmpty()){
-							noCoupon.setVisibility(View.GONE);
+						else{
+							for(int i = 0; i < product.length(); i++){
+								JSONObject jsonObject = product.getJSONObject(i);
+								String time = jsonObject.getString("created_at");
+								time = time.substring(5, 16);
+								time = time.replace('T', ' ');
+								mCouponList = new CouponListViewItem(jsonObject.getString("order_id"), jsonObject.getBoolean("is_used"), jsonObject.getBoolean("is_expired"),
+										jsonObject.getBoolean("is_canceled"), jsonObject.getString("image"), time, jsonObject.getString("name"), jsonObject.getString("maker"),
+										jsonObject.getString("price"), null);
+								ticketList.add(mCouponList);
+							}
+							if(!ticketList.isEmpty()){
+								noCoupon.setVisibility(View.GONE);
+							}
+							purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, ticketList);
+					    	listView.setAdapter(purchasedListViewAdapter);							
 						}
-						purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, couponList);
-				    	listView.setAdapter(purchasedListViewAdapter);
 					}
 				}
 				else{
@@ -267,10 +381,12 @@ public class HomeMyPagePurchased extends Activity {
 	}
     
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-		ImageView bmImage;
+		int position;
+		int type;
 
-		public DownloadImageTask(ImageView bmImage) {
-			this.bmImage = bmImage;
+		public DownloadImageTask(int aPosition, int aType) {
+			position = aPosition;
+			type = aType;
 		}
 		protected Bitmap doInBackground(String... urls) {
 			String urldisplay = urls[0];
@@ -287,7 +403,12 @@ public class HomeMyPagePurchased extends Activity {
 		}
 
 		protected void onPostExecute(Bitmap result) {
-			bmImage.setImageBitmap(result);
+			if(type == 0)
+				couponList.get(position).bitmapImg = result;
+			else
+				ticketList.get(position).bitmapImg = result;
+			
+			purchasedListViewAdapter.notifyDataSetChanged();
 		}
 	}
     

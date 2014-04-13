@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="90" >
+            android:layout_weight="100" >
 
             <!-- title bar -->
 
@@ -36,280 +36,302 @@
 
         <!-- carousel -->
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="665"
+            android:layout_weight="1180"
             android:paddingLeft="12dp"
-            android:paddingRight="12dp" >
+            android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
+            android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" >
 
             <LinearLayout
-                android:id="@+id/activity_home_store_purchase_detail_upper_yellow_box"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="26dp"
-                android:background="@drawable/common_image_yellowbox"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:padding="5dp" >
+                android:paddingRight="12dp" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="90" >
+                    android:layout_height="wrap_content" >
 
-                    <TextView
-                        android:id="@+id/home_store_purchase_detail_title"
+                    <LinearLayout
+                        android:id="@+id/activity_home_store_purchase_detail_upper_yellow_box"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="17dp"
+                        android:background="@drawable/store_8_img_yellowbox"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/store_8_img_yellow"
+                            android:paddingBottom="12dp"
+                            android:paddingTop="12dp" >
+
+                            <TextView
+                                android:id="@+id/home_store_purchase_detail_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:textColor="#000000"
+                                android:textSize="15dp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:id="@+id/home_store_purchase_detail_product_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:scaleType="fitXY" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="12dp"
+                            android:background="#F7F3D0" />
+
+                        <ImageView
+                            android:id="@+id/home_store_purchase_detail_maker_img"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:scaleType="fitXY" />
+
+                        <TextView
+                            android:id="@+id/home_store_purchase_detail_maker"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:textColor="#000000"
+                            android:textSize="10dp" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:background="#FDF8DE"
+                            android:orientation="vertical"
+                            android:paddingLeft="33dp"
+                            android:paddingRight="13dp" >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/store_8_img_line_yellow"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical" >
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal" >
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/store_8_bgimg_productname" />
+
+                                    <TextView
+                                        android:id="@+id/home_store_purchase_detail_product"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="61dp"
+                                        android:textColor="#000000"
+                                        android:textSize="14dp"
+                                        android:textStyle="bold" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal" >
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/store_8_bgimg_change" />
+
+                                    <TextView
+                                        android:id="@+id/home_store_purchase_detail_place"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="61dp"
+                                        android:textColor="#000000"
+                                        android:textSize="12dp" />
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal" >
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:src="@drawable/store_8_bgimg_date" />
+
+                                    <TextView
+                                        android:id="@+id/home_store_purchase_detail_validate"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="61dp"
+                                        android:textColor="#000000"
+                                        android:textSize="12dp" />
+                                </RelativeLayout>
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="13dp"
+                            android:layout_marginRight="13dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/store_8_img_line_yellow"
+                            android:orientation="vertical"
+                            android:paddingLeft="20dp" >
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/store_8_bgimg_price" />
+
+                                <TextView
+                                    android:id="@+id/home_store_purchase_detail_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="87dp"
+                                    android:drawableLeft="@drawable/common_image_bigcoin"
+                                    android:drawablePadding="8dp"
+                                    android:textColor="#000000"
+                                    android:textSize="12dp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/store_8_bgimg_presentamount" />
+
+                                <TextView
+                                    android:id="@+id/home_store_purchase_detail_current_amount_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="87dp"
+                                    android:drawableLeft="@drawable/common_image_bigcoin"
+                                    android:drawablePadding="8dp"
+                                    android:textColor="#000000"
+                                    android:textSize="12dp" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/store_8_bgimg_remainamount" />
+
+                                <TextView
+                                    android:id="@+id/home_store_purchase_detail_remain_amount_number"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="87dp"
+                                    android:drawableLeft="@drawable/common_image_bigcoin"
+                                    android:drawablePadding="8dp"
+                                    android:textColor="#000000"
+                                    android:textSize="12dp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/store_35_image_monkey" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/activity_home_store_purchase_detail_upper_yellow_box"
+                        android:layout_alignRight="@+id/activity_home_store_purchase_detail_upper_yellow_box"
+                        android:layout_marginBottom="9dp"
+                        android:layout_marginRight="9dp"
+                        android:src="@drawable/common_img_qpcon" />
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="500"
-                    android:orientation="vertical"
-                    android:paddingLeft="28dp"
-                    android:paddingRight="25dp"
-                    android:paddingTop="17.5dp" >
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="235" >
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_validate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="right|center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="15sp" />
-
-                        <ImageView
-                            android:id="@+id/home_store_purchase_detail_line1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="3dp"
-                            android:src="@drawable/store_35_image_whiteline" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignLeft="@id/home_store_purchase_detail_line1"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="8dp"
-                            android:gravity="left|center_vertical"
-                            android:text="유효기간"
-                            android:textColor="#000000"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_line1"
-                            android:layout_alignLeft="@id/home_store_purchase_detail_line1"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="left|center_vertical"
-                            android:text="교환처"
-                            android:textColor="#000000"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_place"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_line1"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="right|center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="15sp" />
-
-                        <ImageView
-                            android:id="@+id/home_store_purchase_detail_line2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_line1"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/store_35_image_whiteline" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_line2"
-                            android:layout_alignLeft="@id/home_store_purchase_detail_line1"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="left|center_vertical"
-                            android:text="가격"
-                            android:textColor="#000000"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_product"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_line2"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="right|center_vertical"
-                            android:textColor="#D9534A"
-                            android:textSize="15sp" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_toLeftOf="@id/home_store_purchase_detail_line1"
-                            android:paddingRight="20dp" >
-
-                            <ImageView
-                                android:id="@+id/home_store_purchase_detail_product_img"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_alignParentBottom="true"
-                                android:scaleType="fitXY" />
-                        </RelativeLayout>
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="270" >
-
-                        <!-- buy btn -->
-
-                        <Button
-                            android:id="@+id/home_store_purchase_btn"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:background="@drawable/homestore_drawable_btn_buy"
-                            android:onClick="onClickPurchase" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_remain_amount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_btn"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="right|center_vertical"
-                            android:text="구매 후 장학금"
-                            android:textColor="#000000"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_remain_amount_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_btn"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="5dp"
-                            android:gravity="right|center_vertical"
-                            android:textColor="#D9534A"
-                            android:textSize="13sp" />
-
-                        <ImageView
-                            android:id="@+id/home_store_purchase_detail_long_line1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_remain_amount"
-                            android:layout_centerInParent="true"
-                            android:layout_marginBottom="3dp"
-                            android:src="@drawable/store_8_image_whiteline_long" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_current_amount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_long_line1"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginBottom="4dp"
-                            android:gravity="right|center_vertical"
-                            android:text="현재장학금"
-                            android:textColor="#000000"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/home_store_purchase_detail_current_amount_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/home_store_purchase_detail_long_line1"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginBottom="4dp"
-                            android:gravity="right|center_vertical"
-                            android:textColor="#000000"
-                            android:textSize="13sp" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/activity_home_store_purchase_detail_upper_yellow_box"
-                android:layout_alignTop="@id/activity_home_store_purchase_detail_upper_yellow_box"
-                android:layout_marginLeft="11dp"
-                android:layout_marginTop="-20dp"
-                android:src="@drawable/store_8_image_monkey_01" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="525"
-            android:paddingBottom="17dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
-            android:paddingTop="19dp" >
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/common_image_opacitytextbox"
-                android:padding="10dp" >
-
-                <TextView
-                    android:id="@+id/home_my_page_purchased_detail_explain"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="@string/home_my_page_purchased_detail_expalin"
-                    android:textColor="#12323C"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:background="@drawable/common_image_opacitytextbox"
+                    android:orientation="vertical"
+                    android:padding="10dp" >
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/home_my_page_purchased_detail_explain"
-                    android:fadeScrollbars="false"
-                    android:scrollbarThumbVertical="@drawable/register_28_drop_scroll"
-                    android:scrollbarTrackVertical="@drawable/register_28_drop_underbar" >
+                    <TextView
+                        android:id="@+id/home_my_page_purchased_detail_explain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_my_page_purchased_detail_expalin"
+                        android:textColor="#12323C"
+                        android:textSize="15dp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/home_store_purchase_detail_info"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColor="#12323C" />
-                </ScrollView>
-            </RelativeLayout>
-        </RelativeLayout>
-    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="#12323C"
+                        android:textSize="12dp" />
+                </LinearLayout>
 
+                <Button
+                    android:id="@+id/home_store_purchase_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/homestore_drawable_btn_buy"
+                    android:onClick="onClickPurchase" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

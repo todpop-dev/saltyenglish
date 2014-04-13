@@ -3,9 +3,9 @@
  
      <item android:state_checked="false"
           android:state_enabled="true"
-          android:drawable="@drawable/store_2_btn_carousel_convenient_off" />
+          android:drawable="@drawable/store_2_btn_carousel_mart_off" />
     <item android:state_checked="true"
           android:state_enabled="true"
-          android:drawable="@drawable/store_2_btn_carousel_convenient_on" />
+          android:drawable="@drawable/store_2_btn_carousel_mart_on" />
  
 </selector>
