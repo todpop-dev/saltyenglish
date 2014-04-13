@@ -16,6 +16,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Point;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -64,6 +68,15 @@ public class HomeWordList extends Activity {
 	
 	RelativeLayout editBg;
 	CheckBox selectAllBtn;
+	
+	RelativeLayout tutorial_layout;
+	ViewPager tutorial_view;
+	
+	ImageView indi_1;
+	ImageView indi_2;
+	ImageView indi_3;
+	ImageView indi_4;
+	ImageView indi_5;
 	
 	// popup view
 	PopupWindow popupWindow;
@@ -128,6 +141,28 @@ public class HomeWordList extends Activity {
 		deleteWords = new ArrayList<String>();
 		
 		deleteBtn = (Button)findViewById(R.id.home_word_list_id_delete);
+		
+
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		Boolean introOk = pref.getBoolean("introWordListOk", false);
+		if(!introOk){
+			//tutorial
+			tutorial_layout = (RelativeLayout)findViewById(R.id.home_word_list_id_tutorial);
+			tutorial_view = (ViewPager)findViewById(R.id.home_word_list_id_pager);
+			
+			tutorial_view.setAdapter(new WordListTutoPagerAdapter(this));
+			
+			tutorial_view.setOnPageChangeListener(new WordListTutoPagerListener());
+
+			indi_1 = (ImageView)findViewById(R.id.home_word_list_id_indicator_1);
+			indi_2 = (ImageView)findViewById(R.id.home_word_list_id_indicator_2);
+			indi_3 = (ImageView)findViewById(R.id.home_word_list_id_indicator_3);
+			indi_4 = (ImageView)findViewById(R.id.home_word_list_id_indicator_4);
+			indi_5 = (ImageView)findViewById(R.id.home_word_list_id_indicator_5);
+			
+			tutorial_layout.setVisibility(View.VISIBLE);
+		}
+		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.home_word_list_id_main_view);
 		popupview = View.inflate(this, R.layout.popup_view_home_word_list, null);
@@ -199,6 +234,109 @@ public class HomeWordList extends Activity {
 		cardAni.setDuration(500);
 		cardAni.start();
     }
+    
+    private class WordListTutoPagerAdapter extends PagerAdapter{
+    	private LayoutInflater mInflater;
+    	
+    	public WordListTutoPagerAdapter(Context c){
+    		super();
+    		mInflater = LayoutInflater.from(c);
+    	}
+
+		@Override
+		public int getCount() {
+			return 5;
+		}
+
+		@Override
+		public Object instantiateItem(View pager, int position){
+			View v = null;
+			v = mInflater.inflate(R.layout.fragment_wordlist_tutorial, null);
+			
+			RelativeLayout background = (RelativeLayout)v.findViewById(R.id.fragment_wordlist_tutorial_id_mainview);
+			LinearLayout linear = (LinearLayout)v.findViewById(R.id.fragment_wordlist_tutorial_id_linear);
+			
+			if(position == 0){
+				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_1);
+				linear.setVisibility(View.GONE);
+			}
+			else if(position == 1){
+				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_2);
+				linear.setVisibility(View.GONE);
+			}
+			else if(position == 2){
+				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_3);
+				linear.setVisibility(View.GONE);
+			}
+			else if(position == 3){
+				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_4);
+				linear.setVisibility(View.GONE);
+			}
+			else if(position == 4){
+				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_5);
+				linear.setVisibility(View.VISIBLE);
+			}
+			
+			((ViewPager)pager).addView(v, 0);
+			
+			return v;
+		}
+		@Override
+		public void destroyItem(View pager, int position, Object view){
+			((ViewPager)pager).removeView((View)view);
+		}
+		@Override
+		public boolean isViewFromObject(View pager, Object obj) {
+			return pager == obj;
+		}
+    	
+    }
+    private class WordListTutoPagerListener implements OnPageChangeListener{
+
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+		}
+
+		@Override
+		public void onPageSelected(int position) {
+			if(position == 0){
+				indi_1.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
+				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+			}
+			else if(position == 1){
+				indi_1.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
+				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+			}
+			else if(position == 2){
+				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
+				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+			}
+			else if(position == 3){
+				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
+				indi_5.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+			}
+			else if(position == 4){
+				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
+				indi_5.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
+			}
+		}
+	}
+    
+    public void dismissTutorial(View v){
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		SharedPreferences.Editor prefEditor= pref.edit();
+		prefEditor.putBoolean("introWordListOk", true);
+		prefEditor.apply();
+    	tutorial_layout.setVisibility(View.GONE);
+    }
+    
 	public void updateListView()
     {
 		if(listArray.isEmpty()){
@@ -210,6 +348,7 @@ public class HomeWordList extends Activity {
 			listView.setAdapter(homeWordViewAdapter);
 		}
     }
+	
 	public void closePopup(View v)
 	{
 		noWordPopupWindow.dismiss();

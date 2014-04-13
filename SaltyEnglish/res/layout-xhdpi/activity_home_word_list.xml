@@ -160,8 +160,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/wordbook_1_img_noword" 
-                        android:visibility="gone"/>
+                        android:src="@drawable/wordbook_1_img_noword"
+                        android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -206,6 +206,62 @@
             android:layout_height="0dp"
             android:layout_weight="40" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/home_word_list_id_tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:visibility="gone">
+
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/home_word_list_id_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" 
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp">
+
+            <ImageView
+                android:id="@+id/home_word_list_id_indicator_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wordbook_tutorial_img_indicator_pressed" />
+
+            <ImageView
+                android:id="@+id/home_word_list_id_indicator_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/wordbook_tutorial_img_indicator_normal" />
+
+            <ImageView
+                android:id="@+id/home_word_list_id_indicator_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/wordbook_tutorial_img_indicator_normal" />
+
+            <ImageView
+                android:id="@+id/home_word_list_id_indicator_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/wordbook_tutorial_img_indicator_normal" />
+
+            <ImageView
+                android:id="@+id/home_word_list_id_indicator_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:src="@drawable/wordbook_tutorial_img_indicator_normal" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <!-- edit -->
 
