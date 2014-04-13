@@ -35,7 +35,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMoreAcountChangePw extends Activity {
+public class HomeMoreAccountChangePw extends Activity {
 
 	String mobile = "";
 	EditText currentPw;

@@ -54,7 +54,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="20dp"
         android:singleLine="true"
-        android:textSize="15sp" />
+        android:textSize="15dp" />
 
     <EditText
         android:id="@+id/fb_nickname_id_nickname"
@@ -69,7 +69,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="20dp"
         android:singleLine="true"
-        android:textSize="15sp" >
+        android:textSize="15dp" >
     </EditText>
 
     <ImageView

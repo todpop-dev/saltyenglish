@@ -31,7 +31,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMoreAcountInfo extends Activity {
+public class HomeMoreAccountInfo extends Activity {
 
 	// popup view
 	PopupWindow popupWindow;
@@ -177,7 +177,7 @@ public class HomeMoreAcountInfo extends Activity {
 			}*/
 
 			Intent intent = new Intent();
-			intent.setClass(HomeMoreAcountInfo.this, MainActivity.class);    
+			intent.setClass(HomeMoreAccountInfo.this, MainActivity.class);    
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 			startActivity(intent);
 			finish();
@@ -200,7 +200,7 @@ public class HomeMoreAcountInfo extends Activity {
 
 	public void showChangePwActivity(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(), HomeMoreAcountChangePw.class);
+		Intent intent = new Intent(getApplicationContext(), HomeMoreAccountChangePw.class);
 		startActivity(intent);
 	} 
 

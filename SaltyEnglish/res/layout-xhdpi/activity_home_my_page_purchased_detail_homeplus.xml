@@ -55,14 +55,13 @@
                     android:layout_height="wrap_content" >
 
                     <LinearLayout
-                        android:id="@+id/activity_home_my_page_purchased_detail_homeplus_upper_pink_box"
+                        android:id="@+id/activity_home_my_page_purchased_detail_upper_pink_box"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="17dp"
                         android:background="@drawable/store_35_img_pinkbox"
                         android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="gone" >
+                        android:orientation="vertical" >
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -99,9 +98,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:gravity="center_vertical"
+                            android:textStyle="bold"
                             android:textColor="#000000"
-                            android:textSize="20dp"
-                            android:textStyle="bold" />
+                            android:textSize="20dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -119,9 +118,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:textStyle="bold"
                             android:textColor="#000000"
-                            android:textSize="14dp"
-                            android:textStyle="bold" />
+                            android:textSize="14dp" />
 
                         <RelativeLayout
                             android:layout_width="200dp"
@@ -129,7 +128,8 @@
                             android:layout_gravity="center"
                             android:layout_marginBottom="7dp"
                             android:layout_marginTop="10dp"
-                            android:background="#FFFFFF" >
+                            android:background="#FFFFFF"
+                            android:visibility="invisible" >
 
                             <TextView
                                 android:id="@+id/home_my_page_purchased_detail_homeplus_barcode_text"
@@ -144,7 +144,7 @@
                                 android:id="@+id/home_my_page_purchased_detail_homeplus_barcode_image"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_above="@id/home_my_page_purchased_detail_homeplus_barcode_text"
+                                android:layout_above="@id/home_my_page_purchased_detail_barcode_text"
                                 android:layout_centerHorizontal="true"
                                 android:scaleType="centerInside" />
                         </RelativeLayout>
@@ -170,7 +170,6 @@
                                     android:layout_height="0dp"
                                     android:layout_weight="1"
                                     android:orientation="horizontal" >
-
                                     <TextView
                                         android:id="@+id/home_my_page_purchased_detail_homeplus_title_bottom"
                                         android:layout_width="wrap_content"
@@ -194,7 +193,7 @@
                                         android:src="@drawable/homeplus_35_bgimg_date" />
 
                                     <TextView
-                                        android:id="@+id/home_my_page_purchased_detail_homeplus_validate"
+                                        android:id="@+id/home_my_page_purchased_detail_homeplus_place"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
@@ -216,7 +215,7 @@
                                         android:src="@drawable/store_35_bgimg_change" />
 
                                     <TextView
-                                        android:id="@+id/home_my_page_purchased_detail_homeplus_place"
+                                        android:id="@+id/home_my_page_purchased_detail_homeplus_validate"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
@@ -234,222 +233,6 @@
                             android:layout_marginBottom="5dp"
                             android:layout_marginRight="5dp"
                             android:layout_marginTop="7dp" >
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:src="@drawable/common_img_qpcon" />
-                        </RelativeLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/activity_home_my_page_purchased_detail_upper_pink_box"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="17dp"
-                        android:background="@drawable/store_35_img_pinkbox"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical" >
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/store_35_img_pink"
-                            android:paddingBottom="12dp"
-                            android:paddingTop="12dp" >
-
-                            <TextView
-                                android:id="@+id/home_my_page_purchased_detail_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:textColor="@android:color/white"
-                                android:textSize="15dp"
-                                android:textStyle="bold" />
-                        </RelativeLayout>
-
-                        <ImageView
-                            android:id="@+id/home_my_page_purchased_detail_product_img"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:scaleType="fitXY" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginTop="6dp"
-                            android:background="#F4EAE8" />
-
-                        <ImageView
-                            android:id="@+id/home_my_page_purchased_detail_maker_img"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:scaleType="fitXY" />
-
-                        <TextView
-                            android:id="@+id/home_my_page_purchased_detail_maker"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:textColor="#000000"
-                            android:textSize="10dp" />
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:background="#F6E9E5"
-                            android:orientation="vertical"
-                            android:paddingLeft="13dp"
-                            android:paddingRight="13dp" >
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/store_8_img_line_yellow"
-                                android:gravity="center_vertical"
-                                android:orientation="vertical"
-                                android:paddingLeft="20dp" >
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:src="@drawable/store_35_bgimg_productname" />
-
-                                    <TextView
-                                        android:id="@+id/home_my_page_purchased_detail_product"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginLeft="61dp"
-                                        android:textColor="#000000"
-                                        android:textSize="14dp"
-                                        android:textStyle="bold" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:src="@drawable/store_35_bgimg_change" />
-
-                                    <TextView
-                                        android:id="@+id/home_my_page_purchased_detail_place"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginLeft="61dp"
-                                        android:textColor="#000000"
-                                        android:textSize="12dp" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:src="@drawable/store_35_bgimg_date" />
-
-                                    <TextView
-                                        android:id="@+id/home_my_page_purchased_detail_validate"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerVertical="true"
-                                        android:layout_marginLeft="61dp"
-                                        android:textColor="#000000"
-                                        android:textSize="12dp" />
-                                </RelativeLayout>
-                            </LinearLayout>
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/home_my_page_purchased_detail_confirm_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="7dp"
-                            android:paddingLeft="13dp"
-                            android:paddingRight="13dp" 
-                            android:visibility="gone">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="20dp"
-                                android:src="@drawable/store_35_bgimg_codenumber" />
-
-                            <TextView
-                                android:id="@+id/home_my_page_purchased_detail_confirm_number"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="81dp"
-                                android:textColor="#000000"
-                                android:textSize="12dp" />
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="1dp"
-                                android:layout_marginTop="30dp"
-                                android:background="#F4EAE8" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/home_my_page_purchased_detail_barcode_layout"
-                            android:layout_width="200dp"
-                            android:layout_height="90dp"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="7dp"
-                            android:layout_marginTop="10dp"
-                            android:background="#FFFFFF"
-                            android:visibility="invisible" >
-
-                            <TextView
-                                android:id="@+id/home_my_page_purchased_detail_barcode_text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_centerHorizontal="true"
-                                android:textColor="#000000"
-                                android:textSize="14dp" />
-
-                            <ImageView
-                                android:id="@+id/home_my_page_purchased_detail_barcode_image"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_above="@id/home_my_page_purchased_detail_barcode_text"
-                                android:layout_centerHorizontal="true"
-                                android:scaleType="centerInside" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/home_my_page_purchased_detail_qpcon_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginRight="5dp"
-                            android:visibility="gone" >
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -613,7 +396,6 @@
                     android:padding="10dp" >
 
                     <TextView
-                        android:id="@+id/home_my_page_purchased_detail_explain"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/home_my_page_purchased_detail_expalin"
@@ -622,7 +404,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/home_my_page_purchased_detail_info"
+                        android:id="@+id/home_my_page_purchased_detail_homeplus_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"

@@ -55,6 +55,7 @@
         android:gravity="left"
         android:paddingTop="7dp"
         android:textSize="30dp"
+        android:typeface="normal"
         android:onClick="setStudyAlarm" />
 
     <!-- set study popup -->

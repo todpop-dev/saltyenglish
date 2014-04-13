@@ -48,7 +48,7 @@
             android:background="#E6947F"
             android:gravity="center_horizontal"
             android:textColor="#EEF5D3"
-            android:textSize="15sp"
+            android:textSize="15dp"
             android:textStyle="bold" />
 
         <ImageView
@@ -70,7 +70,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center_horizontal"
             android:textColor="#000000"
-            android:textSize="14sp"
+            android:textSize="14dp"
             android:textStyle="bold" />
 
         <TextView
@@ -82,7 +82,7 @@
             android:layout_marginTop="15dp"
             android:gravity="center_horizontal"
             android:textColor="#000000"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
     </RelativeLayout>
 
     <Button

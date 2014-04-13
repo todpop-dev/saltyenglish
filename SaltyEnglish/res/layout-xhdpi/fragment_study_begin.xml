@@ -57,7 +57,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="354dp"
         android:gravity="center"
-        android:textSize="35sp"
+        android:textSize="35dp"
         android:textColor="#000000" />
         <!-- android:background="@drawable/study_8_text_engirritate"  -->
        
@@ -69,7 +69,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="412dp"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="23dp"
         android:textColor="#000000" />
         
     	<!--  android:background="@drawable/study_8_text_pronounce" -->
@@ -84,7 +84,7 @@
         android:layout_marginTop="462dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textColor="#000000"
          />
     <!--    android:background="@drawable/study_8_text_exsentence" -->

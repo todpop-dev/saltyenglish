@@ -15,7 +15,7 @@
         android:gravity="right"
         android:text="1."
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/survey_id_question"
@@ -25,7 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <EditText
         android:id="@+id/survey_id_edit_text"
@@ -64,7 +64,7 @@
             android:background="@drawable/survey_drawable_checkbox"
             android:button="@null"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_2"
@@ -74,7 +74,7 @@
             android:background="@drawable/survey_drawable_checkbox"
             android:button="@null"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_3"
@@ -84,7 +84,7 @@
             android:background="@drawable/survey_drawable_checkbox"
             android:button="@null"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_4"
@@ -94,7 +94,7 @@
             android:background="@drawable/survey_drawable_checkbox"
             android:button="@null"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_5"
@@ -104,7 +104,7 @@
             android:background="@drawable/survey_drawable_checkbox"
             android:button="@null"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
     </RadioGroup>
 
 </RelativeLayout>

@@ -32,14 +32,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <TextView
                 android:id="@+id/home_mypage_purchased_list_item_id_name1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000000"
-                android:textSize="18sp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
                 android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:layout_toRightOf="@id/home_mypage_purchased_list_item_id_coin_image"
                 android:gravity="left"
                 android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
         </RelativeLayout>
     </LinearLayout>
 

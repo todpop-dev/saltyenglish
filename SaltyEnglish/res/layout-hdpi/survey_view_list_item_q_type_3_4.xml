@@ -13,7 +13,7 @@
         android:layout_marginTop="16.66dp"
         android:gravity="right"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/survey_id_question"
@@ -24,7 +24,7 @@
         android:layout_marginTop="16.66dp"
         android:layout_toRightOf="@id/survey_id_point"
         android:textColor="#000000"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
     <EditText
         android:id="@+id/survey_id_edit_text"
@@ -62,7 +62,7 @@
             android:button="@null"
             android:paddingLeft="30dp"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_2"
@@ -73,7 +73,7 @@
             android:button="@null"
             android:paddingLeft="30dp"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_3"
@@ -84,7 +84,7 @@
             android:button="@null"
             android:paddingLeft="30dp"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_4"
@@ -95,7 +95,7 @@
             android:button="@null"
             android:paddingLeft="30dp"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <RadioButton
             android:id="@+id/survey_id_btn_5"
@@ -106,7 +106,7 @@
             android:button="@null"
             android:paddingLeft="30dp"
             android:textColor="#000000"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
     </RadioGroup>
 
 </RelativeLayout>

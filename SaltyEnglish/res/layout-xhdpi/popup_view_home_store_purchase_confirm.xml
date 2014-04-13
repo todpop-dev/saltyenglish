@@ -14,7 +14,7 @@
         android:gravity="center"
         android:text="결제 내용 확인"
         android:textColor="#D9534A"
-        android:textSize="15sp" />
+        android:textSize="15dp" />
 
     <RelativeLayout
         android:id="@+id/popup_store_id_info"
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textColor="#000000"
-        android:textSize="16sp" >
+        android:textSize="16dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             android:gravity="left|center_vertical"
             android:text="결제금액"
             android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/popup_store_id_price"
@@ -43,7 +43,7 @@
             android:layout_marginTop="5dp"
             android:gravity="right|center_vertical"
             android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="15dp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
             android:gravity="left|center_vertical"
             android:text="닉네임"
             android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/popup_store_id_nick"
@@ -72,7 +72,7 @@
             android:layout_marginTop="3dp"
             android:gravity="right|center_vertical"
             android:textColor="#000000"
-            android:textSize="15sp" />
+            android:textSize="15dp" />
 
         <TextView
             android:id="@+id/textView1"
@@ -83,7 +83,7 @@
             android:gravity="left|center_vertical"
             android:text="*결제 후 환불이 불가합니다"
             android:textColor="#000000"
-            android:textSize="12sp" />
+            android:textSize="12dp" />
     </RelativeLayout>
 
     <EditText
@@ -99,7 +99,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:singleLine="true"
-        android:textSize="15sp" />
+        android:textSize="15dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

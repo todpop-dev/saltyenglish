@@ -11,6 +11,8 @@
     <string name="title_activity_rg_register_email">RgRegisterEmail</string>
     <string name="title_activity_rg_register_email_info">RgRegisterEmailInfo</string>
     <string name="title_activity_rg_register_finish">RgRegisterFinish</string>
+    <string name="popup_common_timeout_title">통신 실패</string>
+    <string name="popup_common_timeout">서버와의 통신에 실패했습니다.\n잠시 뒤 다시 시도해 주세요.</string>
     <string name="popup_nickname_no">중복된 닉네임이 있어요. </string>
     <string name="popup_nickname_no_blank">빈칸은 사용할 수 없어요</string>
     <string name="popup_nickname_no_error">닉네임에 사용할 수 없는 문자가\n포함되어있어요!</string>
@@ -26,6 +28,9 @@
     <string name="popup_nickname_length">닉네임은 3~8자리까지 가능해요</string>
     <string name="popup_nickname_needcheck">닉네임 중복체크를 해주세요</string>
     <string name="popup_interest_More_than_three">관심사 3개 이상을 선택해 주세요</string>
+    <string name="popup_sign_up_fail_mobile_error">휴대폰 번호가 올바르지 않습니다.\n\n해당 증상이 계속될 경우 smile@todpop.co.kr로 연락 부탁드립니다.</string>
+    <string name="popup_get_mobile_fail">휴대폰 번호를 읽어오는데 실패했습니다.\n다시 시도해 주세요\n\n해당 증상이 계속될 경우 smile@todpop.co.kr로 연락 부탁드립니다.</string>
+    <string name="popup_sign_up_fail_mobile_duplicated">이미 가입된 휴대폰 번호입니다.</string>
     <string name="popup_sign_up_fail_false">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.\n\n혹시 닉네임에 특수문자가 포함되어 있지 않은지 확인해 주세요.</string>
     <string name="popup_sign_up_fail">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.</string>
     <string name="popup_birth_not_selected">생년월일을 선택해주세요</string>
@@ -43,6 +48,7 @@
     <string name="title_activity_collection_demo">CollectionDemoActivity</string>
     <string name="testname7">점</string>
     <string name="testname8">원</string>
+    <string name="testname9">까지</string>
     <string name="title_activity_study_home">StudyHome</string>
     <string name="title_activity_study_begin">StudyBegin</string>
     <string name="title_activity_study_category">StudyCategory</string>
@@ -78,7 +84,6 @@
     <string name="title_activity_wordlist_test_result">WordListTestResult</string>
     <string name="home_page_attendance_text1">현재 </string>
     <string name="home_page_attendance_text2">일 연속학습 중입니다!</string>
-    <string name="home_store_prep">준비중 입니다</string>
     <string name="home_store_refund_amount">적립금이 부족해요</string>
     <string name="title_activity_close">CloseActivity</string>
     <string name="title_activity_fb_nickname">FbNickname</string>
@@ -154,7 +159,7 @@
     <string name="cpa_install_notice">과정을 완료하셔야 적립됩니다.</string>
     <string name="cpc_rewarded">적립이 완료되었습니다.</string>
     <string name="home_more_help_info">[짭짤한 영어]\nE-mail = smile@todpop.co.kr\nTel. 070-4814-4688\n\n(주)토드팝</string>
-    <string name="get_coupon_error">쿠폰 정보를 읽어오는데 오류가 발생했습니다.\n다시 시도해 주세요.\n해당 증상이 지속될 경우 연락 부탁드립니다.\nE-mail = email@todpop.co.kr\nTel. 070-4814-4628\n(주)토드팝</string>
+    <string name="get_coupon_error">쿠폰 정보를 읽어오는데 오류가 발생했습니다.\n다시 시도해 주세요.\n해당 증상이 지속될 경우 연락 부탁드립니다.\nE-mail = smile@todpop.co.kr\nTel. 070-4814-4628\n(주)토드팝</string>
     <string name="home_my_page_purchased_detail_expalin">상세설명</string>
     <string name="word_list_test_result_a">문제 중 </string>
     <string name="word_list_test_result_b">문제 맞았습니다!</string>
@@ -185,7 +190,6 @@
     <string name="rg_register_refer_nickname_hint">추천인이 없는 경우 빈칸으로 남겨주세요</string>
     <string name="rg_register_nickname_hint">예) 짭짤</string>
     <string name="popup_view_home_store_purchase_done">상품구매가 완료되었습니다!\n[내페이지 - 주머니 - 구매함]에\n저장되었습니다</string>
-    <string name="temp_list_angel_info">-교환 유효기간은 발행일로부터 60일입니다.\n-본 쿠폰은 타 쿠폰(모바일쿠폰, 제품교환권 포함)과 중복사용이 불가합니다.\n-본 쿠폰을 사용하실 때 추가할인, 포인트적립 및 할인카드 적용이 되지 않습니다.\n-추가금을 내시더라도 다른 제품으로 교환 및 사이즈 업그레이드는 되지 않습니다.\n-수신인에게 동일 상품을 여러개 보낼 경우 기프티콘은 1개만 다운로드 받으시면 되며, 교환시에는 단품(한개씩)으로는 교환불가능합니다.\n\n[교환시 유의사항]\n-전 점포 사용가능합니다.\n-단, 특설매장(휴게소 및 리조트, 일부 Take out점, 위락시설 內 등)은 사용이 제한됩니다.</string>
     <string name="not_enough_reward">장학금이 부족합니다.</string>
     <string name="home_purchased_detail_info_null">상세설명이 없습니다.</string>
     <string name="temp_search_being_prepare">검색 기능은 준비중입니다.</string>
@@ -208,10 +212,19 @@
     <string name="popup_view_download_progressbar_delete_done">삭제가 완료되었습니다.</string>
     <string name="popup_view_download_progressbar_delete_no_list">삭제할 파일이 없습니다.</string>
     <string name="popup_view_download_progressbar_delete_error">파일 삭제에 실패했습니다!</string>
-    <string name="popup_view_prize_1st">주간 1등에게만 제공됩니다.\n순위는 일요일에 결정됩니다.</string>
-    <string name="popup_view_prize_2nd">주간 2등에게만 제공됩니다.\n순위는 일요일에 결정됩니다.</string>
-    <string name="popup_view_prize_3rd">주간 3등에게만 제공됩니다.\n순위는 일요일에 결정됩니다.</string>
-    <string name="temp_set_store_coming_soon">스토어는 곧 개점 예정입니다.</string>
+    <string name="popup_view_prize_week_1st">주간 1등에게만 제공됩니다.\n순위는 매주 월요일부터 일요일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="popup_view_prize_week_2nd">주간 2등에게만 제공됩니다.\n순위는 매주 월요일부터 일요일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="popup_view_prize_week_3rd">주간 3등에게만 제공됩니다.\n순위는 매주 월요일부터 일요일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="popup_view_prize_month_1st">월간 1등에게만 제공됩니다.\n순위는 매월 1일부터 말일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="popup_view_prize_month_2nd">월간 2등에게만 제공됩니다.\n순위는 매월 1일부터 말일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="popup_view_prize_month_3rd">월간 3등에게만 제공됩니다.\n순위는 매월 1일부터 말일까지\n학습을 통해 얻은 점수로 결정됩니다.</string>
+    <string name="store_temporary_closed">상점 내부 공사로 잠시 휴업 중입니다.</string>
+    <string name="store_pw_not_set">상품구매와 장학금 수여를 위해\n비밀번호를 설정해야 합니다\n비밀번호를 설정해 주세요!</string>
+    <string name="store_refund_waiting">환급 요청 중입니다.\n잠시만 기다려 주세요.</string>
+    <string name="store_refund_done">환급 요청이 완료되었습니다.\n\n환급은 주말에 이루어지며,\n특이사항 발생 시 연락 드리겠습니다.</string>
+    <string name="store_refund_error_param">환급 요청이 실패했습니다.\n\n입력되지 않은 값이 있습니다.</string>
+    <string name="store_refund_error">환급 요청이 실패했습니다.\n\n증상이 지속될경우 smile@todpop.co.kr로 연락 주세요.</string>
+    <string name="store_refund_error_pw">환급 요청이 실패했습니다.\n\n비밀번호가 올바르지 않습니다.</string>
 	<string name="study_home_point"> point</string>
 	<string name="study_home_reward"> 장학금</string>
 	<string name="popup_pronounce_info_basic">기초 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 15MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
@@ -219,4 +232,11 @@
 	<string name="popup_pronounce_info_high">수능 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
 	<string name="popup_pronounce_info_toeic">토익 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
 	<string name="facebook_share_history">이미 공유를 완료하셨습니다</string>
+	<string name="home_my_page_purchased_detail_homeplus">홈플러스</string>
+	<string name="popup_progress_loading">Loading...</string>
+	<string name="home_my_page_purchased_used">이미 사용되었습니다.</string>
+	<string name="home_my_page_purchased_expired">만료되었습니다.</string>
+	<string name="home_my_page_purchased_canceled">취소된 쿠폰입니다.</string>
+	<string name="home_store_purcahse_error">상품 구매에 실패했습니다.\n\n</string>
+	<string name="home_store_purchase_error_contact">증상이 지속될경우 smile@todpop.co.kr로 연락 주세요.</string>
 </resources>

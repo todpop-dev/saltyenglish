@@ -46,7 +46,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textColor="#000000"
-            android:textSize="19dp" />
+            android:textSize="19dp"
+            android:typeface="normal" />
         <!-- wrap, wrap, 60dp, 493dp, 19sp -->
 
         <ImageView
@@ -69,7 +70,8 @@
             android:layout_weight="221"
             android:gravity="left|center_vertical"
             android:textColor="#000000"
-            android:textSize="17dp" />
+            android:textSize="17dp"
+            android:typeface="normal" />
         <!-- 180dp, 493dp, 17sp -->
 
         <View
@@ -84,7 +86,8 @@
             android:layout_weight="141"
             android:gravity="center_vertical|right"
             android:textColor="#000000"
-            android:textSize="17dp" />
+            android:textSize="17dp"
+            android:typeface="normal" />
 
         <View
             android:layout_width="0dp"

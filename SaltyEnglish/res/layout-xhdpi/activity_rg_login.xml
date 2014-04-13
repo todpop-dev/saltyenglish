@@ -68,7 +68,7 @@
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
                     android:singleLine="true"
-                    android:textSize="15sp" >
+                    android:textSize="15dp" >
                 </EditText>
 
                 <ImageView
@@ -93,7 +93,7 @@
                 android:paddingLeft="25dp"
                 android:paddingRight="25dp"
                 android:singleLine="true"
-                android:textSize="15sp" />
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/rglogin_id_loginbtn"

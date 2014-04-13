@@ -127,7 +127,7 @@ public class HomeMore extends Activity {
 	
 	public void showAccountInfoActivity(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(), HomeMoreAcountInfo.class);
+		Intent intent = new Intent(getApplicationContext(), HomeMoreAccountInfo.class);
 		startActivity(intent);
 	}
 	

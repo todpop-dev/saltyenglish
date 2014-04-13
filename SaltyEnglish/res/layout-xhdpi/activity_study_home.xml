@@ -246,7 +246,7 @@
                         android:gravity="center"
                         android:textColor="#000000"
                         android:textSize="14dp" />
-                    <!-- wrap, wrap, 60dp, 493dp, 19sp -->
+                    <!-- wrap, wrap, 60dp, 493dp, 19dp -->
 
                     <View
                         android:layout_width="0dp"
@@ -274,7 +274,7 @@
                         android:gravity="left|center_vertical"
                         android:textColor="#000000"
                         android:textSize="16dp" />
-                    <!-- 180dp, 493dp, 17sp -->
+                    <!-- 180dp, 493dp, 17dp -->
 
                     <View
                         android:layout_width="0dp"
@@ -294,7 +294,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="44" />
-                    <!-- 57dp, 493dp, 17sp -->
+                    <!-- 57dp, 493dp, 17dp -->
                 </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
@@ -418,8 +418,17 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="7dp"
                     android:background="@drawable/studytest_drawable_btn_saving"
-                    android:onClick="cpxGoReward" 
-                    android:visibility="invisible"/>
+                    android:onClick="cpxGoReward"
+                    android:visibility="invisible" />
+
+                <ProgressBar
+                    android:id="@+id/studyhome_id_cpx_progress"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/studyhome_id_go_home"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -446,7 +455,7 @@
                             android:paddingTop="3dp"
                             android:text="Loading"
                             android:textColor="#EEF5D3"
-                            android:textSize="14sp"
+                            android:textSize="14dp"
                             android:textStyle="bold"
                             android:visibility="invisible" />
                     </RelativeLayout>
@@ -469,6 +478,7 @@
                         android:paddingTop="3dp"
                         android:text="..."
                         android:textColor="#000000"
+                        android:textSize="14dp"
                         android:visibility="invisible" />
                 </LinearLayout>
             </RelativeLayout>

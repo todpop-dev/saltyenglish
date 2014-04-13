@@ -14,20 +14,26 @@
         android:layout_marginTop="10dp"
         android:text="@string/study_home_popup_notice"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/popup_notice_id_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
     <TextView
-        android:layout_centerHorizontal="true"
         android:id="@+id/popup_notice_id_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/popup_notice_id_title"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:gravity="center"
         android:textColor="#000000"
-        android:textSize="15sp" 
-        android:gravity="center"/>
-    
+        android:textSize="15dp" />
+
     <Button
         android:id="@+id/popup_notice_id_btn"
         android:layout_width="wrap_content"

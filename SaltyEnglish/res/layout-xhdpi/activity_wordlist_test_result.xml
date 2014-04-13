@@ -94,7 +94,7 @@
                 android:gravity="center"
                 android:text="Testing"
                 android:textColor="#fffff0"
-                android:textSize="19sp" />
+                android:textSize="19dp" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -117,7 +117,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:gravity="left"
                                 android:textColor="#EEF5D3"
-                                android:textSize="15sp" />
+                                android:textSize="15dp" />
 
                             <TextView
                                 android:id="@+id/home_mypage_id_level_text"
@@ -129,7 +129,7 @@
                                 android:paddingLeft="5dp"
                                 android:textColor="#E6947F"
                                 android:textStyle="bold"
-                                android:textSize="16sp" />
+                                android:textSize="16dp" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -219,6 +219,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_above="@id/rankingpoint"
                                 android:layout_marginBottom="3dp"
+                                android:textSize="11dp"
                                 android:background="@drawable/homemypage_drawable_btn_dinoattendance"
                                 android:gravity="center"
                                 android:onClick="showAttendanceActivity"
@@ -261,7 +262,7 @@
                                 android:layout_toLeftOf="@id/home_mypage_id_ranking_text"
                                 android:gravity="bottom|right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="48sp"
+                                android:textSize="48dp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -272,7 +273,7 @@
                                 android:layout_alignTop="@id/rankingpoint"
                                 android:gravity="right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
 
                             <TextView
                                 android:id="@+id/home_mypage_id_myremain_text"
@@ -282,7 +283,7 @@
                                 android:layout_alignTop="@id/home_mypage_id_score"
                                 android:gravity="right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
 
                             <TextView
                                 android:id="@+id/home_mypage_id_rewardtotay_text"
@@ -292,7 +293,7 @@
                                 android:layout_alignTop="@id/home_mypage_id_todaymoney"
                                 android:gravity="right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
 
                             <TextView
                                 android:id="@+id/home_mypage_id_rewardcurrent_text"
@@ -302,7 +303,7 @@
                                 android:layout_alignTop="@id/home_mypage_id_presentmoney"
                                 android:gravity="right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
 
                             <!-- money text -->
 
@@ -315,7 +316,7 @@
                                 android:layout_marginBottom="3dp"
                                 android:gravity="right"
                                 android:textColor="#EEF5D3"
-                                android:textSize="13sp" />
+                                android:textSize="13dp" />
                         </RelativeLayout>
 
                         <View

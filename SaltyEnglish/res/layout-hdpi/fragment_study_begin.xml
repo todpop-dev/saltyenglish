@@ -15,7 +15,7 @@
         android:layout_marginTop="51.63dp"
         android:src="@drawable/study_8_image_engcard"/>
     
-    <!-- speack btn -->
+    <!-- dpeack btn -->
     <Button 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="294.82dp"
         android:gravity="center"
-        android:textSize="35sp"
+        android:textSize="35dp"
         android:textColor="#000000" />
         <!-- android:background="@drawable/study_8_text_engirritate"  -->
        
@@ -68,7 +68,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="343.12dp"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="23dp"
         android:textColor="#000000" />
         
     	<!--  android:background="@drawable/study_8_text_pronounce" -->
@@ -83,7 +83,7 @@
         android:layout_marginTop="384.76dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="20dp"
         android:textColor="#000000"
          />
     <!--    android:background="@drawable/study_8_text_exsentence" -->
