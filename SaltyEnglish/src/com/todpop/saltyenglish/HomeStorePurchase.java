@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +38,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,6 +55,10 @@ public class HomeStorePurchase extends Activity {
 	TextView productTitle;
 	
 	ImageView productImg;
+	ImageView providerImg;
+	TextView providerName;
+	
+	TextView productName;
 	
 	TextView productPrice;
 	TextView place;
@@ -57,6 +66,7 @@ public class HomeStorePurchase extends Activity {
 	
 	TextView currentReward;
 	TextView remainReward;
+	Boolean pwNotSet;
 	
 	TextView detail;
 
@@ -77,7 +87,10 @@ public class HomeStorePurchase extends Activity {
 	PopupWindow kickBackPopupWindow;
 	View kickBackPopupView;
 	TextView kickBackPopupText;
-
+	
+	//loading progress dialog
+	LoadingDialog loadingDialog;
+	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
 	
@@ -93,11 +106,8 @@ public class HomeStorePurchase extends Activity {
 		setContentView(R.layout.activity_home_store_purchase);
 		Intent intent = getIntent();
 		productId = intent.getStringExtra("productId");
-		/*String title = intent.getStringExtra("title");
-		String provider = intent.getStringExtra("provider");
-		price = intent.getStringExtra("price");
-		String imgUrl = intent.getStringExtra("imgUrl");*/
 		curReward = intent.getStringExtra("curReward");
+		pwNotSet = intent.getBooleanExtra("pwNotSet", false);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
@@ -107,9 +117,13 @@ public class HomeStorePurchase extends Activity {
 		
 		productTitle = (TextView)findViewById(R.id.home_store_purchase_detail_title);
 		
-		productImg = (ImageView)findViewById(R.id.home_store_purchase_detail_product_img);
+		productName = (TextView)findViewById(R.id.home_store_purchase_detail_product);
 		
-		productPrice = (TextView)findViewById(R.id.home_store_purchase_detail_product);
+		productImg = (ImageView)findViewById(R.id.home_store_purchase_detail_product_img);
+		providerImg = (ImageView)findViewById(R.id.home_store_purchase_detail_maker_img);
+		providerName = (TextView)findViewById(R.id.home_store_purchase_detail_maker);
+		
+		productPrice = (TextView)findViewById(R.id.home_store_purchase_detail_price);
 		place = (TextView)findViewById(R.id.home_store_purchase_detail_place);
 		validate = (TextView)findViewById(R.id.home_store_purchase_detail_validate);
 		
@@ -135,13 +149,20 @@ public class HomeStorePurchase extends Activity {
 		kickBackPopupWindow = new PopupWindow(kickBackPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		kickBackPopupText = (TextView)kickBackPopupView.findViewById(R.id.popup_id_text);
 		
+		//loading dialog
+		loadingDialog = new LoadingDialog(this);
+		
 		new GetQPConInfo().execute("http://todpop.co.kr/api/etc/get_qpcon_info.json?product_id=" + productId);
 		
-		validate.setText(getResources().getString(R.string.temp_store_validate_check_after_purchase));
 		currentReward.setText(curReward);
 	}
 	
 	private class GetQPConInfo extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
 		@Override
 		protected JSONObject doInBackground(String... urls) {
 			JSONObject result = null;
@@ -149,8 +170,13 @@ public class HomeStorePurchase extends Activity {
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpParams httpParameters = new BasicHttpParams();
-				DefaultHttpClient httpClient = new DefaultHttpClient(
-						httpParameters);
+				
+				int timeoutConnection = 3000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 5000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				DefaultHttpClient httpClient = new DefaultHttpClient(httpParameters);
 				HttpResponse response = httpClient.execute(httpGet);
 				HttpEntity resEntity = response.getEntity();
 
@@ -160,33 +186,55 @@ public class HomeStorePurchase extends Activity {
 				}
 				return result;
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.e("STEVEN", e.toString());
+				return result;
 			}
-
-			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
 
 			try {
-				if (json.getBoolean("status") == true) {
-
-					productTitle.setText(json.getString("name"));
-					productPrice.setText(json.getString("price"));
-					remainRewardAmount = Integer.valueOf(curReward) - Integer.valueOf(json.getString("price"));
-					remainReward.setText(String.valueOf(remainRewardAmount));
-					place.setText(json.getString("place"));
-					// TODO detail enter
-					if(json.getString("information").equals("null"))
-						detail.setText(getResources().getString(R.string.home_purchased_detail_info_null));
-					else
-						detail.setText(json.getString("information"));
-
-					new DownloadImageTask(productImg)
-							.execute(json.getString("image"));
-				} else {
-					detail.setText(R.string.get_coupon_error);
+				if(json != null){
+					if (json.getBoolean("status") == true) {
+	
+						productTitle.setText(json.getString("name"));
+						productName.setText(json.getString("name"));
+						providerName.setText(json.getString("maker"));
+						validate.setText(json.getString("valid_duration")+getResources().getString(R.string.rg_register_email_info_day));
+						price = json.getString("price");
+						productPrice.setText(price);
+						remainRewardAmount = Integer.valueOf(curReward) - Integer.valueOf(json.getString("price"));
+						remainReward.setText(String.valueOf(remainRewardAmount));
+						place.setText(json.getString("place"));
+						// TODO detail enter
+						if(json.getString("information").equals("null"))
+							detail.setText(getResources().getString(R.string.home_purchased_detail_info_null));
+						else{
+							String cleanedInfo;
+							cleanedInfo = json.getString("information")
+									.replace("<ul>", "")
+									.replace("<li>", "")
+									.replace("</ul>", "")
+									.replace("</li>", "");
+							detail.setText(cleanedInfo);
+						}
+	
+						new DownloadImageTask(productImg)
+								.execute(json.getString("image"));
+						if(!json.getString("maker_logo_url").equals("null")){
+							new DownloadImageTask(providerImg)
+									.execute(json.getString("maker_logo_url"));
+						}
+					} else {
+						loadingDialog.dissmiss();
+						detail.setText(R.string.get_coupon_error);
+					}
+				}
+				else{
+					loadingDialog.dissmiss();
+					kickBackPopupText.setText(R.string.popup_common_timeout);
+					kickBackPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -216,6 +264,7 @@ public class HomeStorePurchase extends Activity {
 
 			protected void onPostExecute(Bitmap result) {
 				bmImage.setImageBitmap(result);
+				loadingDialog.dissmiss();
 			}
 		}
 	}
@@ -229,7 +278,11 @@ public class HomeStorePurchase extends Activity {
 	}
 	
 	public void onClickPurchase(View v){
-		if(remainRewardAmount > 0){
+		if(pwNotSet){
+			kickBackPopupText.setText(R.string.store_pw_not_set);
+			kickBackPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+		}
+		else if(remainRewardAmount > 0){
 			SharedPreferences rgInfo;
 			rgInfo = getSharedPreferences("rgInfo",0);
 			confirmPopupPrice.setText(price);
@@ -268,11 +321,10 @@ public class HomeStorePurchase extends Activity {
 		finish();
 	}
 
-		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_my_page_purchased, menu);
+		//getMenuInflater().inflate(R.menu.home_my_page_purchased, menu);
 		return false;
 	}
 	@Override
@@ -336,18 +388,18 @@ public class HomeStorePurchase extends Activity {
         protected void onPostExecute(JSONObject result) {
         	try {
         		confirmPopupWindow.dismiss();
-        		if (result.getBoolean("status")==true) {
+        		if (result.getBoolean("status") == true) {
         			donePopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
         			donePopupWindow.showAsDropDown(null);
         			}
         		else
         		{
-        			kickBackPopupText.setText(result.getString("msg"));
+        			kickBackPopupText.setText(getResources().getString(R.string.home_store_purcahse_error) + result.getString("msg"));
         			kickBackPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
         			kickBackPopupWindow.showAsDropDown(null);
         		}
         	}catch (Exception e) {
-    			kickBackPopupText.setText("error 01");
+    			kickBackPopupText.setText(getResources().getString(R.string.home_store_purcahse_error) + getResources().getString(R.string.home_store_purchase_error_contact));
     			kickBackPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
     			kickBackPopupWindow.showAsDropDown(null);
         	}
