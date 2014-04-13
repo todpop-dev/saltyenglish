@@ -12,6 +12,8 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.todpop.api.LoadingDialog;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +26,9 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -71,6 +76,10 @@ public class RgRegister extends Activity {
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
+	
+	//loading progress dialog
+	LoadingDialog loadingDialog;
+	
 	LoginButton fb_btn;
 	
 	String mobile;
@@ -102,11 +111,14 @@ public class RgRegister extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+
+		//loading dialog
+		loadingDialog = new LoadingDialog(this);
 		
 		//get phone number
 		try {
 			TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
-			mobile =phoneMgr.getLine1Number().toString();
+			mobile = phoneMgr.getLine1Number().toString();
 			mobile = mobile.replace("+82", "0");
 			new CheckMobileExist().execute("http://todpop.co.kr/api/users/check_mobile_exist.json?mobile="+mobile);
 		} catch(Exception e) {
@@ -118,11 +130,15 @@ public class RgRegister extends Activity {
 		uiHelper.onCreate(savedInstanceState);
 	}
 	
-	
 	//--- request class ---
 	private class CheckMobileExist extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;
+		@Override
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -164,6 +180,7 @@ public class RgRegister extends Activity {
 		protected void onPostExecute(JSONObject json) {
 
 			try {
+				loadingDialog.dissmiss();
 				if(json.getBoolean("status")==false) {
 
 					rgInfoEdit.putString("email",null);

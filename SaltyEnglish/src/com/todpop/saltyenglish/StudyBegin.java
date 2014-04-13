@@ -31,6 +31,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
 
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -159,6 +160,8 @@ public class StudyBegin extends FragmentActivity {
 	String link;
 	String picture;
 	
+	LoadingDialog loadingDialog;
+	
 	private boolean shareTried = false;
 	private final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
@@ -217,6 +220,8 @@ public class StudyBegin extends FragmentActivity {
 			introBtn.setVisibility(View.GONE);
 		}
 		
+		loadingDialog = new LoadingDialog(this);
+		
 		// Get word list - callback when get word list to setup page view
 		//new GetWord().execute("http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level);
 
@@ -226,6 +231,8 @@ public class StudyBegin extends FragmentActivity {
 		Log.d("=======================","=========================");
 		
 		String getWordsUrl = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + tmpStage + "&level=" + tmpLevel;
+		
+		loadingDialog.show();
 		
 		GetWord getWordTask = new GetWord();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -264,6 +271,8 @@ public class StudyBegin extends FragmentActivity {
 		studyStartPagerAdapter = new StudyStartPagerAdapter(getSupportFragmentManager());		
 		studyStartPageView.setAdapter(studyStartPagerAdapter);
 
+		loadingDialog.dissmiss();
+		
 		studyStartPageView.setOnPageChangeListener(new OnPageChangeListener() {    
 			@Override public void onPageSelected(int position) {
 				Log.d("----------------", Integer.toString(position));

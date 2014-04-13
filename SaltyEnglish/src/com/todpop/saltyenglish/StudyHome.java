@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -28,19 +29,15 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
@@ -53,9 +50,13 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -82,6 +83,7 @@ public class StudyHome extends Activity {
 	Button cpxAdSaveNowBtn;
 	Button cpxAdNoButton;
 	ImageView cpxAdPlus;
+	ProgressBar cpxProgress;
 	
 	
 	boolean closeFlag = false;
@@ -101,6 +103,7 @@ public class StudyHome extends Activity {
 	
 	
 	ArrayList<String> noticeList;
+	ArrayList<Bitmap> noticeListImg;
 
 	TextView myRank;
 	ImageView myImage;
@@ -114,7 +117,11 @@ public class StudyHome extends Activity {
 	PopupWindow popupWindow;
 	View popupview;
 	LinearLayout mainLayout;
+	ImageView popupImage;
 	TextView popupText;
+	
+	//loading progress dialog
+	LoadingDialog loadingDialog;
 	
 	String kakaoMent = "";
 	String kaokaoAndroidUrl = "";
@@ -123,7 +130,7 @@ public class StudyHome extends Activity {
 	
 	boolean majorVersionUpdate = false;
 	
-	SharedPreferences pref;
+	SharedPreferences rgInfo;
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
 	//SharedPreferences myRankInfo;
@@ -183,8 +190,8 @@ public class StudyHome extends Activity {
 		//myRankInfo = getSharedPreferences("myRankInfo", 0);
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
-		pref = getSharedPreferences("rgInfo",0);
-		userId = pref.getString("mem_id", "0");
+		rgInfo = getSharedPreferences("rgInfo",0);
+		userId = rgInfo.getString("mem_id", "0");
 		
 		mHelper = new WordDBHelper(this);
 
@@ -210,6 +217,7 @@ public class StudyHome extends Activity {
 		rankingItemArray_toeicMonth = new ArrayList<RankingListItem>();
 		
 		noticeList = new ArrayList<String>();
+		noticeListImg = new ArrayList<Bitmap>();
 		
 		studyInfoEdit = studyInfo.edit();
 		studyInfoEdit.putInt("currentPeriod", 1);
@@ -232,7 +240,7 @@ public class StudyHome extends Activity {
     				if(studyInfo.getInt("currentPeriod", 1) == 1){
     					if(rankingItemArray_basicWeek.isEmpty()){
     						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								1+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    								1+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[0]);
@@ -242,7 +250,7 @@ public class StudyHome extends Activity {
     				else{
     					if(rankingItemArray_basicMonth.isEmpty()){
     						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								1+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    								1+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[4]);
@@ -258,7 +266,7 @@ public class StudyHome extends Activity {
     				if(studyInfo.getInt("currentPeriod", 1) == 1){
     					if(rankingItemArray_middleWeek.isEmpty()){
     						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								2+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    								2+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[1]);
@@ -268,7 +276,7 @@ public class StudyHome extends Activity {
     				else{
     					if(rankingItemArray_middleMonth.isEmpty()){
     						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								2+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    								2+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[5]);
@@ -284,7 +292,7 @@ public class StudyHome extends Activity {
     				if(studyInfo.getInt("currentPeriod", 1) == 1){
     					if(rankingItemArray_highWeek.isEmpty()){
     						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								3+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    								3+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[2]);
@@ -294,7 +302,7 @@ public class StudyHome extends Activity {
     				else{
     					if(rankingItemArray_highMonth.isEmpty()){
     						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								3+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    								3+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[6]);
@@ -310,7 +318,7 @@ public class StudyHome extends Activity {
     				if(studyInfo.getInt("currentPeriod", 1) == 1){
     					if(rankingItemArray_toeicWeek.isEmpty()){
     						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								4+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+    								4+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[3]);
@@ -320,7 +328,7 @@ public class StudyHome extends Activity {
     				else{
     					if(rankingItemArray_toeicMonth.isEmpty()){
     						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								4+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+    								4+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
     					}
     					else{
     						myRank.setText(myRankArray[7]);
@@ -329,19 +337,12 @@ public class StudyHome extends Activity {
     				}
 				}
 			}
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
-				
 			}
-
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-				
 			}
-			
 		});		
 		try {
 			Field mScroller = ViewPager.class.getDeclaredField("mScroller");
@@ -356,7 +357,6 @@ public class StudyHome extends Activity {
 			e.printStackTrace();
 		}
 		
-		
 		// CPX View
 		cpxView = (RelativeLayout)findViewById(R.id.studyhome_cpi_view);
 		cpxAdImageView = (ImageView)findViewById(R.id.study_home_id_cpi_ad_image);
@@ -366,12 +366,17 @@ public class StudyHome extends Activity {
 		cpxAdSaveNowBtn = (Button)findViewById(R.id.studyhome_id_save_now);
 		cpxAdNoButton = (Button)findViewById(R.id.studyhome_id_go_home);
 		cpxAdPlus = (ImageView)findViewById(R.id.study_home_id_cpx_plus);
+		cpxProgress = (ProgressBar)findViewById(R.id.studyhome_id_cpx_progress);
 		
 		//popupview
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
+
+		//loading animation dialog
+		loadingDialog = new LoadingDialog(this);
 		
 		edgeSwipe = new EdgeSwipe();
 		mainLayout.setOnTouchListener(edgeSwipe);
@@ -382,7 +387,6 @@ public class StudyHome extends Activity {
 		cpxPopupWindow = new PopupWindow(cpxPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
-		//TODO 
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}		
@@ -393,6 +397,9 @@ public class StudyHome extends Activity {
 		super.onResume();
 		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 
+
+		
+		
 		if(isOnSlide)
 			slideOff();
 		
@@ -421,6 +428,7 @@ public class StudyHome extends Activity {
 			cpxAdTextReward.setVisibility(View.VISIBLE);
 			cpxAdSaveNowBtn.setVisibility(View.VISIBLE);
 			cpxAdPlus.setVisibility(View.VISIBLE);
+			cpxProgress.setVisibility(View.GONE);
 			Log.i("STEVEN", "download image task called");
 			if(cpxReward.equals("0") || cpxReward.equals("null")){
 				cpxAdInfoTitle.setBackgroundResource(R.drawable.test_27_img_point);
@@ -561,7 +569,7 @@ public class StudyHome extends Activity {
 						case 0:
 							if(rankingItemArray_basicWeek.isEmpty()){
 	    						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								1+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    								1+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[0]);
@@ -571,7 +579,7 @@ public class StudyHome extends Activity {
 						case 1:
 							if(rankingItemArray_middleWeek.isEmpty()){
 	    						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								2+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    								2+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[1]);
@@ -581,7 +589,7 @@ public class StudyHome extends Activity {
 						case 2:
 							if(rankingItemArray_highWeek.isEmpty()){
 	    						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								3+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    								3+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[2]);
@@ -591,7 +599,7 @@ public class StudyHome extends Activity {
 						case 3:
 							if(rankingItemArray_toeicWeek.isEmpty()){
 	    						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								4+"&period="+1+"&nickname="+pref.getString("nickname", "NO"));
+	    								4+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[3]);
@@ -608,7 +616,7 @@ public class StudyHome extends Activity {
 						case 0:
 	    					if(rankingItemArray_basicMonth.isEmpty()){
 	    						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								1+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    								1+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[4]);
@@ -618,7 +626,7 @@ public class StudyHome extends Activity {
 						case 1:
 	    					if(rankingItemArray_middleMonth.isEmpty()){
 	    						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								2+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    								2+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[5]);
@@ -628,7 +636,7 @@ public class StudyHome extends Activity {
 						case 2:
 	    					if(rankingItemArray_highMonth.isEmpty()){
 	    						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								3+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    								3+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[6]);
@@ -638,7 +646,7 @@ public class StudyHome extends Activity {
 						case 3:
 	    					if(rankingItemArray_toeicMonth.isEmpty()){
 	    						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								4+"&period="+2+"&nickname="+pref.getString("nickname", "NO"));
+	    								4+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
 	    					}
 	    					else{
 	    						myRank.setText(myRankArray[7]);
@@ -809,6 +817,7 @@ public class StudyHome extends Activity {
 						cpxAdTextReward.setVisibility(View.VISIBLE);
 						cpxAdSaveNowBtn.setVisibility(View.VISIBLE);
 						cpxAdPlus.setVisibility(View.VISIBLE);
+						cpxProgress.setVisibility(View.GONE);
 						cpxAdTextView.setText(cpxAdAction);
 						if(cpxReward.equals("0") || cpxReward.equals("null")){
 					    	cpxAdTextReward.setText(cpxPoint + getResources().getString(R.string.study_home_point));
@@ -826,6 +835,7 @@ public class StudyHome extends Activity {
 						cpxAdTextReward.setVisibility(View.INVISIBLE);
 						cpxAdSaveNowBtn.setVisibility(View.INVISIBLE);
 						cpxAdPlus.setVisibility(View.INVISIBLE);
+						cpxProgress.setVisibility(View.GONE);
 						new DownloadImageTask().execute(cpxAdImageUrl);
 					}
 				} else {		   
@@ -862,9 +872,9 @@ public class StudyHome extends Activity {
 	
 	public void getInfo()
 	{
-		pref = getSharedPreferences("rgInfo",0);
+		rgInfo = getSharedPreferences("rgInfo",0);
 
-		FlurryAgent.setUserId(pref.getString("mem_id", "NO"));
+		FlurryAgent.setUserId(rgInfo.getString("mem_id", "NO"));
 		
 		category = studyInfo.getInt("currentCategory", 1);
 		period = studyInfo.getInt("currentPeriod", 1);
@@ -889,10 +899,10 @@ public class StudyHome extends Activity {
 		
 		if(period == 1)
 			new GetRank(category).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-					category+"&period=1&nickname="+pref.getString("nickname", "NO"));
+					category+"&period=1&nickname="+rgInfo.getString("nickname", "NO"));
 		else
 			new GetRank(category + 4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-					category+"&period=2&nickname="+pref.getString("nickname", "NO"));
+					category+"&period=2&nickname="+rgInfo.getString("nickname", "NO"));
 		Log.e("STEVEN", "609");
 	}
 
@@ -1210,6 +1220,7 @@ public class StudyHome extends Activity {
 			slideOff();
 		}
 	}
+
 	public void otherSide(View v){
 		slideOff();
 	}
@@ -1289,6 +1300,10 @@ public class StudyHome extends Activity {
 	private class GetNotice extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
@@ -1318,8 +1333,8 @@ public class StudyHome extends Activity {
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
-			try {
-				
+			try {			
+				loadingDialog.dissmiss();	
 				String curVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 				String newVersion = json.getJSONObject("data").getString("android_version");
 				
@@ -1351,6 +1366,7 @@ public class StudyHome extends Activity {
 					notice = notice.replace("\\n", "\n");
 					noticeList.add(notice);
 				}
+				
 				if(!noticeList.isEmpty()){
 					popupText.setText(noticeList.get(0));
 					noticeList.remove(0);
@@ -1365,7 +1381,74 @@ public class StudyHome extends Activity {
 			}
 		}
 	}
+	
+	//TODO
+	private class DownloadNoticeImageTask extends AsyncTask<String, Void, Bitmap> {
+	    protected Bitmap doInBackground(String... urls) {
+	        String urldisplay = urls[0];
+	        Bitmap mIcon11 = null;
+	        try {
+	            InputStream in = new java.net.URL(urldisplay).openStream();
+	            mIcon11 = BitmapFactory.decodeStream(in);
+	        } catch (Exception e) {
+	            Log.e("Error", e.getMessage());
+	            e.printStackTrace();
+	        }
+	        return mIcon11;
+	    }
 
+	    protected void onPostExecute(Bitmap result) 
+	    {	        
+	    	noticeListImg.add(result);
+	    }
+	}
+	private class AccessCheck extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE ---- ", result.toString());
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			loadingDialog.dissmiss();
+			try {
+				if(json.getBoolean("status")){
+					int result = json.getJSONObject("data").getInt("result");
+					if(result == 0){	//closed
+						popupText.setText(R.string.store_temporary_closed);
+						popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+					}
+					else{ //opened, may not set password(doesn't matter)
+						Intent intent = new Intent(getApplicationContext(),HomeStore.class);
+						startActivity(intent);
+					}
+				}
+			} catch (Exception e) {
+
+			}
+		}
+	}	
 
 	// on click
 	public void showStudyCategory(View view)
@@ -1378,10 +1461,7 @@ public class StudyHome extends Activity {
 
 	public void showHomeStore(View view)
 	{
-		popupText.setText(R.string.temp_set_store_coming_soon);
-		popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		/*Intent intent = new Intent(getApplicationContext(),HomeStore.class);
-		startActivity(intent);*/
+		new AccessCheck().execute("http://todpop.co.kr/api/qpcon_coupons/can_shopping.json?user_id=" + rgInfo.getString("mem_id", "NO"));
 	}
 
 	public void showMore(View view)
@@ -1467,11 +1547,12 @@ public class StudyHome extends Activity {
 				Toast toast = Toast.makeText(getApplicationContext(), R.string.cpa_install_notice, Toast.LENGTH_LONG);
 				toast.show();
 				if(cpxTargetUrl.contains("**ad_id**")){
-					cpxTargetUrl.replace("**ad_id**", String.valueOf(cpxAdId));
+					cpxTargetUrl = cpxTargetUrl.replace("**ad_id**", String.valueOf(cpxAdId));
 				}
 				if(cpxTargetUrl.contains("**user_id**")){
-					cpxTargetUrl.replace("**user_id**", String.valueOf(userId));
+					cpxTargetUrl = cpxTargetUrl.replace("**user_id**", String.valueOf(userId));
 				}
+				Log.i("STEVEN", "cpx test url : "+cpxTargetUrl);
 				startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(cpxTargetUrl)));
 			}
 		}else if (cpxAdType == 305) {
@@ -1530,7 +1611,7 @@ public class StudyHome extends Activity {
 			metaInfoAndroid.put("installurl", "market://details?id=com.todpop.saltyenglish");		// fix
 			metaInfoArray.add(metaInfoAndroid);
 
-			String nickname = pref.getString("nickname", null);
+			String nickname = rgInfo.getString("nickname", null);
 			String strMessage = kakaoMent + nickname +"]";
 			String strURL = "http://market.android.com/details?id=com.todpop.saltyenglish";			// fix & hidden
 			String strAppId = "com.todpop.saltyenglish";											// fix
@@ -1653,7 +1734,6 @@ public class StudyHome extends Activity {
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 			
 			if(cpxView.isShown()){
@@ -1672,8 +1752,15 @@ public class StudyHome extends Activity {
 			else{
 				new GetCPX().execute("http://todpop.co.kr/api/advertises/get_cpx_ad.json?user_id=" + userId + "&type=1");
 				closeFlag = true;
-				cpxView.setVisibility(View.VISIBLE);
+				cpxAdImageView.setImageResource(R.drawable.test_27_image_end);
+				cpxAdInfoTitle.setVisibility(View.INVISIBLE);
+				cpxAdTextView.setVisibility(View.INVISIBLE);
+				cpxAdPlus.setVisibility(View.INVISIBLE);
+				cpxAdTextReward.setVisibility(View.INVISIBLE);
+				cpxAdSaveNowBtn.setVisibility(View.INVISIBLE);
 				cpxAdNoButton.setBackgroundResource(R.drawable.studytest_drawable_btn_end);
+				cpxProgress.setVisibility(View.VISIBLE);
+				cpxView.setVisibility(View.VISIBLE);
 				/*
 				final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
 				DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
