@@ -17,6 +17,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -31,15 +34,26 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity 
 {
 	AnimationDrawable mainLoading;
+	
+	//popup view
+	PopupWindow popupWindow;
+	View popupview;
+	RelativeLayout relative;
+	TextView popupText;
 	
 	SharedPreferences rgInfo;
 	SharedPreferences setting;
@@ -57,6 +71,12 @@ public class MainActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		//popupview
+		relative = (RelativeLayout)findViewById(R.id.main_activity_id_main);;
+		popupview = View.inflate(this, R.layout.popup_view, null);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
@@ -133,7 +153,12 @@ public class MainActivity extends Activity
 			e.printStackTrace();
 		}
 	}
-
+	
+	public void closePopup(View v)
+	{
+		popupWindow.dismiss();
+		finish();
+	}
 	
 	private class SignInAPI extends AsyncTask<String, Void, JSONObject> 
 	{
@@ -143,8 +168,34 @@ public class MainActivity extends Activity
         	JSONObject json = null;
 
         	try
-        	{
-        		HttpClient client = new DefaultHttpClient();  
+        	{  
+        		String postURL = urls[0];
+        		HttpPost post = new HttpPost(postURL);
+        		HttpParams httpParams = new BasicHttpParams();
+        		
+        		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        		String user_id = rgInfo.getString("mem_id", "");
+        		params.add(new BasicNameValuePair("user_id", user_id));
+        		
+        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+        		post.setEntity(ent);
+        		
+        		HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        		HttpConnectionParams.setSoTimeout(httpParams, 5000);
+        		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+        		HttpResponse response = httpClient.execute(post);
+        		
+        		HttpEntity resEntity = response.getEntity();
+
+        		if (resEntity != null)
+        		{    
+        			json = new JSONObject(EntityUtils.toString(resEntity)); 
+        			Log.d("[Register-1] user info check", json.toString());				        	
+        			return json;
+        		}
+        		return json;
+        		/*HttpClient client = new DefaultHttpClient();  
         		String postURL = urls[0];
         		HttpPost post = new HttpPost(postURL); 
         		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -163,37 +214,43 @@ public class MainActivity extends Activity
         			Log.d("[Register-1] user info check", json.toString());				        	
         			return json;
         		}
-        		return json;
+        		return json;*/
         	}
         	catch (Exception e)
         	{
-			        e.printStackTrace();
+			    Log.e("STEVEN", e.toString());
+            	return json;
 			}
         	
-        	return json;
         }
         
         @Override
         protected void onPostExecute(JSONObject result) {
         	try {
-        		if (result.getBoolean("status")==true) {
-        			if (result.getJSONObject("data").getJSONObject("user").getInt("level_test")>0)
-        			{
-        				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-        			}
-        			else
-        			{
-        				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
-        				startActivity(intent);
-	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        			}
-        		} else {
-        			// something wrong (ex: user deleted) = logout
-        			settingEdit = setting.edit();
-        			settingEdit.putString("isLogin","NO");
-        			settingEdit.apply();
-        			
-        			finish();
+        		if(result != null){
+        			if (result.getBoolean("status")==true) {
+	        			if (result.getJSONObject("data").getJSONObject("user").getInt("level_test")>0)
+	        			{
+	        				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+	        			}
+	        			else
+	        			{
+	        				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
+	        				startActivity(intent);
+		    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	        			}
+	        		} else {
+	        			// something wrong (ex: user deleted) = logout
+	        			settingEdit = setting.edit();
+	        			settingEdit.putString("isLogin","NO");
+	        			settingEdit.apply();
+	        			
+	        			finish();
+	        		}
+        		}
+        		else{
+					popupText.setText(R.string.popup_common_timeout);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
         		}
         	}catch (Exception e) {
         	}
@@ -211,9 +268,17 @@ public class MainActivity extends Activity
 			JSONObject result = null;
 			try
 			{
-				DefaultHttpClient httpClient = new DefaultHttpClient();
+				DefaultHttpClient httpClient;
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL);
+				HttpParams httpParameters = new BasicHttpParams(); 
+				
+				int timeoutConnection = 3000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 5000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				httpClient = new DefaultHttpClient(httpParameters); 
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
@@ -224,36 +289,39 @@ public class MainActivity extends Activity
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
 					return result;
 				}
+				return result;
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+			    Log.e("STEVEN", e.toString());
+            	return null;
 			}
-			
-			Log.d("M A","207");
-			
-			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
-				
-				Log.d("FbNickname","243");
-				
-				if(json.getBoolean("status")) {
+				if(json != null){
+					Log.d("FbNickname","243");
 					
-					String stage_info = json.getJSONObject("data").getString("stage");
-					studyInfoEdit.putString("stageInfo",stage_info);
-					studyInfoEdit.apply();
-					
-    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-    				startActivity(intent);
-    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					if(json.getBoolean("status")) {
+						
+						String stage_info = json.getJSONObject("data").getString("stage");
+						studyInfoEdit.putString("stageInfo",stage_info);
+						studyInfoEdit.apply();
+						
+	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+	    				startActivity(intent);
+	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+					}
+					else
+					{
+						Log.d("M A","224");
+					}
 				}
-				else
-				{
-					Log.d("M A","224");
+				else{
+					popupText.setText(R.string.popup_common_timeout);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}
 				
 			} catch (Exception e) {
