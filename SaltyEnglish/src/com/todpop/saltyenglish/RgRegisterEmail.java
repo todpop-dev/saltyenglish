@@ -380,18 +380,19 @@ public class RgRegisterEmail extends Activity {
 				if(json.getJSONObject("data").getBoolean("result"))
 				{
 					rgInfoEdit.putString("email", email.getText().toString());
-					rgInfoEdit.putString("tempPassword", returnSHA512(emailPassword.getText().toString()));
 					
 					Intent intent = new Intent(getApplicationContext(), RgRegisterEmailInfo.class);
+					intent.putExtra("email", email.getText().toString());
+					intent.putExtra("password", returnSHA512(emailPassword.getText().toString()));
+					intent.putExtra("nickname", nickname.getText().toString());
+					intent.putExtra("recommender", nicknameRefre.getText().toString());
 					startActivity(intent);
 				}else{
 					rgInfoEdit.putString("email",null);
-					rgInfoEdit.putString("tempPassword", null);
 					
 					popupText.setText(R.string.popup_send_info_error);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					popupWindow.showAsDropDown(doneBtn);
-
 				}
 				rgInfoEdit.apply();
 			} catch (Exception e) {

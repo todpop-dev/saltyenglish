@@ -1,7 +1,5 @@
 package com.todpop.saltyenglish;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -15,6 +13,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
 
 
 import android.app.Activity;
@@ -33,6 +35,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -52,6 +55,13 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
 public class RgRegisterEmailInfo extends Activity {
+	String email;
+	String password;
+	String nickname;
+	String recommender;
+	String mobile;
+	
+	Boolean kickBack = false;
 
 	//declare define UI Item
 	Button birthBtn;
@@ -93,11 +103,20 @@ public class RgRegisterEmailInfo extends Activity {
 	SharedPreferences.Editor settingEdit;
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
+	
+	LoadingDialog loadingDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_register_email_info);
+		
+		Intent intent = getIntent();
+		
+		email = intent.getStringExtra("email");
+		password = intent.getStringExtra("password");
+		nickname = intent.getStringExtra("nickname");
+		recommender = intent.getStringExtra("recommender");
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
@@ -105,14 +124,28 @@ public class RgRegisterEmailInfo extends Activity {
 		settingEdit = setting.edit();
 		studyInfo = getSharedPreferences("studyInfo", 0);
 		studyInfoEdit = studyInfo.edit();
-
-		doneBtn = (Button)findViewById(R.id.rgregisteremailinfo_id_donebtn);
 		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+
+		mobile = rgInfo.getString("mobile", null);
+		if(mobile == null){
+			//get phone number
+			try {
+				TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+				mobile = phoneMgr.getLine1Number().toString();
+				mobile = mobile.replace("+82", "0");
+			} catch(Exception e) {
+				kickBack = true;
+				popupText.setText(R.string.popup_get_mobile_fail);
+				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+			}
+		}
+		
+		doneBtn = (Button)findViewById(R.id.rgregisteremailinfo_id_donebtn);
 
 		//picker
 		birthBtn = (Button)findViewById(R.id.rgregisteremailinfo_id_birthdate);
@@ -138,7 +171,9 @@ public class RgRegisterEmailInfo extends Activity {
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
 		});
-
+		
+		loadingDialog = new LoadingDialog(this);
+		
 		new GetAddr().execute("http://todpop.co.kr/api/users/address_list.json?depth=1");
 
 		county =(Spinner)findViewById(R.id.rgregisteremailinfo_id_spinner_contry);
@@ -209,14 +244,28 @@ public class RgRegisterEmailInfo extends Activity {
 	private class GetAddr extends AsyncTask<String, Void, JSONObject> 
 	{
 		@Override
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
+		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
 			JSONObject result = null;
 			try
 			{
-				DefaultHttpClient httpClient = new DefaultHttpClient();
+				DefaultHttpClient httpClient;
 				String getURL = urls[0];
 				HttpGet httpGet = new HttpGet(getURL);
+				HttpParams httpParameters = new BasicHttpParams(); 
+				
+				int timeoutConnection = 3000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 5000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				httpClient = new DefaultHttpClient(httpParameters); 
+				
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
@@ -230,32 +279,40 @@ public class RgRegisterEmailInfo extends Activity {
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				return result;
 			}
-			return result;
 		}
 
 		@Override
 		protected void onPostExecute(JSONObject json) {
 
 			try {
-				if(json.getBoolean("status")==true)
-				{
-
-					JSONArray cityScr = json.getJSONObject("data").getJSONArray("addr");
-					List<String> list = new ArrayList<String>();
-					for(int i=0;i<cityScr.length();i++)
+				loadingDialog.dissmiss();
+				if(json != null){
+					if(json.getBoolean("status")==true)
 					{
-						list.add( cityScr.getString(i) );
-					}	
-
-					SpinnerAdapter aa = new SpinnerAdapter(RgRegisterEmailInfo.this,  
-							android.R.layout.simple_spinner_item, list);  
-					city.setAdapter(aa);
-					city.setSelection(0);
-					cityLocal = cityScr.getString(0);
-					new GetAddrLocal().execute("http://todpop.co.kr/api/users/address_list.json?depth=2&s="+cityLocal);
-				}else{		        
-					Log.d("-----------------------", "Login Failed");
+	
+						JSONArray cityScr = json.getJSONObject("data").getJSONArray("addr");
+						List<String> list = new ArrayList<String>();
+						for(int i=0;i<cityScr.length();i++)
+						{
+							list.add( cityScr.getString(i) );
+						}	
+	
+						SpinnerAdapter aa = new SpinnerAdapter(RgRegisterEmailInfo.this,  
+								android.R.layout.simple_spinner_item, list);  
+						city.setAdapter(aa);
+						city.setSelection(0);
+						cityLocal = cityScr.getString(0);
+						new GetAddrLocal().execute("http://todpop.co.kr/api/users/address_list.json?depth=2&s="+cityLocal);
+					}else{		        
+						Log.d("-----------------------", "Login Failed");
+					}
+				}
+				else{
+					kickBack = true;
+					popupText.setText(R.string.popup_common_timeout);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				}
 			} catch (Exception e) {
 
@@ -331,22 +388,30 @@ public class RgRegisterEmailInfo extends Activity {
 		}   
 		return null;   
 	}   
+	
+	
 	//---- send info -----
 	private class SignUp extends AsyncTask<String, Void, JSONObject> {
 
 		JSONObject result = null;
+		
+		@Override
+		protected void onPreExecute(){
+			super.onPreExecute();
+			loadingDialog.show();
+		}
+		
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
 			try
 			{
-				HttpClient client = new DefaultHttpClient();  
 				String postURL = urls[0];
 				HttpPost post = new HttpPost(postURL); 
+        		HttpParams httpParams = new BasicHttpParams();
+        		
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				
-				Log.d("RgRegisterEmailInfo","335");
-				Log.d("chk=",rgInfo.getString("facebook","no") + "/" + rgInfo.getString("nickname","no") + "/" + rgInfo.getString("mem_id",null)+"/" );
 				String birthDay = Integer.toString(mYear) + "-" + Integer.toString(mMonth + 1) + "-" + Integer.toString(mDay);
 				if(!rgInfo.getString("facebook","no").equals("no"))						// cross join (facebook->email)
 				{
@@ -356,9 +421,6 @@ public class RgRegisterEmailInfo extends Activity {
 					params.add(new BasicNameValuePair("address", city.getSelectedItem().toString()+" "+county.getSelectedItem().toString()));
 					params.add(new BasicNameValuePair("interest",Integer.toString(interest)));
 					params.add(new BasicNameValuePair("mem_no",rgInfo.getString("mem_id", null)));
-					Log.i("SETVEN", "INTEREST!!!-------"+interest);
-					Log.d("--347-----","335");
-					Log.d("--348-----",rgInfo.getString("password", "0"));
 					
 					if(rgInfo.getString("password", "0").equals("0"))
 					{
@@ -367,14 +429,14 @@ public class RgRegisterEmailInfo extends Activity {
 
 				}else																			// first join (email->facebook)
 				{
-					params.add(new BasicNameValuePair("email", rgInfo.getString("email", null)));
-					params.add(new BasicNameValuePair("password", rgInfo.getString("tempPassword", null)));
-					params.add(new BasicNameValuePair("nickname", rgInfo.getString("nickname", null)));
-					params.add(new BasicNameValuePair("mobile", rgInfo.getString("mobile", null)));		// null?
+					params.add(new BasicNameValuePair("email", email));
+					params.add(new BasicNameValuePair("password", password));
+					params.add(new BasicNameValuePair("nickname", nickname));
+					params.add(new BasicNameValuePair("mobile", mobile));
 					
 					if(!rgInfo.getString("recommend", "no").equals("no"))
 					{
-						params.add(new BasicNameValuePair("recommend", rgInfo.getString("recommend", null)));
+						params.add(new BasicNameValuePair("recommend", recommender));
 					}
 					
 					params.add(new BasicNameValuePair("birth", birthDay));
@@ -385,10 +447,13 @@ public class RgRegisterEmailInfo extends Activity {
 
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
-				HttpResponse responsePOST = client.execute(post);  
+				
+				HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+        		HttpConnectionParams.setSoTimeout(httpParams, 10000);
+        		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
+        		
+				HttpResponse responsePOST = httpClient.execute(post);  
 				HttpEntity resEntity = responsePOST.getEntity();
-
-
 
 				if (resEntity != null)
 				{    
@@ -402,8 +467,8 @@ public class RgRegisterEmailInfo extends Activity {
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				return result;
 			}
-			return result;
 		}
 
 		@Override
@@ -411,43 +476,58 @@ public class RgRegisterEmailInfo extends Activity {
 			//System.out.print(result);
 			//textView.setText(result);
 			try {
-				if (result.getBoolean("status")==true) {
-					
-					settingEdit.putString("isLogin", "YES");
-					settingEdit.putString("loginType", "email");
-					settingEdit.apply();
-					
-					rgInfoEdit.putString("mem_id", result.getJSONObject("data").getString("mem_id"));
-					rgInfoEdit.putString("tempPassword", null);
-					rgInfoEdit.apply();
-					
-					Log.d("RgRegisterEmailInfo","400");
-					Log.d("chk=",result.getJSONObject("data").getString("mem_id") + "     " + result.getJSONObject("data").getString("level_test"));
-					
-					if(result.getJSONObject("data").getInt("level_test")==0)
-					{
-						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
-						startActivity(intent);
-						finish();
+				loadingDialog.dissmiss();
+				if(result != null){
+					if (result.getBoolean("status")==true) {
+						
+						settingEdit.putString("isLogin", "YES");
+						settingEdit.putString("loginType", "email");
+						settingEdit.apply();
+						
+						rgInfoEdit.putString("mem_id", result.getJSONObject("data").getString("mem_id"));
+						rgInfoEdit.putString("tempPassword", null);
+						rgInfoEdit.apply();
+						
+						Log.d("RgRegisterEmailInfo","400");
+						Log.d("chk=",result.getJSONObject("data").getString("mem_id") + "     " + result.getJSONObject("data").getString("level_test"));
+						
+						if(result.getJSONObject("data").getInt("level_test")==0)
+						{
+							Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
+							startActivity(intent);
+							finish();
+						}
+						else
+						{
+							new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+						}
+					} else {
+						doneBtn.setClickable(true);
+						int code = result.getInt("code");
+						if(code == 71){
+							popupText.setText(R.string.popup_sign_up_fail_mobile_error);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);						
+						}
+						else if(code == 72){
+							popupText.setText(R.string.popup_sign_up_fail_mobile_duplicated);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);		
+						}
+						else{
+							popupText.setText(R.string.popup_sign_up_fail_false);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						}
 					}
-					else
-					{
-						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-					}
-					
-					
-				} else {
-					popupText.setText(R.string.popup_sign_up_fail_false);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					popupWindow.showAsDropDown(null);
 				}
-
+				else{
+					doneBtn.setClickable(true);
+					popupText.setText(R.string.popup_common_timeout);
+					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+				}
 			} catch (Exception e) {
+				doneBtn.setClickable(true);
 				popupText.setText(R.string.popup_sign_up_fail);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-				popupWindow.showAsDropDown(null);
 			}
-
 		}
 
 	}
@@ -524,6 +604,7 @@ public class RgRegisterEmailInfo extends Activity {
 
 	public void showRgRegisterFinishActivity(View view)
 	{
+		doneBtn.setClickable(false);
 		checkCount = 0;
 		interest = 0;
 		if(sports.isChecked())			{	checkCount++;	interest = interest +1;		}
@@ -548,18 +629,22 @@ public class RgRegisterEmailInfo extends Activity {
 				popupText.setText(R.string.popup_interest_More_than_three);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 				popupWindow.showAsDropDown(null);
+				doneBtn.setClickable(true);
 			}
 		}
 		else{
 			popupText.setText(R.string.popup_birth_not_selected);
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			popupWindow.showAsDropDown(null);
+			doneBtn.setClickable(true);
 		}
 	}
 	
 	public void closePopup(View v)
 	{
 		popupWindow.dismiss();
+		if(kickBack)
+			finish();
 	}
 
 	public void setBirthdate(View view)
