@@ -42,7 +42,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -51,6 +50,8 @@ import android.widget.TextView;
 public class HomeMyPage extends FragmentActivity {
 
 	static RelativeLayout mainLayout;
+	
+	static int period;
 	
 	ViewPager pageView;
 	PagerAdapter pagerAdapter;
@@ -152,7 +153,7 @@ public class HomeMyPage extends FragmentActivity {
 		}	
 		
 		int category = studyInfo.getInt("currentCategory",1);
-		int period = studyInfo.getInt("currentPeriod", 1);
+		period = studyInfo.getInt("currentPeriod", 1);
 		
 		// image here cys !!!!!!!!!!
 		myrankCategory = (ImageView)findViewById(R.id.home_mypage_id_myrank_category);
@@ -262,7 +263,10 @@ public class HomeMyPage extends FragmentActivity {
 				case 0:
 					popupImage.setImageBitmap(prizeImageArr.get(1));
 					popupRank.setImageResource(R.drawable.store_31_image_2nd);
-					popupGuide.setText(R.string.popup_view_prize_2nd);
+					if(period == 1)
+						popupGuide.setText(R.string.popup_view_prize_week_2nd);
+					else
+						popupGuide.setText(R.string.popup_view_prize_month_2nd);
 					popupProgress.setVisibility(View.VISIBLE);
 					popupTitle.setVisibility(View.INVISIBLE);
 					popupDetail.setVisibility(View.INVISIBLE);
@@ -272,7 +276,10 @@ public class HomeMyPage extends FragmentActivity {
 				case 1:
 					popupImage.setImageBitmap(prizeImageArr.get(0));
 					popupRank.setImageResource(R.drawable.store_31_image_1st);
-					popupGuide.setText(R.string.popup_view_prize_1st);
+					if(period == 1)
+						popupGuide.setText(R.string.popup_view_prize_week_1st);
+					else
+						popupGuide.setText(R.string.popup_view_prize_month_1st);
 					popupProgress.setVisibility(View.VISIBLE);
 					popupTitle.setVisibility(View.INVISIBLE);
 					popupDetail.setVisibility(View.INVISIBLE);
@@ -282,7 +289,10 @@ public class HomeMyPage extends FragmentActivity {
 				case 2:
 					popupImage.setImageBitmap(prizeImageArr.get(2));
 					popupRank.setImageResource(R.drawable.store_31_image_3rd);
-					popupGuide.setText(R.string.popup_view_prize_3rd);
+					if(period == 1)
+						popupGuide.setText(R.string.popup_view_prize_week_3rd);
+					else
+						popupGuide.setText(R.string.popup_view_prize_month_3rd);
 					popupProgress.setVisibility(View.VISIBLE);
 					popupTitle.setVisibility(View.INVISIBLE);
 					popupDetail.setVisibility(View.INVISIBLE);
@@ -512,6 +522,49 @@ public class HomeMyPage extends FragmentActivity {
 		}
 	}
 	
+	private class AccessCheck extends AsyncTask<String, Void, JSONObject> {
+		@Override
+		protected JSONObject doInBackground(String... urls) {
+			JSONObject result = null;
+			try {
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL);
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+				HttpEntity resEntity = httpResponse.getEntity();
+
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
+					Log.d("RESPONSE ---- ", result.toString());
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				if(json.getBoolean("status")){
+					int result = json.getJSONObject("data").getInt("result");
+					if(result == 0){	//closed
+						tempPopupText.setText(R.string.store_temporary_closed);
+						tempPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+					}
+					else{ //opened, may not set password(doesn't matter)
+						Intent intent = new Intent(getApplicationContext(),HomeStore.class);
+						startActivity(intent);
+					}
+				}
+			} catch (Exception e) {
+
+			}
+
+		}
+	}	
+	
 	public void setCharacter(String imageID)
 	{		
 		if(imageID.equals("1"))
@@ -553,10 +606,7 @@ public class HomeMyPage extends FragmentActivity {
 
 	public void showHomeStoreActivity(View v)
 	{
-		tempPopupText.setText(R.string.temp_set_store_coming_soon);
-		tempPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		/*Intent intent = new Intent(getApplicationContext(), HomeStore.class);
-		startActivity(intent);*/
+		new AccessCheck().execute("http://todpop.co.kr/api/qpcon_coupons/can_shopping.json?user_id=" + rgInfo.getString("mem_id", "NO"));
 	}
 
 	public void showHomeMyPagePurchased(View v)
