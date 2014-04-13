@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -58,6 +59,9 @@ public class LvTestFinish extends Activity {
 	ImageView marking;
 	ImageView markingDone;
 	Button shareBtn;
+
+	private LinearLayout fbShareLayout;
+	private TextView fbShareReward;
 	
 	String reward;
 	String point;
@@ -66,6 +70,8 @@ public class LvTestFinish extends Activity {
 	String description;
 	String link;
 	String picture;
+
+	String sharedId;
 	
 	SharedPreferences rgInfo;
 	private int video_length = 0;
@@ -73,6 +79,9 @@ public class LvTestFinish extends Activity {
 	private int ad_id = -1;
 	private int ad_type;
 	int view_time = 0;
+	private boolean shareDone = false;
+	private String sharedHistory;
+	private boolean shareTried = false;
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 
@@ -94,6 +103,9 @@ public class LvTestFinish extends Activity {
 		marking = (ImageView) findViewById(R.id.testfinish_id_marking);
 		markingDone = (ImageView) findViewById(R.id.testfinish_id_marking_completed);
 		shareBtn = (Button) findViewById(R.id.testfinish_fb_share_btn);
+
+		fbShareLayout = (LinearLayout)findViewById(R.id.testfinish_fb_share_layout);
+		fbShareReward = (TextView)findViewById(R.id.testfinish_fb_share_reward);
 		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
@@ -149,6 +161,8 @@ public class LvTestFinish extends Activity {
 					
 					if(ad_type == 202){
 						shareBtn.setVisibility(View.VISIBLE);
+						fbShareLayout.setVisibility(View.VISIBLE);
+						sharedHistory = json.getJSONObject("data").getString("history");
 						reward = json.getJSONObject("data").getString("reward");
 						point = json.getJSONObject("data").getString("point");
 						name = json.getJSONObject("data").getString("name");
@@ -156,6 +170,19 @@ public class LvTestFinish extends Activity {
 						description = json.getJSONObject("data").getString("description");
 						link = json.getJSONObject("data").getString("link");
 						picture = json.getJSONObject("data").getString("picture");
+						
+						if(sharedHistory.equals("0")){
+							shareBtn.setEnabled(false);
+							fbShareReward.setText(R.string.facebook_share_history);
+						}
+						else{
+							if(reward.equals("0") || reward.equals("null")){
+								fbShareReward.setText(point + " point");
+							}
+							else{
+								fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+							}
+						}
 					}
 					else{
 						video.setOnCompletionListener(cl);
@@ -180,7 +207,13 @@ public class LvTestFinish extends Activity {
 			JSONObject result = null;
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				String getURL = urls[0];
+				String getURL;
+				if(shareDone){
+					getURL = urls[0] + "&facebook_id=" + sharedId;
+				}
+				else{
+					getURL = urls[0];
+				}
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
@@ -201,10 +234,10 @@ public class LvTestFinish extends Activity {
 
 			try {
 				if (json.getBoolean("status") == true) {
-					Intent intent = new Intent(getApplicationContext(),
+					/*Intent intent = new Intent(getApplicationContext(),
 							LvTestResult.class);
 					startActivity(intent);
-					LvTestFinish.this.finish();
+					LvTestFinish.this.finish();*/
 				} else {
 				}
 			} catch (Exception e) {
@@ -229,6 +262,9 @@ public class LvTestFinish extends Activity {
 							+ rgInfo.getString("mem_id", "0")
 							+ "&act=1&view_time="
 							+ video_length);
+			Intent intent = new Intent(getApplicationContext(),LvTestResult.class);
+			startActivity(intent);
+			LvTestFinish.this.finish();
 		}
 	};
 
@@ -268,12 +304,20 @@ public class LvTestFinish extends Activity {
 						+ rgInfo.getString("mem_id", "0")
 						+ "&act=1&view_time="
 						+ view_time);
+
+		Intent intent = new Intent(getApplicationContext(),LvTestResult.class);
+		startActivity(intent);
+		LvTestFinish.this.finish();
 	}
 
 	/*
 	 * for facebook share
 	 */
 	public void publishAdBtn(View v) {
+		shareTried = true;
+		
+		shareBtn.setEnabled(false);
+		
 		Session session = Session.getActiveSession();
 		if (session == null || session.isClosed()) {
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
@@ -306,33 +350,31 @@ public class LvTestFinish extends Activity {
 
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
-					JSONObject graphResponse = response.getGraphObject()
-							.getInnerJSONObject();
-					String postId = null;
-					try {
-						postId = graphResponse.getString("id");
-					} catch (JSONException e) {
-						Log.i("Facebook StudyTestFinish",
-								"JSON error " + e.getMessage());
-					}
-					FacebookRequestError error = response.getError();
-					if (error != null) {
-						Toast.makeText(getApplicationContext(),
-								error.getErrorMessage(), Toast.LENGTH_SHORT)
-								.show();
-					} else {
-						shareBtn.setClickable(false);
-						popupText.setText(R.string.facebook_share_done);
+					try{
+						JSONObject graphResponse = response.getGraphObject()
+								.getInnerJSONObject();
+						try {
+							sharedId = graphResponse.getString("id");
+						} catch (JSONException e) {
+							Log.i("Facebook StudyTestFinish",
+									"JSON error " + e.getMessage());
+						}
+						FacebookRequestError error = response.getError();
+						if (error != null) {
+							popupText.setText(R.string.facebook_share_error);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							Toast.makeText(getApplicationContext(),
+									error.getErrorMessage(), Toast.LENGTH_SHORT)
+									.show();
+						} else {
+							shareDone = true;
+							shareBtn.setEnabled(false);
+							popupText.setText(R.string.facebook_share_done);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);		
+						}
+					}catch(Exception e){
+						popupText.setText(R.string.facebook_share_error);
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						new SetCPDMlog()
-						.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
-								+ ad_id
-								+ "&ad_type="
-								+ ad_type
-								+ "&user_id="
-								+ rgInfo.getString("mem_id", "0")
-								+ "&act=2&facebook_id="
-								+ postId);
 					}
 				}
 			};
@@ -369,8 +411,6 @@ public class LvTestFinish extends Activity {
 			if(!pendingPublishReauthorization)
 				publishAd();
 			else{
-				popupText.setText(R.string.facebook_login_done);
-				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
 		}
 	}
@@ -385,6 +425,23 @@ public class LvTestFinish extends Activity {
 		super.onResume();
 	}
 
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		Log.i("STEVEN", "onRestart()");
+		if(shareTried){
+			skipBtn.setEnabled(true);
+			Session session = Session.getActiveSession();
+			if (session == null || session.isClosed()) {
+				Log.i("STEVEN", "publishAdBtn if");
+				view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
+				Session.openActiveSession(this, true, callback);
+			} else {
+				Log.i("STEVEN", "publishAdBtn else");
+				publishAd();
+			}
+		}
+	}
 	@Override
 	public void onPause() {
 		super.onPause();
