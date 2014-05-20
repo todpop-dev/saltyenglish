@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

@@ -11,6 +11,7 @@
     <string name="title_activity_rg_register_email">RgRegisterEmail</string>
     <string name="title_activity_rg_register_email_info">RgRegisterEmailInfo</string>
     <string name="title_activity_rg_register_finish">RgRegisterFinish</string>
+    <string name="title_activity_rg_register_tutorial">RgRegisterTutorial</string>
     <string name="popup_common_timeout_title">통신 실패</string>
     <string name="popup_common_timeout">서버와의 통신에 실패했습니다.\n잠시 뒤 다시 시도해 주세요.</string>
     <string name="popup_nickname_no">중복된 닉네임이 있어요. </string>
@@ -33,6 +34,7 @@
     <string name="popup_sign_up_fail_mobile_duplicated">이미 가입된 휴대폰 번호입니다.</string>
     <string name="popup_sign_up_fail_false">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.\n\n혹시 닉네임에 특수문자가 포함되어 있지 않은지 확인해 주세요.</string>
     <string name="popup_sign_up_fail">오류가 발생했습니다.\n잠시 뒤 다시 시도해 주세요.</string>
+    <string name="popup_auto_sign_in_error">로그아웃 되었습니다.\n다시 로그인 해주세요.</string>
     <string name="popup_birth_not_selected">생년월일을 선택해주세요</string>
     <string name="popup_send_info_error">이미 가입된 이메일입니다</string>
     <string name="popup_emailogin_error">이메일 혹은 비밀번호가 올바르지 않아요</string>
@@ -119,7 +121,8 @@
     <string name="notificationTitle">영어공부 시간이 되었어요!</string>
     <string name="notificationSubject">짭짤한 영어</string>
     <string name="study_home_popup_notice">공지사항</string>
-    <string name="study_home_popup_version_check">[짭짤한 영어] 새로운 버전이 출시되었습니다.\n\n지금 플레이 스토어에서 새 버전으로 업데이트 해주세요\n</string>
+    <string name="study_home_popup_version_title">업데이트 출시!</string>
+    <string name="study_home_popup_version_check">새로운 버전이 출시되었습니다.\n\n지금 플레이 스토어에서 새 버전으로 업데이트 해주세요\n</string>
     <string name="study_home_popup_version_current">현재 버전 :</string>
     <string name="study_home_popup_version_latest">최신 버전 :</string>
     <string name="study_home_popup_nokakao">카카오톡이 없어요</string>
@@ -189,7 +192,9 @@
     <string name="rg_register_email_info_day">일</string>
     <string name="rg_register_refer_nickname_hint">추천인이 없는 경우 빈칸으로 남겨주세요</string>
     <string name="rg_register_nickname_hint">예) 짭짤</string>
-    <string name="popup_view_home_store_purchase_done">상품구매가 완료되었습니다!\n[내페이지 - 주머니 - 구매함]에\n저장되었습니다</string>
+    <string name="popup_view_home_store_purchase_done">상품구매가 완료되었어요.\n[내페이지-주머니-구매함]에\n저장되어있어요!</string>
+    <string name="popup_view_home_store_price">결제금액 :</string>
+    <string name="popup_view_home_store_nick">닉네임 :</string>
     <string name="not_enough_reward">장학금이 부족합니다.</string>
     <string name="home_purchased_detail_info_null">상세설명이 없습니다.</string>
     <string name="temp_search_being_prepare">검색 기능은 준비중입니다.</string>
@@ -227,16 +232,24 @@
     <string name="store_refund_error_pw">환급 요청이 실패했습니다.\n\n비밀번호가 올바르지 않습니다.</string>
 	<string name="study_home_point"> point</string>
 	<string name="study_home_reward"> 장학금</string>
-	<string name="popup_pronounce_info_basic">기초 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 15MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
-	<string name="popup_pronounce_info_middle">중학 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 45MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
-	<string name="popup_pronounce_info_high">수능 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
-	<string name="popup_pronounce_info_toeic">토익 카테고리 발음파일을 지금 받으시겠습니까?\n\n용량은 약 60MB입니다.\n\n지금 받지 않으시면 학습 도중에 발음 버튼을 클릭하실 때마다 해당 파일만 내려받습니다.\n\n와이파이를 켜고 내려받는것을 추천합니다!</string>
+	<string name="popup_pronounce_info_basic">기초 카테고리 발음파일을\n지금 다운받으시겠습니까?</string>
+	<string name="popup_pronounce_info_basic_size">(용량은 약 15MB입니다.)</string>
+	<string name="popup_pronounce_info_middle">중학 카테고리 발음파일을\n지금 다운받으시겠습니까?</string>
+	<string name="popup_pronounce_info_middle_size">(용량은 약 45MB입니다.)</string>
+	<string name="popup_pronounce_info_high">수능 카테고리 발음파일을\n지금 다운받으시겠습니까?</string>
+	<string name="popup_pronounce_info_high_size">(용량은 약 60MB입니다.)</string>
+	<string name="popup_pronounce_info_toeic">토익 카테고리 발음파일을\n지금 다운받으시겠습니까?</string>
+	<string name="popup_pronounce_info_toeic_size">(용량은 약 60MB입니다.)</string>	
+	<string name="popup_pronounce_info_if_not_now">지금 받지 않으시면 학습 도중에 발음 버튼을\n클릭하실 때마다 해당 파일만 내려받습니다.</string>
+	<string name="popup_pronounce_info_wifi">와이파이를 켜고 내려받는것을 추천합니다 :)</string>
 	<string name="facebook_share_history">이미 공유를 완료하셨습니다</string>
 	<string name="home_my_page_purchased_detail_homeplus">홈플러스</string>
 	<string name="popup_progress_loading">Loading...</string>
+	<string name="popup_progress_update">새로운 버전에 맞춰 업그레이드 중입니다.\n잠시만 기다려 주세요...</string>
 	<string name="home_my_page_purchased_used">이미 사용되었습니다.</string>
 	<string name="home_my_page_purchased_expired">만료되었습니다.</string>
 	<string name="home_my_page_purchased_canceled">취소된 쿠폰입니다.</string>
 	<string name="home_store_purcahse_error">상품 구매에 실패했습니다.\n\n</string>
 	<string name="home_store_purchase_error_contact">증상이 지속될경우 smile@todpop.co.kr로 연락 주세요.</string>
+	<string name="locker_notification_running">잠금화면 작동중입니다.</string>
 </resources>

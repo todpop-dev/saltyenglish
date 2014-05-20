@@ -70,7 +70,7 @@ public class HomeMoreAccountDelete extends Activity {
 		//popupview
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		relative = (RelativeLayout)findViewById(R.id.home_more_account_delete_main);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 	}
 

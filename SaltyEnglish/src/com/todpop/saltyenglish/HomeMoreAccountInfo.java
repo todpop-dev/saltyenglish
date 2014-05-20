@@ -78,11 +78,11 @@ public class HomeMoreAccountInfo extends Activity {
 
 		//popupview
 		popupview = View.inflate(this, R.layout.popup_view_home_more_acount_info, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
 		popupview1 = View.inflate(this, R.layout.popup_view, null);
-		popupWindow1 = new PopupWindow(popupview1,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow1 = new PopupWindow(popupview1,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText1 = (TextView)popupview1.findViewById(R.id.popup_id_text);
 	}
 

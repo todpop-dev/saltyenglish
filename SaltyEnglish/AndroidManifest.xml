@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
-    android:versionCode="19"
-    android:versionName="1.3.0"  >
+    android:versionCode="20"
+    android:versionName="1.3.6" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -10,9 +10,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -63,6 +66,11 @@
         <activity
             android:name="com.todpop.saltyenglish.RgRegisterFinish"
             android:label="@string/title_activity_rg_register_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.RgRegisterTutorial"
+            android:label="@string/title_activity_rg_register_tutorial"
             android:screenOrientation="portrait" >
         </activity>
         <activity
@@ -254,32 +262,41 @@
             android:label="@string/title_activity_cplview" >
         </activity>
 
-        <service 
-            android:name="com.todpop.saltyenglish.ReminderService" >
+        <service android:name="com.todpop.saltyenglish.ReminderService" >
         </service>
 
         <activity
             android:name="com.todpop.saltyenglish.LvTestPause"
             android:label="@string/title_activity_lv_test_pause" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.HomeMorePronounce"
             android:label="@string/title_activity_home_more_pronounce"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.PopupNotification"
-            android:label="@string/title_activity_popup_notification" 
+            android:label="@string/title_activity_popup_notification"
             android:screenOrientation="portrait"
-        	android:theme="@android:style/Theme.Black.NoTitleBar" >
-            <intent-filter >
-                <action android:name="com.todpop.saltyenglish.popupnotification"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="com.todpop.saltyenglish.popupnotification" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.LockScreenActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
 
+        <service android:name="com.todpop.saltyenglish.LockScreenService" />
+        <service android:name="com.todpop.saltyenglish.LockGetService" />
+
+        <receiver android:name="com.todpop.api.LockScreenReceiver" />
         <receiver android:name="CpxPackageChangeReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
@@ -289,7 +306,15 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        
+        <receiver
+            android:name="com.todpop.api.BootReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Used for install referral measurement -->
         <service android:name="com.google.analytics.tracking.android.CampaignTrackingService" />
 

@@ -1,79 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/common_pop"
-    android:padding="20dp" >
-
-    <TextView
-        android:id="@+id/popup_id_text"
-        android:layout_width="230dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="다운로드 중이욧"
-        android:textColor="#000000"
-        android:textSize="16dp" />
-
-    <TextView
-        android:id="@+id/popup_download_id_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/popup_id_text"
-        android:layout_marginRight="30dp"
-        android:gravity="center"
-        android:text="loading"
-        android:textColor="#000000"
-        android:textSize="10dp"
-        android:visibility="invisible" />
-
-    <ProgressBar
-        android:id="@+id/popup_download_id_loading_progressbar"
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/popup_download_id_count"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
-
-    <ProgressBar
-        android:id="@+id/popup_download_id_progressbar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/popup_download_id_count"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:visibility="invisible" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000"
+    android:padding="25dp" >
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/popup_download_id_progressbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
+        android:layout_centerInParent="true"
+        android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/popup_download_id_btn_cancel"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/popup_view_home_more_acount_cancel"
-            android:onClick="cancelDownload" />
-        <Button
-            android:id="@+id/popup_download_id_btn_done"
-            android:layout_width="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:src="@drawable/popup_img_puppy" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/popupview_drawable_btn"
-            android:onClick="doneDownload" 
-            android:visibility="gone"/>
+            android:background="#D57264"
+            android:padding="8dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/popup_textimg_notice" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/common_img_beigebox"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="25dp" >
+
+            <TextView
+                android:id="@+id/popup_id_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/popup_download_id_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:textColor="#000000"
+                android:textSize="10dp"
+                android:visibility="invisible" />
+
+            <ProgressBar
+                android:id="@+id/popup_download_id_loading_progressbar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+            <ProgressBar
+                android:id="@+id/popup_download_id_progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/popup_download_id_btn_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginRight="2.5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/popup_com_drawable_cancel"
+                    android:onClick="cancelDownload" />
+
+                <Button
+                    android:id="@+id/popup_download_id_btn_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginRight="2.5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/popup_com_drawable_confirm"
+                    android:onClick="doneDownload"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

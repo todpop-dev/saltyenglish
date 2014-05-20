@@ -98,7 +98,7 @@ public class HomeDownload extends Activity {
 
 		//popupview
 		cpxPopupview = View.inflate(this, R.layout.popup_view, null);
-		cpxPopupWindow = new PopupWindow(cpxPopupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		cpxPopupWindow = new PopupWindow(cpxPopupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		cpxPopupText = (TextView)cpxPopupview.findViewById(R.id.popup_id_text);
 		
 		cpiArray = new ArrayList<CpiListViewItem>();

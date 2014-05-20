@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.saltyenglish.StudyTestResult.MyItem;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.Bundle;
 import android.app.Activity;

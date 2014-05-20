@@ -58,7 +58,7 @@ public class HomeMoreAccountChangePw extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.home_more_account_changepw_main);
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
 		currentPw = (EditText)findViewById(R.id.home_more_account_change_pw_current);

@@ -56,7 +56,7 @@ public class HomeMoreHelp extends Activity {
 		expandListView = (ExpandableListView)findViewById(R.id.homemorehelp_id_listview_item);
 		mainLayout = (LinearLayout)findViewById(R.id.activity_home_more_help);
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 		new GetHelp().execute("http://todpop.co.kr/api/app_infos/get_helps.json");

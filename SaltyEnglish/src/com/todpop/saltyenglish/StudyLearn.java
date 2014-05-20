@@ -172,7 +172,7 @@ public class StudyLearn extends FragmentActivity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.study_learn_activity_id_relative);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT, true);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
  		
 		new SendPivotTime().execute("http://todpop.co.kr/api/app_infos/get_fast_pivot_time.json");

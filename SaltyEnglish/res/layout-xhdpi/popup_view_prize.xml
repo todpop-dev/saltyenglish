@@ -1,98 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/popup_id_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/store_43_image_opacitybox"
-    android:paddingBottom="15dp"
-    android:paddingTop="23dp" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7f000000"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingLeft="35dp"
+    android:paddingRight="35dp" >
 
-    <RelativeLayout
-        android:id="@+id/popup_view_prize_upper"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" >
+        android:layout_marginLeft="17dp"
+        android:src="@drawable/store_43_img_puppy" />
 
-        <ImageView
-            android:id="@+id/popup_view_prize_id_img"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="0.5dp"
+            android:background="@drawable/store_43_img_beigebox"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
+            android:paddingTop="7.5dp" >
 
-        <ProgressBar
-            android:id="@+id/popup_view_prize_id_progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/popup_view_prize_id_img"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp" />
+            <ImageView
+                android:id="@+id/popup_view_prize_id_img"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitStart"/>
+            <TextView
+                android:id="@+id/popup_view_prize_id_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#E6947F"
+                android:gravity="center_horizontal"
+                android:textColor="#EEF5D3"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/popup_view_prize_id_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:textColor="#000000"
+                android:textSize="12.5dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/popup_view_prize_id_guide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:gravity="center_horizontal"
+                android:textColor="#000000"
+                android:textSize="10dp" />
+
+            <Button
+                android:id="@+id/popup_id_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/com_drawable_btn_confirm"
+                android:onClick="closePopup" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/popup_view_prize_id_rank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/popup_view_prize_id_img"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="-20dp" />
-
-        <TextView
-            android:id="@+id/popup_view_prize_id_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/popup_view_prize_id_img"
-            android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true"
-            android:background="#E6947F"
-            android:gravity="center_horizontal"
-            android:textColor="#EEF5D3"
-            android:textSize="15dp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/popup_view_prize_id_corocodile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/popup_view_prize_id_title"
-            android:layout_marginBottom="-15dp"
-            android:layout_alignRight="@id/popup_view_prize_id_title"
-            android:layout_marginRight="-10dp"
-            android:src="@drawable/store_43_image_crocodile" />
-
-        <TextView
-            android:id="@+id/popup_view_prize_id_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/popup_view_prize_id_title"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:textColor="#000000"
-            android:textSize="14dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/popup_view_prize_id_guide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/popup_view_prize_id_detail"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
-            android:textColor="#000000"
-            android:textSize="12dp" />
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/store_43_img_1st" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/popup_id_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/popup_view_prize_upper"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/popupview_drawable_btn_close"
-        android:onClick="closePopup" />
-
-</RelativeLayout>
+</LinearLayout>
