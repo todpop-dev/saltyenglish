@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,7 +33,10 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.FileManager;
 import com.todpop.api.LoadingDialog;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -39,6 +44,7 @@ import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -79,7 +85,6 @@ public class StudyBegin extends FragmentActivity {
 	View popupview;
 	RelativeLayout relative;
 	TextView popupText;
-		
 		
 	static int tmpStageAccumulated = 1;
 	static int tmpLevel = 1;
@@ -131,6 +136,8 @@ public class StudyBegin extends FragmentActivity {
  	// Start Intro Button
  	ImageButton introBtn;
  	
+ 	ImageView lowBanner;
+ 	
  	// CPD image view
  	private static ImageView cpdView;
  	private static Button cpdCoupon;
@@ -150,7 +157,9 @@ public class StudyBegin extends FragmentActivity {
  	
  	// Database
  	WordDBHelper mHelper;
- 	SQLiteDatabase db;
+ 	PronounceDBHelper pHelper;
+ 	SQLiteDatabase mDB;
+ 	SQLiteDatabase pDB;
  	
 	static String reward;
 	static String point;
@@ -185,11 +194,12 @@ public class StudyBegin extends FragmentActivity {
 		
 		// Database initiation
 		mHelper = new WordDBHelper(this);
+		pHelper = new PronounceDBHelper(this);
 		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.studybegin_id_main_activity);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 	 	// word change
@@ -209,6 +219,11 @@ public class StudyBegin extends FragmentActivity {
 		point9 = (ImageView)findViewById(R.id.studybigin_id_point9);
 		point10 = (ImageView)findViewById(R.id.studybigin_id_point10);
 		// End of Saving TMP data to Shared Preference
+		
+		lowBanner = (ImageView)findViewById(R.id.studybegin_id_banner);
+		if(tmpCategory == 3){
+			lowBanner.setImageResource(R.drawable.study_8_img_kingkong);
+		}
 		
 		// Add Intro Button
 		introBtn = (ImageButton)findViewById(R.id.studybegin_id_intro_button);
@@ -370,7 +385,7 @@ public class StudyBegin extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			
-			ImageView wholeCard = null;
+			LinearLayout wholeCard = null;
 			
 			
 			Bundle studyBeginArgs = getArguments();
@@ -378,7 +393,7 @@ public class StudyBegin extends FragmentActivity {
 			{
 				rootView = inflater.inflate(R.layout.fragment_study_begin, container, false);
 				ImageView wordOn = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_on);
-				wholeCard = (ImageView)rootView.findViewById(R.id.fragment_study_begin_whole_card);
+				wholeCard = (LinearLayout)rootView.findViewById(R.id.fragment_study_begin_whole_card);
 				wholeCard.setOnClickListener(new BtnFlipListener());
 							
 				int pageNum = studyBeginArgs.getInt("studyStartPage");
@@ -386,34 +401,34 @@ public class StudyBegin extends FragmentActivity {
 				
 				{
 				case 0:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_01);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_1);
 					break;
 				case 1:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_02);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_2);
 					break;
 				case 2:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_03);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_3);
 					break;
 				case 3:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_04);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_4);
 					break;
 				case 4:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_05);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_5);
 					break;
 				case 5:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_06);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_6);
 					break;
 				case 6:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_07);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_7);
 					break;
 				case 7:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_08);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_8);
 					break;
 				case 8:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_09);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_9);
 					break;
 				case 9:
-					wordOn.setBackgroundResource(R.drawable.study_8_image_number_10);
+					wordOn.setBackgroundResource(R.drawable.study_8_img_number_10);
 					break;
 				}
 				
@@ -629,9 +644,9 @@ public class StudyBegin extends FragmentActivity {
 				if(json.getBoolean("status")==true) {
 					Log.d("Get Word JSON RESPONSE ---- ", json.toString());				        	
 					
-					db = mHelper.getWritableDatabase();
+					mDB = mHelper.getWritableDatabase();
 					try {
-						db.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
+						mDB.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
 					} catch (Exception e) {
 						
 					}
@@ -677,14 +692,14 @@ public class StudyBegin extends FragmentActivity {
 						row.put("stage", tmpStageAccumulated);
 						row.put("xo", "X");
 
-						db.insert("dic", null, row);
+						mDB.insert("dic", null, row);
 						
 					}
 					
 					if (jsonWords.length() < 10) {
 												
 						// Add additional 3 words
-						Cursor otherCursor = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
+						Cursor otherCursor = mDB.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 								"xo=\'X\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated-1) + 
 								" ORDER BY RANDOM() LIMIT 3" , null);
 						
@@ -700,7 +715,18 @@ public class StudyBegin extends FragmentActivity {
 								jsonObj.put("picture", otherCursor.getInt(5));
 								jsonObj.put("image_url", otherCursor.getString(6));
 
+								pDB = pHelper.getReadableDatabase();
+								Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + otherCursor.getString(0) + "'", null);
 
+								if(soundCursor.getCount() > 0){
+									soundCursor.moveToFirst();
+									jsonObj.put("voice", soundCursor.getString(0));
+								}
+								else{
+									jsonObj.put("voice", 1);
+								}
+								pDB.close();
+								
 								jsonWords.put(jsonObj);
 								
 								ContentValues row = new ContentValues();
@@ -714,7 +740,7 @@ public class StudyBegin extends FragmentActivity {
 								row.put("stage", tmpStageAccumulated);
 								row.put("xo", "X");
 
-								db.insert("dic", null, row);
+								mDB.insert("dic", null, row);
 							}
 						}
 						
@@ -727,7 +753,7 @@ public class StudyBegin extends FragmentActivity {
 								}
 							}
 							
-							Cursor otherCursor2 = db.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
+							Cursor otherCursor2 = mDB.rawQuery("SELECT distinct name, mean, example_en, example_ko, phonetics, picture, image_url FROM dic WHERE " +
 									"xo=\'O\' AND stage>=" + tmpStageAccumulated/10*10 + " AND stage <=" + (tmpStageAccumulated-1) + 
 									" AND name NOT IN ("+overlap+") ORDER BY RANDOM() LIMIT " + (10-jsonWords.length()) , null);
 							if (otherCursor2.getCount() > 0) {
@@ -756,7 +782,7 @@ public class StudyBegin extends FragmentActivity {
 									row.put("stage", tmpStageAccumulated);
 									row.put("xo", "X");
 
-									db.insert("dic", null, row);
+									mDB.insert("dic", null, row);
 								}
 							}
 
@@ -782,7 +808,7 @@ public class StudyBegin extends FragmentActivity {
 								row.put("stage", tmpStageAccumulated);
 								row.put("xo", "X");
 
-								db.insert("dic", null, row);
+								mDB.insert("dic", null, row);
 							}
 						}
 						
@@ -1032,27 +1058,40 @@ public class StudyBegin extends FragmentActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		Cursor find = db.rawQuery("SELECT word, version, category FROM wordSound WHERE word=\'" + word + "\'", null);
+		pDB = pHelper.getWritableDatabase();
+		Cursor find = pDB.rawQuery("SELECT word, version FROM pronounce WHERE word=\'" + word + "\'", null);
 		//TODO Testing
 
 		Log.i("STEVEN", "find.getCount() = " + find.getCount());
 		if(find.getCount() > 0){
-			Log.i("STEVEN", "inside if find.getCount() > 0");
-			/*if(!version.equals(find.getString(1))){
-
-				Log.i("STEVEN", "1");
-				db.delete("wordSound", "word='" + word + "'", null);
+			find.moveToFirst();
+			if(new FileManager().pronounceFileCheck(word)){
+				Log.i("STEVEN", "find.getString(1) is : " + find.getString(1) + "  version is : " + version);
+				if(!find.getString(1).equals(version)){
+					String name = Environment.getExternalStorageDirectory().getAbsolutePath() 
+							+ "/Android/data/com.todpop.saltyenglish/pronounce/" + find.getString(0) + ".data";
+					File file = new File(name);
+						
+					file.delete();
+						
+					pDB.delete("pronounce", "word='" + word + "'", null);
+					new DownloadTask().execute(word, version);
+				}
+				else{
+					pronouncePlay(word);
+				}
+			}
+			else{
+				pDB.delete("pronounce", "word='" + word + "'", null);
 				new DownloadTask().execute(word, version);
 			}
-			else{*/
-				Log.i("STEVEN", "2");
-				pronouncePlay(word);
-			//}
 		}
 		else{
 			Log.i("STEVEN", "3");
 			new DownloadTask().execute(word, version);
 		}
+		find.close();
+		pDB.close();
 	}	
 	public void pronouncePlay(String word){
 		SoundPool mSoundPool =  new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
@@ -1062,7 +1101,7 @@ public class StudyBegin extends FragmentActivity {
 		         soundPool.play(soundId, 100, 100, 1, 0, 1.0f); 
 		    }
 		});
-		mSoundPool.load(getFilesDir() + "/" + word, 1);
+		mSoundPool.load(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.todpop.saltyenglish/pronounce/" + word + ".data", 1);
 	}
 	private class DownloadTask extends AsyncTask<String, String, String> {
 		String word;
@@ -1071,10 +1110,15 @@ public class StudyBegin extends FragmentActivity {
 	    @Override
 	    protected String doInBackground(String... param) {
 	    	try {
+	    		String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.todpop.saltyenglish/pronounce/";
+		        File saltEng = new File(path);
+		        if(!saltEng.exists())
+		        	saltEng.mkdirs();
+		        
 	    		word = param[0];
 	    		version = param[1];
 	    		InputStream input = null;
-			    OutputStream output = null;
+			    FileOutputStream fileOutput = null;
 			    HttpURLConnection connection = null;
 		        try {
 		            //TODO testing
@@ -1090,20 +1134,28 @@ public class StudyBegin extends FragmentActivity {
 		                    		 + " " + connection.getResponseMessage();*/
 	
 		            // download the file
+	                String finalPath = path + word + ".data";
+
+	                File file = new File(finalPath);
+	                file.createNewFile();
+	                
 		            input = connection.getInputStream();
-		            output = openFileOutput(word, Context.MODE_PRIVATE);
+	                fileOutput = new FileOutputStream(finalPath);
+		            //output = openFileOutput(word, Context.MODE_PRIVATE);
 	
 		                byte data[] = new byte[1024];
 		                int count;
 		                while ((count = input.read(data)) != -1) {
-		                    output.write(data, 0, count);
+		                    fileOutput.write(data, 0, count);
 		            }
 		        } catch (Exception e) {
 		                return getResources().getString(R.string.popup_view_download_progressbar_real_error) + e.toString();
 		        } finally {
 		            try {
-		                if (output != null)
-		                        output.close();
+		                if (fileOutput != null){
+		                	fileOutput.flush();
+		                    fileOutput.close();
+		                }
 		                if (input != null)
 		                        input.close();
 		                } 
@@ -1123,13 +1175,16 @@ public class StudyBegin extends FragmentActivity {
 	            Toast.makeText(StudyBegin.this, result, Toast.LENGTH_LONG).show();
 	        }
 	        else{
+	        	pDB = pHelper.getWritableDatabase();
+	        	
 		        ContentValues row = new ContentValues();
 		        Log.i("STEVEN", "before save");
 				row.put("word", word);
 				row.put("version", version);
 				row.put("category", tmpCategory);
 
-				db.insert("wordSound", null, row);
+				pDB.insert("pronounce", null, row);
+				pDB.close();
 
 		        Log.i("STEVEN", "saved version is " + version);
 				pronouncePlay(word);

@@ -87,6 +87,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
                     android:fadeScrollbars="false"
                     android:paddingRight="5dp"
                     android:scrollbarThumbVertical="@drawable/store_32_drop_scroll"

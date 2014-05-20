@@ -23,7 +23,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.todpop.api.LoadingDialog;
-
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -112,8 +111,8 @@ public class RgLogin extends Activity {
 		relative = (RelativeLayout) findViewById(R.id.rglogin_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT, true);
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView) popupview.findViewById(R.id.popup_id_text);
 
 		// loading dialog
@@ -326,17 +325,17 @@ public class RgLogin extends Activity {
 						studyInfoEdit.putString("stageInfo", stage_info);
 						studyInfoEdit.apply();
 
-						if (rgInfo.getString("level", "0").equals("0")) {
-							Intent intent = new Intent(getApplicationContext(),
-									LvTestBigin.class);
+
+        				if(rgInfo.getBoolean("introMainOk", false)){
+							Intent intent = new Intent(getApplicationContext(), StudyHome.class);
 							startActivity(intent);
 							finish();
-						} else {
-							Intent intent = new Intent(getApplicationContext(),
-									StudyHome.class);
-							startActivity(intent);
-							finish();
-						}
+        				}
+        				else{
+        					Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
+        					startActivity(intent);
+        					finish();
+        				}
 					} else {
 						Log.d("R L", "268");
 					}

@@ -14,10 +14,12 @@
         android:src="@drawable/common_loading_progress" />
 
     <TextView
+        android:id="@+id/popup_loading_id_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/popup_progress_loading"
+        android:gravity="center"
         android:layout_marginTop="10dp"
         android:layout_below="@id/popup_loading_id_img"
         android:textSize="17dp" />

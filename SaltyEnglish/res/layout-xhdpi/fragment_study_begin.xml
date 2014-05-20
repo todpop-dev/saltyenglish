@@ -3,91 +3,116 @@
     android:id="@+id/fragment_study_begin_id_mainview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     >
-   
-    
-    <!-- bg  -->
-    <ImageView
-        android:id="@+id/fragment_study_begin_whole_card" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="62dp"
-        android:src="@drawable/study_8_image_engcard"/>
-    
-    <!-- speack btn -->
+    android:paddingTop="15dp" >
 
-    <Button 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="65dp"
-        android:background="@drawable/studybigin_drawable_btn_speaker"
-        android:onClick="readItForMe"
-        />
-     
-    <!-- word ON -->
-    <ImageView 
-        android:id="@+id/fragment_study_begin_id_word_on"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="274dp"
-        android:layout_marginTop="72dp"
-        android:background="@drawable/study_8_image_number_01"
-        />
-    
-     <!-- baby image -->
-    <ImageView 
-        android:id="@+id/fragment_study_begin_id_word_img"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="124dp"
-        android:scaleType="centerInside"
-        
-        />
-         <!-- android:src="@drawable/study_8_image_eximage" -->   
-    
-    
-     <!-- word -->
-    <TextView 
-        android:id="@+id/study_word_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="354dp"
-        android:gravity="center"
-        android:textSize="35dp"
-        android:textColor="#000000" />
-        <!-- android:background="@drawable/study_8_text_engirritate"  -->
-       
-    <!-- word pronounce -->
-    <TextView 
-        android:id="@+id/study_word_pron_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="412dp"
-        android:gravity="center"
-        android:textSize="23dp"
-        android:textColor="#000000" />
-        
-    	<!--  android:background="@drawable/study_8_text_pronounce" -->
-        
-    
-    <!-- word pronounce -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/study_word_ex_tv"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="462dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:textSize="20dp"
-        android:textColor="#000000"
-         />
-    <!--    android:background="@drawable/study_8_text_exsentence" -->
-    
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" />
+
+        <LinearLayout
+            android:id="@+id/fragment_study_begin_whole_card"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1043"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/study_8_img_engcard"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="378" >
+
+                <!-- word ON -->
+
+                <ImageView
+                    android:id="@+id/fragment_study_begin_id_word_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/study_8_img_number_1" />
+
+                <!-- baby image -->
+
+                <ImageView
+                    android:id="@+id/fragment_study_begin_id_word_img"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="61dp"
+                    android:scaleType="centerInside" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="257" >
+
+                <!-- speack btn -->
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="1.8dp"
+                    android:background="@drawable/studybigin_drawable_btn_speaker"
+                    android:onClick="readItForMe" /> <!-- word -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="28dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/study_word_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="#000000"
+                        android:textSize="27dp" />
+
+                    <!-- word pronounce -->
+
+                    <TextView
+                        android:id="@+id/study_word_pron_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:textColor="#000000"
+                        android:textSize="18dp" />
+
+                    <!-- word pronounce -->
+
+                    <TextView
+                        android:id="@+id/study_word_ex_tv"
+                        android:layout_width="290dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="41dp"
+                        android:gravity="center"
+                        android:textColor="#000000"
+                        android:textSize="15dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="147" />
+    </LinearLayout>
 
 </RelativeLayout>

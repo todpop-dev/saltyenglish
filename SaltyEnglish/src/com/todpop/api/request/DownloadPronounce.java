@@ -1,5 +1,7 @@
-package com.todpop.saltyenglish;
+package com.todpop.api.request;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,6 +23,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.todpop.saltyenglish.R;
+import com.todpop.saltyenglish.R.id;
+import com.todpop.saltyenglish.R.string;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,6 +40,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -73,7 +82,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	ArrayList<WordPair> wordList;
 	ArrayList<WordPair> downloadWordList;
 	
-	WordDBHelper mHelper;
+	PronounceDBHelper pHelper;
 	SQLiteDatabase db;
 	
 	private class WordPair{
@@ -104,7 +113,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
     	progressPopupDone = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_done);
 		wordList = new ArrayList<WordPair>();
 		downloadWordList = new ArrayList<WordPair>();
-		mHelper = new WordDBHelper(context);
+		pHelper = new PronounceDBHelper(context);
 		getWordFlag = false;
 		getSoundFlag = false;
 		downloadCancel = false;
@@ -226,12 +235,11 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	                	});	
                     	return;
                     }
-					db = mHelper.getWritableDatabase();
-					Log.i("STEVEN", wordList.get(i).getWord());
-					Cursor find = db.rawQuery("SELECT distinct word, version FROM wordSound WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
+					db = pHelper.getWritableDatabase();
+					Cursor find = db.rawQuery("SELECT distinct word, version FROM pronounce WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
 					if(find.moveToFirst()){
 						if(!wordList.get(i).getVersion().equals(find.getString(1))){
-							db.delete("wordSound", "word='" + wordList.get(i).getWord() + "'", null);
+							db.delete("pronounce", "word='" + wordList.get(i).getWord() + "'", null);
 							downloadWordList.add(wordList.get(i));
 						}
 					}
@@ -240,7 +248,6 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 					}
 					find.close();
 			    	db.close();
-					Log.i("STEVEN", "DB closed");
 
 	                activity.runOnUiThread(new Runnable(){
 	    				@Override
@@ -338,6 +345,11 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
 		        wl.acquire();
 
+		        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/com.todpop.saltyenglish/pronounce/";
+		        File saltEng = new File(path);
+		        if(!saltEng.exists())
+		        	saltEng.mkdirs();
+		        
 				getSoundFlag = true;
 	        	progressPopupProgBar.setProgress(0);
 
@@ -347,7 +359,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		        	final int progress = i;
 			        try {
 			            InputStream input = null;
-			            OutputStream output = null;
+			            FileOutputStream fileOutput = null;
 			            HttpURLConnection connection = null;
 			            try {
 			            	//Log.i("STEVEN", "downloading word is : " + downloadWordList.get(i).getWord());
@@ -374,9 +386,15 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 			                    return;
 			                }
 			                // download the file
+			                String finalPath = path + downloadWordList.get(i).getWord() + ".data";
+
+			                File file = new File(finalPath);
+			                file.createNewFile();
+			                
 			                input = connection.getInputStream();
-			                output = context.openFileOutput(downloadWordList.get(i).getWord(), Context.MODE_PRIVATE);
-		
+			                fileOutput = new FileOutputStream(finalPath);
+			                //output = context.openFileOutput(downloadWordList.get(i).getWord(), Context.MODE_PRIVATE);
+
 			                byte data[] = new byte[1024];
 			                int count;
 			                while ((count = input.read(data)) != -1) {
@@ -394,7 +412,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 			        	            wl.release();
 			                    	return;
 			                    }
-			                    output.write(data, 0, count);
+			                    fileOutput.write(data, 0, count);
 			                }
 			            } catch (final Exception e) {
 		                    activity.runOnUiThread(new Runnable(){
@@ -409,8 +427,10 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 		                    return;
 			            } finally {
 			                try {
-			                    if (output != null)
-			                        output.close();
+			                    if (fileOutput != null){
+			                    	fileOutput.flush();
+			                        fileOutput.close();
+			                    }
 			                    if (input != null)
 			                        input.close();
 			                } 
@@ -428,13 +448,13 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 			    				}
 			    			});	
 			                
-							db = mHelper.getWritableDatabase();
+							db = pHelper.getWritableDatabase();
 					        ContentValues row = new ContentValues();
 							row.put("word", downloadWordList.get(i).getWord());
 							row.put("version", downloadWordList.get(i).getVersion());
 							row.put("category", selectedCategoryInt);
 
-							db.insert("wordSound", null, row);
+							db.insert("pronounce", null, row);
 					    	db.close();
 			            }
 			        }catch(Exception e){
@@ -598,5 +618,6 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 	        }
 		    getSoundFlag = false;
 	    }
-	}*/
+	}*/  
+
 }

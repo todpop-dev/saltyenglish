@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_wordlist_tutorial_id_mainview"
+    android:id="@+id/fragment_com_tutorial_id_mainview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/wordbook_tutorial_img_1" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
-        android:id="@+id/fragment_wordlist_tutorial_id_linear"
+        android:id="@+id/fragment_com_tutorial_id_linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1004" />
+            android:layout_weight="1052" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="276" >
+            android:layout_weight="228" >
 
             <Button
-                android:id="@+id/fragment_wordlist_tutorial_id_button"
+                android:id="@+id/fragment_com_tutorial_id_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

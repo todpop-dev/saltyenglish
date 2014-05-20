@@ -107,7 +107,7 @@ public class RgRegisterEmail extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.rgregisteremail_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 	}
 		

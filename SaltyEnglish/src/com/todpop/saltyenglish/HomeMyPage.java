@@ -10,7 +10,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -31,8 +30,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +39,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
@@ -51,8 +49,6 @@ public class HomeMyPage extends FragmentActivity {
 
 	static RelativeLayout mainLayout;
 	
-	static int period;
-	
 	ViewPager pageView;
 	PagerAdapter pagerAdapter;
 	LevelFragment levelFragment;
@@ -60,6 +56,8 @@ public class HomeMyPage extends FragmentActivity {
 	static ArrayList<Integer> rankPrizeIdList = new ArrayList<Integer>();
 	static ArrayList<String> rankImageList = new ArrayList<String>();
 	static ArrayList<String> rankNickNameList = new ArrayList<String>();
+	static ArrayList<String> rankTitleList = new ArrayList<String>();
+	static ArrayList<String> rankContentList = new ArrayList<String>();
 
 	int myLevel = 0;
 	int myRank = 0 ;
@@ -85,6 +83,10 @@ public class HomeMyPage extends FragmentActivity {
 	
 	static ArrayList<Bitmap> prizeImageArr;
 	
+	ImageView indi1;
+	ImageView indi2;
+	ImageView indi3;
+	
 	ImageView characterBtn;
 	ImageView myrankCategory;
 	
@@ -100,7 +102,6 @@ public class HomeMyPage extends FragmentActivity {
 	static TextView popupTitle;
 	static TextView popupDetail;
 	static TextView popupGuide;
-	static ProgressBar popupProgress;
 
 	//declare define popup view
 	PopupWindow tempPopupWindow;
@@ -117,6 +118,10 @@ public class HomeMyPage extends FragmentActivity {
 		
 		mainLayout = (RelativeLayout)findViewById(R.id.home_my_page_userbox_main_layout);
 		
+		indi1 = (ImageView)findViewById(R.id.home_my_page_id_indi_1);
+		indi2 = (ImageView)findViewById(R.id.home_my_page_id_indi_2);
+		indi3 = (ImageView)findViewById(R.id.home_my_page_id_indi_3);
+		
 		characterBtn = (ImageView)findViewById(R.id.home_mypage_id_character_btn);		
 		levelBox = (TextView)findViewById(R.id.home_mypage_id_level_text);
 		rankBox = (TextView)findViewById(R.id.home_mypage_id_myrank_text);
@@ -129,17 +134,16 @@ public class HomeMyPage extends FragmentActivity {
 		myNicknameBox = (TextView)findViewById(R.id.home_mypage_id_my_nickname);
 		
 		popupView = View.inflate(this, R.layout.popup_view_prize, null);
-		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupImage = (ImageView)popupView.findViewById(R.id.popup_view_prize_id_img);
 		popupRank = (ImageView)popupView.findViewById(R.id.popup_view_prize_id_rank);
 		popupTitle = (TextView)popupView.findViewById(R.id.popup_view_prize_id_title);
 		popupDetail = (TextView)popupView.findViewById(R.id.popup_view_prize_id_detail);
 		popupGuide = (TextView)popupView.findViewById(R.id.popup_view_prize_id_guide);
-		popupProgress = (ProgressBar)popupView.findViewById(R.id.popup_view_prize_id_progressbar);
 
 		
 		tempPopupview =View.inflate(this, R.layout.popup_view, null);
-		tempPopupWindow = new PopupWindow(tempPopupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		tempPopupWindow = new PopupWindow(tempPopupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		tempPopupText = (TextView)tempPopupview.findViewById(R.id.popup_id_text);
 		
 		myNicknameBox.setText(rgInfo.getString("nickname", "NO"));
@@ -150,26 +154,23 @@ public class HomeMyPage extends FragmentActivity {
 		{
 			rankImageList.add(i,"null");
 			rankNickNameList.add(i,"null");
+			rankTitleList.add(i,"null");
+			rankContentList.add(i,"null");
 		}	
 		
 		int category = studyInfo.getInt("currentCategory",1);
-		period = studyInfo.getInt("currentPeriod", 1);
 		
 		// image here cys !!!!!!!!!!
 		myrankCategory = (ImageView)findViewById(R.id.home_mypage_id_myrank_category);
-		if      (category==1 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
-		else if (category==1 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_month_ranking);}
-		else if (category==2 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_week_ranking);}
-		else if (category==2 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_month_ranking);}
-		else if (category==3 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_high_week_ranking);}
-		else if (category==3 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_high_month_ranking);}
-		else if (category==4 && period==1) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_week_ranking);}
-		else if (category==4 && period==2) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_month_ranking);}
-		else                               {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
+		if      (category==1) {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
+		else if (category==2) {myrankCategory.setImageResource(R.drawable.store_31_text_middle_week_ranking);}
+		else if (category==3) {myrankCategory.setImageResource(R.drawable.store_31_text_high_week_ranking);}
+		else if (category==4) {myrankCategory.setImageResource(R.drawable.store_31_text_toeic_week_ranking);}
+		else                  {myrankCategory.setImageResource(R.drawable.store_31_text_basic_week_ranking);}
 		
 		
 		
-		new GetRankInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/my_home.json?category=" + category + "&period=" + period);
+		new GetRankInfo().execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/my_home.json?category=" + category + "&period=" + 1);
 	}
 
 	@Override
@@ -212,14 +213,11 @@ public class HomeMyPage extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_home_my_page_runking, container, false);
-
-			ImageView indicatorL = (ImageView)rootView.findViewById(R.id.left);
-			ImageView indicatorR = (ImageView)rootView.findViewById(R.id.right);
 			
-			ImageButton prizeButton = (ImageButton)rootView.findViewById(R.id.home_my_page_goodsbox);
+			ImageView prizeButton = (ImageView)rootView.findViewById(R.id.home_my_page_goodsbox);
+			TextView prizeTitle = (TextView)rootView.findViewById(R.id.home_mypage_id_rankingid_title);
 			ImageView rankImage = (ImageView)rootView.findViewById(R.id.home_mypage_id_rankingid_img);
-			ImageView prizeImage = (ImageView)rootView.findViewById(R.id.home_mypage_id_ranking_img);
-			TextView nickName = (TextView)rootView.findViewById(R.id.home_mypage_id_ranking_nickName);
+			TextView rankUserId = (TextView)rootView.findViewById(R.id.home_mypage_id_rankingid);
 
 			Bundle args = getArguments();
 			
@@ -229,28 +227,22 @@ public class HomeMyPage extends FragmentActivity {
 			switch(args.getInt("page"))
 			{
 				case 0:
-					rankImage.setImageResource(R.drawable.store_31_image_2nd);
-					prizeImage.setImageBitmap(prizeImageArr.get(1));
-					
-					nickName.setText(rankNickNameList.get(1));
-					indicatorL.setVisibility(View.GONE);
-					indicatorR.setVisibility(View.GONE);
+					rankImage.setImageResource(R.drawable.store_31_image_1st);
+					prizeTitle.setText(rankTitleList.get(0));
+					rankUserId.setText(rankNickNameList.get(0));
+					prizeButton.setImageBitmap(prizeImageArr.get(0));
 				break;
 				case 1:
-					rankImage.setImageResource(R.drawable.store_31_image_1st);
-					prizeImage.setImageBitmap(prizeImageArr.get(0));
-
-					nickName.setText(rankNickNameList.get(0));
-					indicatorL.setVisibility(View.VISIBLE);
-					indicatorR.setVisibility(View.VISIBLE);
+					rankImage.setImageResource(R.drawable.store_31_image_2nd);
+					prizeTitle.setText(rankTitleList.get(1));
+					rankUserId.setText(rankNickNameList.get(1));
+					prizeButton.setImageBitmap(prizeImageArr.get(1));
 				break;
 				case 2:
 					rankImage.setImageResource(R.drawable.store_31_image_3rd);
-					prizeImage.setImageBitmap(prizeImageArr.get(2));
-
-					nickName.setText(rankNickNameList.get(2));
-					indicatorL.setVisibility(View.GONE);
-					indicatorR.setVisibility(View.GONE);
+					prizeTitle.setText(rankTitleList.get(2));
+					rankUserId.setText(rankNickNameList.get(2));
+					prizeButton.setImageBitmap(prizeImageArr.get(2));
 				break;
 			}
 			return rootView;
@@ -261,42 +253,27 @@ public class HomeMyPage extends FragmentActivity {
 			public void onClick(View v) {
 				switch((Integer)v.getTag()){
 				case 0:
-					popupImage.setImageBitmap(prizeImageArr.get(1));
-					popupRank.setImageResource(R.drawable.store_31_image_2nd);
-					if(period == 1)
-						popupGuide.setText(R.string.popup_view_prize_week_2nd);
-					else
-						popupGuide.setText(R.string.popup_view_prize_month_2nd);
-					popupProgress.setVisibility(View.VISIBLE);
-					popupTitle.setVisibility(View.INVISIBLE);
-					popupDetail.setVisibility(View.INVISIBLE);
-					new HomeMyPage().new GetPrizeInfo().execute("http://todpop.co.kr/api/prizes/get_prize_info.json?prize_id=" + rankPrizeIdList.get(1));
+					popupImage.setImageBitmap(prizeImageArr.get(0));
+					popupRank.setImageResource(R.drawable.store_43_img_1st);
+					popupGuide.setText(R.string.popup_view_prize_week_1st);
+					popupTitle.setText(" " + rankTitleList.get(0) + " ");
+					popupDetail.setText(rankContentList.get(0));
 					popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 					break;
 				case 1:
-					popupImage.setImageBitmap(prizeImageArr.get(0));
-					popupRank.setImageResource(R.drawable.store_31_image_1st);
-					if(period == 1)
-						popupGuide.setText(R.string.popup_view_prize_week_1st);
-					else
-						popupGuide.setText(R.string.popup_view_prize_month_1st);
-					popupProgress.setVisibility(View.VISIBLE);
-					popupTitle.setVisibility(View.INVISIBLE);
-					popupDetail.setVisibility(View.INVISIBLE);
-					new HomeMyPage().new GetPrizeInfo().execute("http://todpop.co.kr/api/prizes/get_prize_info.json?prize_id=" + rankPrizeIdList.get(0));
+					popupImage.setImageBitmap(prizeImageArr.get(1));
+					popupRank.setImageResource(R.drawable.store_43_img_2nd);
+					popupGuide.setText(R.string.popup_view_prize_week_2nd);
+					popupTitle.setText(" " + rankTitleList.get(1) + " ");
+					popupDetail.setText(rankContentList.get(1));
 					popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 					break;
 				case 2:
 					popupImage.setImageBitmap(prizeImageArr.get(2));
-					popupRank.setImageResource(R.drawable.store_31_image_3rd);
-					if(period == 1)
-						popupGuide.setText(R.string.popup_view_prize_week_3rd);
-					else
-						popupGuide.setText(R.string.popup_view_prize_month_3rd);
-					popupProgress.setVisibility(View.VISIBLE);
-					popupTitle.setVisibility(View.INVISIBLE);
-					popupDetail.setVisibility(View.INVISIBLE);
-					new HomeMyPage().new GetPrizeInfo().execute("http://todpop.co.kr/api/prizes/get_prize_info.json?prize_id=" + rankPrizeIdList.get(2));
+					popupRank.setImageResource(R.drawable.store_43_img_3rd);
+					popupGuide.setText(R.string.popup_view_prize_week_3rd);
+					popupTitle.setText(" " + rankTitleList.get(2) + " ");
+					popupDetail.setText(rankContentList.get(2));
 					popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 					break;
 				}
@@ -366,9 +343,13 @@ public class HomeMyPage extends FragmentActivity {
 					
 					JSONArray jsonArray = json.getJSONObject("data").getJSONArray("prize");
 					for (int i=0;i<jsonArray.length();i++) {
-						rankPrizeIdList.add(i, jsonArray.getJSONObject(i).getInt("id"));
-						rankImageList.add(i,jsonArray.getJSONObject(i).getString("image"));
-						rankNickNameList.add(i,jsonArray.getJSONObject(i).getString("nickname"));
+						JSONObject jsonObj = jsonArray.getJSONObject(i);
+						rankPrizeIdList.add(i, jsonObj.getInt("id"));
+						rankImageList.add(i, jsonObj.getString("image"));
+						rankNickNameList.add(i, jsonObj.getString("nickname"));
+						rankTitleList.add(i, jsonObj.getString("content1"));
+						rankContentList.add(i, jsonObj.getString("content2"));
+						
 						
 						String imgUrl = "http://todpop.co.kr" + jsonArray.getJSONObject(i).getJSONObject("image").getJSONObject("image").getJSONObject("thumb").getString("url");
 						URL url = new URL(imgUrl);
@@ -411,69 +392,48 @@ public class HomeMyPage extends FragmentActivity {
 					pageView.setAdapter(pagerAdapter);
 					pageView.setOffscreenPageLimit(pagerAdapter.getCount());
 
-					Display display = getWindowManager().getDefaultDisplay();
+					/*Display display = getWindowManager().getDefaultDisplay();
 					size = new Point();
 					display.getSize(size);
-					pageView.setPageMargin(-size.x/3);
+					pageView.setPageMargin(-size.x/3);*/
 					pageView.setClipChildren(false);
-					pageView.setCurrentItem(1);
+					
+					pageView.setOnPageChangeListener(new OnPageChangeListener(){
+
+						@Override
+						public void onPageScrollStateChanged(int arg0) {
+						}
+
+						@Override
+						public void onPageScrolled(int arg0, float arg1,
+								int arg2) {
+						}
+
+						@Override
+						public void onPageSelected(int position) {
+							if(position == 0){
+								indi1.setImageResource(R.drawable.store_31_image_indicator_pink_on);
+								indi2.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+								indi3.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+							}
+							else if(position == 1){
+								indi1.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+								indi2.setImageResource(R.drawable.store_31_image_indicator_pink_on);
+								indi3.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+							}
+							else{
+								indi1.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+								indi2.setImageResource(R.drawable.store_31_image_indicator_gray_off);
+								indi3.setImageResource(R.drawable.store_31_image_indicator_pink_on);
+							}
+						}
+						
+					});
 		    	}
 
 		    }
 		}
-	}
-	
-	private class GetPrizeInfo extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try
-			{
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
-
-
-				if (resEntity != null)
-				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("RESPONSE JSON ---- ", result.toString());				        	
-				}
-				return result;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				if(json.getBoolean("status") == true) {
-					popupProgress.setVisibility(View.GONE);
-					popupTitle.setText(" " + json.getJSONObject("data").getString("content1") + " ");
-					popupDetail.setText(json.getJSONObject("data").getString("content2"));
-					popupTitle.setVisibility(View.VISIBLE);
-					popupDetail.setVisibility(View.VISIBLE);
-				}
-				else{
-					
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
+	}	
 	
 	private class CheckCharater extends AsyncTask<String, Void, JSONObject> 
 	{

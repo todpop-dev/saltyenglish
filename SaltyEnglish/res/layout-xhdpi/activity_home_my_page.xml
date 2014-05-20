@@ -29,7 +29,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="472" >
+            android:layout_weight="472"
+            android:gravity="bottom"
+            android:orientation="vertical" >
 
             <android.support.v4.view.ViewPager
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,6 +39,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/store_31_image_wholewhitebox" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/home_my_page_id_indi_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/store_31_image_indicator_pink_on" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/home_my_page_id_indi_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/store_31_image_indicator_gray_off" />
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/home_my_page_id_indi_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/store_31_image_indicator_gray_off" />
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -128,8 +164,8 @@
                                 android:gravity="left"
                                 android:paddingLeft="5dp"
                                 android:textColor="#E6947F"
-                                android:textStyle="bold"
-                                android:textSize="16dp" />
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -219,13 +255,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_above="@id/rankingpoint"
                                 android:layout_marginBottom="3dp"
-                                android:textSize="11dp"
                                 android:background="@drawable/homemypage_drawable_btn_dinoattendance"
                                 android:gravity="center"
                                 android:onClick="showAttendanceActivity"
                                 android:paddingBottom="2dp"
                                 android:paddingLeft="18dp"
-                                android:textColor="#EE3F42" />
+                                android:textColor="#EE3F42"
+                                android:textSize="11dp" />
 
                             <ImageView
                                 android:id="@+id/home_mypage_id_whitebar"
@@ -321,8 +357,8 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="0dp" 
-                            android:layout_weight="50"/>
+                            android:layout_height="0dp"
+                            android:layout_weight="50" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

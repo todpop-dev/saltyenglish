@@ -25,7 +25,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
 
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -34,6 +33,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -55,11 +55,15 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
 public class RgRegisterEmailInfo extends Activity {
+	TelephonyManager phoneMgr;
+	
 	String email;
 	String password;
 	String nickname;
 	String recommender;
 	String mobile;
+	String operator;
+	String country;
 	
 	Boolean kickBack = false;
 
@@ -128,14 +132,14 @@ public class RgRegisterEmailInfo extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
 		mobile = rgInfo.getString("mobile", null);
 		if(mobile == null){
 			//get phone number
 			try {
-				TelephonyManager phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+				phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 				mobile = phoneMgr.getLine1Number().toString();
 				mobile = mobile.replace("+82", "0");
 			} catch(Exception e) {
@@ -143,6 +147,12 @@ public class RgRegisterEmailInfo extends Activity {
 				popupText.setText(R.string.popup_get_mobile_fail);
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
+		}
+		try{
+			operator = phoneMgr.getNetworkOperatorName();
+			country = phoneMgr.getNetworkCountryIso();
+		} catch(Exception e){
+			
 		}
 		
 		doneBtn = (Button)findViewById(R.id.rgregisteremailinfo_id_donebtn);
@@ -444,7 +454,12 @@ public class RgRegisterEmailInfo extends Activity {
 					params.add(new BasicNameValuePair("interest",Integer.toString(interest)));
 					params.add(new BasicNameValuePair("sex",Integer.toString(sex)));
 				}
-
+				
+				params.add(new BasicNameValuePair("device", Build.DEVICE));
+				params.add(new BasicNameValuePair("android_version", Build.VERSION.RELEASE));
+				params.add(new BasicNameValuePair("operator", operator));
+				params.add(new BasicNameValuePair("operator_region", country));
+				
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
 				
@@ -493,7 +508,7 @@ public class RgRegisterEmailInfo extends Activity {
 						
 						if(result.getJSONObject("data").getInt("level_test")==0)
 						{
-							Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
+							Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
 							startActivity(intent);
 							finish();
 						}

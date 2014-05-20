@@ -67,6 +67,7 @@ public class LoadingDialog{
 
 	Dialog dialog;
 	ImageView progressImg;
+	TextView progressText;
 	Animation spinImgAni;
 	
     public LoadingDialog(Context aContext){
@@ -77,6 +78,7 @@ public class LoadingDialog{
 		dialog.setContentView(R.layout.dialog_progress);
 		dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		progressImg = (ImageView)dialog.findViewById(R.id.popup_loading_id_img);
+		progressText = (TextView)dialog.findViewById(R.id.popup_loading_id_text);
 		dialog.setCancelable(false);
 		
 		spinImgAni = AnimationUtils.loadAnimation(context, R.anim.popup_loading_spin_set);
@@ -118,5 +120,11 @@ public class LoadingDialog{
     
     public void dissmiss(){
     	dialog.dismiss();
+    }
+    
+    public void showMigration(){
+    	progressText.setText(R.string.popup_progress_update);
+		progressImg.startAnimation(spinImgAni);
+		dialog.show();
     }
 }

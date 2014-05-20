@@ -8,6 +8,10 @@ import org.apache.http.HttpEntity;
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
+import com.todpop.api.FileManager;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,10 +27,13 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.AnimationDrawable;
@@ -64,6 +71,7 @@ public class MainActivity extends Activity
 	TextView totalReward;
 	
 	WordDBHelper mHelper;
+	PronounceDBHelper pHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -74,7 +82,7 @@ public class MainActivity extends Activity
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.main_activity_id_main);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
@@ -84,16 +92,10 @@ public class MainActivity extends Activity
 		studyInfoEdit = studyInfo.edit();
 		
 		mHelper = new WordDBHelper(this);
+		pHelper = new PronounceDBHelper(this);
 
 		totalReward = (TextView)findViewById(R.id.main_id_total_reward_amount);
 		new GetTotalRewardAPI().execute("http://todpop.co.kr/api/etc/show_service_stat.json");
-		
-		
-		//loading animation
-		/*ImageView rocketImage = (ImageView) findViewById(R.id.main_id_loading);
-		rocketImage.setBackgroundResource(R.drawable.main_drawable_loading);
-		mainLoading = (AnimationDrawable) rocketImage.getBackground();
-		mainLoading.start();*/
 
 		if(setting.getString("check","NO").equals("YES"))												// want to quit
 		{
@@ -102,33 +104,13 @@ public class MainActivity extends Activity
 
 			finish();
 		} else {
-			Handler handler = new Handler();
-	        handler.postDelayed(new Runnable() {
-	        	@Override
-	            public void run() {
-	    			if(setting.getString("isLogin","NO").equals("YES")) {										// already logged in
-	    				// update user info (only level)
-	    				new SignInAPI().execute("http://todpop.co.kr/api/users/sign_in.json");
-	    			} else {																					// not logged in yet
-	        		    Session session = Session.getActiveSession();
-	        		    if (session != null) {
-	        		        if (!session.isClosed()) {
-	        		            session.closeAndClearTokenInformation();
-	        		            //clear your preferences if saved
-	        		        }
-	        		    } else {
-	        		        session = new Session(getApplicationContext());
-	        		        Session.setActiveSession(session);
-
-	        		        session.closeAndClearTokenInformation();
-	        		            //clear your preferences if saved
-	        		    }
-	    				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
-	    				startActivity(intent);
-	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-	    			}
-	            }
-	        }, 2000);
+			if(isTableExisting("wordSound")){
+				new Migration().execute();
+			}
+			else{
+				Handler handler = new Handler();
+		        handler.postDelayed(delayed, 2000);
+			}
 		}
 		
 		// Force create Database
@@ -136,8 +118,6 @@ public class MainActivity extends Activity
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		try {
 			Log.e("STEVEN", "Main Activity line 98");
-			db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, xo TEXT);");
 			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
@@ -152,6 +132,19 @@ public class MainActivity extends Activity
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		SQLiteDatabase pDB = pHelper.getReadableDatabase();
+		try {
+			pDB.execSQL("CREATE TABLE pronounce ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
+					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(setting.getBoolean("lockerEnabled", true)){
+			Intent i = new Intent(this, LockScreenService.class);
+			startService(i);
+		}
 	}
 	
 	public void closePopup(View v)
@@ -160,7 +153,7 @@ public class MainActivity extends Activity
 		finish();
 	}
 	
-	private class SignInAPI extends AsyncTask<String, Void, JSONObject> 
+	/*private class SignInAPI extends AsyncTask<String, Void, JSONObject> 
 	{
         @Override
         protected JSONObject doInBackground(String... urls) 
@@ -195,26 +188,6 @@ public class MainActivity extends Activity
         			return json;
         		}
         		return json;
-        		/*HttpClient client = new DefaultHttpClient();  
-        		String postURL = urls[0];
-        		HttpPost post = new HttpPost(postURL); 
-        		List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-        		String user_id = rgInfo.getString("mem_id", "");
-        		params.add(new BasicNameValuePair("user_id", user_id));
-
-        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
-        		post.setEntity(ent);
-        		HttpResponse responsePOST = client.execute(post);  
-        		HttpEntity resEntity = responsePOST.getEntity();
-
-        		if (resEntity != null)
-        		{    
-        			json = new JSONObject(EntityUtils.toString(resEntity)); 
-        			Log.d("[Register-1] user info check", json.toString());				        	
-        			return json;
-        		}
-        		return json;*/
         	}
         	catch (Exception e)
         	{
@@ -229,16 +202,7 @@ public class MainActivity extends Activity
         	try {
         		if(result != null){
         			if (result.getBoolean("status")==true) {
-	        			if (result.getJSONObject("data").getJSONObject("user").getInt("level_test")>0)
-	        			{
-	        				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-	        			}
-	        			else
-	        			{
-	        				Intent intent = new Intent(getApplicationContext(), LvTestBigin.class);
-	        				startActivity(intent);
-		    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-	        			}
+	        			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
 	        		} else {
 	        			// something wrong (ex: user deleted) = logout
 	        			settingEdit = setting.edit();
@@ -255,7 +219,7 @@ public class MainActivity extends Activity
         	}catch (Exception e) {
         	}
         }
-	}
+	}*/
 	
 	// -------------- get stage info ---------------------------------------------------------------
 
@@ -309,14 +273,27 @@ public class MainActivity extends Activity
 						String stage_info = json.getJSONObject("data").getString("stage");
 						studyInfoEdit.putString("stageInfo",stage_info);
 						studyInfoEdit.apply();
-						
-	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-	    				startActivity(intent);
-	    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        				if(rgInfo.getBoolean("introMainOk", false)){
+		    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+		    				startActivity(intent);
+		    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+		    				finish();
+        				}
+        				else{
+	        				Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
+	        				startActivity(intent);
+		    				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+	        				finish();
+        				}
 					}
 					else
 					{
-						Log.d("M A","224");
+	        			settingEdit = setting.edit();
+	        			settingEdit.putString("isLogin","NO");
+	        			settingEdit.apply();
+	        			
+						popupText.setText(R.string.popup_auto_sign_in_error);
+						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 					}
 				}
 				else{
@@ -375,7 +352,64 @@ public class MainActivity extends Activity
 	}
 
 	// --------------------------------------------------------------------------------------------------------------
-	
+	private class Migration extends AsyncTask<Void, Void, Boolean> {
+		LoadingDialog loading = new LoadingDialog(MainActivity.this);
+		
+		@Override
+		protected void onPreExecute(){
+			loading.showMigration();
+		}
+		
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			
+			
+			SQLiteDatabase oldDB = mHelper.getWritableDatabase();
+			SQLiteDatabase newDB = pHelper.getWritableDatabase();
+				
+			Cursor find = oldDB.rawQuery("SELECT distinct word, version, category FROM wordSound", null);
+				
+			find.moveToFirst();
+				
+			FileManager mFile = new FileManager();
+				
+			while(!find.isAfterLast()){
+				if(mFile.moveFile(MainActivity.this, find.getString(0), "/Android/data/com.todpop.saltyenglish/pronounce/")){
+					oldDB.delete("wordSound", "word='" + find.getString(0) + "'", null);
+					
+			        ContentValues row = new ContentValues();
+					row.put("word", find.getString(0));
+					row.put("version", find.getString(1));
+					row.put("category", find.getString(2));
+
+					newDB.insert("pronounce", null, row);
+				}
+				else{
+					oldDB.close();
+					newDB.close();
+					return false;
+				}
+				find.moveToNext();
+			}
+			find.close();
+			oldDB.close();
+			newDB.close();
+			
+			return true;
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			SQLiteDatabase db = mHelper.getWritableDatabase();
+			db.execSQL("DROP TABLE IF EXISTS wordSound");
+			db.close();
+			
+			loading.dissmiss();
+			
+			Handler handler = new Handler();
+	        handler.postDelayed(delayed, 2000);
+		}
+	}
 
 	//---disable back btn---
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -386,6 +420,51 @@ public class MainActivity extends Activity
 		return super.onKeyDown(keyCode, event);
 	}
 
+	private boolean isTableExisting(String tableName){
+		try{
+			SQLiteDatabase db = mHelper.getReadableDatabase();
+			Cursor cursor = db.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'", null);
+			if(cursor != null){
+				if(cursor.getCount() > 0){
+					cursor.close();
+					return true;
+				}
+				cursor.close();
+			}
+			return false;
+		} catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	Runnable delayed = new Runnable() {
+    	@Override
+        public void run() {
+			if(setting.getString("isLogin","NO").equals("YES")) {										// already logged in
+				// update user info (only level)
+				new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+			} else {																					// not logged in yet
+    		    Session session = Session.getActiveSession();
+    		    if (session != null) {
+    		        if (!session.isClosed()) {
+    		            session.closeAndClearTokenInformation();
+    		            //clear your preferences if saved
+    		        }
+    		    } else {
+    		        session = new Session(getApplicationContext());
+    		        Session.setActiveSession(session);
+
+    		        session.closeAndClearTokenInformation();
+    		            //clear your preferences if saved
+    		    }
+				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
+				startActivity(intent);
+				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+			}
+        }
+    };
+    
 	@Override
 	public void onDestroy()
 	{

@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -143,8 +144,6 @@ public class LvTestBigin extends Activity {
 					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
 			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 					"name TEXT, mean TEXT, xo TEXT);");
-			db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

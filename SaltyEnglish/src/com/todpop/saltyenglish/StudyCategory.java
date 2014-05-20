@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.request.DownloadPronounce;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -34,6 +35,7 @@ public class StudyCategory extends Activity {
 	PopupWindow askPopupWindow;
 	View askPopupView;
 	TextView askPopupText;
+	TextView askPopupSize;
 
     PopupWindow progressPopupWindow;
     View progressPopupView;
@@ -50,8 +52,9 @@ public class StudyCategory extends Activity {
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
 		askPopupView = View.inflate(this, R.layout.popup_view_download_pronunciation, null);
-		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		askPopupText = (TextView)askPopupView.findViewById(R.id.popup_id_text);
+		askPopupSize = (TextView)askPopupView.findViewById(R.id.popup_id_size_text);
 		askPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 		askPopupWindow.setOutsideTouchable(true);
 		askPopupView.setOnKeyListener(new View.OnKeyListener() {
@@ -66,7 +69,7 @@ public class StudyCategory extends Activity {
 	    });
 		
 		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);
-		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 	}
 
 	@Override
@@ -89,6 +92,7 @@ public class StudyCategory extends Activity {
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
 			askPopupText.setText(R.string.popup_pronounce_info_basic);
+			askPopupSize.setText(R.string.popup_pronounce_info_basic_size);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -103,6 +107,7 @@ public class StudyCategory extends Activity {
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
 			askPopupText.setText(R.string.popup_pronounce_info_middle);
+			askPopupSize.setText(R.string.popup_pronounce_info_middle_size);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -117,6 +122,7 @@ public class StudyCategory extends Activity {
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
 			askPopupText.setText(R.string.popup_pronounce_info_high);
+			askPopupSize.setText(R.string.popup_pronounce_info_high_size);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{
@@ -131,6 +137,7 @@ public class StudyCategory extends Activity {
 		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
 		if(soundState == LATER){
 			askPopupText.setText(R.string.popup_pronounce_info_toeic);
+			askPopupSize.setText(R.string.popup_pronounce_info_toeic_size);
 			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		}
 		else{

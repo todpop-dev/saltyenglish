@@ -21,10 +21,13 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -39,6 +42,11 @@ import android.widget.TextView;
 
 public class FbNickname extends Activity {
 
+	TelephonyManager phoneMgr;
+
+	String operator;
+	String country;
+	
 	EditText nickName;
 	Button checkNicknameBtn;
 	
@@ -63,13 +71,21 @@ public class FbNickname extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fb_nickname);
-
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();;
 		setting = getSharedPreferences("setting", 0);
 		settingEdit = setting.edit();
 		studyInfo = getSharedPreferences("studyInfo", 0);
 		studyInfoEdit = studyInfo.edit();
+
+		phoneMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
+
+		try{
+			operator = phoneMgr.getNetworkOperatorName();
+			country = phoneMgr.getNetworkCountryIso();
+		} catch(Exception e){
+			
+		}
 		
 		nickName = (EditText)findViewById(R.id.fb_nickname_id_nickname);
 		checkNicknameBtn = (Button)findViewById(R.id.fb_nickname_id_check_btn);
@@ -78,7 +94,7 @@ public class FbNickname extends Activity {
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.fb_nickname_id_main_activity);
 		popupview = View.inflate(this, R.layout.popup_view, null);
-		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
 		if(!rgInfo.getString("email","no").equals("no"))
@@ -137,6 +153,11 @@ public class FbNickname extends Activity {
 					params.add(new BasicNameValuePair("address", rgInfo.getString("fbLocation", null)));
 				}
 
+				params.add(new BasicNameValuePair("device", Build.DEVICE));
+				params.add(new BasicNameValuePair("android_version", Build.VERSION.RELEASE));
+				params.add(new BasicNameValuePair("operator", operator));
+				params.add(new BasicNameValuePair("operator_region", country));
+				
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
 				HttpResponse responsePOST = client.execute(post);  
@@ -175,7 +196,7 @@ public class FbNickname extends Activity {
 					
 					if(json.getJSONObject("data").getInt("level_test")==0)
 					{
-						Intent intent = new Intent(getApplicationContext(), RgRegisterFinish.class);
+						Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
 						startActivity(intent);
 					}
 					else

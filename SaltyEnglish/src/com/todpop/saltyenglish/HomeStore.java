@@ -145,11 +145,11 @@ public class HomeStore extends Activity {
 		loadingProgressBar = (ProgressBar)findViewById(R.id.loadingProgressBar);
 		
 		pwdPopupView = View.inflate(this, R.layout.popup_view_home_store_password, null);
-		pwdPopupWindow = new PopupWindow(pwdPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		pwdPopupWindow = new PopupWindow(pwdPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		pwdPopupText = (TextView)pwdPopupView.findViewById(R.id.popup_id_text);
 		
 		searchTempPopupView = View.inflate(this, R.layout.popup_view, null);
-		searchTempPopupWindow = new PopupWindow(searchTempPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		searchTempPopupWindow = new PopupWindow(searchTempPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		searchTempPopupText = (TextView)searchTempPopupView.findViewById(R.id.popup_id_text);
 		
 		//eduationBtn.setOnClickListener(radio_listener);
@@ -598,8 +598,6 @@ public class HomeStore extends Activity {
 	
 						if (result == 2) {	//password not set
 							pwNotSet = true;
-							//pwdPopupText.setText(json.getString("msg"));
-							pwdPopupText.setText(getResources().getString(R.string.store_pw_not_set));
 							pwdPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 						}
 					}

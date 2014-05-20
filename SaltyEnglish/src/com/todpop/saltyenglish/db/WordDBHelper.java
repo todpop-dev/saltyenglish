@@ -1,4 +1,4 @@
-package com.todpop.saltyenglish;
+package com.todpop.saltyenglish.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,8 +27,6 @@ public class WordDBHelper extends SQLiteOpenHelper {
 				"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
 		db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
 	"name TEXT, mean TEXT, xo TEXT);");
-		db.execSQL("CREATE TABLE wordSound ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-				"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
 	}
 	
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -37,7 +35,6 @@ public class WordDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS mywords");
 		db.execSQL("DROP TABLE IF EXISTS cpxInfo");
 		db.execSQL("DROP TABLE IF EXISTS mywordtest");
-		db.execSQL("DROP TABLE IF EXISTS wordSound");
 		onCreate(db);
 	}
 }

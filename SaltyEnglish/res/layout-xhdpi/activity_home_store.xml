@@ -183,6 +183,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="45dp"
+                android:divider="@null"
+                android:dividerHeight="0dp"
                 android:fadeScrollbars="false"
                 android:scrollbarThumbVertical="@drawable/store_2_drop_scroll"
                 android:scrollbarTrackVertical="@drawable/store_2_drop_underbar" >
@@ -417,8 +419,8 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="21dp"
                         android:layout_marginTop="30dp"
-                        android:onClick="sendRefundRequest"
-                        android:background="@drawable/homestore_drawable_refund_btn_ok" />
+                        android:background="@drawable/homestore_drawable_refund_btn_ok"
+                        android:onClick="sendRefundRequest" />
 
                     <View
                         android:layout_width="1dp"

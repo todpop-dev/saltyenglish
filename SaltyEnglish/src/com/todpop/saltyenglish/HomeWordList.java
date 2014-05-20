@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.Bundle;
 import android.animation.ObjectAnimator;
@@ -169,12 +170,12 @@ public class HomeWordList extends Activity {
 		popupview.setFocusable(true); 
 		popupview.setFocusableInTouchMode(true);
 		density = getResources().getDisplayMetrics().density;
-		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupWindow.setFocusable(true);
 		
 		//popupview for no word
 		noWordPopupView = View.inflate(this, R.layout.popup_view, null);
-		noWordPopupWindow = new PopupWindow(noWordPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		noWordPopupWindow = new PopupWindow(noWordPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		noWordPopupText = (TextView)noWordPopupView.findViewById(R.id.popup_id_text);
 		
 		popupview.setOnKeyListener(new OnKeyListener() {
@@ -251,10 +252,10 @@ public class HomeWordList extends Activity {
 		@Override
 		public Object instantiateItem(View pager, int position){
 			View v = null;
-			v = mInflater.inflate(R.layout.fragment_wordlist_tutorial, null);
+			v = mInflater.inflate(R.layout.fragment_com_tutorial, null);
 			
-			RelativeLayout background = (RelativeLayout)v.findViewById(R.id.fragment_wordlist_tutorial_id_mainview);
-			LinearLayout linear = (LinearLayout)v.findViewById(R.id.fragment_wordlist_tutorial_id_linear);
+			RelativeLayout background = (RelativeLayout)v.findViewById(R.id.fragment_com_tutorial_id_mainview);
+			LinearLayout linear = (LinearLayout)v.findViewById(R.id.fragment_com_tutorial_id_linear);
 			
 			if(position == 0){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_1);

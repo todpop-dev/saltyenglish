@@ -1,14 +1,19 @@
 package com.todpop.saltyenglish;
 
 
+import java.io.File;
+
 import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.request.DownloadPronounce;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
@@ -56,7 +61,7 @@ public class HomeMorePronounce extends Activity {
 	DownloadPronounce downloadPronounce;
 	DeleteFile deleteFile;
 
-	WordDBHelper mHelper;
+	PronounceDBHelper pHelper;
 	SQLiteDatabase db;
 	
 	@Override
@@ -78,7 +83,7 @@ public class HomeMorePronounce extends Activity {
     	progressPopupCancel = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_cancel);
     	progressPopupDone = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_done);
     	
-		mHelper = new WordDBHelper(this);
+		pHelper = new PronounceDBHelper(this);
 		
 		deletingFlag = false;
 	}
@@ -163,7 +168,7 @@ public class HomeMorePronounce extends Activity {
 			Log.i("STEVEN", "deleteFile");
 			progressPopupText.setText(R.string.popup_view_download_progressbar_list_loading);
 			progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-			db = mHelper.getWritableDatabase();
+			db = pHelper.getWritableDatabase();
 			noFile = true;
 			deletingFlag = true;
 
@@ -181,7 +186,7 @@ public class HomeMorePronounce extends Activity {
 			if(category == 0){ //delete all
 				for(int i = 1; i <= 4; i++){
 					final int current = i;
-					final Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + i + "\'", null);
+					final Cursor find = db.rawQuery("SELECT distinct word FROM pronounce WHERE category=\'" + i + "\'", null);
 					if(find.getCount() > 0){
 						noFile = false;
 						runOnUiThread(new Runnable(){
@@ -204,9 +209,12 @@ public class HomeMorePronounce extends Activity {
 								return false;
 							}
 							publishProgress(count, find.getCount());
-							String name = find.getString(0);
-							Log.i("STEVEN", "DELETE FILE name = " + name);
-							if(!deleteFile(name)){ //if fail to delete file	
+							String name = Environment.getExternalStorageDirectory().getAbsolutePath() 
+									+ "/Android/data/com.todpop.saltyenglish/pronounce/" + find.getString(0) + ".data";
+							//Log.i("STEVEN", "DELETE FILE name = " + name);
+							File file = new File(name);
+							
+							if(!file.delete()){ //if fail to delete file	
 								runOnUiThread(new Runnable(){
 									@Override
 									public void run(){
@@ -216,7 +224,7 @@ public class HomeMorePronounce extends Activity {
 								return false;
 							}
 							else{
-								db.delete("wordSound", "word='" + name + "'", null);
+								db.delete("pronounce", "word='" + name + "'", null);
 							}
 							count++;
 						}
@@ -233,7 +241,7 @@ public class HomeMorePronounce extends Activity {
 				}
 			}
 			else{
-				final Cursor find = db.rawQuery("SELECT distinct word FROM wordSound WHERE category=\'" + category + "\'", null);
+				final Cursor find = db.rawQuery("SELECT distinct word FROM pronounce WHERE category=\'" + category + "\'", null);
 				if(find.getCount() > 0){
 					runOnUiThread(new Runnable(){
 						@Override
@@ -254,9 +262,11 @@ public class HomeMorePronounce extends Activity {
 							return false;
 						}
 						publishProgress(count, find.getCount());
-						String name = find.getString(0);
+						String name = Environment.getExternalStorageDirectory().getAbsolutePath() 
+								+ "/Android/data/com.todpop.saltyenglish/pronounce/" + find.getString(0) + ".data";
 						//Log.i("STEVEN", "DELETE FILE name = " + name);
-						if(!deleteFile(name)){ //if fail to delete file		
+						File file = new File(name);
+						if(!file.delete()){ //if fail to delete file		
 							runOnUiThread(new Runnable(){
 								@Override
 								public void run(){
@@ -266,7 +276,7 @@ public class HomeMorePronounce extends Activity {
 							return false;
 						}
 						else{
-							db.delete("wordSound", "word='" + name + "'", null);
+							db.delete("pronounce", "word='" + name + "'", null);
 						}
 						count++;
 					}

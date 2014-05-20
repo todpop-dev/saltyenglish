@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.request.SendLockState;
+import com.todpop.saltyenglish.LockScreenService;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,8 @@ import android.widget.TimePicker;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class HomeMoreSetting extends Activity {
+	private static final int ENABLED = 1; 
+	private static final int DISABLED = 0; 
 	
 	Button setAlarm;
 	private int hour;
@@ -40,6 +44,7 @@ public class HomeMoreSetting extends Activity {
 	
 	CheckBox alarmCheckBox;
 	CheckBox popupCheckBox;
+	CheckBox lockerCheckBox;
 	
 	NotificationManager notificationManager;
 	AlarmManager alarmManager;
@@ -47,7 +52,8 @@ public class HomeMoreSetting extends Activity {
 	SharedPreferences stdInfo;
 	SharedPreferences.Editor stdInfoEdit;
 	
-	
+	SharedPreferences setting;
+	SharedPreferences.Editor settingEdit;
 	
 
 	@Override 
@@ -59,6 +65,9 @@ public class HomeMoreSetting extends Activity {
 
         stdInfo = getSharedPreferences("studyInfo",0);
         stdInfoEdit = stdInfo.edit();
+        
+        setting = getSharedPreferences("setting", 0);
+        settingEdit = setting.edit();
         
 		/*final Calendar c = Calendar.getInstance();*/
 		
@@ -74,6 +83,7 @@ public class HomeMoreSetting extends Activity {
 		
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
 		popupCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_popup_box);
+		lockerCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_locker_box);
 		
 		if(stdInfo.getBoolean("alarm", false)){
 			alarmCheckBox.setChecked(true);
@@ -88,6 +98,10 @@ public class HomeMoreSetting extends Activity {
 			popupCheckBox.setChecked(false);
 			popupCheckBox.setEnabled(false);
 			alarmCheckBox.setChecked(false);
+		}
+
+		if(setting.getBoolean("lockerEnabled", true)){
+			lockerCheckBox.setChecked(true);
 		}
 		
 		alarmCheckBox.setOnCheckedChangeListener(
@@ -134,60 +148,27 @@ public class HomeMoreSetting extends Activity {
 						}
 					}
 			});
-		RadioGroup rb1 = (RadioGroup)findViewById(R.id.home_more_radioGrop);
-        RadioButton rbBasic =(RadioButton)findViewById(R.id.home_more_radiobtn_basic);
-        RadioButton rbMiddle =(RadioButton)findViewById(R.id.home_more_radiobtn_middle);
-        RadioButton rbHigh =(RadioButton)findViewById(R.id.home_more_radiobtn_high);
-        RadioButton rbToeic =(RadioButton)findViewById(R.id.home_more_radiobtn_toeic);
-
-        switch(stdInfo.getInt("currentCategory", 1))
-        {
-        case 1:
-        	rbBasic.setChecked(true);
-        	break;
-        case 2:
-        	rbMiddle.setChecked(true);
-        	break;
-        case 3:
-        	rbHigh.setChecked(true);
-        	break;
-        case 4:
-        	rbToeic.setChecked(true);
-        	break;
-        }
-
-        rb1.setOnCheckedChangeListener(new OnCheckedChangeListener() 
-	    {
-	        public void onCheckedChanged(RadioGroup group, int checkedId) {
-	        	switch(checkedId)
-        		{
-        			case R.id.home_more_radiobtn_basic:
-        				FlurryAgent.logEvent("Category set basic");
-        				stdInfoEdit.putInt("currentCategory", 1);
-        			break;
-        			
-        			case R.id.home_more_radiobtn_middle:
-        				FlurryAgent.logEvent("Category set middle");
-        				stdInfoEdit.putInt("currentCategory", 2);      
-        			break;
-        			
-        			case R.id.home_more_radiobtn_high:
-        				FlurryAgent.logEvent("Category set high");
-        				stdInfoEdit.putInt("currentCategory", 3);
-        			break;
-        			
-        			case R.id.home_more_radiobtn_toeic:
-        				FlurryAgent.logEvent("Category set toiec");
-        				stdInfoEdit.putInt("currentCategory", 4);
-        			break;
-        			
-        			default:
-        			break;
-        		}
-	        	stdInfoEdit.apply();
-	        }
-	    });
-
+		
+		lockerCheckBox.setOnCheckedChangeListener(
+				new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if(isChecked){
+							settingEdit.putBoolean("lockerEnabled", true);
+							new SendLockState(HomeMoreSetting.this).execute(ENABLED);
+							Intent i = new Intent(HomeMoreSetting.this, LockScreenService.class);
+							startService(i);
+						}
+						else{
+							settingEdit.putBoolean("lockerEnabled", false);
+							new SendLockState(HomeMoreSetting.this).execute(DISABLED);
+							Intent i = new Intent(HomeMoreSetting.this, LockScreenService.class);
+							stopService(i);							
+						}
+						settingEdit.apply();
+					}
+			});
 	}
 		   
 

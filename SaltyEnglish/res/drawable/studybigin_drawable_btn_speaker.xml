@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/study_8_btn_speaker_on"
+    <item android:drawable="@drawable/study_8_btn_speaker_pressed"
           android:state_pressed="true" />
-    <item android:drawable="@drawable/study_8_btn_speaker_off" />    
+    <item android:drawable="@drawable/study_8_btn_speaker_normal" />    
 </selector>

@@ -3,7 +3,9 @@ package com.todpop.saltyenglish;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ import org.json.JSONObject;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.NoticeInfo;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,7 +33,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,13 +53,8 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -65,7 +63,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -102,7 +99,7 @@ public class StudyHome extends Activity {
 	String[] myScoreArray;
 	
 	
-	ArrayList<String> noticeList;
+	ArrayList<NoticeInfo> noticeList;
 	ArrayList<Bitmap> noticeListImg;
 
 	TextView myRank;
@@ -118,6 +115,7 @@ public class StudyHome extends Activity {
 	View popupview;
 	LinearLayout mainLayout;
 	ImageView popupImage;
+	TextView popupTitle;
 	TextView popupText;
 	
 	//loading progress dialog
@@ -216,11 +214,14 @@ public class StudyHome extends Activity {
 		rankingItemArray_toeicWeek = new ArrayList<RankingListItem>();
 		rankingItemArray_toeicMonth = new ArrayList<RankingListItem>();
 		
-		noticeList = new ArrayList<String>();
+		noticeList = new ArrayList<NoticeInfo>();
 		noticeListImg = new ArrayList<Bitmap>();
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String currentDateandTime = sdf.format(new Date());
+		
 		studyInfoEdit = studyInfo.edit();
-		studyInfoEdit.putInt("currentPeriod", 1);
+		studyInfoEdit.putString("lastUse", currentDateandTime);
 		studyInfoEdit.apply();
 
 		//setting category ViewPager.
@@ -237,25 +238,13 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentCategory", 1);
     				studyInfoEdit.apply();
     				
-    				if(studyInfo.getInt("currentPeriod", 1) == 1){
-    					if(rankingItemArray_basicWeek.isEmpty()){
-    						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								1+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[0]);
-    						myScore.setText(myScoreArray[0]);
-    					}
+    				if(rankingItemArray_basicWeek.isEmpty()){
+    					new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    						1+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     				}
     				else{
-    					if(rankingItemArray_basicMonth.isEmpty()){
-    						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								1+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[4]);
-    						myScore.setText(myScoreArray[4]);
-    					}
+    					myRank.setText(myRankArray[0]);
+    					myScore.setText(myScoreArray[0]);
     				}
 				}
 				else if(arg0%4 == 1){		//middle
@@ -263,25 +252,13 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentCategory", 2);
     				studyInfoEdit.apply();
     				
-    				if(studyInfo.getInt("currentPeriod", 1) == 1){
-    					if(rankingItemArray_middleWeek.isEmpty()){
-    						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								2+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[1]);
-    						myScore.setText(myScoreArray[1]);
-    					}
+    				if(rankingItemArray_middleWeek.isEmpty()){
+    					new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    						2+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     				}
     				else{
-    					if(rankingItemArray_middleMonth.isEmpty()){
-    						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								2+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[5]);
-    						myScore.setText(myScoreArray[5]);
-    					}
+    					myRank.setText(myRankArray[1]);
+    					myScore.setText(myScoreArray[1]);
     				}
 				}
 				else if(arg0%4 == 2){		//high
@@ -289,25 +266,13 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentCategory", 3);
     				studyInfoEdit.apply();
     				
-    				if(studyInfo.getInt("currentPeriod", 1) == 1){
-    					if(rankingItemArray_highWeek.isEmpty()){
-    						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								3+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[2]);
-    						myScore.setText(myScoreArray[2]);
-    					}
+    				if(rankingItemArray_highWeek.isEmpty()){
+    					new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    						3+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     				}
     				else{
-    					if(rankingItemArray_highMonth.isEmpty()){
-    						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								3+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[6]);
-    						myScore.setText(myScoreArray[6]);
-    					}
+    					myRank.setText(myRankArray[2]);
+    					myScore.setText(myScoreArray[2]);
     				}
 				}
 				else{		//toiec
@@ -315,25 +280,13 @@ public class StudyHome extends Activity {
     				studyInfoEdit.putInt("currentCategory", 4);
     				studyInfoEdit.apply();
     				
-    				if(studyInfo.getInt("currentPeriod", 1) == 1){
-    					if(rankingItemArray_toeicWeek.isEmpty()){
-    						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								4+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[3]);
-    						myScore.setText(myScoreArray[3]);
-    					}
+    				if(rankingItemArray_toeicWeek.isEmpty()){
+    					new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
+    						4+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
     				}
     				else{
-    					if(rankingItemArray_toeicMonth.isEmpty()){
-    						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-    								4+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-    					}
-    					else{
-    						myRank.setText(myRankArray[7]);
-    						myScore.setText(myScoreArray[7]);
-    					}
+    					myRank.setText(myRankArray[3]);
+    					myScore.setText(myScoreArray[3]);
     				}
 				}
 			}
@@ -371,9 +324,10 @@ public class StudyHome extends Activity {
 		//popupview
 		mainLayout = (LinearLayout)findViewById(R.id.frag_home_rela_id);
 		popupview = View.inflate(this, R.layout.popup_view_notice, null);
-		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
-		popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
-		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_text);
+		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+		//popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
+		popupTitle = (TextView)popupview.findViewById(R.id.popup_notice_id_content_title);
+		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_content);
 
 		//loading animation dialog
 		loadingDialog = new LoadingDialog(this);
@@ -384,7 +338,7 @@ public class StudyHome extends Activity {
 		// CPX Popup view
 		//cpxPopupRelative = (RelativeLayout)findViewById(R.id.rgregisteremailinfo_id_main_activity);
 		cpxPopupView = View.inflate(this, R.layout.popup_view, null);
-		cpxPopupWindow = new PopupWindow(cpxPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		cpxPopupWindow = new PopupWindow(cpxPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
@@ -458,84 +412,37 @@ public class StudyHome extends Activity {
 		public Object instantiateItem(View container, int position) {
 			View v = null;
 			v = mInflater.inflate(R.layout.fragment_study_home_category, null);
-			RadioButton weekBtn = (RadioButton)v.findViewById(R.id.study_home_category_week);
-			RadioButton monthBtn = (RadioButton)v.findViewById(R.id.study_home_category_month);
+			ImageView weekTitle = (ImageView)v.findViewById(R.id.study_home_category_week);
 			ListView rankingList = (ListView)v.findViewById(R.id.studyhome_id_listview);
 			ProgressBar rankProgressBar = (ProgressBar)v.findViewById(R.id.studyhome_id_progressBar);
-			weekBtn.setOnClickListener(radioButton);
-			monthBtn.setOnClickListener(radioButton);
 							
 			switch(position%4){
 			case 0:
-				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_basicweek);
-				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_basicmonth);
-				if(studyInfo.getInt("currentPeriod", 1) == 1){
-					weekBtn.setChecked(true);
-					if(!rankingItemArray_basicWeek.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_basicWeek));
-						rankProgressBar.setVisibility(View.GONE);
-					}
-				}
-				else{
-					monthBtn.setChecked(true);
-					if(!rankingItemArray_basicMonth.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_basicMonth));
-						rankProgressBar.setVisibility(View.GONE);
-					}
+				weekTitle.setBackgroundResource(R.drawable.home_text_subtitle_basicweek_pink);
+				if(!rankingItemArray_basicWeek.isEmpty()){
+					rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_basicWeek));
+					rankProgressBar.setVisibility(View.GONE);
 				}
 				break;
 			case 1:
-				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_middleweek);
-				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_middlemonth);
-				if(studyInfo.getInt("currentPeriod", 1) == 1){
-					weekBtn.setChecked(true);
-					if(!rankingItemArray_middleWeek.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_middleWeek));
-						rankProgressBar.setVisibility(View.GONE);
-					}
-				}
-				else{
-					monthBtn.setChecked(true);
-					if(!rankingItemArray_middleMonth.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_middleMonth));
-						rankProgressBar.setVisibility(View.GONE);
-					}
+				weekTitle.setBackgroundResource(R.drawable.home_text_subtitle_middleweek_pink);
+				if(!rankingItemArray_middleWeek.isEmpty()){
+					rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_middleWeek));
+					rankProgressBar.setVisibility(View.GONE);
 				}
 				break;
 			case 2:
-				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_highweek);
-				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_highmonth);
-				if(studyInfo.getInt("currentPeriod", 1) == 1){
-					weekBtn.setChecked(true);
-					if(!rankingItemArray_highWeek.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_highWeek));
-						rankProgressBar.setVisibility(View.GONE);
-					}
-				}
-				else{
-					monthBtn.setChecked(true);
-					if(!rankingItemArray_highMonth.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_highMonth));
-						rankProgressBar.setVisibility(View.GONE);
-					}
+				weekTitle.setBackgroundResource(R.drawable.home_text_subtitle_highweek_pink);
+				if(!rankingItemArray_highWeek.isEmpty()){
+					rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_highWeek));
+					rankProgressBar.setVisibility(View.GONE);
 				}
 				break;
 			case 3:
-				weekBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_toeicweek);
-				monthBtn.setButtonDrawable(R.drawable.studyhome_drawable_ranklist_btn_toeicmonth);
-				if(studyInfo.getInt("currentPeriod", 1) == 1){
-					weekBtn.setChecked(true);
-					if(!rankingItemArray_toeicWeek.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_toeicWeek));
-						rankProgressBar.setVisibility(View.GONE);
-					}
-				}
-				else{
-					monthBtn.setChecked(true);
-					if(!rankingItemArray_toeicMonth.isEmpty()){
-						rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_toeicMonth));
-						rankProgressBar.setVisibility(View.GONE);
-					}
+				weekTitle.setBackgroundResource(R.drawable.home_text_subtitle_toeicweek_pink);
+				if(!rankingItemArray_toeicWeek.isEmpty()){
+					rankingList.setAdapter(new RankingListAdapter(StudyHome.this, rankingItemArray_toeicWeek));
+					rankProgressBar.setVisibility(View.GONE);
 				}
 				break;
 			}	
@@ -558,107 +465,6 @@ public class StudyHome extends Activity {
 		public boolean isViewFromObject(View pager, Object obj) {
 			return pager == obj;
 		}
-
-		OnClickListener radioButton = new OnClickListener(){
-			public void onClick(View v){
-				switch(v.getId()){
-				case R.id.study_home_category_week:
-					studyInfoEdit.putInt("currentPeriod", 1);
-					studyInfoEdit.apply();
-					switch(categoryPager.getCurrentItem() % 4){
-						case 0:
-							if(rankingItemArray_basicWeek.isEmpty()){
-	    						new GetRank(1).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								1+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[0]);
-	    						myScore.setText(myScoreArray[0]);
-	    					}
-							break;
-						case 1:
-							if(rankingItemArray_middleWeek.isEmpty()){
-	    						new GetRank(2).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								2+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[1]);
-	    						myScore.setText(myScoreArray[1]);
-	    					}
-							break;
-						case 2:
-							if(rankingItemArray_highWeek.isEmpty()){
-	    						new GetRank(3).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								3+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[2]);
-	    						myScore.setText(myScoreArray[2]);
-	    					}
-							break;
-						case 3:
-							if(rankingItemArray_toeicWeek.isEmpty()){
-	    						new GetRank(4).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								4+"&period="+1+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[3]);
-	    						myScore.setText(myScoreArray[3]);
-	    					}
-							break;
-					}
-					
-					break;
-				case R.id.study_home_category_month:
-					studyInfoEdit.putInt("currentPeriod", 2);
-					studyInfoEdit.apply();
-					switch(categoryPager.getCurrentItem() % 4){
-						case 0:
-	    					if(rankingItemArray_basicMonth.isEmpty()){
-	    						new GetRank(5).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								1+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[4]);
-	    						myScore.setText(myScoreArray[4]);
-	    					}
-							break;
-						case 1:
-	    					if(rankingItemArray_middleMonth.isEmpty()){
-	    						new GetRank(6).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								2+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[5]);
-	    						myScore.setText(myScoreArray[5]);
-	    					}
-							break;
-						case 2:
-	    					if(rankingItemArray_highMonth.isEmpty()){
-	    						new GetRank(7).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								3+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[6]);
-	    						myScore.setText(myScoreArray[6]);
-	    					}
-							break;
-						case 3:
-	    					if(rankingItemArray_toeicMonth.isEmpty()){
-	    						new GetRank(8).execute("http://todpop.co.kr/api/users/get_users_score.json?category="+
-	    								4+"&period="+2+"&nickname="+rgInfo.getString("nickname", "NO"));
-	    					}
-	    					else{
-	    						myRank.setText(myRankArray[7]);
-	    						myScore.setText(myScoreArray[7]);
-	    					}
-							break;
-					}
-					break;
-				}
-				categoryPager.getAdapter().notifyDataSetChanged();
-			}
-		};
 	}	
 	
 	/*@Override
@@ -1352,23 +1158,31 @@ public class StudyHome extends Activity {
 				int newVersionInt = newA*1000000 + newB*1000 + newC;
 				
 				if(curVersionInt < newVersionInt){
-					noticeList.add(getResources().getString(R.string.study_home_popup_version_check) 
+					noticeList.add(new NoticeInfo(getResources().getString(R.string.study_home_popup_version_title), 
+							getResources().getString(R.string.study_home_popup_version_check) 
 							+ "\n" + getResources().getString(R.string.study_home_popup_version_current) + " " + curVersion 
-							+ "\n" + getResources().getString(R.string.study_home_popup_version_latest) + " " + newVersion);
+							+ "\n" + getResources().getString(R.string.study_home_popup_version_latest) + " " + newVersion));
 
 					if(curA != newA || curB != newB){
 						majorVersionUpdate = true;
 					}
 				}
-				JSONArray noticeArray = json.getJSONObject("data").getJSONArray("ment");
+				JSONArray noticeArray = json.getJSONObject("data").getJSONArray("ment_arr");
 				for(int i = 0; i < noticeArray.length(); i++){
-					String notice = noticeArray.getString(i);
-					notice = notice.replace("\\n", "\n");
-					noticeList.add(notice);
+					JSONObject jsonObj = noticeArray.getJSONObject(i);
+					String content = jsonObj.getString("content");
+					content = content.replace("\\n", "\n");
+					noticeList.add(new NoticeInfo(jsonObj.getString("title"), content));
 				}
 				
 				if(!noticeList.isEmpty()){
-					popupText.setText(noticeList.get(0));
+					if(noticeList.get(0).getTitle().equals("null")){
+						popupTitle.setVisibility(View.GONE);
+					}
+					else{
+						popupTitle.setText(noticeList.get(0).getTitle());
+					}
+					popupText.setText(noticeList.get(0).getContent());
 					noticeList.remove(0);
 					Log.i("STEVEN", "just before pop");
 					popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
@@ -1834,7 +1648,13 @@ public class StudyHome extends Activity {
 		else {
 			popupWindow.dismiss();
 			if(!noticeList.isEmpty()){	//if more then one notice left
-				popupText.setText(noticeList.get(0));
+				if(noticeList.get(0).getTitle().equals("null")){
+					popupTitle.setVisibility(View.GONE);
+				}
+				else{
+					popupTitle.setText(noticeList.get(0).getTitle());
+				}
+				popupText.setText(noticeList.get(0).getContent());
 				noticeList.remove(0);
 				popupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 				popupWindow.showAsDropDown(null);

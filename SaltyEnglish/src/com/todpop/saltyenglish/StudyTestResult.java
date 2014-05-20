@@ -14,7 +14,8 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.LoadingDialog;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,6 +41,9 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -55,12 +60,39 @@ public class StudyTestResult extends Activity {
  	int tmpStageAccumulated;
 	String resultScore;
 	String resultReward;
+	String resultPoint;
+	String resultAttendReward;
+	String resultAttendPoint;
 	String resultMedal;
  	
 	MyItem mi;
 
 	TextView scoreView;
 	TextView rewardView;
+	
+	//popup view
+	RelativeLayout relative;
+	View popupView;
+	PopupWindow popupWindow;
+	
+	LinearLayout popupBoth;
+	LinearLayout popupBothNoAtt;	//w/o attendance reward
+	TextView popupBothNoAttReward;
+	TextView popupBothNoAttPoint;
+	LinearLayout popupBothAtt;	//w/ attendance reward
+	TextView popupBothAttReward;
+	TextView popupBothAttPoint;
+	TextView popupAttReward; //reward for attendance
+	TextView popupAttPoint; //point for attendance
+	
+	LinearLayout popupOnly;
+	ImageView popupOnlyTitle;
+	ImageView popupOnlyType;
+	ImageView popupOnlyImg;
+	TextView popupOnlyAmount;
+	
+	//loading progress dialog
+	LoadingDialog loadingDialog;
 	
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
@@ -92,55 +124,74 @@ public class StudyTestResult extends Activity {
 		}
 
 
-		{
-			Log.e("STEVEN", "line 135");
-			// Get Test result from database
-			SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
-			tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
-			getTestWords();
-			
-			// ----------- Request Result -------------
-			SharedPreferences pref = getSharedPreferences("rgInfo",0);
-			// levelCount could be 1, 16, 61, 121 etc... 
-			int category = studyInfo.getInt("tmpCategory", 1);
-			String userId = pref.getString("mem_id", "0");
-			SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
-			String finalAnswerForRequest = levelPref.getString("testResult", "");
-			String resultUrl;
+		// Get Test result from database
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
+		getTestWords();
+		
+		// ----------- Request Result -------------
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		// levelCount could be 1, 16, 61, 121 etc... 
+		int category = studyInfo.getInt("tmpCategory", 1);
+		String userId = pref.getString("mem_id", "0");
+		SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
+		String finalAnswerForRequest = levelPref.getString("testResult", "");
+		String resultUrl;
 
-			// ------- cys added -----------
-			studyInfoEdit.putInt("currentCategory", category);
-			studyInfoEdit.putInt("currentStageAccumulated", tmpStageAccumulated);		// save tmpStage -> currentStage
-			int level = ((tmpStageAccumulated-1)/10) + 1;
-			if(category==1)			{studyInfoEdit.putInt("levelLast1", level);Log.e("STR1",String.valueOf(level));}
-			else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);Log.e("STR2",String.valueOf(level));}
-			else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);Log.e("STR3",String.valueOf(level));}
-			else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
-			studyInfoEdit.apply();
-			// ----------------------------
-			
-			if (tmpStageAccumulated%10 != 0) {
-				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-						"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
-			} else {
-				resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-						"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
-			}
-			new GetTestResult().execute(resultUrl);
-			Log.d("-------- result url ------- ", resultUrl);
-			// ----------- End of  Request Result -------------
-			
+		// ------- cys added -----------
+		studyInfoEdit.putInt("currentCategory", category);
+		studyInfoEdit.putInt("currentStageAccumulated", tmpStageAccumulated);		// save tmpStage -> currentStage
+		int level = ((tmpStageAccumulated-1)/10) + 1;
+		if(category==1)			{studyInfoEdit.putInt("levelLast1", level);Log.e("STR1",String.valueOf(level));}
+		else if(category==2)	{studyInfoEdit.putInt("levelLast2", level);Log.e("STR2",String.valueOf(level));}
+		else if(category==3)	{studyInfoEdit.putInt("levelLast3", level);Log.e("STR3",String.valueOf(level));}
+		else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
+		studyInfoEdit.apply();
+		// ----------------------------
+		
+		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
+		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
+		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+		
+		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
+		// w/o attendace
+		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
+		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
+		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
+		// w/ attendace
+		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
+		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
+		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
+		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
+		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
+		
+		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
+		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
+		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
+		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
+		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
+		
+		
+		if (tmpStageAccumulated%10 != 0) {
+			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+					"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
+		} else {
+			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
 		}
 		
-		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
+		loadingDialog = new LoadingDialog(this);
+		loadingDialog.show();
 		
+		new GetTestResult().execute(resultUrl);
+		Log.d("-------- result url ------- ", resultUrl);
+		// ----------- End of  Request Result -------------
+
+		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 		
 		ListView MyList;
 		MyList=(ListView)findViewById(R.id.lvtestresult_id_listview);
 		MyList.setAdapter(MyAdapter);
-		
-		
-
 	}
 	
 	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
@@ -177,6 +228,7 @@ public class StudyTestResult extends Activity {
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			try {
+				loadingDialog.dissmiss();
 				Log.d("Get Result JSON RESPONSE ---- ", json.toString());				        	
 
 				if(json.getBoolean("status")==true) {
@@ -184,7 +236,11 @@ public class StudyTestResult extends Activity {
 						JSONObject resultObj = json.getJSONObject("data");
 						resultScore = resultObj.getString("score");
 						resultReward = resultObj.getString("reward");
+						resultPoint = resultObj.getString("rank_point");
 						resultMedal = resultObj.getString("medal");
+						
+						resultAttendReward = resultObj.getString("attend_reward");
+						resultAttendPoint = resultObj.getString("attend_point");
 
             			String stageInfo = resultObj.getString("stage_info");		// stageInfo
             			studyInfoEdit.putString("stageInfo", stageInfo);
@@ -192,6 +248,52 @@ public class StudyTestResult extends Activity {
 					
 						rewardView.setText(resultReward);
 						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
+						
+						if(resultAttendReward.equals("null")){
+							if(resultReward.equals("0")){
+								if(resultPoint.equals("0")){
+									//no popup
+								}
+								else{
+									popupBoth.setVisibility(View.GONE);
+									popupOnly.setVisibility(View.VISIBLE);
+									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
+									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
+									popupOnlyAmount.setText("+" + resultPoint);
+									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+								}
+							}
+							else if(resultPoint.equals("0")){
+								popupBoth.setVisibility(View.GONE);
+								popupOnly.setVisibility(View.VISIBLE);
+								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
+								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
+								popupOnlyAmount.setText("+" + resultReward);
+								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							}
+							else{
+								popupBoth.setVisibility(View.VISIBLE);
+								popupOnly.setVisibility(View.GONE);
+								popupBothAtt.setVisibility(View.GONE);
+								popupBothNoAtt.setVisibility(View.VISIBLE);
+								popupBothNoAttReward.setText("+" + resultReward);
+								popupBothNoAttPoint.setText("+" + resultPoint);
+								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							}
+						}
+						else{
+							popupBoth.setVisibility(View.VISIBLE);
+							popupOnly.setVisibility(View.GONE);
+							popupBothAtt.setVisibility(View.VISIBLE);
+							popupBothNoAtt.setVisibility(View.GONE);
+							
+							popupBothAttReward.setText("+" + resultReward);
+							popupBothAttPoint.setText("+" + resultPoint);
+							popupAttReward.setText("+ " + resultAttendReward);
+							popupAttPoint.setText("+ " + resultAttendPoint);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						}
+						
 
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -207,6 +309,9 @@ public class StudyTestResult extends Activity {
 		}
 	}
 	
+	public void dismissPopup(View v){
+		popupWindow.dismiss();
+	}
 
 	private void getTestWords()
 	{

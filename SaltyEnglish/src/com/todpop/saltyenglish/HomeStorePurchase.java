@@ -75,7 +75,7 @@ public class HomeStorePurchase extends Activity {
 	PopupWindow confirmPopupWindow;
 	View confirmPopupView;
 	TextView confirmPopupPrice;
-	TextView confirmPopupMobile;
+	TextView confirmPopupNick;
 	EditText confirmPopupPwd;
 	ProgressBar confirmProgressBar;
 	Button cancleBtn;
@@ -134,19 +134,19 @@ public class HomeStorePurchase extends Activity {
 
 		//confirm popup
 		confirmPopupView = View.inflate(this, R.layout.popup_view_home_store_purchase_confirm, null);
-		confirmPopupWindow = new PopupWindow(confirmPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		confirmPopupWindow = new PopupWindow(confirmPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		confirmPopupPrice = (TextView)confirmPopupView.findViewById(R.id.popup_store_id_price);
-		confirmPopupMobile = (TextView)confirmPopupView.findViewById(R.id.popup_store_id_nick);
+		confirmPopupNick = (TextView)confirmPopupView.findViewById(R.id.popup_store_id_nick);
 		confirmPopupPwd = (EditText)confirmPopupView.findViewById(R.id.popup_store_id_pwd);
 		confirmProgressBar = (ProgressBar)confirmPopupView.findViewById(R.id.popup_store_id_progressBar);
 		cancleBtn = (Button)confirmPopupView.findViewById(R.id.popup_store_id_cancle);
 		confirmBtn = (Button)confirmPopupView.findViewById(R.id.popup_store_id_confirm);
 		
 		donePopupView = View.inflate(this, R.layout.popup_view_home_store_purchase_done, null);
-		donePopupWindow = new PopupWindow(donePopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		donePopupWindow = new PopupWindow(donePopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		
 		kickBackPopupView = View.inflate(this, R.layout.popup_view, null);
-		kickBackPopupWindow = new PopupWindow(kickBackPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		kickBackPopupWindow = new PopupWindow(kickBackPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		kickBackPopupText = (TextView)kickBackPopupView.findViewById(R.id.popup_id_text);
 		
 		//loading dialog
@@ -285,8 +285,10 @@ public class HomeStorePurchase extends Activity {
 		else if(remainRewardAmount > 0){
 			SharedPreferences rgInfo;
 			rgInfo = getSharedPreferences("rgInfo",0);
-			confirmPopupPrice.setText(price);
-			confirmPopupMobile.setText(rgInfo.getString("nickname", "NO"));
+			String priceField = getResources().getString(R.string.popup_view_home_store_price) + " " + price + getResources().getString(R.string.testname8);
+			String nickField = getResources().getString(R.string.popup_view_home_store_nick) + " " + rgInfo.getString("nickname", "NO");
+			confirmPopupPrice.setText(priceField);
+			confirmPopupNick.setText(nickField);
 			confirmPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 			confirmPopupWindow.showAsDropDown(null);
 		}
