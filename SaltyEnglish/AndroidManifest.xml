@@ -292,6 +292,16 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestMock"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestMockStart"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <service android:name="com.todpop.saltyenglish.LockScreenService" />
         <service android:name="com.todpop.saltyenglish.LockGetService" />
