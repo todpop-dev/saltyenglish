@@ -536,6 +536,8 @@ public class StudyTestResult extends Activity {
 	
 	public void showStudyLearnActivity(View v)
 	{
+		Intent intent =new Intent(getApplicationContext(),MainActivity.class);
+		startActivity(intent);
 		finish();
 	}
 	

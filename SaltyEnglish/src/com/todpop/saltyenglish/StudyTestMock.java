@@ -60,7 +60,7 @@ public class StudyTestMock extends Activity {
 	Button select3;
 	Button select4;
 	//page number
-	ImageView pageNumber;
+	TextView pageNumber;
 	
 	// Total Stage
 	int tmpStageAccumulated;
@@ -120,6 +120,8 @@ public class StudyTestMock extends Activity {
 		setContentView(R.layout.activity_study_test_mock);
 		FlurryAgent.logEvent("Study Test");
 		//test word
+
+		pageNumber = (TextView)findViewById(R.id.study_testmock_id_view_number);
 		enWordText = (TextView)findViewById(R.id.study_testmock_id_enword);
 		
 		//select word button
@@ -153,7 +155,7 @@ public class StudyTestMock extends Activity {
 		getTestWords();
 		
 		//page number
-//		pageNumber = (ImageView)findViewById(R.id.study_testmock_id_view_number);
+		
 //		pageNumber.setBackgroundResource(R.drawable.test_9_image_number_1);
 		
 		
@@ -170,7 +172,8 @@ public class StudyTestMock extends Activity {
 		
 		//set first test word
 		setupTestWords(0);
-		
+
+		pageNumber.setText(1+" / "+ cntMaxWords);
 		//crocodile Time animation
 		
 		crocodileTime = (ImageView) findViewById(R.id.study_testmock_id_crocodile_time);
@@ -206,6 +209,8 @@ public class StudyTestMock extends Activity {
 					//update image
 //					pageNumber.setBackgroundResource(resID);
 					//update test word
+					if(wordCount<=cntMaxWords)
+						pageNumber.setText((wordCount + 1)+" / "+ cntMaxWords);
 					setupTestWords(wordCount);
 					if (wordCount>1) {
 						finalAnswerForRequest+="0";
@@ -466,6 +471,7 @@ public class StudyTestMock extends Activity {
 
 			// Setup Words
 			if (wordCount <= cntMaxWords-1) {
+				pageNumber.setText((wordCount + 1)+" / "+ cntMaxWords);
 				setupTestWords(wordCount);
 				startTime = 10000;
 				startTimeCount(startTime);

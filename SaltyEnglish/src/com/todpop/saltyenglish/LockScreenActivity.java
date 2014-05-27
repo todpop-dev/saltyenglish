@@ -240,8 +240,10 @@ public class LockScreenActivity extends Activity {
 				
 				lockInfo.setReward(rePoCursor.getInt(0));
 				lockInfo.setPoint(rePoCursor.getInt(1));
-				
-				lockList.add(i, lockInfo);
+				if(lockInfo.getGroup() == 413)
+					lockList.add(0, lockInfo);
+				else
+					lockList.add(i, lockInfo);
 				find.moveToNext();
 			}
 			
@@ -457,7 +459,7 @@ public class LockScreenActivity extends Activity {
     				startActivity(intent);
     				finish();
 				}
-				else if(position == 2){//junho , Mock Test
+				else if(position == 1){//junho , Mock Test
 					Intent intent = new Intent(getApplicationContext(),StudyTestMockStart.class);
 					startActivity(intent);
 					finish();
@@ -608,6 +610,7 @@ public class LockScreenActivity extends Activity {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String getURL = urls[0];
+				Log.e("url",getURL);
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();

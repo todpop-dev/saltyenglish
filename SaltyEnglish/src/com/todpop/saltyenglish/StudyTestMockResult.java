@@ -12,15 +12,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.LoadingDialog;
-import com.todpop.saltyenglish.db.LockerDBHelper;
-import com.todpop.saltyenglish.db.WordDBHelper;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -30,25 +21,30 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
+import com.todpop.saltyenglish.db.LockerDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 public class StudyTestMockResult extends Activity {
 
@@ -107,7 +103,7 @@ public class StudyTestMockResult extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_study_test_result);
+		setContentView(R.layout.activity_study_test_mock_result);
 
 
 		rgInfo = getSharedPreferences("rgInfo",0);
@@ -119,8 +115,8 @@ public class StudyTestMockResult extends Activity {
 
 		arItem = new ArrayList<MyItem>();
 
-		scoreView = (TextView)findViewById(R.id.lvtest_result_id_level);
-		rewardView = (TextView)findViewById(R.id.study_test_result_id_score_view);
+		scoreView = (TextView)findViewById(R.id.lvmocktest_result_id_level);
+		rewardView = (TextView)findViewById(R.id.study_mock_test_result_id_score_view);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
 
 
@@ -138,7 +134,7 @@ public class StudyTestMockResult extends Activity {
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		score = (int) (( ((float)cntRightWords/cntWords)*100 )); //rounded
-
+		scoreView.setText(score + getResources().getString(R.string.study_result_score_text));
 		// ----------- Request Result -------------
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
@@ -159,7 +155,7 @@ public class StudyTestMockResult extends Activity {
 		studyInfoEdit.apply();
 		// ----------------------------
 
-		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
+		relative = (RelativeLayout)findViewById(R.id.mock_test_result_id_main);
 		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
 		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 
@@ -212,7 +208,7 @@ public class StudyTestMockResult extends Activity {
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 
 		ListView MyList;
-		MyList=(ListView)findViewById(R.id.lvtestresult_id_listview);
+		MyList=(ListView)findViewById(R.id.lvmocktestresult_id_listview);
 		MyList.setAdapter(MyAdapter);
 	}
 
@@ -607,6 +603,8 @@ public class StudyTestMockResult extends Activity {
 
 	public void showStudyLearnActivity(View v)
 	{
+		Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+		startActivity(intent);
 		finish();
 	}
 
