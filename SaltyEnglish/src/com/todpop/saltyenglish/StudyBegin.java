@@ -705,6 +705,7 @@ public class StudyBegin extends FragmentActivity {
 						
 						if (otherCursor.getCount() > 0) {
 							while(otherCursor.moveToNext()) {
+								Log.i("STEVEN", "708");
 								JSONObject jsonObj= new JSONObject();
 								jsonObj.put("id", 0);
 								jsonObj.put("name", otherCursor.getString(0));
@@ -768,6 +769,20 @@ public class StudyBegin extends FragmentActivity {
 									jsonObj.put("picture", otherCursor2.getInt(5));
 									jsonObj.put("image_url", otherCursor2.getString(6));
 
+									Log.i("STEVEN", "772");
+									Log.i("STEVEN", "SELECT version FROM pronounce WHERE word='" + otherCursor2.getString(0) + "'");
+									
+									pDB = pHelper.getReadableDatabase();
+									Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + otherCursor2.getString(0) + "'", null);
+
+									if(soundCursor.getCount() > 0){
+										soundCursor.moveToFirst();
+										jsonObj.put("voice", soundCursor.getString(0));
+									}
+									else{
+										jsonObj.put("voice", 1);
+									}
+									pDB.close();
 
 									jsonWords.put(jsonObj);
 									

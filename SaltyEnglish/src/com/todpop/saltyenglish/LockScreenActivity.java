@@ -1,6 +1,8 @@
 package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,6 +47,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
+import com.flurry.android.FlurryAgent;
 import com.todpop.api.FileManager;
 import com.todpop.api.LockInfo;
 import com.todpop.api.LockScreenClock;
@@ -187,6 +190,12 @@ public class LockScreenActivity extends Activity {
 						leftAmount.setVisibility(View.INVISIBLE);
 					}
 				}
+
+				//Log for flurry
+				Map<String, String> logParams = new HashMap<String, String>();
+				logParams.put("GroupID", lockList.get(position - 1).getGroupId());
+				logParams.put("UserID", userId);
+				FlurryAgent.logEvent("Locker_Expose", logParams);
 			}
 		});	
 	}
@@ -276,23 +285,28 @@ public class LockScreenActivity extends Activity {
 		
 		verViewPager.setAdapter(new DummyAdapter(getFragmentManager()));
 	}
+	
 	@Override
 	protected void onPause(){
 		super.onPause();
-		Log.e("STEVEN", "onPause");
 	}
+	
+	@Override
+	protected void onStart(){
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+	}
+	
 	@Override
 	protected void onStop(){
 		super.onStop();
-		Log.e("STEVEN", "onStop");
 		new GetWord().execute("http://www.todpop.co.kr/api/screen_lock/word.json?user_id=" + userId);
+		FlurryAgent.onEndSession(this);
 	}
 
 	@Override
 	protected void onDestroy(){
 		super.onDestroy();
-		Log.e("STEVEN", "onDestroy");
-		//mainApp.decreaseLockerCnt();
 	}
 	public class DummyAdapter extends FragmentPagerAdapter {
 

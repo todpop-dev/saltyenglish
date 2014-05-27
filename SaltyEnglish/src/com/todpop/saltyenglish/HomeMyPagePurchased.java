@@ -135,6 +135,8 @@ public class HomeMyPagePurchased extends Activity {
 					noCoupon.setVisibility(View.VISIBLE);
 					new GetCoupons(0).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
 				}
+				else
+					noCoupon.setVisibility(View.GONE);
 				break;
 			case R.id.homemypagepurchased_id_btn_purchased:
 				purchasedListViewAdapter = new PurchasedListViewAdapter(HomeMyPagePurchased.this, R.layout.home_my_page_purchased_list_item_view, ticketList);
@@ -143,6 +145,8 @@ public class HomeMyPagePurchased extends Activity {
 					noCoupon.setVisibility(View.VISIBLE);
 					new GetCoupons(1).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=1");
 				}
+				else
+					noCoupon.setVisibility(View.GONE);
 				break;
 			}
 		}

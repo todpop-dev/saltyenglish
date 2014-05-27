@@ -494,42 +494,7 @@ public class StudyTestResult extends Activity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) 
 		{
-			final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
-
-			DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() 
-			{
-				public void onClick(DialogInterface dialog, int which) 
-				{
-					switch (which) 
-					{
-					case AlertDialog.BUTTON_POSITIVE:
-						SharedPreferences settings = getSharedPreferences("setting", 0);
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putString("check","YES");
-						editor.apply();
-						
-						Intent intent = new Intent();
-				        intent.setClass(StudyTestResult.this, MainActivity.class);    
-				        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
-				        startActivity(intent);
-						finish();	
-
-						break;
-					case AlertDialog.BUTTON_NEGATIVE:
-						break;
-					default:
-						break;
-					}
-				}
-			};
-
-			isExit.setTitle(getResources().getString(R.string.register_alert_title));
-			isExit.setMessage(getResources().getString(R.string.register_alert_text));
-			isExit.setPositiveButton("OK", listener);
-			isExit.setNegativeButton("Cancel", listener);
-			isExit.show();
-
-			return false;
+			goHome();
 		}
 		return false;
 	}
@@ -541,13 +506,15 @@ public class StudyTestResult extends Activity {
 	
 	public void showHomeActivity(View v)
 	{
+		goHome();
+	}
+	private void goHome(){
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "1");
 		String cpxRequestUrl = "http://todpop.co.kr/api/advertises/get_cpx_ad.json?user_id="+userId;
 		Log.d("CPX URL ---- ", cpxRequestUrl);
 		new GetCPX().execute(cpxRequestUrl);
 	}
-	
 	// Get CPX - here we get CPI first
 	private class GetCPX extends AsyncTask<String, Void, JSONObject> 
 	{
