@@ -225,8 +225,8 @@ public class LockScreenActivity extends Activity {
 		
 		db = lHelper.getReadableDatabase();
 		Cursor find = db.rawQuery("SELECT * FROM latest order by category asc", null);
-		int count = find.getCount(); // junho
-		verticalPageCount = count + 1; // junho 
+		int count = find.getCount(); 
+		verticalPageCount = count + 1;
 		if(count > 0){
 			arrowDown.setVisibility(View.VISIBLE);
 			find.moveToFirst();
@@ -234,11 +234,6 @@ public class LockScreenActivity extends Activity {
 			for(int i = 0; count > i; i++){
 				LockInfo lockInfo = new LockInfo(find.getInt(1), find.getInt(2), find.getInt(3), 
 					find.getString(4), find.getString(5), find.getInt(6), find.getInt(7));
-				if(i==0){ //junho
-					//LockInfo lockInfo2 = new LockInfo(0, 0, 0,  find.getString(4), "", 0, 0);
-			
-					//lockList.add(i, lockInfo);
-				}
 				
 				Cursor rePoCursor = db.rawQuery("SELECT reward, point FROM history WHERE category_id=\'" + lockInfo.getGroupId() + "\'", null);
 				rePoCursor.moveToFirst();
@@ -355,7 +350,7 @@ public class LockScreenActivity extends Activity {
 			Bundle args = getArguments();
 			int position = args.getInt(ARG_SECTION_NUMBER);
 
-			if (position == 1) { //junho
+			if (position == 1) {
 				rootView = inflater.inflate(R.layout.fragment_locker_viewpager,
 						container, false);
 				ViewPager viewPager;
@@ -364,14 +359,6 @@ public class LockScreenActivity extends Activity {
 						.findViewById(R.id.locker_fragment_id_viewpager);
 				viewPager.setAdapter(new StudyWordAdapter(context));
 			}
-//			else if(position == 3){ //junho
-//				rootView = inflater.inflate(R.layout.fragment_locker_image,
-//						container, false);
-//				ImageView img;
-//				img = (ImageView) rootView
-//						.findViewById(R.id.locker_fragment_id_image);
-//				img.setImageResource(R.drawable.store_44_image_amanda);
-//			}
 			else {
 				rootView = inflater.inflate(R.layout.fragment_locker_image,
 						container, false);
@@ -470,12 +457,11 @@ public class LockScreenActivity extends Activity {
     				startActivity(intent);
     				finish();
 				}
-//				else if(position == 1){//junho || pos ==1
-//					//Intent intent = new Intent(getApplicationContext(),)
-//					Intent intent = new Intent(getApplicationContext(),StudyTestMockStart.class);
-//					startActivity(intent);
-//					finish();
-//				}
+				else if(position == 2){//junho , Mock Test
+					Intent intent = new Intent(getApplicationContext(),StudyTestMockStart.class);
+					startActivity(intent);
+					finish();
+				}
 				else{
 					new SendLockLog().execute("http://www.todpop.co.kr/api/screen_lock/set_ad_log.json?user_id=" + userId 
 							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId());

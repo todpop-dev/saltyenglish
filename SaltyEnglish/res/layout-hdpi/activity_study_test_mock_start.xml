@@ -8,14 +8,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="67.5dp" >
+        android:layout_marginTop="38.67dp" >
 
         <RelativeLayout
             android:id="@+id/rl_mocktest_poster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="21dp"
+            android:layout_marginTop="16.67dp"
             android:background="@drawable/test_2_img_imgbox" >
 
             <ImageView
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="42.5dp"
+            android:layout_marginTop="33.33dp"
             android:onClick="startMockTest"
             android:background="@drawable/mocktest_drawable_btn_start" >
         </Button>

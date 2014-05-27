@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.Gravity;
@@ -65,9 +66,15 @@ public class StudyTestMockStart extends Activity {
 		finish();
 	}
 	
-	public void clickLevelTest(View view)
+	public void startMockTest(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
+		//Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
+		//startActivity(intent);
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		Editor ed = studyInfo.edit();
+		ed.putInt("tmpStageAccumulated", 99999);
+		ed.apply();
+		Intent intent=new Intent(getApplicationContext(),StudyTestMockCnt.class);
 		startActivity(intent);
 		finish();
 	}
@@ -77,7 +84,7 @@ public class StudyTestMockStart extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
-		FlurryAgent.logEvent("Study Category");
+		FlurryAgent.logEvent("MockTest Start Activity");
 	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 

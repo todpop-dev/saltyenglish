@@ -74,6 +74,8 @@ public class StudyTestMock extends Activity {
 //	int[] krWords1;
 //	int[] krWords2;
 //	int[] krWords3;
+ 	
+ 	static int cntMaxWords;
 	
 	ArrayList<String> englishWords;
 	ArrayList<String> optionOne;
@@ -146,13 +148,13 @@ public class StudyTestMock extends Activity {
 		optionThree = new ArrayList<String>();
 		optionFour = new ArrayList<String>();
 		
-		//SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
-		tmpStageAccumulated = 1;//studyInfo.getInt("tmpStageAccumulated", 1);
+		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
+		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		
 		//page number
-		pageNumber = (ImageView)findViewById(R.id.study_testmock_id_view_number);
-		pageNumber.setBackgroundResource(R.drawable.test_9_image_number_1);
+//		pageNumber = (ImageView)findViewById(R.id.study_testmock_id_view_number);
+//		pageNumber.setBackgroundResource(R.drawable.test_9_image_number_1);
 		
 		
 		// Relative Layout for pausing
@@ -199,10 +201,10 @@ public class StudyTestMock extends Activity {
 					stopTimeCount();				
 					crocodileNewStart();
 					// string to drawable ID
-					String imageID = "test_9_image_number_"+(wordCount+1);
-					int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
+//					String imageID = "test_9_image_number_"+(wordCount+1);
+//					int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
 					//update image
-					pageNumber.setBackgroundResource(resID);
+//					pageNumber.setBackgroundResource(resID);
 					//update test word
 					setupTestWords(wordCount);
 					if (wordCount>1) {
@@ -214,7 +216,7 @@ public class StudyTestMock extends Activity {
 					stopTimeCount();
 					isTestFinish = true;
 					imageTimeBlindAni.cancel();
-					Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+					Intent intent = new Intent(getApplicationContext(), StudyTestMockFinish.class);
 					startActivity(intent);
 					finish();
 				}
@@ -389,6 +391,8 @@ public class StudyTestMock extends Activity {
 			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " ORDER BY RANDOM();", null);
 			
 			if (cursor.getCount()>0) {
+				cntMaxWords = cursor.getCount();
+				Log.e("cntMaxWords",cntMaxWords+"");
 				while(cursor.moveToNext()) {
 					englishWords.add(cursor.getString(0));
 					optionOne.add(cursor.getString(1));
@@ -456,16 +460,16 @@ public class StudyTestMock extends Activity {
 			wordCount++;
 			
 			// Setup Label
-			String imageID = "test_9_image_number_"+(wordCount+1);
-			int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
-			pageNumber.setBackgroundResource(resID);
+			//String imageID = "test_9_image_number_"+(wordCount+1);
+			//int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
+			//pageNumber.setBackgroundResource(resID);
 
 			// Setup Words
-			if (wordCount <=9) {
+			if (wordCount <= cntMaxWords-1) {
 				setupTestWords(wordCount);
 				startTime = 10000;
 				startTimeCount(startTime);
-			} else if (wordCount == 10) {
+			} else if (wordCount == cntMaxWords) {
 				// Send Final Request to Server
 				Log.d("funny result: -----", finalAnswerForRequest);
 				SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
@@ -475,7 +479,7 @@ public class StudyTestMock extends Activity {
 				
 				stopTimeCount();
 				isTestFinish = true;
-				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+				Intent intent = new Intent(getApplicationContext(), StudyTestMockFinish.class);
 				startActivity(intent);
 				finish();
 			}
@@ -532,6 +536,7 @@ public class StudyTestMock extends Activity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		FlurryAgent.logEvent("MockTest Activity");
 	    EasyTracker.getInstance(this).activityStart(this);
 	}
 	 

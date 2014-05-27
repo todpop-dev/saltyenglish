@@ -292,12 +292,11 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.StudyTestMock"
+            android:label="@string/title_activity_rg_register"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.StudyTestMockStart"
             android:screenOrientation="portrait" >
@@ -307,7 +306,7 @@
         <service android:name="com.todpop.saltyenglish.LockGetService" />
 
         <receiver android:name="com.todpop.api.LockScreenReceiver" />
-        <receiver android:name="CpxPackageChangeReceiver" >
+        <receiver android:name="com.todpop.saltyenglish.CpxPackageChangeReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
@@ -335,6 +334,15 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestMockCnt"
+            android:label="@string/title_activity_study_test_mock_cnt" >
+        </activity>
+        <activity android:name="com.todpop.saltyenglish.StudyTestMockFinish">
+        </activity>
+        <activity android:name="com.todpop.saltyenglish.StudyTestMockResult">
+        </activity>
     </application>
 
 </manifest>
