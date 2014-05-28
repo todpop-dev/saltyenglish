@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -257,6 +258,10 @@ public class StudyTestMockResult extends Activity {
 						// nothing
 						else
 						{
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							
+							popupLayoutReward.setVisibility(View.GONE);
+							popupLayoutPoint.setVisibility(View.GONE);
 							Log.e("MockTestResult","nothing");
 							// don't show popup page
 						}
@@ -367,14 +372,14 @@ public class StudyTestMockResult extends Activity {
 			textKr.setText(arSrc.get(position).kr);
 
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
-			//Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
+			Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
 
 			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);
-				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
+//				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
 			} else {
 				checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
-				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
+//				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			}
 
 			//			if (count ==1) {
