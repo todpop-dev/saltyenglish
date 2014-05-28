@@ -171,7 +171,7 @@ public class StudyBegin extends FragmentActivity {
 	
 	LoadingDialog loadingDialog;
 	
-	private boolean shareTried = false;
+	private static boolean shareTried = false;
 	private final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 	
@@ -467,7 +467,7 @@ public class StudyBegin extends FragmentActivity {
 					FlurryAgent.logEvent("CPD (Facebook)");
 					cpdFbShare.setVisibility(View.VISIBLE);
 					fbShareLayout.setVisibility(View.VISIBLE);
-					if(sharedHistory.equals("0")){
+					if(sharedHistory.equals("0") || shareTried){
 						cpdFbShare.setEnabled(false);
 						fbShareReward.setText(R.string.facebook_share_history);
 					}
