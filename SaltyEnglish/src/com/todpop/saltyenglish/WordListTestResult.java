@@ -76,11 +76,10 @@ public class WordListTestResult extends Activity {
 
 		getTestWords();
 
-		TextView levelShow = (TextView) findViewById(R.id.wordlisttestresult_result_id_level);
-		String resultShowA = getResources().getString(R.string.word_list_test_result_a);
-		String resultShowB = getResources().getString(R.string.word_list_test_result_b);
-		levelShow.setText(String.valueOf(wordListSize) + resultShowA + String.valueOf(wordCorrectCnt) +
-				resultShowB);
+		TextView totalWords = (TextView) findViewById(R.id.wordlisttestresult_result_id_total);
+		TextView levelShow = (TextView) findViewById(R.id.wordlisttestresult_result_id_correct);
+		totalWords.setText(String.valueOf(wordListSize));
+		levelShow.setText(String.valueOf(wordCorrectCnt));
 
 		MyListAdapter MyAdapter = new MyListAdapter(this,
 				R.layout.lvtest_result_list_item_view, arItem);

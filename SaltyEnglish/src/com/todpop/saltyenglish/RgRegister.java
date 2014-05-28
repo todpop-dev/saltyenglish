@@ -51,9 +51,6 @@ import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.google.analytics.tracking.android.EasyTracker;
 
-
-
-
 public class RgRegister extends Activity {
 	
     private UiLifecycleHelper uiHelper;
@@ -92,8 +89,6 @@ public class RgRegister extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rg_register);
-		
-		Log.d("RgRegister","1");
 		
 		rgInfo = getSharedPreferences("rgInfo", 0);
 		rgInfoEdit = rgInfo.edit();

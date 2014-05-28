@@ -251,6 +251,7 @@ public class MainActivity extends Activity
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					Log.e("getStage result", result.toString());
 					return result;
 				}
 				return result;

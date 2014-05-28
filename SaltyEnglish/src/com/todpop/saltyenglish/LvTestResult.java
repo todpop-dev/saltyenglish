@@ -51,7 +51,7 @@ public class LvTestResult extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lvtest_result);
+		//setContentView(R.layout.activity_lvtest_result);
 		
 		FlurryAgent.logEvent("Level Test Result");
 		

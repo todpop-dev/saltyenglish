@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -27,10 +28,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -40,6 +43,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class SurveyView extends Activity {
 
@@ -60,13 +64,17 @@ public class SurveyView extends Activity {
 	int adId;
 	String rewardAmount;
 	String pointAmount;
-
+	
+	SharedPreferences cpxInfo;
+	SharedPreferences pref;
+	String userId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_survey_view);
 
-		SharedPreferences cpxInfo = getSharedPreferences("cpxInfo", 0);
+		cpxInfo = getSharedPreferences("cpxInfo", 0);
 
 		listView = (ListView) findViewById(R.id.survey_id_list_view);
 		listView.setFocusableInTouchMode(true);
@@ -77,15 +85,13 @@ public class SurveyView extends Activity {
 		answerMap = new HashMap<Integer, String>();
 		listViewHolder = new HashMap<Integer, View>();
 
-		SharedPreferences pref = getSharedPreferences("rgInfo", 0);
-		String userId = pref.getString("mem_id", "0");
+		pref = getSharedPreferences("rgInfo", 0);
+		userId = pref.getString("mem_id", "0");
 		adId = cpxInfo.getInt("adId", 0);
-		submitStr = "http://todpop.co.kr/api/advertises/set_survey_result.json?ad_id="
-				+ cpxInfo.getInt("adId", 0) + "&user_id=" + userId;
 
 		new GetInfo()
 				.execute("http://todpop.co.kr/api/advertises/get_cps_questions.json?ad_id="
-						+ cpxInfo.getInt("adId", 0));
+						+ adId);
 
 		rewardAmount = cpxInfo.getString("reward", "0");
 		pointAmount = cpxInfo.getString("point", "0");
@@ -414,8 +420,16 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.survey_id_question);
 					question.setText(arSrc.get(position).question);
 
-					EditText et = (EditText) convertView
+					final EditText et = (EditText) convertView
 							.findViewById(R.id.survey_id_edit_text);
+					if(arSrc.size() - 1 == position){
+						Log.i("SETVEN", "action_done");
+						et.setImeOptions(EditorInfo.IME_ACTION_DONE);
+					}
+					else{
+						Log.i("SETVEN", "action_next");
+						et.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+					}
 					et.setOnFocusChangeListener(new OnFocusChangeListener() {
 
 						public void onFocusChange(View v, boolean hasFocus) {
@@ -443,6 +457,15 @@ public class SurveyView extends Activity {
 									}
 								}
 							}
+						}
+					});
+					et.setOnEditorActionListener(new OnEditorActionListener(){
+						@Override
+						public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+							if(actionId == EditorInfo.IME_ACTION_DONE){
+								et.clearFocus();
+							}
+							return false;
 						}
 					});
 
@@ -503,6 +526,8 @@ public class SurveyView extends Activity {
 	}
 
 	public void submitSurvey(View v) {
+		submitStr = "http://todpop.co.kr/api/advertises/set_survey_result.json?ad_id="
+				+ adId + "&user_id=" + userId;
 		for (int i = 0; i < surveyCount; i++) {
 			submitStr += answerMap.get(i);
 		}

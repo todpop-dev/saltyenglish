@@ -259,6 +259,7 @@ public class StudyTestResult extends Activity {
 									popupOnly.setVisibility(View.VISIBLE);
 									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
 									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
+									popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigpoint);
 									popupOnlyAmount.setText("+" + resultPoint);
 									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 								}
@@ -268,6 +269,7 @@ public class StudyTestResult extends Activity {
 								popupOnly.setVisibility(View.VISIBLE);
 								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
 								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
+								popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigcoin);
 								popupOnlyAmount.setText("+" + resultReward);
 								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 							}
@@ -432,9 +434,9 @@ public class StudyTestResult extends Activity {
 //			}
 			
 			if (count%2 == 1) {
-				convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_blue_center);
+				convertView.setBackgroundResource(R.drawable.weekly_2_img_saparatebox_1);
 			} else {
-				convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_skyblue_center);
+				convertView.setBackgroundResource(R.drawable.weekly_2_img_saparatebox_2);
 			}
 			
 			CheckBox wordListCB = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
@@ -494,15 +496,13 @@ public class StudyTestResult extends Activity {
 		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) 
 		{
-			goHome();
+			finish();
 		}
 		return false;
 	}
 	
 	public void showStudyLearnActivity(View v)
 	{
-		Intent intent =new Intent(getApplicationContext(),MainActivity.class);
-		startActivity(intent);
 		finish();
 	}
 	

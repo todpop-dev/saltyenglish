@@ -24,11 +24,13 @@ import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -72,6 +74,10 @@ public class StudyTestFinish extends Activity {
 	String sharedId;
 	
 	SharedPreferences rgInfo;
+	
+	AudioManager audio;
+	int oldVolume;
+	
 	private int video_length = 0;
 	private VideoView video;
 	private int ad_id = -1;
@@ -104,6 +110,9 @@ public class StudyTestFinish extends Activity {
 		
 		fbShareLayout = (LinearLayout)findViewById(R.id.testfinish_fb_share_layout);
 		fbShareReward = (TextView)findViewById(R.id.testfinish_fb_share_reward);
+		
+		audio = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		oldVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
 		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
@@ -427,6 +436,10 @@ public class StudyTestFinish extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		int maxVol = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		int volume = (int) (maxVol * 0.3);
+		audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 	}
 
 	@Override
@@ -449,6 +462,7 @@ public class StudyTestFinish extends Activity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		audio.setStreamVolume(AudioManager.STREAM_MUSIC, oldVolume, 0);
 	}
 
 	@Override

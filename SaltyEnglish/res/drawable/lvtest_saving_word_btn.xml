@@ -3,9 +3,9 @@
  
      <item android:state_checked="false"
           android:state_enabled="true"
-          android:drawable="@drawable/lvtest_10_btn_pencil_off" />
+          android:drawable="@drawable/weekly_2_btn_pencil_off" />
     <item android:state_checked="true"
           android:state_enabled="true"
-          android:drawable="@drawable/lvtest_10_btn_pencil_on" />
+          android:drawable="@drawable/weekly_2_btn_pencil_on" />
  
 </selector>
