@@ -217,10 +217,10 @@ public class LockScreenActivity extends Activity {
 				}
 				hhmm.setText(time);
 				String apm = DateFormat.format("a", currentTime.toMillis(true)).toString();
-				if(apm.equals("¿ÀÀü")){
+				if(apm.equals("ï¿½ï¿½ï¿½ï¿½")){
 					apm = "AM";
 				}
-				else if(apm.equals("¿ÀÈÄ")){
+				else if(apm.equals("ï¿½ï¿½ï¿½ï¿½")){
 					apm = "PM";
 				}
 				aa.setText(apm);
@@ -234,7 +234,7 @@ public class LockScreenActivity extends Activity {
 		
 		db = lHelper.getReadableDatabase();
 		Cursor find = db.rawQuery("SELECT * FROM latest order by category asc", null);
-		int count = find.getCount();
+		int count = find.getCount(); 
 		verticalPageCount = count + 1;
 		if(count > 0){
 			arrowDown.setVisibility(View.VISIBLE);
@@ -249,10 +249,13 @@ public class LockScreenActivity extends Activity {
 				
 				lockInfo.setReward(rePoCursor.getInt(0));
 				lockInfo.setPoint(rePoCursor.getInt(1));
-				
-				lockList.add(i, lockInfo);
+				if(lockInfo.getGroup() == 413)
+					lockList.add(0, lockInfo);
+				else
+					lockList.add(i, lockInfo);
 				find.moveToNext();
 			}
+			
 		}
 		else{
 			arrowDown.setVisibility(View.INVISIBLE);
@@ -371,7 +374,7 @@ public class LockScreenActivity extends Activity {
 				viewPager = (ViewPager) rootView
 						.findViewById(R.id.locker_fragment_id_viewpager);
 				viewPager.setAdapter(new StudyWordAdapter(context));
-			} 
+			}
 			else {
 				rootView = inflater.inflate(R.layout.fragment_locker_image,
 						container, false);
@@ -380,7 +383,7 @@ public class LockScreenActivity extends Activity {
 				img = (ImageView) rootView
 						.findViewById(R.id.locker_fragment_id_image);
 				String gId = lockList.get(position - 2).getGroupId();
-				
+				Log.e("LOCK_IMG_GID",gId);
 				img.setImageBitmap(fm.getImgFile(gId));
 			}
 			return rootView;
@@ -465,10 +468,15 @@ public class LockScreenActivity extends Activity {
 				finish();
 			} else if (current == 0) {
 				int position = verViewPager.getCurrentItem();
-				if(position == 0){
+				if(position == 0){ 
     				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
     				startActivity(intent);
     				finish();
+				}
+				else if(position == 1){//junho , Mock Test
+					Intent intent = new Intent(getApplicationContext(),StudyTestMockStart.class);
+					startActivity(intent);
+					finish();
 				}
 				else{
 					new SendLockLog().execute("http://www.todpop.co.kr/api/screen_lock/set_ad_log.json?user_id=" + userId 
@@ -616,6 +624,7 @@ public class LockScreenActivity extends Activity {
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
 				String getURL = urls[0];
+				Log.e("url",getURL);
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
@@ -687,10 +696,10 @@ public class LockScreenActivity extends Activity {
 			}
 			hhmm.setText(time);
 			String apm = DateFormat.format("a", currentTime.toMillis(true)).toString();
-			if(apm.equals("¿ÀÀü")){
+			if(apm.equals("ï¿½ï¿½ï¿½ï¿½")){
 				apm = "AM";
 			}
-			else if(apm.equals("¿ÀÈÄ")){
+			else if(apm.equals("ï¿½ï¿½ï¿½ï¿½")){
 				apm = "PM";
 			}
 			aa.setText(apm);
