@@ -76,22 +76,6 @@ public class StudyTestMockResult extends Activity {
 	View popupView;
 	PopupWindow popupWindow;
 
-	LinearLayout popupBoth;
-	LinearLayout popupBothNoAtt;	//w/o attendance reward
-	TextView popupBothNoAttReward;
-	TextView popupBothNoAttPoint;
-	LinearLayout popupBothAtt;	//w/ attendance reward
-	TextView popupBothAttReward;
-	TextView popupBothAttPoint;
-	TextView popupAttReward; //reward for attendance
-	TextView popupAttPoint; //point for attendance
-
-	LinearLayout popupOnly;
-	ImageView popupOnlyTitle;
-	ImageView popupOnlyType;
-	ImageView popupOnlyImg;
-	TextView popupOnlyAmount;
-
 	//loading progress dialog
 	LoadingDialog loadingDialog;
 
@@ -99,6 +83,11 @@ public class StudyTestMockResult extends Activity {
 	SharedPreferences.Editor studyInfoEdit;
 	int ad_id;
 	SharedPreferences rgInfo;
+	private TextView popupTvAnswerPercentage;
+	private LinearLayout popupLayoutReward;
+	private TextView popupReward;
+	private LinearLayout popupLayoutPoint;
+	private TextView popupPoint;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,40 +145,20 @@ public class StudyTestMockResult extends Activity {
 		// ----------------------------
 
 		relative = (RelativeLayout)findViewById(R.id.mock_test_result_id_main);
-		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
+		popupView = View.inflate(this, R.layout.popup_view_test_mock_result, null);
 		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-
-		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
-		// w/o attendace
-		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
-		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
-		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
-		// w/ attendace
-		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
-		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
-		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
-		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
-		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
-
-		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
-		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
-		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
-		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
-		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
-
-
-//		if (tmpStageAccumulated%10 != 0) {
-//			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-//					"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
-//		} else {
-//			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-//					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
-//		}
+		
+		popupTvAnswerPercentage = (TextView)popupView.findViewById(R.id.popup_mock_test_answer_percentage);
+		
+		popupLayoutReward = (LinearLayout)popupView.findViewById(R.id.popup_mock_test_result_reward_layout);
+		popupReward = (TextView)popupView.findViewById(R.id.popup_mock_test_result_reward);
+		
+		popupLayoutPoint = (LinearLayout)popupView.findViewById(R.id.popup_mock_test_result_point_layout);
+		popupPoint= (TextView)popupView.findViewById(R.id.popup_mock_test_result_point);
 
 		loadingDialog = new LoadingDialog(this);
 		loadingDialog.show();
 
-//		new GetTestResult().execute(resultUrl);
 		SQLiteDatabase locker_db = new LockerDBHelper(getApplicationContext()).getReadableDatabase();
 		Cursor cursor = locker_db.rawQuery("SELECT * FROM latest where category=413 order by id asc", null);
 		if(cursor.moveToLast())
@@ -198,133 +167,16 @@ public class StudyTestMockResult extends Activity {
 		setTestLogUrl += "ad_id="+ad_id+"&";
 		setTestLogUrl += "user_id="+rgInfo.getString("mem_id", null)+"&";
 		setTestLogUrl += "score="+ score;
-		//Log.e("setTestLogUrl",setTestLogUrl);
+		
 		new SetTestLog().execute(setTestLogUrl);
 	
 		
-//		Log.d("-------- result url ------- ", resultUrl);
-		// ----------- End of  Request Result -------------
 
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 
 		ListView MyList;
 		MyList=(ListView)findViewById(R.id.lvmocktestresult_id_listview);
 		MyList.setAdapter(MyAdapter);
-	}
-
-	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try {
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 5000; 
-				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 5000; 
-				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
-
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
-
-				if (resEntity != null) {    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					//Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				loadingDialog.dissmiss();
-				Log.d("Get Result JSON RESPONSE ---- ", json.toString());				        	
-
-				if(json.getBoolean("status")==true) {
-					try {
-						JSONObject resultObj = json.getJSONObject("data");
-						resultScore = resultObj.getString("score");
-						resultReward = resultObj.getString("reward");
-						resultPoint = resultObj.getString("rank_point");
-						resultMedal = resultObj.getString("medal");
-
-						resultAttendReward = resultObj.getString("attend_reward");
-						resultAttendPoint = resultObj.getString("attend_point");
-
-						String stageInfo = resultObj.getString("stage_info");		// stageInfo
-						studyInfoEdit.putString("stageInfo", stageInfo);
-						studyInfoEdit.apply();
-
-//						rewardView.setText(resultReward);
-						scoreView.setText(score + getResources().getString(R.string.study_result_score_text));
-
-						if(resultAttendReward.equals("null")){
-							if(resultReward.equals("0")){
-								if(resultPoint.equals("0")){
-									//no popup
-								}
-								else{
-									popupBoth.setVisibility(View.GONE);
-									popupOnly.setVisibility(View.VISIBLE);
-									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
-									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
-									popupOnlyAmount.setText("+" + resultPoint);
-									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-								}
-							}
-							else if(resultPoint.equals("0")){
-								popupBoth.setVisibility(View.GONE);
-								popupOnly.setVisibility(View.VISIBLE);
-								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
-								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
-								popupOnlyAmount.setText("+" + resultReward);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-							else{
-								popupBoth.setVisibility(View.VISIBLE);
-								popupOnly.setVisibility(View.GONE);
-								popupBothAtt.setVisibility(View.GONE);
-								popupBothNoAtt.setVisibility(View.VISIBLE);
-								popupBothNoAttReward.setText("+" + resultReward);
-								popupBothNoAttPoint.setText("+" + resultPoint);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-						}
-						else{
-							popupBoth.setVisibility(View.VISIBLE);
-							popupOnly.setVisibility(View.GONE);
-							popupBothAtt.setVisibility(View.VISIBLE);
-							popupBothNoAtt.setVisibility(View.GONE);
-
-							popupBothAttReward.setText("+" + resultReward);
-							popupBothAttPoint.setText("+" + resultPoint);
-							popupAttReward.setText("+ " + resultAttendReward);
-							popupAttPoint.setText("+ " + resultAttendPoint);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						}
-
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-
-				}else{		    
-				}
-
-			} catch (Exception e) {
-				Log.d("Exception: ", e.toString());
-			}
-		}
 	}
 
 	private class SetTestLog extends AsyncTask<String, Void, JSONObject> 
@@ -366,9 +218,50 @@ public class StudyTestMockResult extends Activity {
 
 				if(json.getBoolean("status")==true) {
 					try {
+						// 여기서 테스트 결과 받아(리워드,포인트)
+						int reward=0,point=0;
+						if(json.has("reward"))
+							reward = json.getInt("reward");
+						if(json.has("point"))
+							point = json.getInt("point");
 						
+						rewardView.setText(reward+"");
+						// reward and point
+						
+						popupTvAnswerPercentage.setText(score+"");
+						if(reward > 0 && point > 0)
+						{
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							popupPoint.setText("+ "+point);
+							popupReward.setText("+ "+reward);
+							Log.e("MockTestResult","Both");
+						}
+						// reward only
+						else if(reward > 0)
+						{
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							popupReward.setText("+ "+reward);
+							
+							popupLayoutPoint.setVisibility(View.GONE);
+							Log.e("MockTestResult","reward");	
+						}
+						//point only
+						else if(point > 0)
+						{
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+							popupPoint.setText("+ "+point);
 
-
+							popupLayoutReward.setVisibility(View.GONE);
+							Log.e("MockTestResult","point");
+						}
+						// nothing
+						else
+						{
+							Log.e("MockTestResult","nothing");
+							// don't show popup page
+						}
+						
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -402,8 +295,6 @@ public class StudyTestMockResult extends Activity {
 					arItem.add(mi);
 				}
 			}
-
-
 		} catch (Exception e) {
 			Log.e("AFDSDFDSFSDFDSF", "catch error");
 			e.printStackTrace();
