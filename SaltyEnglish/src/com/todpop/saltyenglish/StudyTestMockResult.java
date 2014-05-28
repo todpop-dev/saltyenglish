@@ -372,14 +372,15 @@ public class StudyTestMockResult extends Activity {
 			textKr.setText(arSrc.get(position).kr);
 
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
-			Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
-
+			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
+			itemBtn.setChecked(((ListView)parent).isItemChecked(position));
+			//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);
-//				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
+				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
 			} else {
 				checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
-//				itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
+				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			}
 
 			//			if (count ==1) {
