@@ -421,6 +421,11 @@ public class RgRegisterEmailInfo extends Activity {
         		HttpParams httpParams = new BasicHttpParams();
         		
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+				//junho unique device , but 3g, 4g avaliable , wifi model disable
+				TelephonyManager telManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+				params.add(new BasicNameValuePair("device_id",telManager.getDeviceId()));
+				//junho end
 				
 				String birthDay = Integer.toString(mYear) + "-" + Integer.toString(mMonth + 1) + "-" + Integer.toString(mDay);
 				if(!rgInfo.getString("facebook","no").equals("no"))						// cross join (facebook->email)
