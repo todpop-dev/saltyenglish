@@ -126,7 +126,9 @@ public class FbNickname extends Activity {
 				//Log.d("URL ---- ", postURL);
 				HttpPost post = new HttpPost(postURL); 
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
-				
+				//junho determine unique device
+				params.add(new BasicNameValuePair("device_id",android.provider.Settings.Secure.ANDROID_ID));
+				//junho end
 				if(!rgInfo.getString("email","no").equals("no"))										// cross join ( email -> facebook)
 				{
 					params.add(new BasicNameValuePair("facebook", rgInfo.getString("facebook", null)));

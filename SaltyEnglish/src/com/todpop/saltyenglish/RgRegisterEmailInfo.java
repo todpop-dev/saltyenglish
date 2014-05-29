@@ -423,8 +423,7 @@ public class RgRegisterEmailInfo extends Activity {
         		
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-				//junho determine unique device , 
-				
+				//junho determine unique device
 				params.add(new BasicNameValuePair("device_id",android.provider.Settings.Secure.ANDROID_ID));
 				//junho end
 				
