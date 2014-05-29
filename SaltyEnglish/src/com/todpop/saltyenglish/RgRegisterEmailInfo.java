@@ -32,6 +32,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.audiofx.BassBoost.Settings;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -422,9 +423,9 @@ public class RgRegisterEmailInfo extends Activity {
         		
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-				//junho unique device , but 3g, 4g avaliable , wifi model disable
-				TelephonyManager telManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-				params.add(new BasicNameValuePair("device_id",telManager.getDeviceId()));
+				//junho determine unique device , 
+				
+				params.add(new BasicNameValuePair("device_id",android.provider.Settings.Secure.ANDROID_ID));
 				//junho end
 				
 				String birthDay = Integer.toString(mYear) + "-" + Integer.toString(mMonth + 1) + "-" + Integer.toString(mDay);
