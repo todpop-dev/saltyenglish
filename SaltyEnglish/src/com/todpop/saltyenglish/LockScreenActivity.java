@@ -189,13 +189,13 @@ public class LockScreenActivity extends Activity {
 					else{
 						leftAmount.setVisibility(View.INVISIBLE);
 					}
+					//Log for flurry
+					Map<String, String> logParams = new HashMap<String, String>();
+					logParams.put("GroupID", lockList.get(position - 1).getGroupId());
+					logParams.put("UserID", userId);
+					FlurryAgent.logEvent("Locker_Expose", logParams);
 				}
 
-				//Log for flurry
-				Map<String, String> logParams = new HashMap<String, String>();
-				logParams.put("GroupID", lockList.get(position - 1).getGroupId());
-				logParams.put("UserID", userId);
-				FlurryAgent.logEvent("Locker_Expose", logParams);
 			}
 		});	
 	}
