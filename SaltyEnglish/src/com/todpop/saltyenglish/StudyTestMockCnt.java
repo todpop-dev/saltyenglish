@@ -136,7 +136,7 @@ public class StudyTestMockCnt extends Activity {
 					public void run() {
 						try{
 							db = new WordDBHelper(getApplicationContext()).getWritableDatabase();
-							db.execSQL("DELETE FROM dic WHERE stage=99999");
+							db.execSQL("DELETE FROM dic WHERE stage=-1");
 							JSONArray word_arr=json.getJSONArray("list");
 							for(int i=0;i < word_arr.length();i++)
 							{
@@ -144,12 +144,12 @@ public class StudyTestMockCnt extends Activity {
 								ContentValues row = new ContentValues();
 								row.put("name", job.getString("word"));
 								row.put("mean", job.getString("mean"));
-								row.put("stage", 99999); //stage 99999 = mock test (tmp)
+								row.put("stage", -1); //stage -1 = mock test (tmp)
 								db.insert("dic", null, row);
 							}
 							SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 							Editor editor = studyInfo.edit();
-							editor.putInt("tmpStageAccumulated", 99999);
+							editor.putInt("tmpStageAccumulated", -1);
 							editor.apply();
 						}
 						catch(Exception e)
