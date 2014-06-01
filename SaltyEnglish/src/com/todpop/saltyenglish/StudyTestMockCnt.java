@@ -54,24 +54,6 @@ public class StudyTestMockCnt extends TypefaceActivity {
 		Log.e("Jun Test1","url");
 		new GetMockTestWords().execute(url);
 
-		new CountDownTimer(4000,1000) {
-			int cur_cnt_img_id = R.drawable.test_3_img_second_3;
-			ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
-			@Override
-			public void onTick(long millisUntilFinished) {
-				iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
-				if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
-				{
-					Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
-					startActivity(intent);
-					finish();
-				}
-			}
-
-			@Override
-			public void onFinish() {
-			}
-		}.start();
 	}
 
 	@Override
@@ -152,11 +134,32 @@ public class StudyTestMockCnt extends TypefaceActivity {
 							Editor editor = studyInfo.edit();
 							editor.putInt("tmpStageAccumulated", -1);
 							editor.apply();
+							
+							new CountDownTimer(4000,1000) {
+								int cur_cnt_img_id = R.drawable.test_3_img_second_3;
+								ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
+								@Override
+								public void onTick(long millisUntilFinished) {
+									iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
+									if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
+									{
+										Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
+										startActivity(intent);
+										finish();
+									}
+								}
+
+								@Override
+								public void onFinish() {
+								}
+							}.start();
+
 						}
 						catch(Exception e)
 						{
 							e.printStackTrace();
 						}
+						
 					}
 				}).start();
 
