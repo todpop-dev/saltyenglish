@@ -35,6 +35,8 @@ public class StudyTestMockCnt extends TypefaceActivity {
 	SharedPreferences rgInfo;
 	LockerDBHelper lHelper;
 	SQLiteDatabase db;
+	
+	CountDownTimer timer;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +57,24 @@ public class StudyTestMockCnt extends TypefaceActivity {
 		Log.e("Jun Test1","url");
 		new GetMockTestWords().execute(url);
 
+		timer = new CountDownTimer(4000,1000) {
+			int cur_cnt_img_id = R.drawable.test_3_img_second_3;
+			ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
+			@Override
+			public void onTick(long millisUntilFinished) {
+				iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
+				if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
+				{
+					Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
+					startActivity(intent);
+					finish();
+				}
+			}
+
+			@Override
+			public void onFinish() {
+			}
+		};
 	}
 
 	@Override
@@ -135,30 +155,14 @@ public class StudyTestMockCnt extends TypefaceActivity {
 								row.put("stage", -1); //stage -1 = mock test (tmp)
 								db.insert("dic", null, row);
 							}
+							db.close();
 							SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 							Editor editor = studyInfo.edit();
 							editor.putInt("tmpStageAccumulated", -1);
 							editor.apply();
-							// sqlite3 저장 후 카운트 시작,
+							// sqlite3 
 							// Count down
-							new CountDownTimer(4000,1000) {
-								int cur_cnt_img_id = R.drawable.test_3_img_second_3;
-								ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
-								@Override
-								public void onTick(long millisUntilFinished) {
-									iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
-									if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
-									{
-										Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
-										startActivity(intent);
-										finish();
-									}
-								}
-
-								@Override
-								public void onFinish() {
-								}
-							}.start();
+							timer.start();
 							
 						}
 						catch(Exception e)
