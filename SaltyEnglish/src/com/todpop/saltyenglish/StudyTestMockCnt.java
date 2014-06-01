@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -54,24 +55,6 @@ public class StudyTestMockCnt extends TypefaceActivity {
 		Log.e("Jun Test1","url");
 		new GetMockTestWords().execute(url);
 
-		new CountDownTimer(4000,1000) {
-			int cur_cnt_img_id = R.drawable.test_3_img_second_3;
-			ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
-			@Override
-			public void onTick(long millisUntilFinished) {
-				iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
-				if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
-				{
-					Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
-					startActivity(intent);
-					finish();
-				}
-			}
-
-			@Override
-			public void onFinish() {
-			}
-		}.start();
 	}
 
 	@Override
@@ -128,8 +111,12 @@ public class StudyTestMockCnt extends TypefaceActivity {
 		@Override
 		protected void onPostExecute(final JSONObject json) {
 			if(json == null) {
+				Toast.makeText(getApplicationContext(), "There are no json params, finish", Toast.LENGTH_LONG).show();
+				finish();
 			}
 
+
+			// add Mock test words in sqlite3
 			try {
 				new Thread(new Runnable() {
 
@@ -152,29 +139,35 @@ public class StudyTestMockCnt extends TypefaceActivity {
 							Editor editor = studyInfo.edit();
 							editor.putInt("tmpStageAccumulated", -1);
 							editor.apply();
+							// sqlite3 저장 후 카운트 시작,
+							// Count down
+							new CountDownTimer(4000,1000) {
+								int cur_cnt_img_id = R.drawable.test_3_img_second_3;
+								ImageView iv_cnt_img_view = (ImageView)findViewById(R.id.iv_test_cntdown);
+								@Override
+								public void onTick(long millisUntilFinished) {
+									iv_cnt_img_view.setBackgroundResource(cur_cnt_img_id--);
+									if(cur_cnt_img_id == R.drawable.test_3_img_second_0)
+									{
+										Intent intent = new Intent(getApplicationContext(),StudyTestMock.class);
+										startActivity(intent);
+										finish();
+									}
+								}
+
+								@Override
+								public void onFinish() {
+								}
+							}.start();
+							
 						}
 						catch(Exception e)
 						{
 							e.printStackTrace();
 						}
+						
 					}
 				}).start();
-
-
-				//		    	ContentValues row = new ContentValues();
-				//				row.put("name", jsonWords.getJSONObject(i).get("name").toString());
-				//				row.put("mean", jsonWords.getJSONObject(i).get("mean").toString());
-				//				row.put("example_en", jsonWords.getJSONObject(i).get("example_en").toString());
-				//				row.put("example_ko", jsonWords.getJSONObject(i).get("example_ko").toString());
-				//				row.put("phonetics", jsonWords.getJSONObject(i).get("phonetics").toString());
-				//				row.put("picture", (Integer)(jsonWords.getJSONObject(i).get("picture")));
-				//				row.put("image_url", jsonWords.getJSONObject(i).get("image_url").toString());
-				//				row.put("stage", tmpStageAccumulated);
-				//				row.put("xo", "X");
-				//
-				//				mDB.insert("dic", null, row);
-
-
 
 			} catch (Exception e) {
 
