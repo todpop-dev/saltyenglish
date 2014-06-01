@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,7 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomeMyPagePurchased extends Activity {
+public class HomeMyPagePurchased extends TypefaceActivity {
 	
 	PurchasedListViewAdapter purchasedListViewAdapter;
 	ArrayList<CouponListViewItem> couponList;
@@ -88,6 +88,8 @@ public class HomeMyPagePurchased extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView) popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 		
 		if(state == 0){
 			new GetCoupons(0).execute("http://todpop.co.kr/api/etc/"+rgInfo.getString("mem_id", "NO")+"/get_purchase_list.json?coupon_type=0");
@@ -202,11 +204,16 @@ public class HomeMyPagePurchased extends Activity {
     			holder.coinText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coins);
         		holder.coinImage = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coin_image);
         		holder.image = (ImageView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_item);
+        		setFont(holder.timeText);
+        		setFont(holder.name1Text);
+        		setFont(holder.name2Text);
+        		setFont(holder.coinText);
         		convertView.setTag(holder);
     		}
     		else{
     			holder = (ViewHolder)convertView.getTag();
     		}
+    		
     		
     		holder.timeText.setText(item.created_at);
     		holder.name1Text.setText(item.name);

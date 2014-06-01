@@ -2,6 +2,7 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RgRegisterProvision extends Activity {
+public class RgRegisterProvision extends TypefaceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class RgRegisterProvision extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.rg_register_provision, menu);
-		return true;
+		return false;
 	}
 	@Override
 	protected void onStart()

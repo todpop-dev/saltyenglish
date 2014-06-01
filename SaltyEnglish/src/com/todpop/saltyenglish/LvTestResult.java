@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class LvTestResult extends Activity {
+public class LvTestResult extends TypefaceActivity {
 	
 	ViewHolder viewHolder = null;
 

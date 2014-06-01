@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceFragmentActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMyPage extends FragmentActivity {
+public class HomeMyPage extends TypefaceFragmentActivity {
 
 	static RelativeLayout mainLayout;
 	
@@ -140,11 +141,16 @@ public class HomeMyPage extends FragmentActivity {
 		popupTitle = (TextView)popupView.findViewById(R.id.popup_view_prize_id_title);
 		popupDetail = (TextView)popupView.findViewById(R.id.popup_view_prize_id_detail);
 		popupGuide = (TextView)popupView.findViewById(R.id.popup_view_prize_id_guide);
-
+		
+		setFont(popupTitle);
+		setFont(popupDetail);
+		setFont(popupGuide);
 		
 		tempPopupview =View.inflate(this, R.layout.popup_view, null);
 		tempPopupWindow = new PopupWindow(tempPopupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		tempPopupText = (TextView)tempPopupview.findViewById(R.id.popup_id_text);
+		
+		setFont(tempPopupText);
 		
 		myNicknameBox.setText(rgInfo.getString("nickname", "NO"));
 		
@@ -220,6 +226,9 @@ public class HomeMyPage extends FragmentActivity {
 			TextView rankUserId = (TextView)rootView.findViewById(R.id.home_mypage_id_rankingid);
 
 			Bundle args = getArguments();
+			
+			setFont(prizeTitle);
+			setFont(rankUserId);
 			
 			prizeButton.setTag(args.getInt("page"));
 			prizeButton.setOnClickListener(prizeClick);

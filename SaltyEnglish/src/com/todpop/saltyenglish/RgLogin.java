@@ -23,6 +23,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -57,7 +58,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RgLogin extends Activity {
+public class RgLogin extends TypefaceActivity {
 
 	// email
 	EditText email;
@@ -114,6 +115,8 @@ public class RgLogin extends Activity {
 				ViewGroup.LayoutParams.MATCH_PARENT,
 				ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView) popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 
 		// loading dialog
 		loadingDialog = new LoadingDialog(this);
@@ -367,7 +370,7 @@ public class RgLogin extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.rg_login, menu);
-		return true;
+		return false;
 	}
 
 	// Facebook delegates

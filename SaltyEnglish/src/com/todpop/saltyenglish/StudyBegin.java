@@ -35,6 +35,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.FileManager;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceFragmentActivity;
 import com.todpop.saltyenglish.db.PronounceDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
@@ -79,7 +80,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StudyBegin extends FragmentActivity {
+public class StudyBegin extends TypefaceFragmentActivity {
 	// popup view
 	PopupWindow popupWindow;
 	View popupview;
@@ -202,6 +203,8 @@ public class StudyBegin extends FragmentActivity {
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		
+		setFont(popupText);
+		
 	 	// word change
 		word1 = (TextView)findViewById(R.id.study_word_tv);
 		word2 = (TextView)findViewById(R.id.study_word_pron_tv);
@@ -236,9 +239,6 @@ public class StudyBegin extends FragmentActivity {
 		}
 		
 		loadingDialog = new LoadingDialog(this);
-		
-		// Get word list - callback when get word list to setup page view
-		//new GetWord().execute("http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level);
 
 		Log.d("=======================","=========================");
 		Log.d("level",String.valueOf(tmpLevel));
@@ -254,11 +254,6 @@ public class StudyBegin extends FragmentActivity {
 			getWordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getWordsUrl);
 		else
 			getWordTask.execute(getWordsUrl);
-
-		// Get CPD ad -> Moved to after GetWords Request
-//		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-//		userId = rgInfo.getString("mem_id", "1");
-//		new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 		
 		picNull = 0;
 
@@ -436,6 +431,10 @@ public class StudyBegin extends FragmentActivity {
 				TextView pron = (TextView)rootView.findViewById(R.id.study_word_pron_tv);
 				TextView example = (TextView)rootView.findViewById(R.id.study_word_ex_tv);
 				ImageView wordImage = (ImageView)rootView.findViewById(R.id.fragment_study_begin_id_word_img);
+				
+				setFont(word);
+				setFont(pron);
+				setFont(example);
 
 				// Setup word textview
 				try {
@@ -456,6 +455,8 @@ public class StudyBegin extends FragmentActivity {
 				cpdFbShare = (Button)rootView.findViewById(R.id.studyfinish_id_facebook_share);
 				fbShareLayout = (RelativeLayout)rootView.findViewById(R.id.studyfinish_fb_share_layout);
 				fbShareReward = (TextView)rootView.findViewById(R.id.studyfinish_fb_share_reward);
+				
+				setFont(fbShareReward);
 				
 				cpdView.setOnClickListener(new CPDFlipListener());
 				cpdView.setImageBitmap(cpdFrontImage);
@@ -653,33 +654,7 @@ public class StudyBegin extends FragmentActivity {
 					
 					jsonWords = json.getJSONArray("data");
 					
-					for(int i=0;i<jsonWords.length();i++) {												
-//						ImageView wordImage = (ImageView)rootViewArr.get(i).findViewById(R.id.fragment_study_begin_id_word_img);
-//						TextView word =  (TextView)rootViewArr.get(i).findViewById(R.id.study_word_tv);
-//						TextView pron = (TextView)rootViewArr.get(i).findViewById(R.id.study_word_pron_tv);
-//						TextView example = (TextView)rootViewArr.get(i).findViewById(R.id.study_word_ex_tv);
-						
-						// Setup Image
-//						Integer picInt = (Integer)jsonWords.getJSONObject(i).get("picture");
-//						if (picInt == 1) {
-//							try {
-//								// show The Image
-//								//JSONObject img = jsonWords.getJSONObject(i).getJSONObject("image_url");
-//								String imgUrl = "http://todpop.co.kr" + jsonWords.getJSONObject(i).getString("image_url");
-//								URL url = new URL(imgUrl);
-//								Log.d("url ------ ", url.toString());
-//								new DownloadImageTask()
-//								            .execute(url.toString());
-//							} catch (Exception e) {
-//								
-//							}
-//						}
-						
-						// Setup word textview
-//						word.setText(jsonWords.getJSONObject(i).get("name").toString());
-//						pron.setText(jsonWords.getJSONObject(i).get("phonetics").toString());
-//						example.setText(jsonWords.getJSONObject(i).get("example_en").toString());
-						
+					for(int i=0;i<jsonWords.length();i++) {	
 						// Save info to Database
 						ContentValues row = new ContentValues();
 						row.put("name", jsonWords.getJSONObject(i).get("name").toString());
@@ -1368,8 +1343,8 @@ public class StudyBegin extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_bigin, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.study_bigin, menu);
+		return false;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -37,7 +37,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-public class HomeMoreHelp extends Activity {
+public class HomeMoreHelp extends TypefaceActivity {
 	
 	//declare define popup view
 	PopupWindow popupWindow;
@@ -58,6 +58,7 @@ public class HomeMoreHelp extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		setFont(popupText);
 		
 		new GetHelp().execute("http://todpop.co.kr/api/app_infos/get_helps.json");
 	}
@@ -141,6 +142,7 @@ public class HomeMoreHelp extends Activity {
 								textView.setPadding(70, 20, 0, 20);
 								textView.setTextColor(Color.rgb(0, 0, 0));
 								textView.setTextSize(19);
+								setFont(textView);
 								return textView;
 							}
 							@Override
@@ -149,6 +151,7 @@ public class HomeMoreHelp extends Activity {
 							{
 								TextView textView = getTextView();			
 								textView.setText(getChild(groupPosition, childPosition).toString());
+								setFont(textView);
 								return textView;
 							}
 							@Override
@@ -204,8 +207,8 @@ public class HomeMoreHelp extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_more_help, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_more_help, menu);
+		return false;
 	}
 	// on click
 

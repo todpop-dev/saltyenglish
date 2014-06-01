@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 
-public class HomeMore extends Activity {
+public class HomeMore extends TypefaceActivity {
 	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;

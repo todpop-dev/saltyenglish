@@ -1,5 +1,7 @@
 package com.todpop.saltyenglish;
 
+import com.todpop.api.TypefaceActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,7 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 
-public class RgRegisterTutorial extends Activity {
+public class RgRegisterTutorial extends TypefaceActivity {
 	ViewPager viewPager;
 	
 	ImageView indi_1;
@@ -220,7 +222,7 @@ public class RgRegisterTutorial extends Activity {
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
+		//getMenuInflater().inflate(R.menu.lv_test_bigin, menu);
 		return false;
 	}
 }

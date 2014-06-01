@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/common_bgimg_study" />
+                android:src="@drawable/common_bgimg_category" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -149,3 +149,176 @@
     </LinearLayout>
 
 </RelativeLayout>
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/study_category_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg_yellowpattern" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
+
+           
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/rg_drawable_btn_back"
+                android:onClick="onClickBack" />
+
+           
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/common_bgimg_category" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="254" >
+
+            <LinearLayout
+                android:id="@+id/study_category_id_weekly_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/study_5_img_weeklydog" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/studycategory_drawable_btn_weekly"
+                    android:onClick="goWeeklyTest" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="190" >
+
+            
+
+            <Button
+                android:id="@+id/study_category_id_basic_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/studycategory_drawable_btn_basic"
+                android:onClick="studyCategoryOneCB" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/study_category_id_basic_button"
+                android:layout_alignLeft="@id/study_category_id_basic_button"
+                android:layout_marginLeft="17dp"
+                android:src="@drawable/study_5_image_basic" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="190" >
+
+         
+
+            <Button
+                android:id="@+id/study_category_id_middle_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/studycategory_drawable_btn_middle"
+                android:onClick="studyCategoryTwoCB" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/study_category_id_middle_button"
+                android:layout_alignLeft="@id/study_category_id_middle_button"
+                android:layout_marginLeft="17dp"
+                android:src="@drawable/study_5_image_middle" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="190" >
+
+            
+
+            <Button
+                android:id="@+id/study_category_id_high_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/studycategory_drawable_btn_high"
+                android:onClick="studyCategoryThreeCB" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/study_category_id_high_button"
+                android:layout_alignLeft="@id/study_category_id_high_button"
+                android:layout_marginLeft="17dp"
+                android:src="@drawable/study_5_image_high" />
+        </RelativeLayout>
+        
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="366" >
+
+            <ImageView
+                android:id="@+id/study_category_id_toeic_img_ghost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/study_5_image_toeic"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/study_category_id_toeic_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/study_category_id_toeic_img_ghost"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/studycategory_drawable_btn_toeic"
+                android:onClick="studyCategoryFourCB" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/study_category_id_toeic_button"
+                android:layout_alignLeft="@id/study_category_id_toeic_button"
+                android:layout_marginLeft="17dp"
+                android:src="@drawable/study_5_image_toeic" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
+-->

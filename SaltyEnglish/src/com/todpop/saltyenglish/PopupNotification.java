@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.StudyTestResult.MyItem;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
@@ -34,7 +35,7 @@ import android.widget.TextView;
 
 
 
-public class PopupNotification extends Activity {
+public class PopupNotification extends TypefaceActivity {
 	ViewPager wordNote;
 	
 	
@@ -99,65 +100,6 @@ public class PopupNotification extends Activity {
 			Log.e("AFDSDFDSFSDFDSF", "catch error");
 			e.printStackTrace();
 		}
-	}
-	private class PagerAdapterClass extends PagerAdapter{
-		private LayoutInflater mInflater;
-		
-		public PagerAdapterClass(Context c){
-			super();
-			mInflater = LayoutInflater.from(c);
-		}
-		
-		@Override
-		public int getCount() {
-			return 10;
-		}
-
-		@Override
-		public Object instantiateItem(View pager, int position){
-			View v = null;
-			//v = mInflater.inflate(R.layout.);
-			//TextView engWord = (TextView)v.findViewById(R.id.);
-			//TextView korWord = (TextView)v.findViewById(R.id.)
-
-			//engWord.setText(arItem.get(position).en);
-			//korWord.setText(arItem.get(position).kr);
-			
-			switch(position){
-			case 0:
-				break;
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				break;
-			case 6:
-				break;
-			case 7:
-				break;
-			case 8:
-				break;
-			case 9:
-				break;
-			}
-			
-			((ViewPager)pager).addView(v, 0);
-			return v;
-		}
-		@Override
-		public void destroyItem(View pager, int position, Object view){
-			((ViewPager)pager).removeView((View)view);
-		}
-		@Override
-		public boolean isViewFromObject(View pager, Object obj) {
-			return pager == obj;
-		}
-		
 	}
 	
 	private final class SeekBarOnSeekBarChangeListener implements OnSeekBarChangeListener

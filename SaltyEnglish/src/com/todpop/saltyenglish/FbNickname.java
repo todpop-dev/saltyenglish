@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,10 +40,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class FbNickname extends Activity {
+public class FbNickname extends TypefaceActivity {
 
 	TelephonyManager phoneMgr;
 
+	String mobile;
+	
 	String operator;
 	String country;
 	
@@ -76,7 +79,13 @@ public class FbNickname extends Activity {
 		settingEdit = setting.edit();
 		studyInfo = getSharedPreferences("studyInfo", 0);
 		studyInfoEdit = studyInfo.edit();
-
+		
+		Intent intent = getIntent();
+		mobile = rgInfo.getString("mobile", null);
+		if(mobile == null || mobile.equals("010test0000")){
+			mobile = intent.getStringExtra("mobile");
+		}
+		
 		phoneMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 
 		try{
@@ -95,6 +104,7 @@ public class FbNickname extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		setFont(popupText);
 		
 		if(!rgInfo.getString("email","no").equals("no"))
 		{
@@ -134,7 +144,7 @@ public class FbNickname extends Activity {
 				}else{																					// first join with facebook
 					params.add(new BasicNameValuePair("facebook", rgInfo.getString("facebook", null)));
 					params.add(new BasicNameValuePair("nickname", rgInfo.getString("nickname", null)));
-					params.add(new BasicNameValuePair("mobile", rgInfo.getString("mobile", "010test0000")));
+					params.add(new BasicNameValuePair("mobile", mobile));
 					
 					if(!rgInfo.getString("recommend", "no").equals("no"))
 					{

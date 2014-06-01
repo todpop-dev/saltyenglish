@@ -24,6 +24,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -47,7 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-public class LvTestFinish extends Activity {
+public class LvTestFinish extends TypefaceActivity {
 	// popup view
 	PopupWindow popupWindow;
 	View popupview;

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class HomeMypageOptionCharacter extends Activity {
+public class HomeMypageOptionCharacter extends TypefaceActivity {
 	
 	String character = "";
 	SharedPreferences rgInfo;
@@ -125,8 +125,8 @@ public class HomeMypageOptionCharacter extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_mypage_option_character, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_mypage_option_character, menu);
+		return false;
 	}
 
 	//on click

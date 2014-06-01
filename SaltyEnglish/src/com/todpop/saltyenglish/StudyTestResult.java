@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
@@ -49,7 +50,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class StudyTestResult extends Activity {
+public class StudyTestResult extends TypefaceActivity {
 
 	ArrayList<MyItem> arItem;
 	int count = 0;
@@ -158,6 +159,10 @@ public class StudyTestResult extends Activity {
 		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
 		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
 		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
+
+		setFont(popupBothNoAttReward);
+		setFont(popupBothNoAttPoint);
+		
 		// w/ attendace
 		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
 		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
@@ -165,11 +170,18 @@ public class StudyTestResult extends Activity {
 		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
 		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
 		
+		setFont(popupBothAttReward);
+		setFont(popupBothAttPoint);
+		setFont(popupAttReward);
+		setFont(popupAttPoint);
+		
 		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
 		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
 		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
 		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
 		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
+		
+		setFont(popupOnlyAmount);
 		
 		
 		if (tmpStageAccumulated%10 != 0) {
@@ -410,6 +422,9 @@ public class StudyTestResult extends Activity {
 			TextView textKr = (TextView)convertView.findViewById(R.id.lv_test_kr);
 			textKr.setText(arSrc.get(position).kr);
 			
+			setFont(textEn);
+			setFont(textKr);
+			
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
 			//Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
 			
@@ -420,18 +435,6 @@ public class StudyTestResult extends Activity {
 				checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
 				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			}
-			
-//			if (count ==1) {
-//				convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_blue_first);
-//			} else if (count == 20) {
-//				convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_blue_end);
-//			} else {
-//				if (count%2 == 1) {
-//					convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_blue_center);
-//				} else {
-//					convertView.setBackgroundResource(R.drawable.lvtest_10_image_separatebox_skyblue_center);
-//				}
-//			}
 			
 			if (count%2 == 1) {
 				convertView.setBackgroundResource(R.drawable.weekly_2_img_saparatebox_1);

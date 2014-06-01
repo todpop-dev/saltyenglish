@@ -25,10 +25,11 @@ import android.widget.ImageView;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.LockerDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
-public class StudyTestMockCnt extends Activity {
+public class StudyTestMockCnt extends TypefaceActivity {
 
 	SharedPreferences rgInfo;
 	LockerDBHelper lHelper;

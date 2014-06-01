@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.api.request.DownloadPronounce;
 
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class StudyTestMockStart extends Activity {
+public class StudyTestMockStart extends TypefaceActivity {
 
 	RelativeLayout mainLayout;
 	
@@ -57,7 +58,7 @@ public class StudyTestMockStart extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.study_category, menu);
-		return true;
+		return false;
 	}
 	
 	//--- on click---

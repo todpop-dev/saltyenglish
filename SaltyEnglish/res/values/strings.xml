@@ -252,6 +252,8 @@
     <string name="home_store_purcahse_error">상품 구매에 실패했습니다.\n\n</string>
     <string name="home_store_purchase_error_contact">증상이 지속될경우 smile@todpop.co.kr로 연락 주세요.</string>
     <string name="locker_notification_running">잠금화면 작동중입니다.</string>
+    <string name="locker_am">오전</string>
+    <string name="locker_pm">오후</string>
     <string name="str_btn_mock_test">레벨테스트 시</string>
     <string name="title_activity_study_test_mock_cnt">StudyTestMockCnt</string>
 

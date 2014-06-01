@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,7 +50,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeStorePurchase extends Activity {
+public class HomeStorePurchase extends TypefaceActivity {
 	
 
 	TextView productTitle;
@@ -142,12 +143,17 @@ public class HomeStorePurchase extends Activity {
 		cancleBtn = (Button)confirmPopupView.findViewById(R.id.popup_store_id_cancle);
 		confirmBtn = (Button)confirmPopupView.findViewById(R.id.popup_store_id_confirm);
 		
+		setFont(confirmPopupPrice);
+		setFont(confirmPopupNick);
+		
 		donePopupView = View.inflate(this, R.layout.popup_view_home_store_purchase_done, null);
 		donePopupWindow = new PopupWindow(donePopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		
 		kickBackPopupView = View.inflate(this, R.layout.popup_view, null);
 		kickBackPopupWindow = new PopupWindow(kickBackPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		kickBackPopupText = (TextView)kickBackPopupView.findViewById(R.id.popup_id_text);
+		
+		setFont(kickBackPopupText);
 		
 		//loading dialog
 		loadingDialog = new LoadingDialog(this);

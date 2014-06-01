@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
@@ -50,7 +51,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 
 
-public class WordListTest extends Activity {
+public class WordListTest extends TypefaceActivity {
 	
 	//test word list size from HomeWordList activity
 	int wordListSize;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.Bundle;
@@ -44,7 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class HomeWordList extends Activity {
+public class HomeWordList extends TypefaceActivity {
 	ViewHolder viewHolder = null;
 	
 	HomeWordViewAdapter homeWordViewAdapter;
@@ -178,6 +179,8 @@ public class HomeWordList extends Activity {
 		noWordPopupWindow = new PopupWindow(noWordPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		noWordPopupText = (TextView)noWordPopupView.findViewById(R.id.popup_id_text);
 		
+		setFont(noWordPopupText);
+		
 		popupview.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -188,29 +191,13 @@ public class HomeWordList extends Activity {
 				return false;
 			}
 		});
-		//popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
-		
-
-		
 		
 		card = (Button)findViewById(R.id.home_word_list_id_card);
 		listArray = new ArrayList<HomeWordViewItem>();
 		listView=(ListView)findViewById(R.id.home_word_list_id_list_view);
 		
-//		for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
-//			mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
-//			listArray.add(mHomeWordViewItem);
-//			boolList.add(false);
-//		}
-		
 		// Get Word List
 		SQLiteDatabase db = mHelper.getWritableDatabase();
-//		try {
-//			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-//					"name TEXT, mean TEXT);");
-//		} catch (Exception e) {
-//			
-//		}
 		
 		try {
 			Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
@@ -406,6 +393,10 @@ public class HomeWordList extends Activity {
 				viewHolder.textEn = (TextView)v.findViewById(R.id.home_word_list_id_word1);
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
+				
+				setFont(viewHolder.textEn);
+				setFont(viewHolder.textKr);
+				
 				v.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder)v.getTag();
@@ -641,8 +632,8 @@ public class HomeWordList extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_word_list, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_word_list, menu);
+		return false;
 	}
 	
 	// Search words

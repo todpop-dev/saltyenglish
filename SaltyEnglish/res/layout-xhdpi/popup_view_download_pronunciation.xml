@@ -62,6 +62,7 @@
                 android:textSize="12dp" />
 
             <TextView
+                android:id="@+id/popup_id_pronounce_not_now"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
@@ -71,6 +72,7 @@
                 android:textSize="12dp" />
 
             <TextView
+                android:id="@+id/popup_id_pronounce_wifi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"

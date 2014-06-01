@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -58,7 +59,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class HomeStore extends Activity {
+public class HomeStore extends TypefaceActivity {
 	RelativeLayout mainLayout;
 	
 	//RadioButton eduationBtn;
@@ -147,10 +148,12 @@ public class HomeStore extends Activity {
 		pwdPopupView = View.inflate(this, R.layout.popup_view_home_store_password, null);
 		pwdPopupWindow = new PopupWindow(pwdPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		pwdPopupText = (TextView)pwdPopupView.findViewById(R.id.popup_id_text);
+		setFont(pwdPopupText);
 		
 		searchTempPopupView = View.inflate(this, R.layout.popup_view, null);
 		searchTempPopupWindow = new PopupWindow(searchTempPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		searchTempPopupText = (TextView)searchTempPopupView.findViewById(R.id.popup_id_text);
+		setFont(searchTempPopupText);
 		
 		//eduationBtn.setOnClickListener(radio_listener);
 		foodBtn.setOnClickListener(radio_listener);
@@ -392,6 +395,9 @@ public class HomeStore extends Activity {
 						.findViewById(R.id.home_store_list_item_id_coins);
 				holder.item = (ImageView) convertView
 						.findViewById(R.id.home_store_list_item_id_item);
+				setFont(holder.name1);
+				setFont(holder.name2);
+				setFont(holder.coins);
 				convertView.setTag(holder);
 			} 
 			else{

@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.api.request.SendLockState;
 import com.todpop.saltyenglish.LockScreenService;
 
@@ -31,7 +32,7 @@ import android.widget.RadioGroup;
 import android.widget.TimePicker;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
-public class HomeMoreSetting extends Activity {
+public class HomeMoreSetting extends TypefaceActivity {
 	private static final int ENABLED = 1; 
 	private static final int DISABLED = 0; 
 	

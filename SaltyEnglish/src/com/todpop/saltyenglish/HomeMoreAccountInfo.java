@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.facebook.Session;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +32,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMoreAccountInfo extends Activity {
+public class HomeMoreAccountInfo extends TypefaceActivity {
 
 	// popup view
 	PopupWindow popupWindow;
@@ -80,10 +81,12 @@ public class HomeMoreAccountInfo extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view_home_more_acount_info, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		setFont(popupText);
 
 		popupview1 = View.inflate(this, R.layout.popup_view, null);
 		popupWindow1 = new PopupWindow(popupview1,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText1 = (TextView)popupview1.findViewById(R.id.popup_id_text);
+		setFont(popupText1);
 	}
 
 	@Override

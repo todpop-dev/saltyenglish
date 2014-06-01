@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +36,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMoreAccountDelete extends Activity {
+public class HomeMoreAccountDelete extends TypefaceActivity {
 
 	EditText inputPw;
 	
@@ -72,6 +72,7 @@ public class HomeMoreAccountDelete extends Activity {
 		relative = (RelativeLayout)findViewById(R.id.home_more_account_delete_main);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		setFont(popupText);
 	}
 
 	//---- send info -----
@@ -178,8 +179,8 @@ public class HomeMoreAccountDelete extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_more_account_delete, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_more_account_delete, menu);
+		return false;
 	}
 
 	// on click

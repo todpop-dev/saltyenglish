@@ -10,6 +10,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
 import com.todpop.api.FileManager;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.PronounceDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
@@ -52,7 +53,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class MainActivity extends Activity 
+public class MainActivity extends TypefaceActivity 
 {
 	AnimationDrawable mainLoading;
 	
@@ -84,6 +85,8 @@ public class MainActivity extends Activity
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		setting = getSharedPreferences("setting", 0);

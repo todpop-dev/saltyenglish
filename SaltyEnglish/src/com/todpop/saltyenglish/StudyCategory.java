@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.api.request.DownloadPronounce;
 
 import android.os.Bundle;
@@ -16,11 +17,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class StudyCategory extends Activity {
+public class StudyCategory extends TypefaceActivity {
 
 	RelativeLayout mainLayout;
 	
@@ -31,6 +35,8 @@ public class StudyCategory extends Activity {
 	
 	private static final int LATER = 0;
 	private static final int NEVER = 2;
+	
+	//LinearLayout weeklyLayout;
 	
 	PopupWindow askPopupWindow;
 	View askPopupView;
@@ -51,10 +57,25 @@ public class StudyCategory extends Activity {
 		
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
+		/*weeklyLayout = (LinearLayout)findViewById(R.id.study_category_id_weekly_layout);
+		Animation floatingAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_study_category_weekly);
+		floatingAni.setRepeatCount(Animation.INFINITE);
+		floatingAni.setRepeatMode(Animation.REVERSE);
+		weeklyLayout.setAnimation(floatingAni);*/
+		
+		
 		askPopupView = View.inflate(this, R.layout.popup_view_download_pronunciation, null);
 		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		askPopupText = (TextView)askPopupView.findViewById(R.id.popup_id_text);
 		askPopupSize = (TextView)askPopupView.findViewById(R.id.popup_id_size_text);
+		TextView askPopupNotNow = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_not_now);
+		TextView askPopupWifi = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_wifi);
+		
+		setFont(askPopupText);
+		setFont(askPopupSize);
+		setFont(askPopupNotNow);
+		setFont(askPopupWifi);
+		
 		askPopupWindow.setBackgroundDrawable(new BitmapDrawable());
 		askPopupWindow.setOutsideTouchable(true);
 		askPopupView.setOnKeyListener(new View.OnKeyListener() {
@@ -76,7 +97,7 @@ public class StudyCategory extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.study_category, menu);
-		return true;
+		return false;
 	}
 	
 	//--- on click---

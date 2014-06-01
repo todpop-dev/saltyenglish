@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -55,7 +56,7 @@ import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
-public class RgRegisterEmailInfo extends Activity {
+public class RgRegisterEmailInfo extends TypefaceActivity {
 	TelephonyManager phoneMgr;
 	
 	String email;
@@ -136,11 +137,13 @@ public class RgRegisterEmailInfo extends Activity {
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 
+		setFont(popupText);
+		
 		mobile = rgInfo.getString("mobile", null);
+		phoneMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 		if(mobile == null){
 			//get phone number
 			try {
-				phoneMgr=(TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE); 
 				mobile = phoneMgr.getLine1Number().toString();
 				mobile = mobile.replace("+82", "0");
 			} catch(Exception e) {
@@ -149,6 +152,11 @@ public class RgRegisterEmailInfo extends Activity {
 				popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 			}
 		}
+		
+		if(mobile == null || mobile.equals("010test0000")){
+			mobile = intent.getStringExtra("mobile");
+		}
+		
 		try{
 			operator = phoneMgr.getNetworkOperatorName();
 			country = phoneMgr.getNetworkCountryIso();
@@ -187,7 +195,7 @@ public class RgRegisterEmailInfo extends Activity {
 		
 		new GetAddr().execute("http://todpop.co.kr/api/users/address_list.json?depth=1");
 
-		county =(Spinner)findViewById(R.id.rgregisteremailinfo_id_spinner_contry);
+		county = (Spinner)findViewById(R.id.rgregisteremailinfo_id_spinner_contry);
 		county.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -468,7 +476,7 @@ public class RgRegisterEmailInfo extends Activity {
 				
 				UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params,HTTP.UTF_8);
 				post.setEntity(ent);
-				
+				Log.i("STEVEN", "parans!! = " + params.toString());
 				HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
         		HttpConnectionParams.setSoTimeout(httpParams, 10000);
         		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
@@ -697,6 +705,9 @@ public class RgRegisterEmailInfo extends Activity {
 
 			TextView tv = (TextView) convertView  
 					.findViewById(android.R.id.text1);  
+			
+			setFont(tv);
+			
 			tv.setText(items.get(position));  
 			tv.setPadding(30, 10, 0, 10);
 			//tv.setGravity(BIND_AUTO_CREATE);
@@ -718,6 +729,9 @@ public class RgRegisterEmailInfo extends Activity {
 
 			TextView tv = (TextView) convertView  
 					.findViewById(android.R.id.text1);  
+			
+			setFont(tv);
+			
 			tv.setText(items.get(position));
 			return convertView;  
 		}  
@@ -729,7 +743,7 @@ public class RgRegisterEmailInfo extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.rg_register_email_info, menu);
-		return true;
+		return false;
 	}
 	@Override
 	protected void onStart()

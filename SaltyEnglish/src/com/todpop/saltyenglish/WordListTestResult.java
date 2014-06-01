@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.StudyTestResult.MyItem;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
@@ -33,7 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class WordListTestResult extends Activity {
+public class WordListTestResult extends TypefaceActivity {
 
 	ViewHolder viewHolder = null;
 
@@ -178,6 +179,10 @@ public class WordListTestResult extends Activity {
 					.findViewById(R.id.lv_test_check_correct);
 			viewHolder.selectBtn = (CheckBox) v.findViewById(R.id.lv_test_btn);
 
+			setFont(viewHolder.textEn);
+			setFont(viewHolder.textKr);
+			
+			
 			// v.setTag(viewHolder);
 
 			// else {

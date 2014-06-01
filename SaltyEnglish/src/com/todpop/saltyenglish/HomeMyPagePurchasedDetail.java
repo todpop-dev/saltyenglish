@@ -23,6 +23,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMyPagePurchasedDetail extends Activity {
+public class HomeMyPagePurchasedDetail extends TypefaceActivity {
 
 	LinearLayout productLayout;
 	
@@ -458,7 +459,7 @@ public class HomeMyPagePurchasedDetail extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_my_page_purchased, menu);
+		//getMenuInflater().inflate(R.menu.home_my_page_purchased, menu);
 		return false;
 	}
 

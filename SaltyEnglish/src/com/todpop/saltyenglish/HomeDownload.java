@@ -24,7 +24,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.playmobs.crosswalk.*;
 import com.playmobs.crosswalk.PlaymobsAgent.ErrorListener;
 import com.playmobs.crosswalk.PlaymobsAgent.ResponseListener;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -60,7 +60,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class HomeDownload extends Activity {
+public class HomeDownload extends TypefaceActivity {
 
 	final int CPI_SAVING_ON = 2;
 	final int CPI_SAVING_COMP = 3;
@@ -100,6 +100,7 @@ public class HomeDownload extends Activity {
 		cpxPopupview = View.inflate(this, R.layout.popup_view, null);
 		cpxPopupWindow = new PopupWindow(cpxPopupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		cpxPopupText = (TextView)cpxPopupview.findViewById(R.id.popup_id_text);
+		setFont(cpxPopupText);
 		
 		cpiArray = new ArrayList<CpiListViewItem>();
 		cpiListView=(ListView)findViewById(R.id.homedownload_id_listiew_cpi);
@@ -247,11 +248,14 @@ public class HomeDownload extends Activity {
 				holder.name1Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_name);
 				holder.name2Text = (TextView)convertView.findViewById(R.id.homedownload_list_item_id_coin);
 				holder.coinImg = (ImageView)convertView.findViewById(R.id.homedownload_list_item_id_imagecoin);
+				setFont(holder.name1Text);
+				setFont(holder.name2Text);
 				convertView.setTag(holder);
 			}
 			else{
 				holder = (ViewHolder)convertView.getTag();
 			}
+			
 			
 			CpiListViewItem item = (CpiListViewItem) arSrc.get(position);
 			holder.name1Text.setText(item.name);

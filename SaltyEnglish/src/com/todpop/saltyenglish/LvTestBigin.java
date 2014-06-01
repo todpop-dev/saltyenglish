@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
@@ -56,7 +57,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class LvTestBigin extends Activity {
+public class LvTestBigin extends TypefaceActivity {
 	RelativeLayout introView;
 	
 	AnimationDrawable imageTimeAni ;

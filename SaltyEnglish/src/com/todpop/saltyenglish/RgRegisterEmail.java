@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,8 +32,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RgRegisterEmail extends Activity {
+public class RgRegisterEmail extends TypefaceActivity {
 
+	String mobile;
+	
 	//declare define UI EditText 
 	EditText email;
 	EditText emailPassword;
@@ -63,6 +66,9 @@ public class RgRegisterEmail extends Activity {
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
+		
+		Intent intent = getIntent();
+		mobile = intent.getStringExtra("mobile");
 		
 		email = (EditText)findViewById(R.id.rgregisteremail_id_email);
 		emailPassword = (EditText)findViewById(R.id.rgregisteremail_id_emailpwd);
@@ -109,6 +115,8 @@ public class RgRegisterEmail extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 	}
 		
 
@@ -386,6 +394,7 @@ public class RgRegisterEmail extends Activity {
 					intent.putExtra("password", returnSHA512(emailPassword.getText().toString()));
 					intent.putExtra("nickname", nickname.getText().toString());
 					intent.putExtra("recommender", nicknameRefre.getText().toString());
+					intent.putExtra("mobile", mobile);
 					startActivity(intent);
 				}else{
 					rgInfoEdit.putString("email",null);
@@ -420,7 +429,7 @@ public class RgRegisterEmail extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.rg_register_email, menu);
-		return true;
+		return false;
 	}
 
 	public String returnSHA512(String password) throws NoSuchAlgorithmException {

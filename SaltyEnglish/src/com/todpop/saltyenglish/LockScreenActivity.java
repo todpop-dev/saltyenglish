@@ -51,13 +51,14 @@ import com.flurry.android.FlurryAgent;
 import com.todpop.api.FileManager;
 import com.todpop.api.LockInfo;
 import com.todpop.api.LockScreenClock;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.api.LockScreenClock.OnClockTickListner;
 import com.todpop.api.request.LockScreenDownloadImage;
 import com.todpop.api.VerticalViewPager;
 import com.todpop.saltyenglish.db.LockerDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
-public class LockScreenActivity extends Activity {
+public class LockScreenActivity extends TypefaceActivity {
 	static int verticalPageCount = 1;
 	
 	static boolean active = true;
@@ -110,20 +111,12 @@ public class LockScreenActivity extends Activity {
 		
 		fm = new FileManager();
 		
-		//mainApp = (MainApplication)getApplication();
-		
-		//mainApp.increaseLockerCnt();
-		
 		wHelper = new WordDBHelper(this);
 		wDB = wHelper.getReadableDatabase();
 		lHelper = new LockerDBHelper(this);
 
 		rgInfo = getSharedPreferences("rgInfo",0);
 		userId = rgInfo.getString("mem_id", "1");
-		
-		//new GetWord().execute("http://www.todpop.co.kr/api/screen_lock/word.json?user_id=" + userId);
-
-		//LockScreenClock clock = new LockScreenClock(this, 0);
 		
 		verViewPager = (VerticalViewPager) findViewById(R.id.locker_id_viertical_view_pager);
 		verViewPager.setAdapter(new DummyAdapter(getFragmentManager()));
@@ -162,9 +155,13 @@ public class LockScreenActivity extends Activity {
 
 			@Override
 			public void onPageSelected(int position) {
+				//Log for flurry
+				Map<String, String> logParams = new HashMap<String, String>();
+				
 				if(position == 0){
 					arrowUp.setVisibility(View.INVISIBLE);
 					leftAmount.setVisibility(View.INVISIBLE);
+					logParams.put("GroupID", "first page(words)");
 				}
 				else{
 					if(position == (verticalPageCount - 1)){
@@ -189,11 +186,9 @@ public class LockScreenActivity extends Activity {
 					else{
 						leftAmount.setVisibility(View.INVISIBLE);
 					}
+					logParams.put("GroupID", lockList.get(position - 1).getGroupId());
 				}
 
-				//Log for flurry
-				Map<String, String> logParams = new HashMap<String, String>();
-				logParams.put("GroupID", lockList.get(position - 1).getGroupId());
 				logParams.put("UserID", userId);
 				FlurryAgent.logEvent("Locker_Expose", logParams);
 			}
@@ -217,10 +212,10 @@ public class LockScreenActivity extends Activity {
 				}
 				hhmm.setText(time);
 				String apm = DateFormat.format("a", currentTime.toMillis(true)).toString();
-				if(apm.equals("����")){
+				if(apm.equals(getResources().getString(R.string.locker_am))){
 					apm = "AM";
 				}
-				else if(apm.equals("����")){
+				else if(apm.equals(getResources().getString(R.string.locker_pm))){
 					apm = "PM";
 				}
 				aa.setText(apm);
@@ -419,6 +414,9 @@ public class LockScreenActivity extends Activity {
 				korean = (TextView) v
 						.findViewById(R.id.locker_fragment_word_id_kor);
 
+				setFont(english);
+				setFont(korean);
+				
 				if(position == 0){
 					leftArrow.setVisibility(View.INVISIBLE);
 					rightArrow.setVisibility(View.VISIBLE);
@@ -428,15 +426,8 @@ public class LockScreenActivity extends Activity {
 					rightArrow.setVisibility(View.INVISIBLE);
 				}
 				
-				//if(engList.size() != 0 && korList.size() != 0){
-					english.setText(engList.get(position));
-					korean.setText(korList.get(position));
-				/*}
-				else{
-					wDB
-					english.setText(getResources().getString(R.string.popup_progress_loading));
-					korean.setText(getResources().getString(R.string.popup_progress_loading));
-				}*/
+				english.setText(engList.get(position));
+				korean.setText(korList.get(position));
 				
 				((ViewPager) container).addView(v, 0);
 				return v;
@@ -684,32 +675,6 @@ public class LockScreenActivity extends Activity {
 			return false;			
 		}
 	}
-	
-	/*private static OnClockTickListner onClockTick = new OnClockTickListner(){
-		@Override
-		public void OnSecondTick(Time currentTime){
-			String time = DateFormat.format("hh:mm", currentTime.toMillis(true)).toString();
-			if(time.charAt(0) == '0'){
-				StringBuilder sb = new StringBuilder(time);
-				sb.deleteCharAt(0);
-				time = sb.toString();
-			}
-			hhmm.setText(time);
-			String apm = DateFormat.format("a", currentTime.toMillis(true)).toString();
-			if(apm.equals("����")){
-				apm = "AM";
-			}
-			else if(apm.equals("����")){
-				apm = "PM";
-			}
-			aa.setText(apm);
-			date.setText(DateFormat.format("M.dd EEEE", currentTime.toMillis(true)).toString());
-		}
-		@Override
-		public void OnMinuteTick(Time currentTime){
-			
-		}
-	};*/
 	
 	@Override
 	protected void onUserLeaveHint(){

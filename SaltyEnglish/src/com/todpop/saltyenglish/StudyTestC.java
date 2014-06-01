@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.os.AsyncTask;
@@ -63,7 +64,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-public class StudyTestC extends Activity {
+public class StudyTestC extends TypefaceActivity {
 	ArrayList<String> englishWords;
 	ArrayList<String> englishMeans;
 	ArrayList<String> tmpArray;
@@ -824,8 +825,8 @@ public class StudyTestC extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_test_c, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.study_test_c, menu);
+		return false;
 	}
 	private class GetWord extends AsyncTask<String, Void, JSONObject> 
 	{

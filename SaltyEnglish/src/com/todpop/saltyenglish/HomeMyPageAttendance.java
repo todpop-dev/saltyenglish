@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class HomeMyPageAttendance extends Activity {
+public class HomeMyPageAttendance extends TypefaceActivity {
 
 	SharedPreferences rgInfo;
 	TextView attendancDay;
@@ -152,8 +152,8 @@ public class HomeMyPageAttendance extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_my_page_attendance, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_my_page_attendance, menu);
+		return false;
 	}
 
 	// on click

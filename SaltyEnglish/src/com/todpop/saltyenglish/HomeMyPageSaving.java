@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,7 +33,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMyPageSaving extends Activity {
+public class HomeMyPageSaving extends TypefaceActivity {
 
 	SavingListViewAdapter savingListViewAdapter;
 	ArrayList<SavingListViewItem> itemArray;
@@ -121,6 +122,11 @@ public class HomeMyPageSaving extends Activity {
     		name2Text.setText(arSrc.get(position).name2);
     		TextView coinText = (TextView)convertView.findViewById(R.id.home_mypage_purchased_list_item_id_coins);
     		coinText.setText(arSrc.get(position).coin);
+    		
+    		setFont(timeText);
+    		setFont(name1Text);
+    		setFont(name2Text);
+    		setFont(coinText);
 
     		if (position%2 == 1) {
     			convertView.setBackgroundResource(R.drawable.store_32_image_separatebox_white);
@@ -202,8 +208,8 @@ public class HomeMyPageSaving extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.home_my_page_saving, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.home_my_page_saving, menu);
+		return false;
 	}
 	@Override
 	protected void onStart()

@@ -23,6 +23,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
 import com.todpop.api.NoticeInfo;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.net.Uri;
@@ -68,7 +69,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StudyHome extends Activity {
+public class StudyHome extends TypefaceActivity {
 	boolean isOnSlide = false;
 
 	// CPI View show in return from study test
@@ -328,6 +329,9 @@ public class StudyHome extends Activity {
 		//popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
 		popupTitle = (TextView)popupview.findViewById(R.id.popup_notice_id_content_title);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_content);
+		
+		setFont(popupTitle);
+		setFont(popupText);
 
 		//loading animation dialog
 		loadingDialog = new LoadingDialog(this);
@@ -341,6 +345,8 @@ public class StudyHome extends Activity {
 		cpxPopupWindow = new PopupWindow(cpxPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		cpxPopupText = (TextView)cpxPopupView.findViewById(R.id.popup_id_text);
 		
+		setFont(cpxPopupText);
+		
 		new GetNotice().execute("http://www.todpop.co.kr/api/etc/main_notice.json");
 		new GetKakao().execute("http://todpop.co.kr/api/app_infos/get_cacao_msg.json");
 	}		
@@ -351,9 +357,6 @@ public class StudyHome extends Activity {
 		super.onResume();
 		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 
-
-		
-		
 		if(isOnSlide)
 			slideOff();
 		
@@ -451,9 +454,6 @@ public class StudyHome extends Activity {
 		}
 	    @Override
 	    public void destroyItem(ViewGroup container, int position, Object object) {
-	    	/*View v = (View)object;
-	    	ListView listView = (ListView)v.findViewById(R.id.studyhome_id_listview);
-	    	listView.setAdapter(null);*/
 	        ((ViewPager) container).removeView((View) object);
 	    }
 	    @Override
@@ -467,18 +467,6 @@ public class StudyHome extends Activity {
 		}
 	}	
 	
-	/*@Override
-	public void onRestart(){
-		super.onRestart();
-		//if current page is not current category setting, get different between two and change page
-		if(categoryPager.getCurrentItem() % 4 != (studyInfo.getInt("currentCategory", 1) - 1)){
-			int different = categoryPager.getCurrentItem() % 4 - (studyInfo.getInt("currentCategory", 1) - 1);
-			categoryPager.setCurrentItem(categoryPager.getCurrentItem() - different, false);
-		}
-		else{
-			getInfo();
-		}
-	}*/
 	// ******************** CPA signed up Check *************************
 		private class CheckCPA extends AsyncTask<String, Void, JSONObject> {
 			@Override
@@ -767,6 +755,10 @@ public class StudyHome extends Activity {
 			ImageView rankImage = (ImageView)convertView.findViewById(R.id.home_list_id_rank_user_image);
 			TextView name = (TextView)convertView.findViewById(R.id.home_list_id_rank_name_text);
 			TextView fraction = (TextView)convertView.findViewById(R.id.home_list_rank_id_user_fraction);
+
+			setFont(rank);
+			setFont(name);
+			setFont(fraction);
 			
 			RankingListItem posRank = arSrc.get(position);
 			setRankImage(posRank.imageNO, rankImage);
@@ -1008,7 +1000,7 @@ public class StudyHome extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.study_home, menu);
+		//getMenuInflater().inflate(R.menu.study_home, menu);
 		return false;
 	}
 

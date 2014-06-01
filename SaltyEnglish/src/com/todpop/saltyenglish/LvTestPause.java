@@ -2,13 +2,14 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 
-public class LvTestPause extends Activity {
+public class LvTestPause extends TypefaceActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -3,6 +3,7 @@ package com.todpop.saltyenglish;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 
-public class RgLoginAndRegister extends Activity {
+public class RgLoginAndRegister extends TypefaceActivity {
 
 
 	@Override
@@ -43,7 +44,6 @@ public class RgLoginAndRegister extends Activity {
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) 
 		{
 			final AlertDialog.Builder isExit = new AlertDialog.Builder(this);

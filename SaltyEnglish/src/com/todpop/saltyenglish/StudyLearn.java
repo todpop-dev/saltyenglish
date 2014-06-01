@@ -18,16 +18,12 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.saltyenglish.LvTestResult.MyItem;
+import com.todpop.api.TypefaceFragmentActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -38,10 +34,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,7 +44,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class StudyLearn extends FragmentActivity {
+public class StudyLearn extends TypefaceFragmentActivity {
 
 	// Slide Level Page
 	ViewPager pageView;
@@ -174,6 +168,8 @@ public class StudyLearn extends FragmentActivity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT, true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
  		
 		new SendPivotTime().execute("http://todpop.co.kr/api/app_infos/get_fast_pivot_time.json");
 		
@@ -279,6 +275,10 @@ public class StudyLearn extends FragmentActivity {
 			TextView levelText1 = (TextView)rootView.findViewById(R.id.studylearn_id_level_text1);
 			TextView levelText2 = (TextView)rootView.findViewById(R.id.studylearn_id_level_text2);
 			TextView levelText3 = (TextView)rootView.findViewById(R.id.studylearn_id_level_text3);
+			
+			setFont(levelText1);
+			setFont(levelText2);
+			setFont(levelText3);
 
 			Bundle args = getArguments();
 			

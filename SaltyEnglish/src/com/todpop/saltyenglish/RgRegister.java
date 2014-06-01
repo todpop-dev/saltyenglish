@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,12 +37,10 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.facebook.*;
 import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
-
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -51,7 +50,7 @@ import com.facebook.model.GraphObject;
 import com.facebook.model.GraphUser;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class RgRegister extends Activity {
+public class RgRegister extends TypefaceActivity {
 	
     private UiLifecycleHelper uiHelper;
     private String userInfo = null;
@@ -106,9 +105,14 @@ public class RgRegister extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 
 		//loading dialog
 		loadingDialog = new LoadingDialog(this);
+
+		fbCheckPointBtn.setEnabled(false);
+		emailBtn.setEnabled(false);
 		
 		//get phone number
 		try {
@@ -305,6 +309,7 @@ public class RgRegister extends Activity {
 		else{
 			FlurryAgent.logEvent("Email Register Clicked");
 			Intent intent = new Intent(getApplicationContext(), RgRegisterEmail.class);
+			intent.putExtra("mobile", mobile);
 			startActivity(intent);
 		}
 	}
@@ -532,6 +537,7 @@ public class RgRegister extends Activity {
 					    
 						Intent intent = new Intent(getApplicationContext(), FbNickname.class);
 //						intent.putExtra("fbEmail",fbEmail);
+						intent.putExtra("mobile", mobile);
 						startActivity(intent);
 		    			finish();
 					} else {

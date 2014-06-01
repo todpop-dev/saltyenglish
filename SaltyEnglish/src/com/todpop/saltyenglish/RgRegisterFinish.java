@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-public class RgRegisterFinish extends Activity {
+public class RgRegisterFinish extends TypefaceActivity {
 	
 	Button testBtn;
 	VideoView video;
@@ -126,7 +127,6 @@ public class RgRegisterFinish extends Activity {
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
-		// TODO Auto-generated method stub
 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) 
 		{
 			final AlertDialog.Builder isExit = new AlertDialog.Builder(this);
@@ -174,8 +174,8 @@ public class RgRegisterFinish extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.rg_register_finish, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.rg_register_finish, menu);
+		return false;
 	}
 	@Override
 	protected void onStart()

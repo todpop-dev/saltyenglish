@@ -44,10 +44,11 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.LockerDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
-public class StudyTestMockResult extends Activity {
+public class StudyTestMockResult extends TypefaceActivity {
 
 	ArrayList<MyItem> arItem;
 	int count = 0;
@@ -156,6 +157,9 @@ public class StudyTestMockResult extends Activity {
 		
 		popupLayoutPoint = (LinearLayout)popupView.findViewById(R.id.popup_mock_test_result_point_layout);
 		popupPoint= (TextView)popupView.findViewById(R.id.popup_mock_test_result_point);
+		
+		setFont(popupReward);
+		setFont(popupPoint);
 
 		loadingDialog = new LoadingDialog(this);
 		loadingDialog.show();
@@ -219,7 +223,6 @@ public class StudyTestMockResult extends Activity {
 
 				if(json.getBoolean("status")==true) {
 					try {
-						// 여기서 테스트 결과 받아(리워드,포인트)
 						int reward=0,point=0;
 						if(json.has("reward"))
 							reward = json.getInt("reward");
@@ -370,6 +373,9 @@ public class StudyTestMockResult extends Activity {
 
 			TextView textKr = (TextView)convertView.findViewById(R.id.lv_test_kr);
 			textKr.setText(arSrc.get(position).kr);
+			
+			setFont(textEn);
+			setFont(textKr);
 
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
 			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);

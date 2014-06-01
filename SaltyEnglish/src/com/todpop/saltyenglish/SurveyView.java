@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,7 +46,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class SurveyView extends Activity {
+public class SurveyView extends TypefaceActivity {
 
 	ListView listView;
 	ContentItem contentItem;
@@ -274,6 +275,10 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.surey_id_save);
 					ImageView coinOrPoint = (ImageView) convertView
 							.findViewById(R.id.survey_id_coin);
+					
+					setFont(topText);
+					setFont(rewardText);
+					
 					topText.setText(arSrc.get(position).question);
 					if(pointAmount.equals("0") || pointAmount.equals("null")){
 						rewardText.setText(rewardAmount);
@@ -301,6 +306,9 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.survey_id_question);
 					question.setText(arSrc.get(position).question);
 
+					setFont(point);
+					setFont(question);
+					
 					if (!arSrc.get(position).image.equals("null")) {
 						ImageView image = (ImageView) convertView
 								.findViewById(R.id.survey_id_image);
@@ -321,6 +329,12 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.survey_id_btn_4);
 					RadioButton btn5 = (RadioButton) convertView
 							.findViewById(R.id.survey_id_btn_5);
+					
+					setFont(btn1);
+					setFont(btn2);
+					setFont(btn3);
+					setFont(btn4);
+					setFont(btn5);
 
 					rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 						@Override
@@ -419,6 +433,9 @@ public class SurveyView extends Activity {
 					TextView question = (TextView) convertView
 							.findViewById(R.id.survey_id_question);
 					question.setText(arSrc.get(position).question);
+					
+					setFont(point);
+					setFont(question);
 
 					final EditText et = (EditText) convertView
 							.findViewById(R.id.survey_id_edit_text);
@@ -489,6 +506,12 @@ public class SurveyView extends Activity {
 							.findViewById(R.id.survey_id_btn_4);
 					RadioButton btn5 = (RadioButton) convertView
 							.findViewById(R.id.survey_id_btn_5);
+					
+					setFont(btn1);
+					setFont(btn2);
+					setFont(btn3);
+					setFont(btn4);
+					setFont(btn5);
 
 					if (!arSrc.get(position).answer1.equals("")) {
 						btn1.setText(arSrc.get(position).answer1);

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 import com.todpop.api.request.DownloadPronounce;
 import com.todpop.saltyenglish.db.PronounceDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
@@ -32,7 +33,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class HomeMorePronounce extends Activity {
+public class HomeMorePronounce extends TypefaceActivity {
 
 	private static final int NO = 0;
 	
@@ -75,13 +76,16 @@ public class HomeMorePronounce extends Activity {
 		rgInfoEdit = rgInfo.edit();
 
 		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);
-		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT,true);
+		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		progressPopupText = (TextView)progressPopupView.findViewById(R.id.popup_id_text);
     	progressPopupCountText = (TextView)progressPopupView.findViewById(R.id.popup_download_id_count);	
     	progressPopupLoadProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_loading_progressbar);
     	progressPopupProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_progressbar);
     	progressPopupCancel = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_cancel);
     	progressPopupDone = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_done);
+
+		setFont(progressPopupText);
+		setFont(progressPopupCountText);
     	
 		pHelper = new PronounceDBHelper(this);
 		

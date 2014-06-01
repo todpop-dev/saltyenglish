@@ -23,6 +23,7 @@ import com.facebook.Session;
 import com.facebook.SessionState;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -45,7 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-public class StudyTestMockFinish extends Activity {
+public class StudyTestMockFinish extends TypefaceActivity {
 	// popup view
 	PopupWindow popupWindow;
 	View popupview;
@@ -94,6 +95,8 @@ public class StudyTestMockFinish extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		
+		setFont(popupText);
 		
 		skipBtn = (Button) findViewById(R.id.testfinish_id_skip_btn);
 		rgInfo = getSharedPreferences("rgInfo", 0);
@@ -284,7 +287,7 @@ public class StudyTestMockFinish extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		// getMenuInflater().inflate(R.menu.study_test_finish, menu);
-		return true;
+		return false;
 	}
 
 	public void showTestFinishViewCB(View v) {

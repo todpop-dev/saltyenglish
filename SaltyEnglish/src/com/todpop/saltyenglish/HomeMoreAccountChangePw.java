@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class HomeMoreAccountChangePw extends Activity {
+public class HomeMoreAccountChangePw extends TypefaceActivity {
 
 	String mobile = "";
 	EditText currentPw;
@@ -60,6 +61,7 @@ public class HomeMoreAccountChangePw extends Activity {
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
+		setFont(popupText);
 
 		currentPw = (EditText)findViewById(R.id.home_more_account_change_pw_current);
 		newPw = (EditText)findViewById(R.id.home_more_account_change_pw_new);

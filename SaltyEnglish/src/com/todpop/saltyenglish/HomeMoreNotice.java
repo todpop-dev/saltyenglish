@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-
+import com.todpop.api.TypefaceActivity;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HomeMoreNotice extends Activity {
+public class HomeMoreNotice extends TypefaceActivity {
 
 	ArrayList<String> titleArray = new ArrayList<String>() ;
 	ArrayList<String> itemArray = new ArrayList<String>();
