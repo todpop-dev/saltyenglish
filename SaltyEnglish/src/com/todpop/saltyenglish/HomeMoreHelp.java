@@ -141,7 +141,7 @@ public class HomeMoreHelp extends TypefaceActivity {
 								textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 								textView.setPadding(70, 20, 0, 20);
 								textView.setTextColor(Color.rgb(0, 0, 0));
-								textView.setTextSize(19);
+								textView.setTextSize(15);
 								setFont(textView);
 								return textView;
 							}
