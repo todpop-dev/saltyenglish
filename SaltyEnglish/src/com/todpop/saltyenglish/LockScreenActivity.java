@@ -188,7 +188,6 @@ public class LockScreenActivity extends TypefaceActivity {
 					}
 					logParams.put("GroupID", lockList.get(position - 1).getGroupId());
 				}
-
 				logParams.put("UserID", userId);
 				FlurryAgent.logEvent("Locker_Expose", logParams);
 			}
