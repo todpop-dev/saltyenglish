@@ -110,7 +110,7 @@ public class StudyTestMockFinish extends TypefaceActivity {
 		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
-						+ rgInfo.getString("mem_id", "0"));
+						+ rgInfo.getString("mem_id", "1"));
 	}
 
 	private Runnable mLaunchTaskMain = new Runnable() {
