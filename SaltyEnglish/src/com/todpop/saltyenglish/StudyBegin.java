@@ -1328,7 +1328,8 @@ public class StudyBegin extends TypefaceFragmentActivity {
 			startActivity(intent);
 			finish();
 		} else if(tmpStage==3 || tmpStage==6 || tmpStage==9) {
-			Intent intent = new Intent(getApplicationContext(), StudyTestB.class);
+			// jangjunho StudyTestB -> StudyTestCookie
+			Intent intent = new Intent(getApplicationContext(), StudyTestCookie.class);
 			startActivity(intent);
 			finish();
 		}else if(tmpStage==10)

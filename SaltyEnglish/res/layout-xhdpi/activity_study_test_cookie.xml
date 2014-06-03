@@ -11,39 +11,19 @@
     <RelativeLayout
         android:id="@+id/rl_test_cookie_top"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:layout_height="0dp"
         android:background="@drawable/test_cookie_bg_top" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/ll_test_cookies"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal|bottom"
-            android:padding="30dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="30dp" >
             
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:background="@drawable/test_cookie_img_biscuit_3"
-                android:text="Hi" />
-            
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:background="@drawable/test_cookie_img_biscuit_2"
-                android:text="Hi" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="19dp"
-                android:background="@drawable/test_cookie_img_biscuit_1"
-                android:text="Hi" />
-
         </LinearLayout>
 
         <ImageView
@@ -62,10 +42,12 @@
             android:paddingBottom="12dp" >
 
             <TextView
+                android:id="@+id/tv_test_cookie_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="-2dp"
-                android:text="50"
+                android:layout_marginRight="2dp"
+                android:text="0"
                 android:textColor="#fff5c8"
                 android:textSize="16dp" />
 
@@ -75,59 +57,68 @@
                 android:src="@drawable/test_cookie_text_number" />
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/test_cookie_img_tongs_left" />
+            android:layout_marginBottom="15dp" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/test_cookie_img_tongs_right" />
+            <ImageView
+                android:id="@+id/iv_test_cookie_left_arm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="-140dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/test_cookie_img_tongs_left" />
+
+            <ImageView
+                android:id="@+id/iv_test_cookie_right_arm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="-140dp"
+                android:src="@drawable/test_cookie_img_tongs_right" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_test_cookie_bot"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
+        android:layout_height="150dp"
         android:background="@drawable/test_cookie_bg_bottom" >
 
-        <RelativeLayout 
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/test_cookie_img_timebar"
             android:paddingBottom="2dp"
-            android:paddingTop="2dp"
             android:paddingRight="30dp"
-            >
-            <TextView 
+            android:paddingTop="2dp" >
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="300"
-                />
+                android:text="300" />
         </RelativeLayout>
 
         <Button
+            android:id="@+id/btn_test_cookie_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="38dp"
             android:layout_marginTop="27dp"
+            android:onClick="onLeftBtnClick"
             android:background="@drawable/studytestcookie_drawable_btn_left" />
 
         <Button
+            android:id="@+id/btn_test_cookie_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="38dp"
             android:layout_marginTop="27dp"
+            android:onClick="onRightBtnClick"
             android:background="@drawable/studytestcookie_drawable_btn_right" />
     </RelativeLayout>
 
