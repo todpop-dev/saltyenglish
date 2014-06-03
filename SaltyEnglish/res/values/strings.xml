@@ -256,5 +256,6 @@
     <string name="locker_pm">오후</string>
     <string name="str_btn_mock_test">레벨테스트 시</string>
     <string name="title_activity_study_test_mock_cnt">StudyTestMockCnt</string>
+    <string name="title_activity_study_test_cookie">StudyTestCookie</string>
 
 </resources>
