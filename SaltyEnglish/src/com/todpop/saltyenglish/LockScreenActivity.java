@@ -470,7 +470,8 @@ public class LockScreenActivity extends TypefaceActivity {
 				}
 				else{
 					new SendLockLog().execute("http://www.todpop.co.kr/api/screen_lock/set_ad_log.json?user_id=" + userId 
-							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId());
+							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId() 
+							+ "$group=" + lockList.get(position - 1).getGroup());
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(lockList.get(position - 1).getTargetUrl())));
 					finish();
 				}
