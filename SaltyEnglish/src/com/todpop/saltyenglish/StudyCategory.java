@@ -36,7 +36,7 @@ public class StudyCategory extends TypefaceActivity {
 	private static final int LATER = 0;
 	private static final int NEVER = 2;
 	
-	//LinearLayout weeklyLayout;
+	LinearLayout weeklyLayout;
 	
 	PopupWindow askPopupWindow;
 	View askPopupView;
@@ -57,12 +57,11 @@ public class StudyCategory extends TypefaceActivity {
 		
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
-		/*weeklyLayout = (LinearLayout)findViewById(R.id.study_category_id_weekly_layout);
+		weeklyLayout = (LinearLayout)findViewById(R.id.study_category_id_weekly_layout);
 		Animation floatingAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.activity_study_category_weekly);
 		floatingAni.setRepeatCount(Animation.INFINITE);
 		floatingAni.setRepeatMode(Animation.REVERSE);
-		weeklyLayout.setAnimation(floatingAni);*/
-		
+		weeklyLayout.setAnimation(floatingAni);		
 		
 		askPopupView = View.inflate(this, R.layout.popup_view_download_pronunciation, null);
 		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
@@ -104,6 +103,11 @@ public class StudyCategory extends TypefaceActivity {
 	public void onClickBack(View view)
 	{
 		finish();
+	}
+	
+	public void goWeeklyTest(View v){
+		Intent intent = new Intent(getApplicationContext(), StudyTestWeekly.class);
+		startActivity(intent);
 	}
 	
 	public void studyCategoryOneCB(View view)

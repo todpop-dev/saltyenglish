@@ -15,8 +15,6 @@
             android:layout_height="0dp"
             android:layout_weight="90" >
 
-            <!-- Back Button -->
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -24,160 +22,6 @@
                 android:layout_marginLeft="10.5dp"
                 android:background="@drawable/rg_drawable_btn_back"
                 android:onClick="onClickBack" />
-
-            <!-- Title Image -->
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/common_bgimg_category" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="330" >
-
-            <!-- level1 button -->
-
-            <Button
-                android:id="@+id/study_category_id_basic_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studycategory_drawable_btn_basic"
-                android:onClick="studyCategoryOneCB" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/study_category_id_basic_button"
-                android:layout_alignLeft="@id/study_category_id_basic_button"
-                android:layout_marginLeft="17dp"
-                android:src="@drawable/study_5_image_basic" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="200" >
-
-            <!-- level2 button -->
-
-            <Button
-                android:id="@+id/study_category_id_middle_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studycategory_drawable_btn_middle"
-                android:onClick="studyCategoryTwoCB" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/study_category_id_middle_button"
-                android:layout_alignLeft="@id/study_category_id_middle_button"
-                android:layout_marginLeft="17dp"
-                android:src="@drawable/study_5_image_middle" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="200" >
-
-            <!-- level3 button -->
-
-            <Button
-                android:id="@+id/study_category_id_high_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studycategory_drawable_btn_high"
-                android:onClick="studyCategoryThreeCB" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/study_category_id_high_button"
-                android:layout_alignLeft="@id/study_category_id_high_button"
-                android:layout_marginLeft="17dp"
-                android:src="@drawable/study_5_image_high" />
-        </RelativeLayout>
-        <!-- level4 button -->
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="200" >
-
-            <Button
-                android:id="@+id/study_category_id_toeic_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/studycategory_drawable_btn_toeic"
-                android:onClick="studyCategoryFourCB" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/study_category_id_toeic_button"
-                android:layout_alignLeft="@id/study_category_id_toeic_button"
-                android:layout_marginLeft="17dp"
-                android:src="@drawable/study_5_image_toeic" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="250" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="14dp"
-                android:src="@drawable/common_image_bgcharacter1" />
-        </RelativeLayout>
-    </LinearLayout>
-
-</RelativeLayout>
-<!--
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/study_category_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/common_bg_yellowpattern" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="90" >
-
-           
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10.5dp"
-                android:background="@drawable/rg_drawable_btn_back"
-                android:onClick="onClickBack" />
-
-           
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -218,8 +62,6 @@
             android:layout_height="0dp"
             android:layout_weight="190" >
 
-            
-
             <Button
                 android:id="@+id/study_category_id_basic_button"
                 android:layout_width="wrap_content"
@@ -242,8 +84,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="190" >
-
-         
 
             <Button
                 android:id="@+id/study_category_id_middle_button"
@@ -268,8 +108,6 @@
             android:layout_height="0dp"
             android:layout_weight="190" >
 
-            
-
             <Button
                 android:id="@+id/study_category_id_high_button"
                 android:layout_width="wrap_content"
@@ -287,7 +125,6 @@
                 android:layout_marginLeft="17dp"
                 android:src="@drawable/study_5_image_high" />
         </RelativeLayout>
-        
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -321,4 +158,3 @@
     </LinearLayout>
 
 </RelativeLayout>
--->

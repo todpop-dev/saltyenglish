@@ -61,6 +61,7 @@
     <string name="title_activity_study_test_b">StudyTestB</string>
     <string name="title_activity_study_test">StudyTestA</string>
     <string name="title_activity_study_test_c">StudyTestC</string>
+    <string name="title_activity_study_test_weekly">StudyTestWeekly</string>
     <string name="title_activity_study_bigin">StudyBigin</string>
     <string name="title_activity_study_test_finish">StudyTestFinish</string>
     <string name="title_activity_home_store">HomeStore</string>
