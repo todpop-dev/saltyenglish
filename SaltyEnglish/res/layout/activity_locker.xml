@@ -39,8 +39,9 @@
                 <TextView
                     android:id="@+id/locker_id_text_clock"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:textColor="#3c3c3c"
+                    android:gravity="bottom"
                     android:textSize="44dp" />
 
                 <TextView
