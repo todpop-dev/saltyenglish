@@ -95,12 +95,25 @@
             android:paddingRight="30dp"
             android:paddingTop="2dp" >
 
-            <TextView
-                android:id="@+id/tv_test_cookie_timebar"
+            <LinearLayout
+                android:id="@+id/ll_test_cookie_timebar_nums"
+                android:layout_width="25dp"
                 android:gravity="right"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="" />
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/iv_test_cookie_timebar_front_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/test_cookie_img_time_4" />
+
+                <ImageView
+                    android:id="@+id/iv_test_cookie_timebar_back_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/test_cookie_img_time_0" />
+            </LinearLayout>
         </RelativeLayout>
 
         <Button

@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -24,44 +25,47 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 public class StudyTestCookie extends Activity {
-	public static final int TIME_CNT_TICK = 1000;
-	public static final int TIME_CNT_END = 40000;
-
-
-	CookieFactory cookieFactory;
-
-	ImageView ivLeftArm;
-	ImageView ivRightArm;
-	Animation animLeftArm;
-	Animation animRightArm;
-	Animation animLeftArmBack;
-	Animation animRightArmBack;
+	public static final int TIME_PER_TICK = 1000;
+	public static final int TIME_CNT = 40;
 
 	int cntTotalCookie = 0;
 	int cntCorrectCookie = 0;
 	int cntWrongCookie = 0;
 	int timeRemain = 0;
-
-	int screenWidth;
-
+	int widthToTick;
 	int tmpStageAccumulated;
+
+	CookieFactory cookieFactory;
+	WordDBHelper mHelper;
+	HashMap<String, String[]> hashWords;
+
+	Animation animLeftArm;
+	Animation animRightArm;
+	Animation animLeftArmBack;
+	Animation animRightArmBack;
 
 	Animation animHookLeft;
 	Animation animHookRight;
-	LinearLayout llTestCookies;
 	AnimationListener animHookListener;
 
+	LinearLayout llTestCookies;
+	LinearLayout llTimebarNums;
+	RelativeLayout rlTimebar;
+
+	ImageView ivLeftArm;
+	ImageView ivRightArm;
+	ImageView ivTimebarFrontNum;
+	ImageView ivTimebarBackNum;
+	
 	Button btnLeft;
 	Button btnRight;
+	
 	TextView tvNumber;
-	WordDBHelper mHelper;
-	HashMap<String, String[]> hashWords;
-	TextView tvTimebar;
-	RelativeLayout rlTimebar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +73,7 @@ public class StudyTestCookie extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_cookie);
 
-		timeRemain = TIME_CNT_END;
+		timeRemain = TIME_CNT * TIME_PER_TICK;
 
 		mHelper = new WordDBHelper(this);
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
@@ -78,38 +82,60 @@ public class StudyTestCookie extends Activity {
 		cookieFactory = CookieFactory.getInstance();
 		llTestCookies =(LinearLayout)findViewById(R.id.ll_test_cookies);
 
+		ivTimebarFrontNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_front_num);
+		ivTimebarBackNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_back_num);
+
 		ivLeftArm = (ImageView)findViewById(R.id.iv_test_cookie_left_arm);
 		ivRightArm = (ImageView)findViewById(R.id.iv_test_cookie_right_arm);
 		btnLeft = (Button)findViewById(R.id.btn_test_cookie_left);
 		btnRight = (Button)findViewById(R.id.btn_test_cookie_right);
 		tvNumber = (TextView)findViewById(R.id.tv_test_cookie_number);
 
-		tvTimebar= (TextView)findViewById(R.id.tv_test_cookie_timebar);
 		rlTimebar = (RelativeLayout)findViewById(R.id.rl_test_cookie_timebar);
-
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		screenWidth = metrics.widthPixels;
+		llTimebarNums = (LinearLayout)findViewById(R.id.ll_test_cookie_timebar_nums);
 
 		initWords();
 		initAnims();
 		initCookies();
 
-		//		tvTimebar.setWidth(screenWidth);
-
-		new CountDownTimer(TIME_CNT_END,TIME_CNT_TICK) {
+		new CountDownTimer((TIME_CNT+2)*TIME_PER_TICK,TIME_PER_TICK) {
 
 			@Override
 			public void onTick(long millisUntilFinished) {
-				int numberCount = timeRemain / 1000;
-				tvTimebar.setWidth(screenWidth / numberCount);
-				timeRemain -= 1000;
-				Log.e("Tick",timeRemain+" / ("+tvTimebar.getWidth()+"/"+screenWidth+")");
+				if(timeRemain == (TIME_CNT*TIME_PER_TICK) ) widthToTick = getTimebarTickWidth();
+				llTimebarNums.getLayoutParams().width += widthToTick;
+				updateTimebarNums();
+				timeRemain -= TIME_PER_TICK;
+			}
+
+			private void updateTimebarNums() {
+				if( timeRemain >= (TIME_PER_TICK*10) ) {
+					int frontNumIndex =  timeRemain/10000;
+					int backNumIndex =  (timeRemain - (frontNumIndex*TIME_PER_TICK*10) ) / TIME_PER_TICK;
+
+					ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + frontNumIndex);
+					ivTimebarBackNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
+				}
+				else{
+					if(timeRemain == TIME_PER_TICK*9) ivTimebarBackNum.setVisibility(View.GONE);
+					int backNumIndex =  timeRemain/1000;
+					ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
+				}
+			}
+
+			private int getTimebarTickWidth() {
+				DisplayMetrics metrics = new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				int widthLlTimebarNums = llTimebarNums.getLayoutParams().width;
+				return ((metrics.widthPixels - widthLlTimebarNums) / TIME_CNT) - 1;
 			}
 
 			@Override
 			public void onFinish() {
-
+				Toast.makeText(getApplicationContext(), "Cookie end", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
+				startActivity(intent);
+				finish();
 			}
 		}.start();
 
@@ -120,8 +146,7 @@ public class StudyTestCookie extends Activity {
 		SQLiteDatabase db = mHelper.getReadableDatabase();
 		Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
 		if (cursor.getCount()>0) {
-			while(cursor.moveToNext())
-			{
+			while(cursor.moveToNext()){
 				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 1", null);
 				otherCursor.moveToNext();
 				hashWords.put(cursor.getString(0), new String[]{cursor.getString(1),otherCursor.getString(0)});
@@ -129,11 +154,8 @@ public class StudyTestCookie extends Activity {
 		}
 	}
 
-
 	private String[] getWordInfo() {
-		String str_correct_name = null;
-		String str_correct_mean = null;
-		String str_wrong_mean = null;
+		String str_correct_name = null, str_correct_mean = null, str_wrong_mean = null;
 		ArrayList<String> keyList = new ArrayList<String>(hashWords.keySet());
 		int randNum = (int)(Math.random() * keyList.size());
 		str_correct_name = keyList.get(randNum);
@@ -181,7 +203,6 @@ public class StudyTestCookie extends Activity {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				llTestCookies.removeView(llTestCookies.getChildAt(llTestCookies.getChildCount()-1));
-				// IMPOOOOOOOOOORTANT METHOOOOOOOOD
 				setCookie();
 				btnLeft.setClickable(true);
 				btnRight.setClickable(true);
@@ -219,15 +240,12 @@ public class StudyTestCookie extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		getMenuInflater().inflate(R.menu.study_test_cookie, menu);
 		return true;
 	}
 
-	public boolean chkIsCorrectAnswer(int direction)
-	{
+	public boolean chkIsCorrectAnswer(int direction){
 		TextView target = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1);
-		String word = target.getText().toString();
 		String[] infos = (String[]) target.getTag();
 		String correctAnswer = infos[1];
 		if(direction == -1) return btnLeft.getText().toString().equals(correctAnswer);
@@ -235,50 +253,53 @@ public class StudyTestCookie extends Activity {
 		else return false;
 	}
 
-	public void correctAnswer()
-	{
+	public void updateCorrectOrWrong(String XorO,String mean){
+		SQLiteDatabase db = mHelper.getWritableDatabase();
+		ContentValues cv = new ContentValues();
+		cv.put("xo", XorO);
+		db.update("dic", cv, "mean='"+ mean + "'", null);
+	}
+
+	public void correctAnswer(View v){
 		cntCorrectCookie++;
 		tvNumber.setText(cntCorrectCookie+"");
+
+		updateCorrectOrWrong("O",((Button)v).getText().toString());
 	}
 
-	public void wrongAnswer()
-	{
+	public void wrongAnswer(View v){
 		cntWrongCookie++;
+		updateCorrectOrWrong("X",((Button)v).getText().toString());
 	}
 
-	public void onLeftBtnClick(View v) 
-	{	
-		if(chkIsCorrectAnswer(-1)) correctAnswer();
-		else wrongAnswer();
+	public void onLeftBtnClick(View v) {	
+		if(chkIsCorrectAnswer(-1)) correctAnswer(v);
+		else wrongAnswer(v);
 
 		ivLeftArm.startAnimation(animLeftArm);
 		btnLeft.setClickable(false);
 		btnRight.setClickable(false);
 	}
 
-	public void onRightBtnClick(View v) 
-	{	
-		if(chkIsCorrectAnswer(1)) correctAnswer();
-		else wrongAnswer();
+	public void onRightBtnClick(View v) {	
+		if(chkIsCorrectAnswer(1)) correctAnswer(v);
+		else wrongAnswer(v);
 
 		ivRightArm.startAnimation(animRightArm);
 		btnLeft.setClickable(false);
 		btnRight.setClickable(false);
 	}
 
-	private static class CookieFactory
-	{
+	private static class CookieFactory{
 		private static CookieFactory obj;
 		private CookieFactory(){}
 
-		public static CookieFactory getInstance()
-		{
+		public static CookieFactory getInstance(){
 			if(obj==null) obj = new CookieFactory();
 			return obj;
 		}
 
-		public View getCookie(Context con, String word ,int color)
-		{
+		public View getCookie(Context con, String word ,int color){
 			TextView v = (TextView) LayoutInflater.from(con).inflate(R.layout.textview_study_test_cookie, null);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, 30, 0, 0);
