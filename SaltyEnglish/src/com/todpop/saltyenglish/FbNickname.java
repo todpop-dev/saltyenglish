@@ -51,6 +51,7 @@ public class FbNickname extends TypefaceActivity {
 	
 	EditText nickName;
 	Button checkNicknameBtn;
+	Button nextBtn;
 	
 	EditText nicknamerefre;
 
@@ -95,6 +96,7 @@ public class FbNickname extends TypefaceActivity {
 			
 		}
 		
+		nextBtn = (Button) findViewById(R.id.button1);
 		nickName = (EditText)findViewById(R.id.fb_nickname_id_nickname);
 		checkNicknameBtn = (Button)findViewById(R.id.fb_nickname_id_check_btn);
 		nicknamerefre = (EditText)findViewById(R.id.fb_nickname_id_nicknamerefre);
@@ -373,6 +375,8 @@ public class FbNickname extends TypefaceActivity {
 	// Click next stage ------------------------------------------------------------------------------------
 	
 	public void bridgeToShowLvTest(View v){
+
+		nextBtn.setClickable(false);
 		if(!nicknamerefre.getText().toString().isEmpty()){
 			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
 		}
