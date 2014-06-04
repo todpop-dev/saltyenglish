@@ -24,6 +24,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.playmobs.crosswalk.*;
 import com.playmobs.crosswalk.PlaymobsAgent.ErrorListener;
 import com.playmobs.crosswalk.PlaymobsAgent.ResponseListener;
+import com.todpop.api.LoadingDialog;
 import com.todpop.api.TypefaceActivity;
 
 import android.net.Uri;
@@ -89,6 +90,8 @@ public class HomeDownload extends TypefaceActivity {
 	TextView cpxPopupText;
 	
 	String mobile;
+	
+	LoadingDialog loadingDialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +169,8 @@ public class HomeDownload extends TypefaceActivity {
 		pm = new PlaymobsAgent(userId, "691824", this, listener, errorListner);
 		
 		pm.setDefaultToast(true);
+		
+		loadingDialog = new LoadingDialog(this);
 	}
 	
 	@Override
@@ -173,6 +178,7 @@ public class HomeDownload extends TypefaceActivity {
 	{
 		super.onResume();
 		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
+		loadingDialog.show();
 		getList();
 		//cpiListViewAdapter.notifyDataSetChanged();
 		
@@ -367,6 +373,7 @@ public class HomeDownload extends TypefaceActivity {
 		protected void onPostExecute(JSONObject result) 
 		{
 			try {
+				loadingDialog.dissmiss();;
 				if	(result.getBoolean("status")==true) {
 					
 					JSONArray jsonArray = result.getJSONArray("data");
