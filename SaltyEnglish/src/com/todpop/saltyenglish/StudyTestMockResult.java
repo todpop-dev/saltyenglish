@@ -106,8 +106,8 @@ public class StudyTestMockResult extends TypefaceActivity {
 
 		arItem = new ArrayList<MyItem>();
 
-		scoreView = (TextView)findViewById(R.id.lvmocktest_result_id_level);
-		rewardView = (TextView)findViewById(R.id.study_mock_test_result_id_score_view);
+		scoreView = (TextView)findViewById(R.id.tv_mock_test_result_level);
+		rewardView = (TextView)findViewById(R.id.tv_mock_test_result_reward);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
 
 
@@ -146,7 +146,7 @@ public class StudyTestMockResult extends TypefaceActivity {
 		studyInfoEdit.apply();
 		// ----------------------------
 
-		relative = (RelativeLayout)findViewById(R.id.mock_test_result_id_main);
+		relative = (RelativeLayout)findViewById(R.id.rl_mock_test_result);
 		popupView = View.inflate(this, R.layout.popup_view_test_mock_result, null);
 		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 		
@@ -180,7 +180,7 @@ public class StudyTestMockResult extends TypefaceActivity {
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 
 		ListView MyList;
-		MyList=(ListView)findViewById(R.id.lvmocktestresult_id_listview);
+		MyList=(ListView)findViewById(R.id.lv_mock_test_result_panel);
 		MyList.setAdapter(MyAdapter);
 	}
 

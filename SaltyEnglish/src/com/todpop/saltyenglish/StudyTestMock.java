@@ -200,7 +200,7 @@ public class StudyTestMock extends TypefaceActivity {
 				// english word set next count
 				wordCount++;
 				
-				if(wordCount<10) {
+				if(wordCount<cntMaxWords) {
 					crocodileTimeAni.stop();
 					stopTimeCount();				
 					crocodileNewStart();
