@@ -175,8 +175,6 @@ public class StudyTestMockResult extends TypefaceActivity {
 		
 		new SetTestLog().execute(setTestLogUrl);
 	
-		
-
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 
 		ListView MyList;
