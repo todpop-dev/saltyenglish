@@ -11,8 +11,8 @@
     <RelativeLayout
         android:id="@+id/rl_test_cookie_top"
         android:layout_width="wrap_content"
-        android:layout_weight="1"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/test_cookie_bg_top" >
 
         <LinearLayout
@@ -23,7 +23,6 @@
             android:gravity="center_horizontal|bottom"
             android:orientation="vertical"
             android:paddingBottom="30dp" >
-            
         </LinearLayout>
 
         <ImageView
@@ -67,8 +66,8 @@
                 android:id="@+id/iv_test_cookie_left_arm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-140dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="-140dp"
                 android:src="@drawable/test_cookie_img_tongs_left" />
 
             <ImageView
@@ -88,6 +87,7 @@
         android:background="@drawable/test_cookie_bg_bottom" >
 
         <RelativeLayout
+            android:id="@+id/rl_test_cookie_timebar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/test_cookie_img_timebar"
@@ -96,9 +96,11 @@
             android:paddingTop="2dp" >
 
             <TextView
+                android:id="@+id/tv_test_cookie_timebar"
+                android:gravity="right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="300" />
+                android:text="" />
         </RelativeLayout>
 
         <Button
@@ -108,8 +110,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="38dp"
             android:layout_marginTop="27dp"
-            android:onClick="onLeftBtnClick"
-            android:background="@drawable/studytestcookie_drawable_btn_left" />
+            android:background="@drawable/studytestcookie_drawable_btn_left"
+            android:onClick="onLeftBtnClick" />
 
         <Button
             android:id="@+id/btn_test_cookie_right"
@@ -118,8 +120,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="38dp"
             android:layout_marginTop="27dp"
-            android:onClick="onRightBtnClick"
-            android:background="@drawable/studytestcookie_drawable_btn_right" />
+            android:background="@drawable/studytestcookie_drawable_btn_right"
+            android:onClick="onRightBtnClick" />
     </RelativeLayout>
 
 </LinearLayout>

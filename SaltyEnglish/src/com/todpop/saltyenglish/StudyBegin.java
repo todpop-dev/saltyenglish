@@ -106,6 +106,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	// CPD Front & Back images
 	static Bitmap cpdFrontImage;
 	static Bitmap cpdBackImage;
+	boolean isDicTableDeleted=false;
 	
 	// Infomation for send CPD cound
 	int adId;
@@ -246,14 +247,31 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		Log.d("=======================","=========================");
 		
 		String getWordsUrl = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + tmpStage + "&level=" + tmpLevel;
-		
+		String getWordsUrl2 = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + (tmpStage-1) + "&level=" + tmpLevel;
+		String getWordsUrl3 = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + (tmpStage-2) + "&level=" + tmpLevel;
 		loadingDialog.show();
 		
 		GetWord getWordTask = new GetWord();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
 			getWordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getWordsUrl);
+			if(tmpStage == 3 || tmpStage == 6 || tmpStage == 9)
+			{
+				new GetWord().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getWordsUrl2);
+				new GetWord().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getWordsUrl3);
+				Log.e("JJun","Cookie Stage Selected");
+			}
+		}
 		else
+		{
 			getWordTask.execute(getWordsUrl);
+			if(tmpStage == 3 || tmpStage == 6 || tmpStage == 9)
+			{
+				new GetWord().execute(getWordsUrl2);
+				new GetWord().execute(getWordsUrl3);
+				Log.e("JJun","Cookie Stage Selected");
+			}
+		}
 		
 		picNull = 0;
 
@@ -647,7 +665,11 @@ public class StudyBegin extends TypefaceFragmentActivity {
 					
 					mDB = mHelper.getWritableDatabase();
 					try {
-						mDB.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
+						if(!isDicTableDeleted)
+						{
+							mDB.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
+							isDicTableDeleted = true;
+						}
 					} catch (Exception e) {
 						
 					}
@@ -666,7 +688,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 						row.put("image_url", jsonWords.getJSONObject(i).get("image_url").toString());
 						row.put("stage", tmpStageAccumulated);
 						row.put("xo", "X");
-
+						Log.e("test insert row",row.toString());
 						mDB.insert("dic", null, row);
 						
 					}
