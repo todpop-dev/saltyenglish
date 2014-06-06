@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -53,7 +54,7 @@ public class StudyTestCookie extends Activity {
 	Animation animHookRight;
 	AnimationListener animHookListener;
 
-	LinearLayout llTestCookies;
+	LinearLayout llTestCookies; 
 	LinearLayout llTimebarNums;
 	RelativeLayout rlTimebar;
 
@@ -61,10 +62,10 @@ public class StudyTestCookie extends Activity {
 	ImageView ivRightArm;
 	ImageView ivTimebarFrontNum;
 	ImageView ivTimebarBackNum;
-	
+
 	Button btnLeft;
 	Button btnRight;
-	
+
 	TextView tvNumber;
 
 	@Override
@@ -157,12 +158,18 @@ public class StudyTestCookie extends Activity {
 	private String[] getWordInfo() {
 		String str_correct_name = null, str_correct_mean = null, str_wrong_mean = null;
 		ArrayList<String> keyList = new ArrayList<String>(hashWords.keySet());
-		int randNum = (int)(Math.random() * keyList.size());
-		str_correct_name = keyList.get(randNum);
+		if(hashWords.isEmpty())
+		{
+			Log.e("Shuffle Words","before");
+			initWords();
+			Log.e("Shuffle Words","after");
+			
+		}
+		str_correct_name = keyList.get(0);
 		String[] means = hashWords.get(str_correct_name);
 		str_correct_mean = means[0];
 		str_wrong_mean = means[1];
-
+		hashWords.remove(keyList.get(0));
 		return new String[]{str_correct_name,str_correct_mean,str_wrong_mean};
 	}
 
