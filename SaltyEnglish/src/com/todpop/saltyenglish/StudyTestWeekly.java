@@ -506,6 +506,7 @@ public class StudyTestWeekly extends TypefaceActivity {
 	
 	@Override
 	public void onBackPressed(){
+		db.delete("mywordtest", null, null);
 		finish();
 	}
 	
