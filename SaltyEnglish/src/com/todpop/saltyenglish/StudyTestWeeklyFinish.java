@@ -456,7 +456,8 @@ public class StudyTestWeeklyFinish extends TypefaceActivity {
 
 		int maxVol = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		int volume = (int) (maxVol * 0.3);
-		audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+		if(oldVolume > volume)
+			audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 	}
 
 	@Override
@@ -479,6 +480,7 @@ public class StudyTestWeeklyFinish extends TypefaceActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		video.stopPlayback();
 		audio.setStreamVolume(AudioManager.STREAM_MUSIC, oldVolume, 0);
 	}
 
