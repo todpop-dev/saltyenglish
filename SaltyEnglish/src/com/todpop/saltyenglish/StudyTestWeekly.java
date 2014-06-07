@@ -428,6 +428,9 @@ public class StudyTestWeekly extends TypefaceActivity {
 		new Handler().postDelayed(resetWord, 500);
 	}
 	private void goNextActivity(){
+		if(comboList.isEmpty()){
+			comboList = "0";
+		}
 		Intent intent = new Intent(getApplicationContext(), StudyTestWeeklyFinish.class);
 		intent.putExtra("combo", comboList);
 		intent.putExtra("lastHigh", lastHigh);
