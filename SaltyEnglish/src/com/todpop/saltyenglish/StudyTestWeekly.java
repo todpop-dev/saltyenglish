@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -56,9 +57,6 @@ public class StudyTestWeekly extends TypefaceActivity {
 	Button option3;
 	Button option4;
 	
-	//ImageView clock;
-	//AnimationDrawable clockAni;
-	
 	ImageView timeImg;
 	Animation timeAni;
 	
@@ -70,10 +68,11 @@ public class StudyTestWeekly extends TypefaceActivity {
 	ImageView comboImg;
 	Animation comboAni;
 	
-	CountDownTimer timer;
-	CountDownTimer progressTimer;
+	TotalTimer timer;
+	ProgressTimer progressTimer;
 	
-	private long time = 40000;
+	private static final long TIME = 60000;
+	private long timeLeft = 0;
 	
 	private ArrayList<Word> wordList;
 	
@@ -159,6 +158,7 @@ public class StudyTestWeekly extends TypefaceActivity {
 		timeImg.setAnimation(timeAni);
 		
 		circularProgress = (ProgressBar)findViewById(R.id.study_testweekly_id_progress);
+		circularProgress.setMax((int)TIME/10);
 		
 		correctImg = (ImageView)findViewById(R.id.study_testweekly_id_o);
 		incorrectImg = (ImageView)findViewById(R.id.study_testweekly_id_x);
@@ -166,54 +166,6 @@ public class StudyTestWeekly extends TypefaceActivity {
 		comboImg = (ImageView)findViewById(R.id.study_testweekly_id_combo);
 		comboAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_combo_ani);
 		comboImg.setAnimation(comboAni);
-		
-		timer = new CountDownTimer(time, 1000){
-			@Override
-			public void onTick(long millisUntilFinished) {
-				if(millisUntilFinished < 6000){	
-					redBack.setVisibility(View.VISIBLE);
-					new Handler().postDelayed(redTime, 500);
-					
-					if(millisUntilFinished < 2000){
-						Log.i("STEVEN", "1");
-						timeImg.setImageResource(R.drawable.weekly_1_text_time_1);
-						timeAni.start();
-					}else if(millisUntilFinished < 3000){
-						Log.i("STEVEN", "2");
-						timeImg.setImageResource(R.drawable.weekly_1_text_time_2);
-						timeAni.start();
-					}else if(millisUntilFinished < 4000){
-						Log.i("STEVEN", "3");
-						timeImg.setImageResource(R.drawable.weekly_1_text_time_3);
-						timeAni.start();
-					}else if(millisUntilFinished < 5000){
-						Log.i("STEVEN", "4");
-						timeImg.setImageResource(R.drawable.weekly_1_text_time_4);
-						timeAni.start();
-					}else if(millisUntilFinished < 6000){
-						Log.i("STEVEN", "5");
-						timeImg.setVisibility(View.VISIBLE);
-						timeAni.start();
-					}
-				}
-			}
-			@Override
-			public void onFinish() {	//time up
-				//time's up effect and end activity
-				timesUp.setVisibility(View.VISIBLE);
-				timesUpAni.start();
-				new Handler().postDelayed(goNext, 2500);
-			}
-		};
-		progressTimer = new CountDownTimer(time, 10){
-			@Override
-			public void onTick(long millisUntilFinished) {
-				circularProgress.setProgress((int) ((time - millisUntilFinished) / 10));
-			}
-			@Override
-			public void onFinish() {
-			}
-		};
 		
 		tutorial = (RelativeLayout)findViewById(R.id.study_testweekly_id_tuto);
 		
@@ -256,7 +208,27 @@ public class StudyTestWeekly extends TypefaceActivity {
 		
 		new GetWord().execute("http://www.todpop.co.kr/api/studies/weekly_challenge.json?user_id=" + userId);
 	}
-	
+	@Override
+	public void onResume(){
+		super.onResume();
+		if(timeLeft != 0){
+			timer = new TotalTimer(timeLeft, 1000);
+			progressTimer = new ProgressTimer(timeLeft, 10);
+			timer.start();
+			progressTimer.start();
+		}
+		else{
+			timer = new TotalTimer(TIME, 1000);
+			progressTimer = new ProgressTimer(TIME, 10);
+		}
+
+	}
+	@Override
+	public void onPause(){
+		super.onPause();
+		timer.cancel();
+		progressTimer.cancel();
+	}
 	private void setWord(){
 		qCount++;
 		if(qTotal > qCount){
@@ -468,6 +440,73 @@ public class StudyTestWeekly extends TypefaceActivity {
 		option2.setClickable(false);
 		option3.setClickable(false);
 		option4.setClickable(false);
+	}
+	
+	private class TotalTimer extends CountDownTimer{
+
+		public TotalTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onFinish() {	//time up
+			//time's up effect and end activity
+			timesUp.setVisibility(View.VISIBLE);
+			timesUpAni.start();
+			new Handler().postDelayed(goNext, 2500);
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			timeLeft = millisUntilFinished;
+			if(millisUntilFinished < 6000){	
+				redBack.setVisibility(View.VISIBLE);
+				new Handler().postDelayed(redTime, 500);
+				
+				if(millisUntilFinished < 2000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_1);
+					timeAni.start();
+				}else if(millisUntilFinished < 3000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_2);
+					timeAni.start();
+				}else if(millisUntilFinished < 4000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_3);
+					timeAni.start();
+				}else if(millisUntilFinished < 5000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_4);
+					timeAni.start();
+				}else if(millisUntilFinished < 6000){
+					timeImg.setVisibility(View.VISIBLE);
+					timeAni.start();
+				}
+			}
+		}
+		
+	}
+	private class ProgressTimer extends CountDownTimer{
+
+		public ProgressTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onFinish() {
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			circularProgress.setProgress((int) ((TIME - millisUntilFinished) / 10));
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
+	
+	@Override
+	public void onBackPressed(){
+		finish();
 	}
 	
 	@Override
