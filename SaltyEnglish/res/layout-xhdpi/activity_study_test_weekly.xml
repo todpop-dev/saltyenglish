@@ -57,7 +57,6 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/weekly_shape_ring_back"
                 android:indeterminate="false"
-                android:max="4000"
                 android:progress="0"
                 android:progressDrawable="@drawable/weekly_shape_ring" />
 
@@ -144,7 +143,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
-                android:text="20"
+                android:text="30"
                 android:textColor="#FEEEC3"
                 android:textSize="8dp"
                 android:textStyle="bold" />
@@ -172,7 +171,8 @@
             android:layout_height="0dp"
             android:layout_weight="540"
             android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:splitMotionEvents="false">
 
             <Button
                 android:id="@+id/study_testweekly_id_option1"
