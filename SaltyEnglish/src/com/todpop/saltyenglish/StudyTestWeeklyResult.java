@@ -203,7 +203,7 @@ public class StudyTestWeeklyResult extends TypefaceActivity {
 						scoreView.setText(json.getString("score") + getResources().getString(R.string.study_result_score_text));
 						oldPoint.setText(oldPointStr);
 						newPoint.setText(newPointStr);
-						if(oldPointStr.equals(newPoint)){
+						if(oldPointStr.equals(newPointStr)){
 							resultImg.setImageResource(R.drawable.weekly_2_text_sorry);
 						}
 					} catch (Exception e) {
