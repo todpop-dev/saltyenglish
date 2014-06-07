@@ -143,18 +143,18 @@ public class StudyTestWeeklyResult extends TypefaceActivity {
 				MyList = (ListView) findViewById(R.id.test_weekly_result_id_listview);
 				MyList.setAdapter(MyAdapter);
 				
-				// ----------- Request Result -------------
-				SharedPreferences pref = getSharedPreferences("rgInfo",0);
-				String userId = pref.getString("mem_id", "0");
-				
-				new GetTestResult().execute("http://www.todpop.co.kr/api/studies/weekly_challenge_result.json?user_id=" + userId 
-						+ "&result=" + wordCorrectCnt + "&combo=" + combo + "&high_score=" + lastHigh);
 			}
+			// ----------- Request Result -------------
+			SharedPreferences pref = getSharedPreferences("rgInfo",0);
+			String userId = pref.getString("mem_id", "0");
+			
+			new GetTestResult().execute("http://www.todpop.co.kr/api/studies/weekly_challenge_result.json?user_id=" + userId 
+					+ "&result=" + wordCorrectCnt + "&combo=" + combo + "&high_score=" + lastHigh);
 		} catch (Exception e) {
+			loadingDialog.dissmiss();
 			Log.e("AFDSDFDSFSDFDSF", "catch error");
 			e.printStackTrace();
 		}
-
 	}
 
 	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
