@@ -103,6 +103,9 @@ public class StudyTestWeeklyFinish extends TypefaceActivity {
 		combo = intent.getStringExtra("combo");
 		lastHigh = intent.getStringExtra("lastHigh");
 		
+		ImageView title = (ImageView)findViewById(R.id.testfinish_id_title);
+		title.setImageResource(R.drawable.weekly_1_text_weeklytitle);
+		
 		//popupview
 		relative = (RelativeLayout)findViewById(R.id.testfinish_id_main);;
 		popupview = View.inflate(this, R.layout.popup_view, null);
