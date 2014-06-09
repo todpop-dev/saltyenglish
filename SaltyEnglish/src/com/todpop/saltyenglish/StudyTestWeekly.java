@@ -79,9 +79,9 @@ public class StudyTestWeekly extends TypefaceActivity {
 	private static int qTotal;
 	private int qCount = -1;
 	
-	private int comboCount = 0;
+	private int comboCount = -1;
 	
-	private String comboList = "";
+	private String comboList = "0";
 	private String lastHigh;
 	
 	private static Runnable resetWord;
@@ -284,9 +284,6 @@ public class StudyTestWeekly extends TypefaceActivity {
 			option4.setClickable(true);
 		}
 		else{	//finish test
-			if(comboCount != 0){
-				comboList = comboList + "-" + comboCount;
-			}
 			goNextActivity();
 		}
 	}
@@ -385,19 +382,19 @@ public class StudyTestWeekly extends TypefaceActivity {
 					e.printStackTrace();
 				}
 				new Handler().postDelayed(resetWord, 500);
-				if(comboCount == 11){ //10combo
+				if(comboCount == 10){ //10combo
 					comboImg.setImageResource(R.drawable.weekly_1_img_10combo);
 					comboAni.start();
 				}
-				else if(comboCount == 21){	//20combo
+				else if(comboCount == 20){	//20combo
 					comboImg.setImageResource(R.drawable.weekly_1_img_20combo);
 					comboAni.start();
 				}
-				else if(comboCount == 31){  //30combo
+				else if(comboCount == 30){  //30combo
 					comboImg.setImageResource(R.drawable.weekly_1_img_30combo);
 					comboAni.start();
 				}
-				else if(comboCount > 1){
+				else if(comboCount > 0){
 					comboImg.setImageResource(R.drawable.weekly_1_img_combo);
 					comboAni.start();
 				}
@@ -410,10 +407,10 @@ public class StudyTestWeekly extends TypefaceActivity {
 	}
 	private void incorrect(){
 		disableAndStop();
-		if(comboCount != 0){
+		if(comboCount > 0){
 			comboList = comboList + "-" + comboCount;
 		}
-		comboCount = 0;
+		comboCount = -1;
 		incorrectImg.setVisibility(View.VISIBLE);
 		try{
 			ContentValues row = new ContentValues();
@@ -428,8 +425,8 @@ public class StudyTestWeekly extends TypefaceActivity {
 		new Handler().postDelayed(resetWord, 500);
 	}
 	private void goNextActivity(){
-		if(comboList.isEmpty()){
-			comboList = "0";
+		if(comboCount > 0){
+			comboList = comboList + "-" + comboCount;
 		}
 		Intent intent = new Intent(getApplicationContext(), StudyTestWeeklyFinish.class);
 		intent.putExtra("combo", comboList);
