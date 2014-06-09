@@ -52,7 +52,7 @@ import com.todpop.api.FileManager;
 import com.todpop.api.LockInfo;
 import com.todpop.api.LockScreenClock;
 import com.todpop.api.TypefaceActivity;
-import com.todpop.api.LockScreenClock.OnClockTickListner;
+import com.todpop.api.LockScreenClock.OnClockTickListener;
 import com.todpop.api.request.LockScreenDownloadImage;
 import com.todpop.api.VerticalViewPager;
 import com.todpop.saltyenglish.db.LockerDBHelper;
@@ -200,7 +200,7 @@ public class LockScreenActivity extends TypefaceActivity {
 
 		Log.e("STEVEN", "onResume");
 		LockScreenClock clock = new LockScreenClock(this, 0);
-		clock.AddClockTickListner(new OnClockTickListner(){
+		clock.AddClockTickListener(new OnClockTickListener(){
 			@Override
 			public void OnSecondTick(Time currentTime){
 				String time = DateFormat.format("hh:mm", currentTime.toMillis(true)).toString();

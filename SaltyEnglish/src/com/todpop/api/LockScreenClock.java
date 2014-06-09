@@ -17,7 +17,7 @@ public class LockScreenClock {
     private Time Time;
     private TimeZone TimeZone;
     private Handler Handler;
-    private List<OnClockTickListner> OnClockTickListenerList = new ArrayList<OnClockTickListner>();
+    private List<OnClockTickListener> OnClockTickListenerList = new ArrayList<OnClockTickListener>();
 
     private Runnable Ticker;
 
@@ -61,13 +61,13 @@ public class LockScreenClock {
         switch (TickMethod)
         {
             case 0:
-                for(OnClockTickListner listner:OnClockTickListenerList)
+                for(OnClockTickListener listner:OnClockTickListenerList)
                 {
                     listner.OnSecondTick(Time);
                 }
                 break;
             case 1:
-                for(OnClockTickListner listner:OnClockTickListenerList)
+                for(OnClockTickListener listner:OnClockTickListenerList)
                 {
                     listner.OnMinuteTick(Time);
                 }
@@ -123,13 +123,13 @@ public class LockScreenClock {
      {
          return this.Time;
      }
-    public void AddClockTickListner(OnClockTickListner listner) 
+    public void AddClockTickListener(OnClockTickListener listner) 
     {
         this.OnClockTickListenerList.add(listner);
 
     }
     
-    public interface OnClockTickListner {
+    public interface OnClockTickListener {
         public void OnSecondTick(Time currentTime);
         public void OnMinuteTick(Time currentTime);
     }
