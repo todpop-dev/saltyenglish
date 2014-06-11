@@ -26,24 +26,31 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.saltyenglish.db.WordDBHelper;
-
+/*--------------------------------------*/
+/* updated at 14. 6. 9 by junho jang    */
+/*--------------------------------------*/
 public class StudyTestCookie extends Activity {
 	public static final int TIME_PER_TICK = 1000;
 	public static final int TIME_CNT = 40;
 
-	int cntTotalCookie = 0;
-	int cntCorrectCookie = 0;
+	int cntTotalCookie = 0; // total emerged cookies, 
+	int cntCorrectCookie = 0; 
 	int cntWrongCookie = 0;
 	int timeRemain = 0;
-	int widthToTick;
+	int widthToTick; // timebar width to add each tick
 	int tmpStageAccumulated;
-
+	boolean isFirstOnCreated = false; // chk onCreated
+	
+	TimebarCountdownTimer timebarCounter;
 	CookieFactory cookieFactory;
+	
 	WordDBHelper mHelper;
-	HashMap<String, String[]> hashWords;
+	// no duplicate key
+	HashMap<String, String[]> hashWords; // key = word , value =  { mean, wrong mean}
 
 	Animation animLeftArm;
 	Animation animRightArm;
@@ -57,6 +64,7 @@ public class StudyTestCookie extends Activity {
 	LinearLayout llTestCookies; 
 	LinearLayout llTimebarNums;
 	RelativeLayout rlTimebar;
+	RelativeLayout rlPauseView;
 
 	ImageView ivLeftArm;
 	ImageView ivRightArm;
@@ -74,7 +82,8 @@ public class StudyTestCookie extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_cookie);
 
-		timeRemain = TIME_CNT * TIME_PER_TICK;
+		timeRemain = TIME_CNT * TIME_PER_TICK; // init timeRemain
+		timebarCounter = new TimebarCountdownTimer((TIME_CNT+2)*TIME_PER_TICK,TIME_PER_TICK);
 
 		mHelper = new WordDBHelper(this);
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
@@ -93,54 +102,16 @@ public class StudyTestCookie extends Activity {
 		tvNumber = (TextView)findViewById(R.id.tv_test_cookie_number);
 
 		rlTimebar = (RelativeLayout)findViewById(R.id.rl_test_cookie_timebar);
+		rlPauseView = (RelativeLayout)findViewById(R.id.rl_test_cookie_pause_view);
 		llTimebarNums = (LinearLayout)findViewById(R.id.ll_test_cookie_timebar_nums);
 
 		initWords();
 		initAnims();
 		initCookies();
-
-		new CountDownTimer((TIME_CNT+2)*TIME_PER_TICK,TIME_PER_TICK) {
-
-			@Override
-			public void onTick(long millisUntilFinished) {
-				if(timeRemain == (TIME_CNT*TIME_PER_TICK) ) widthToTick = getTimebarTickWidth();
-				llTimebarNums.getLayoutParams().width += widthToTick;
-				updateTimebarNums();
-				timeRemain -= TIME_PER_TICK;
-			}
-
-			private void updateTimebarNums() {
-				if( timeRemain >= (TIME_PER_TICK*10) ) {
-					int frontNumIndex =  timeRemain/10000;
-					int backNumIndex =  (timeRemain - (frontNumIndex*TIME_PER_TICK*10) ) / TIME_PER_TICK;
-
-					ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + frontNumIndex);
-					ivTimebarBackNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
-				}
-				else{
-					if(timeRemain == TIME_PER_TICK*9) ivTimebarBackNum.setVisibility(View.GONE);
-					int backNumIndex =  timeRemain/1000;
-					ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
-				}
-			}
-
-			private int getTimebarTickWidth() {
-				DisplayMetrics metrics = new DisplayMetrics();
-				getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				int widthLlTimebarNums = llTimebarNums.getLayoutParams().width;
-				return ((metrics.widthPixels - widthLlTimebarNums) / TIME_CNT) - 1;
-			}
-
-			@Override
-			public void onFinish() {
-				Toast.makeText(getApplicationContext(), "Cookie end", Toast.LENGTH_SHORT).show();
-				Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
-				startActivity(intent);
-				finish();
-			}
-		}.start();
-
+		
+		timebarCounter.start();
 	}
+
 	void initWords()
 	{
 		hashWords = new HashMap<String, String[]>();
@@ -148,6 +119,7 @@ public class StudyTestCookie extends Activity {
 		Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
 		if (cursor.getCount()>0) {
 			while(cursor.moveToNext()){
+				// get wrong mean randomly except correct mean  
 				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 1", null);
 				otherCursor.moveToNext();
 				hashWords.put(cursor.getString(0), new String[]{cursor.getString(1),otherCursor.getString(0)});
@@ -157,14 +129,9 @@ public class StudyTestCookie extends Activity {
 
 	private String[] getWordInfo() {
 		String str_correct_name = null, str_correct_mean = null, str_wrong_mean = null;
-		ArrayList<String> keyList = new ArrayList<String>(hashWords.keySet());
-		if(hashWords.isEmpty())
-		{
-			Log.e("Shuffle Words","before");
+		if(hashWords.isEmpty() || hashWords.size() == 0) // if there are no words in hashmap, init words
 			initWords();
-			Log.e("Shuffle Words","after");
-			
-		}
+		ArrayList<String> keyList = new ArrayList<String>(hashWords.keySet());
 		str_correct_name = keyList.get(0);
 		String[] means = hashWords.get(str_correct_name);
 		str_correct_mean = means[0];
@@ -174,18 +141,19 @@ public class StudyTestCookie extends Activity {
 	}
 
 	private void initCookies() {
+		// in first, cookie init 
 		for(int i=0;i<4;i++) setCookie();
 	}
 
 	private void setCookie() {
 		String[] infos = getWordInfo();
 		View v = cookieFactory.getCookie(getApplicationContext(),infos[0] ,cntTotalCookie % 3);
-		v.setTag(infos);
+		v.setTag(infos); // each cookies has word, mean, wrong mean by string array
 		llTestCookies.addView(v,0);
 
-		TextView targetCookie = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1);
+		TextView targetCookie = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1); // bottom cookie
 		String[] targetInfos = (String[]) targetCookie.getTag();
-		int numRand = (int)(Math.random()*2)+1;
+		int numRand = (int)(Math.random()*2)+1; // set Text in Left or Right Btn
 		btnLeft.setText(targetInfos[numRand]);
 		numRand = numRand == 1 ? 2 : 1; // reverse, 1 to 2 , 2 to 1
 		btnRight.setText(targetInfos[numRand]);
@@ -250,7 +218,8 @@ public class StudyTestCookie extends Activity {
 		getMenuInflater().inflate(R.menu.study_test_cookie, menu);
 		return true;
 	}
-
+	
+	// direction -1 = left , 1 = right
 	public boolean chkIsCorrectAnswer(int direction){
 		TextView target = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1);
 		String[] infos = (String[]) target.getTag();
@@ -270,7 +239,6 @@ public class StudyTestCookie extends Activity {
 	public void correctAnswer(View v){
 		cntCorrectCookie++;
 		tvNumber.setText(cntCorrectCookie+"");
-
 		updateCorrectOrWrong("O",((Button)v).getText().toString());
 	}
 
@@ -296,7 +264,8 @@ public class StudyTestCookie extends Activity {
 		btnLeft.setClickable(false);
 		btnRight.setClickable(false);
 	}
-
+	
+	// cookie factory , factory pattern
 	private static class CookieFactory{
 		private static CookieFactory obj;
 		private CookieFactory(){}
@@ -316,4 +285,100 @@ public class StudyTestCookie extends Activity {
 			return v;
 		}
 	}
+
+	// for pause case
+	@Override
+	public void onBackPressed() {
+		timebarCounter.cancel();
+		onResume();
+	}
+
+	public void pauseViewContinueTest(View v){
+		timebarCounter.start();
+		rlPauseView.setVisibility(View.GONE);
+	}
+
+	public void pauseViewFinishTest(View v) {
+		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+		startActivity(intent);
+		finish();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		timebarCounter.cancel();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(isFirstOnCreated)
+			rlPauseView.setVisibility(View.VISIBLE);
+		isFirstOnCreated = true;
+	}
+
+	// for flury 
+	@Override
+	protected void onStart(){
+		super.onStart();
+		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+
+	@Override
+	protected void onStop(){
+		super.onStop();		
+		FlurryAgent.onEndSession(this);
+		EasyTracker.getInstance(this).activityStop(this);
+	}
+
+	// for timerbar
+	private class TimebarCountdownTimer extends CountDownTimer{
+
+		public TimebarCountdownTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			if(timeRemain <= 0) finishCookieGame(); // end timebar remain
+			else if(timeRemain == (TIME_CNT*TIME_PER_TICK) ) widthToTick = getTimebarTickWidth(); // first timebar width init
+			llTimebarNums.getLayoutParams().width += widthToTick; // update timebar width
+			updateTimebarNums(); // update timebar numbs
+			timeRemain -= TIME_PER_TICK; // decrease timebar Remain
+		}
+
+		private void updateTimebarNums() {
+			if( timeRemain >= (TIME_PER_TICK*10) ) {
+				int frontNumIndex =  timeRemain/10000;
+				int backNumIndex =  (timeRemain - (frontNumIndex*TIME_PER_TICK*10) ) / TIME_PER_TICK;
+
+				ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + frontNumIndex);
+				ivTimebarBackNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
+			}
+			else{
+				if(timeRemain == TIME_PER_TICK*9) ivTimebarBackNum.setVisibility(View.GONE);
+				int backNumIndex =  timeRemain/1000;
+				ivTimebarFrontNum.setImageResource(R.drawable.test_cookie_img_time_0 + backNumIndex);
+			}
+		}
+
+		private int getTimebarTickWidth() {
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			int widthLlTimebarNums = llTimebarNums.getLayoutParams().width;
+			return ((metrics.widthPixels - widthLlTimebarNums) / TIME_CNT) - 1;
+		}
+
+		@Override
+		public void onFinish() {}
+
+		private void finishCookieGame() {
+			Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
+			startActivity(intent);
+			finish();
+		}
+	}
+	
 }

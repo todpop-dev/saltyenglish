@@ -339,13 +339,18 @@
             android:name="com.todpop.saltyenglish.StudyTestMockCnt"
             android:label="@string/title_activity_study_test_mock_cnt" >
         </activity>
-        <activity android:name="com.todpop.saltyenglish.StudyTestMockFinish" >
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestMockFinish"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.todpop.saltyenglish.StudyTestMockResult" >
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestMockResult"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.todpop.saltyenglish.StudyTestCookie"
-            android:label="@string/title_activity_study_test_cookie" >
+            android:label="@string/title_activity_study_test_cookie"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
