@@ -2,6 +2,8 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -12,8 +14,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -30,9 +32,6 @@ import android.widget.TextView;
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.saltyenglish.db.WordDBHelper;
-/*--------------------------------------*/
-/* updated at 14. 6. 9 by junho jang    */
-/*--------------------------------------*/
 public class StudyTestCookie extends Activity {
 	public static final int TIME_PER_TICK = 1000;
 	public static final int TIME_CNT = 40;
@@ -43,13 +42,14 @@ public class StudyTestCookie extends Activity {
 	int timeRemain = 0;
 	int widthToTick; // timebar width to add each tick
 	int tmpStageAccumulated;
+	int cntCombo = 0;
 	boolean isFirstOnCreated = false; // chk onCreated
 	
 	TimebarCountdownTimer timebarCounter;
 	CookieFactory cookieFactory;
 	
 	WordDBHelper mHelper;
-	// no duplicate key
+	// cant duplicate key
 	HashMap<String, String[]> hashWords; // key = word , value =  { mean, wrong mean}
 
 	Animation animLeftArm;
@@ -65,22 +65,33 @@ public class StudyTestCookie extends Activity {
 	LinearLayout llTimebarNums;
 	RelativeLayout rlTimebar;
 	RelativeLayout rlPauseView;
+	RelativeLayout rlRootView;
+	RelativeLayout rlTopView;
 
 	ImageView ivLeftArm;
 	ImageView ivRightArm;
 	ImageView ivTimebarFrontNum;
 	ImageView ivTimebarBackNum;
+	ImageView ivCombo;
+	ImageView ivSuperCombo;
+	ImageView ivWrongAnswer;
+	ImageView ivCntdown;
+	ImageView ivLightbox;
 
 	Button btnLeft;
 	Button btnRight;
 
 	TextView tvNumber;
+	private ImageView ivTimesup;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_cookie);
+		
+		rlRootView = (RelativeLayout) findViewById(R.id.rl_test_cookie);
+		// rlRootView.setAlpha(70);
 
 		timeRemain = TIME_CNT * TIME_PER_TICK; // init timeRemain
 		timebarCounter = new TimebarCountdownTimer((TIME_CNT+2)*TIME_PER_TICK,TIME_PER_TICK);
@@ -94,6 +105,12 @@ public class StudyTestCookie extends Activity {
 
 		ivTimebarFrontNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_front_num);
 		ivTimebarBackNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_back_num);
+		ivCombo=(ImageView) findViewById(R.id.iv_test_cookie_combo);
+		ivSuperCombo=(ImageView) findViewById(R.id.iv_test_cookie_super_combo);
+		ivWrongAnswer=(ImageView) findViewById(R.id.iv_test_cookie_wrong);
+		ivCntdown=(ImageView) findViewById(R.id.iv_test_cookie_countdown);
+		ivLightbox=(ImageView) findViewById(R.id.iv_test_cookie_lightbox);
+		ivTimesup=(ImageView) findViewById(R.id.iv_test_cookie_timesup);
 
 		ivLeftArm = (ImageView)findViewById(R.id.iv_test_cookie_left_arm);
 		ivRightArm = (ImageView)findViewById(R.id.iv_test_cookie_right_arm);
@@ -103,6 +120,7 @@ public class StudyTestCookie extends Activity {
 
 		rlTimebar = (RelativeLayout)findViewById(R.id.rl_test_cookie_timebar);
 		rlPauseView = (RelativeLayout)findViewById(R.id.rl_test_cookie_pause_view);
+		rlTopView = (RelativeLayout)findViewById(R.id.rl_test_cookie_top);
 		llTimebarNums = (LinearLayout)findViewById(R.id.ll_test_cookie_timebar_nums);
 
 		initWords();
@@ -238,13 +256,52 @@ public class StudyTestCookie extends Activity {
 
 	public void correctAnswer(View v){
 		cntCorrectCookie++;
+		cntCombo++;
+		if(cntCombo>=10) showSuperCombo();
+		else showCombo();
 		tvNumber.setText(cntCorrectCookie+"");
 		updateCorrectOrWrong("O",((Button)v).getText().toString());
 	}
 
+	private void showCombo() {
+		ivCombo.setImageResource(R.drawable.test_cookie_img_combo1+cntCombo-1);
+		ivCombo.setVisibility(View.VISIBLE);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivCombo.setVisibility(View.GONE);
+			}
+		}, 500);
+	}
+
+	private void showSuperCombo() {
+		ivSuperCombo.setVisibility(View.VISIBLE);
+		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_super_top);
+		Handler handle = new Handler();
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivSuperCombo.setVisibility(View.GONE);
+			}
+		}, 500);
+	}
+
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
+		cntCombo = 0;
+		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
+		showWrongAnswer();
 		updateCorrectOrWrong("X",((Button)v).getText().toString());
+	}
+
+	private void showWrongAnswer() {
+		ivWrongAnswer.setVisibility(View.VISIBLE);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				ivWrongAnswer.setVisibility(View.GONE);
+			}
+		}, 500);
 	}
 
 	public void onLeftBtnClick(View v) {	
@@ -344,9 +401,26 @@ public class StudyTestCookie extends Activity {
 		public void onTick(long millisUntilFinished) {
 			if(timeRemain <= 0) finishCookieGame(); // end timebar remain
 			else if(timeRemain == (TIME_CNT*TIME_PER_TICK) ) widthToTick = getTimebarTickWidth(); // first timebar width init
+			else if(timeRemain<=5000 && timeRemain!=0) showCntdown();
 			llTimebarNums.getLayoutParams().width += widthToTick; // update timebar width
 			updateTimebarNums(); // update timebar numbs
 			timeRemain -= TIME_PER_TICK; // decrease timebar Remain
+		}
+
+		private void showCntdown() {
+			int cntdown= timeRemain/1000;
+			ivCntdown.setVisibility(View.VISIBLE);
+			ivCntdown.setImageResource(R.drawable.test_cookie_text_time_1+cntdown-1);
+			ivLightbox.setVisibility(View.VISIBLE);
+			
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					ivCntdown.setVisibility(View.GONE);
+					ivLightbox.setVisibility(View.GONE);
+				}
+			}, 500);
+			
 		}
 
 		private void updateTimebarNums() {
@@ -375,9 +449,16 @@ public class StudyTestCookie extends Activity {
 		public void onFinish() {}
 
 		private void finishCookieGame() {
-			Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
-			startActivity(intent);
-			finish();
+			ivLightbox.setImageResource(R.color.color_black);
+			ivTimesup.setVisibility(View.VISIBLE);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
+					startActivity(intent);
+					finish();
+				}
+			}, 500);
 		}
 	}
 	
