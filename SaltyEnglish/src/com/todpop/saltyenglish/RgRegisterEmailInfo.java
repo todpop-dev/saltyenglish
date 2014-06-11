@@ -37,6 +37,7 @@ import android.media.audiofx.BassBoost.Settings;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -432,7 +433,8 @@ public class RgRegisterEmailInfo extends TypefaceActivity {
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 				//junho determine unique device
-				params.add(new BasicNameValuePair("device_id",android.provider.Settings.Secure.ANDROID_ID));
+				String android_id = Secure.getString(getApplicationContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+				params.add(new BasicNameValuePair("device_id",android_id));
 				//junho end
 				
 				String birthDay = Integer.toString(mYear) + "-" + Integer.toString(mMonth + 1) + "-" + Integer.toString(mDay);

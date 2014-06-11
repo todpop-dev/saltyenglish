@@ -23,6 +23,7 @@ import com.todpop.api.TypefaceActivity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -139,7 +140,8 @@ public class FbNickname extends TypefaceActivity {
 				HttpPost post = new HttpPost(postURL); 
 				List<NameValuePair> params = new ArrayList<NameValuePair>();
 				//junho determine unique device
-				params.add(new BasicNameValuePair("device_id",android.provider.Settings.Secure.ANDROID_ID));
+				String android_id = Secure.getString(getApplicationContext().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+				params.add(new BasicNameValuePair("device_id",android_id));
 				//junho end
 				if(!rgInfo.getString("email","no").equals("no"))										// cross join ( email -> facebook)
 				{
