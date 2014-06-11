@@ -157,7 +157,7 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
 				JSONArray jsonArray = json.getJSONObject("data").getJSONArray("list");
 				for(int i = 0; i < jsonArray.length(); i++){
 					JSONArray inner = jsonArray.getJSONArray(i);
-					wordList.add(new WordPair(inner.getString(0), jsonArray.getString(1)));
+					wordList.add(new WordPair(inner.getString(0), inner.getString(1)));
 				}
 		        startDownload();
 			} else {

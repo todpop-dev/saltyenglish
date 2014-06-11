@@ -30,11 +30,9 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -145,7 +143,6 @@ public class StudyTestFinish extends TypefaceActivity {
 
 				if (resEntity != null) {
 					result = new JSONObject(EntityUtils.toString(resEntity));
-					Log.d("CPDM RESPONSE ---- ", result.toString());
 				}
 				return result;
 			} catch (Exception e) {
@@ -229,7 +226,6 @@ public class StudyTestFinish extends TypefaceActivity {
 
 				if (resEntity != null) {
 					result = new JSONObject(EntityUtils.toString(resEntity));
-					Log.d("SET CPDM LOG RESPONSE ---- ", result.toString());
 				}
 				return result;
 			} catch (Exception e) {
@@ -261,7 +257,6 @@ public class StudyTestFinish extends TypefaceActivity {
 		@Override
 		public void onCompletion(MediaPlayer mp) {
 			skipBtn.setEnabled(false);
-			Log.d("cpdm view_time----", String.valueOf(video_length));
 			new SetCPDMlog()
 					.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
 							+ ad_id
@@ -283,8 +278,6 @@ public class StudyTestFinish extends TypefaceActivity {
 		@Override
 		public void onPrepared(MediaPlayer arg0) {
 
-			Log.e("cpdm----", "ready");
-
 			Handler mHandler = new Handler();
 			mHandler.postDelayed(mLaunchTaskMain, 5000); // exact 5000 timing
 															// try
@@ -305,7 +298,6 @@ public class StudyTestFinish extends TypefaceActivity {
 		if(view_time == 0)
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 			
-		Log.d("cpdm view_time----", "" + view_time);
 		FlurryAgent.endTimedEvent("CPDM");
 		new SetCPDMlog()
 				.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
@@ -332,11 +324,9 @@ public class StudyTestFinish extends TypefaceActivity {
 		
 		Session session = Session.getActiveSession();
 		if (session == null || session.isClosed()) {
-			Log.i("STEVEN", "publishAdBtn if");
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 			Session.openActiveSession(this, true, callback);
 		} else {
-			Log.i("STEVEN", "publishAdBtn else");
 			publishAd();
 		}
 	}
@@ -364,15 +354,12 @@ public class StudyTestFinish extends TypefaceActivity {
 
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
-					Log.i("STEVEN", "callback response : " + response);
 					try{
 						JSONObject graphResponse = response.getGraphObject()
 								.getInnerJSONObject();
 						try {
 							sharedId = graphResponse.getString("id");
 						} catch (JSONException e) {
-							Log.i("Facebook StudyTestFinish",
-									"JSON error " + e.getMessage());
 						}
 						FacebookRequestError error = response.getError();
 						if (error != null) {
@@ -422,7 +409,6 @@ public class StudyTestFinish extends TypefaceActivity {
 
 	private void onSessionStateChange(Session session, SessionState state,
 			Exception exception) {
-		Log.i("STEVEN", "onSessionStateChange");
 		if (state.isOpened()) {
 			if(!pendingPublishReauthorization)
 				publishAd();
@@ -442,22 +428,20 @@ public class StudyTestFinish extends TypefaceActivity {
 
 		int maxVol = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		int volume = (int) (maxVol * 0.3);
-		audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
+		if(oldVolume > volume)
+			audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 	}
 
 	@Override
 	public void onRestart() {
 		super.onRestart();
-		Log.i("STEVEN", "onRestart()");
 		if(shareTried){
 			skipBtn.setEnabled(true);
 			Session session = Session.getActiveSession();
 			if (session == null || session.isClosed()) {
-				Log.i("STEVEN", "publishAdBtn if");
 				view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 				Session.openActiveSession(this, true, callback);
 			} else {
-				Log.i("STEVEN", "publishAdBtn else");
 				publishAd();
 			}
 		}
@@ -465,6 +449,7 @@ public class StudyTestFinish extends TypefaceActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
+		video.stopPlayback();
 		audio.setStreamVolume(AudioManager.STREAM_MUSIC, oldVolume, 0);
 	}
 

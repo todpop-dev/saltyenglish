@@ -25,12 +25,14 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.TypefaceActivity;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -61,6 +64,9 @@ public class WordListTestFinish extends TypefaceActivity {
 	ImageView markingDone;
 	Button shareBtn;
 
+	private LinearLayout fbShareLayout;
+	private TextView fbShareReward;
+	
 	String reward;
 	String point;
 	String name;
@@ -68,13 +74,22 @@ public class WordListTestFinish extends TypefaceActivity {
 	String description;
 	String link;
 	String picture;
+
+	String sharedId;
 	
 	SharedPreferences rgInfo;
+
+	AudioManager audio;
+	int oldVolume;
+	
 	private int video_length =0;
 	private VideoView video;
 	private int ad_id = -1;
 	private int ad_type;
 	int view_time = 0;
+	private boolean shareDone = false;
+	private String sharedHistory;
+	private boolean shareTried = false;
 	private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private boolean pendingPublishReauthorization = false;
 	
@@ -99,6 +114,12 @@ public class WordListTestFinish extends TypefaceActivity {
 		markingDone = (ImageView) findViewById(R.id.testfinish_id_marking_completed);
 		shareBtn = (Button) findViewById(R.id.testfinish_fb_share_btn);
 
+		fbShareLayout = (LinearLayout)findViewById(R.id.testfinish_fb_share_layout);
+		fbShareReward = (TextView)findViewById(R.id.testfinish_fb_share_reward);
+		
+		audio = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		oldVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
 						+ rgInfo.getString("mem_id", "0"));
@@ -161,6 +182,19 @@ public class WordListTestFinish extends TypefaceActivity {
 						description = json.getJSONObject("data").getString("description");
 						link = json.getJSONObject("data").getString("link");
 						picture = json.getJSONObject("data").getString("picture");
+
+						if(sharedHistory.equals("0")){
+							shareBtn.setEnabled(false);
+							fbShareReward.setText(R.string.facebook_share_history);
+						}
+						else{
+							if(reward.equals("0") || reward.equals("null")){
+								fbShareReward.setText(point + " point");
+							}
+							else{
+								fbShareReward.setText(reward + getResources().getString(R.string.testname8));
+							}
+						}
 					}
 					else{
 						video.setOnCompletionListener(cl);
@@ -185,14 +219,19 @@ public class WordListTestFinish extends TypefaceActivity {
 			JSONObject result = null;
 			try {
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				String getURL = urls[0];
+				String getURL;
+				if(shareDone){
+					getURL = urls[0] + "&facebook_id=" + sharedId;
+				}
+				else{
+					getURL = urls[0];
+				}
 				HttpGet httpGet = new HttpGet(getURL);
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
-				if (resEntity != null) {    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("SET CPDM LOG RESPONSE ---- ", result.toString());				        	
+				if (resEntity != null) {
+					result = new JSONObject(EntityUtils.toString(resEntity));
 				}
 				return result;
 			} catch (Exception e) {
@@ -206,9 +245,9 @@ public class WordListTestFinish extends TypefaceActivity {
 
 			try {
 				if(json.getBoolean("status")==true) {
-					Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
+					/*Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
 					startActivity(intent);
-					WordListTestFinish.this.finish();
+					WordListTestFinish.this.finish();*/
 				} else {		        
 				}
 			} catch (Exception e) {
@@ -234,6 +273,10 @@ public class WordListTestFinish extends TypefaceActivity {
 					+ rgInfo.getString("mem_id", "0")
 					+ "&act=1&view_time="
 					+ video_length);
+
+			Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
+			startActivity(intent);
+			WordListTestFinish.this.finish();
 		}
 	};
 	
@@ -268,19 +311,24 @@ public class WordListTestFinish extends TypefaceActivity {
 						+ rgInfo.getString("mem_id", "0")
 						+ "&act=1&view_time="
 						+ view_time);
+		Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
+		startActivity(intent);
+		WordListTestFinish.this.finish();
 	}
 	
 	/*
 	 * for facebook share
 	 */
 	public void publishAdBtn(View v) {
+		shareTried = true;
+		
+		shareBtn.setEnabled(false);
+		
 		Session session = Session.getActiveSession();
 		if (session == null || session.isClosed()) {
-			Log.i("STEVEN", "publishAdBtn if");
 			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
 			Session.openActiveSession(this, true, callback);
 		} else {
-			Log.i("STEVEN", "publishAdBtn else");
 			publishAd();
 		}
 	}
@@ -309,33 +357,30 @@ public class WordListTestFinish extends TypefaceActivity {
 
 			Request.Callback callback = new Request.Callback() {
 				public void onCompleted(Response response) {
-					JSONObject graphResponse = response.getGraphObject()
-							.getInnerJSONObject();
-					String postId = null;
-					try {
-						postId = graphResponse.getString("id");
-					} catch (JSONException e) {
-						Log.i("Facebook StudyTestFinish",
-								"JSON error " + e.getMessage());
-					}
-					FacebookRequestError error = response.getError();
-					if (error != null) {
-						Toast.makeText(getApplicationContext(),
-								error.getErrorMessage(), Toast.LENGTH_SHORT)
-								.show();
-					} else {
-						shareBtn.setClickable(false);
-						popupText.setText(R.string.facebook_share_done);
+					try{
+						JSONObject graphResponse = response.getGraphObject()
+								.getInnerJSONObject();
+						try {
+							sharedId = graphResponse.getString("id");
+						} catch (JSONException e) {
+						}
+						FacebookRequestError error = response.getError();
+						if (error != null) {
+							popupText.setText(R.string.facebook_share_error);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						
+							Toast.makeText(getApplicationContext(),
+									error.getErrorMessage(), Toast.LENGTH_SHORT)
+									.show();
+						} else {
+							shareDone = true;
+							shareBtn.setClickable(false);
+							popupText.setText(R.string.facebook_share_done);
+							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+						}
+					}catch(Exception e){
+						popupText.setText(R.string.facebook_share_error);
 						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						new SetCPDMlog()
-								.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
-										+ ad_id
-										+ "&ad_type="
-										+ ad_type
-										+ "&user_id="
-										+ rgInfo.getString("mem_id", "0")
-										+ "&act=2&facebook_id="
-										+ postId);
 					}
 				}
 			};
@@ -394,11 +439,18 @@ public class WordListTestFinish extends TypefaceActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		int maxVol = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		int volume = (int) (maxVol * 0.3);
+		if(oldVolume > volume)
+			audio.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+		video.stopPlayback();
+		audio.setStreamVolume(AudioManager.STREAM_MUSIC, oldVolume, 0);
 	}
 
 	@Override
@@ -409,7 +461,23 @@ public class WordListTestFinish extends TypefaceActivity {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+	}	
+	
+	@Override
+	public void onRestart() {
+		super.onRestart();
+		if(shareTried){
+			skipBtn.setEnabled(true);
+			Session session = Session.getActiveSession();
+			if (session == null || session.isClosed()) {
+				view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
+				Session.openActiveSession(this, true, callback);
+			} else {
+				publishAd();
+			}
+		}
 	}
+	
 	@Override
 	protected void onStart()
 	{

@@ -15,7 +15,7 @@ public class TypefaceFragmentActivity extends FragmentActivity {
         super.setContentView(layoutResID);
 
         if (TypefaceFragmentActivity.mTypeface == null)
-            TypefaceFragmentActivity.mTypeface = Typeface.createFromFile("/system/fonts/DroidSansFallback.ttf");
+            TypefaceFragmentActivity.mTypeface = Typeface.createFromAsset(getAssets(), "fonts/roboto_regular_nanum_bold.ttf.mp3");
 
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         setGlobalFont(root);

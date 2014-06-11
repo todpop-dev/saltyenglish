@@ -39,7 +39,8 @@
                 <TextView
                     android:id="@+id/locker_id_text_clock"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
                     android:textColor="#3c3c3c"
                     android:textSize="44dp" />
 
@@ -78,6 +79,17 @@
             android:layout_height="0dp"
             android:layout_weight="200" >
 
+            <SeekBar
+                android:id="@+id/locker_layout_id_seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingLeft="32.5dp"
+                android:paddingRight="32.5dp"
+                android:progress="50"
+                android:progressDrawable="@drawable/popup_noti_seekbar_progress"
+                android:thumb="@drawable/locker_common_btn_circle_normal" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -86,6 +98,7 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+        			android:clickable="true"
                     android:layout_weight="1" >
 
                     <ImageView
@@ -105,9 +118,9 @@
                         android:shadowDx="3"
                         android:shadowDy="3"
                         android:shadowRadius="2"
-                        android:visibility="invisible"
                         android:textColor="#ffffff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:visibility="invisible" />
                 </RelativeLayout>
 
                 <View
@@ -118,6 +131,7 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+        			android:clickable="true"
                     android:layout_weight="1" >
 
                     <ImageView
@@ -133,7 +147,6 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:visibility="invisible"
                         android:layout_marginBottom="5dp"
                         android:gravity="center_horizontal|bottom"
                         android:shadowColor="#40000000"
@@ -141,20 +154,10 @@
                         android:shadowDy="3"
                         android:shadowRadius="2"
                         android:textColor="#ffffff"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+                        android:visibility="invisible" />
                 </RelativeLayout>
             </LinearLayout>
-
-            <SeekBar
-                android:id="@+id/locker_layout_id_seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingLeft="32.5dp"
-                android:paddingRight="32.5dp"
-                android:progress="50"
-                android:progressDrawable="@drawable/popup_noti_seekbar_progress"
-                android:thumb="@drawable/locker_common_btn_circle_normal" />
         </RelativeLayout>
 
         <RelativeLayout

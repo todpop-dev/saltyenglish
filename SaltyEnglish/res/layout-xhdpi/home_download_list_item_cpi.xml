@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     >
-     
-    
-    <ImageView 
-        android:id="@+id/homedownload_list_item_id_image"
-        android:layout_width="52.5dp"
-        android:layout_height="52.5dp"
-        android:layout_marginLeft="20dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/store_2_image_goodsimage"
-        android:scaleType="fitCenter"
-        />
-    
-    
-    <TextView 
-        android:id="@+id/homedownload_list_item_id_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="7dp"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/homedownload_list_item_id_image"
-        />
-    
-    <ImageView 
-        android:id="@+id/homedownload_list_item_id_imagecoin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_toRightOf="@id/homedownload_list_item_id_image"
-        android:src="@drawable/common_image_smallcoin"
-        />
-    
-    <TextView 
-        android:id="@+id/homedownload_list_item_id_coin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:layout_marginLeft="12dp"
-        android:gravity="center"
-        android:layout_toRightOf="@id/homedownload_list_item_id_imagecoin"
-        android:textColor="#000000"
-        android:textSize="17dp"
-        
-        />
-    
-    
-    <Button 
-        android:id="@+id/homedownload_list_item_id_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/homedownload_drawable_btn_saving"/>
-    
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal" >
 
-</RelativeLayout>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="50" />
+
+    <ImageView
+        android:id="@+id/homedownload_list_item_id_image"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="110"
+        android:scaleType="fitCenter"
+        android:src="@drawable/store_2_image_goodsimage" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="30" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="340"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:id="@+id/homedownload_list_item_id_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/homedownload_list_item_id_imagecoin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/common_image_smallcoin" />
+
+            <TextView
+                android:id="@+id/homedownload_list_item_id_coin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="17dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="5" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="185" >
+
+        <Button
+            android:id="@+id/homedownload_list_item_id_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/homedownload_drawable_btn_saving" />
+    </RelativeLayout>
+
+</LinearLayout>

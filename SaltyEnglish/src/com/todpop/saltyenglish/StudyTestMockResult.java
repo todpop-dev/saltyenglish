@@ -106,8 +106,8 @@ public class StudyTestMockResult extends TypefaceActivity {
 
 		arItem = new ArrayList<MyItem>();
 
-		scoreView = (TextView)findViewById(R.id.lvmocktest_result_id_level);
-		rewardView = (TextView)findViewById(R.id.study_mock_test_result_id_score_view);
+		scoreView = (TextView)findViewById(R.id.tv_mock_test_result_level);
+		rewardView = (TextView)findViewById(R.id.tv_mock_test_result_reward);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
 
 
@@ -124,7 +124,7 @@ public class StudyTestMockResult extends TypefaceActivity {
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
-		score = (int) (( ((float)cntRightWords/cntWords)*100 )); //rounded
+		score =  Math.round( ((float)cntRightWords / cntWords) * 100);//(int) (( ((float)cntRightWords/cntWords)*100 )); //rounded
 		scoreView.setText(score + getResources().getString(R.string.study_result_score_text));
 		// ----------- Request Result -------------
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
@@ -146,7 +146,7 @@ public class StudyTestMockResult extends TypefaceActivity {
 		studyInfoEdit.apply();
 		// ----------------------------
 
-		relative = (RelativeLayout)findViewById(R.id.mock_test_result_id_main);
+		relative = (RelativeLayout)findViewById(R.id.rl_mock_test_result);
 		popupView = View.inflate(this, R.layout.popup_view_test_mock_result, null);
 		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 		
@@ -175,12 +175,10 @@ public class StudyTestMockResult extends TypefaceActivity {
 		
 		new SetTestLog().execute(setTestLogUrl);
 	
-		
-
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
 
 		ListView MyList;
-		MyList=(ListView)findViewById(R.id.lvmocktestresult_id_listview);
+		MyList=(ListView)findViewById(R.id.lv_mock_test_result_panel);
 		MyList.setAdapter(MyAdapter);
 	}
 
@@ -378,8 +376,8 @@ public class StudyTestMockResult extends TypefaceActivity {
 			setFont(textKr);
 
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
-			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
-			itemBtn.setChecked(((ListView)parent).isItemChecked(position));
+//			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
+//			itemBtn.setChecked(((ListView)parent).isItemChecked(position));
 			//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);

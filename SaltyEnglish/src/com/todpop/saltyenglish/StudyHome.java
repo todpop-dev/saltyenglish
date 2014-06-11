@@ -999,13 +999,14 @@ public class StudyHome extends TypefaceActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) 
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.study_home, menu);
+		if (isOnSlide == false) {
+			FlurryAgent.logEvent("Slide Button Clicked (On)");
+			slideOn();
+		} else {
+			FlurryAgent.logEvent("Slide Button Clicked (Off)");
+			slideOff();
+		}
 		return false;
-	}
-
-	public void showShop(View view)
-	{
 	}
 
 	// Sidebar Menu Callback

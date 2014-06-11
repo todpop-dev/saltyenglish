@@ -52,7 +52,7 @@ import com.todpop.api.FileManager;
 import com.todpop.api.LockInfo;
 import com.todpop.api.LockScreenClock;
 import com.todpop.api.TypefaceActivity;
-import com.todpop.api.LockScreenClock.OnClockTickListner;
+import com.todpop.api.LockScreenClock.OnClockTickListener;
 import com.todpop.api.request.LockScreenDownloadImage;
 import com.todpop.api.VerticalViewPager;
 import com.todpop.saltyenglish.db.LockerDBHelper;
@@ -200,7 +200,7 @@ public class LockScreenActivity extends TypefaceActivity {
 
 		Log.e("STEVEN", "onResume");
 		LockScreenClock clock = new LockScreenClock(this, 0);
-		clock.AddClockTickListner(new OnClockTickListner(){
+		clock.AddClockTickListener(new OnClockTickListener(){
 			@Override
 			public void OnSecondTick(Time currentTime){
 				String time = DateFormat.format("hh:mm", currentTime.toMillis(true)).toString();
@@ -470,7 +470,8 @@ public class LockScreenActivity extends TypefaceActivity {
 				}
 				else{
 					new SendLockLog().execute("http://www.todpop.co.kr/api/screen_lock/set_ad_log.json?user_id=" + userId 
-							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId());
+							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId() 
+							+ "$group=" + lockList.get(position - 1).getGroup());
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(lockList.get(position - 1).getTargetUrl())));
 					finish();
 				}

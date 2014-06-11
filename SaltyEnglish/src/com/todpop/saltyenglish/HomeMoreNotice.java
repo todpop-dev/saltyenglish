@@ -124,6 +124,7 @@ public class HomeMoreNotice extends TypefaceActivity {
 								textView.setPadding(70, 20, 0, 20);
 								textView.setTextColor(Color.rgb(0, 0, 0));
 								textView.setTextSize(19);
+								setFont(textView);
 								return textView;
 							}
 							@Override

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.todpop.saltyenglish"
     android:versionCode="20"
-    android:versionName="1.3.6" >
+    android:versionName="1.4.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -125,6 +125,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.todpop.saltyenglish.StudyTestWeekly"
+            android:label="@string/title_activity_study_test_weekly"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.todpop.saltyenglish.StudyBegin"
             android:label="@string/title_activity_study_bigin"
             android:screenOrientation="portrait" >
@@ -132,6 +137,16 @@
         <activity
             android:name="com.todpop.saltyenglish.StudyTestFinish"
             android:label="@string/title_activity_study_test_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestWeeklyFinish"
+            android:label="@string/title_activity_study_test_finish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestWeeklyResult"
+            android:label="@string/title_activity_study_test_result"
             android:screenOrientation="portrait" >
         </activity>
         <activity
