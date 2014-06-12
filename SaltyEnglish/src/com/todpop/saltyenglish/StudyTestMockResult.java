@@ -124,7 +124,7 @@ public class StudyTestMockResult extends TypefaceActivity {
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
-		score = (int) (( ((float)cntRightWords/cntWords)*100 )); //rounded
+		score =  Math.round( ((float)cntRightWords / cntWords) * 100);//(int) (( ((float)cntRightWords/cntWords)*100 )); //rounded
 		scoreView.setText(score + getResources().getString(R.string.study_result_score_text));
 		// ----------- Request Result -------------
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
@@ -376,8 +376,8 @@ public class StudyTestMockResult extends TypefaceActivity {
 			setFont(textKr);
 
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
-			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
-			itemBtn.setChecked(((ListView)parent).isItemChecked(position));
+//			CheckBox itemBtn = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
+//			itemBtn.setChecked(((ListView)parent).isItemChecked(position));
 			//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);
