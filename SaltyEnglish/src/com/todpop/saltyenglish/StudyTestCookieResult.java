@@ -235,7 +235,7 @@ public class StudyTestCookieResult extends TypefaceActivity {
 		protected void onPostExecute(JSONObject json) {
 			try {
 				loadingDialog.dissmiss();
-				Log.d("Get Result JSON RESPONSE ---- ", json.toString());				        	
+				Log.e("Get Result JSON RESPONSE ---- ", json.toString());				        	
 
 				if(json.getBoolean("status")==true) {
 					try {

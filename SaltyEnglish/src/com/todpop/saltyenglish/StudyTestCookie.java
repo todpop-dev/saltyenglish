@@ -136,7 +136,6 @@ public class StudyTestCookie extends Activity {
 			rlTutorial.setVisibility(View.GONE);
 			timebarCounter.start();
 		}
-
 	}
 
 	void initWords(){
@@ -362,7 +361,7 @@ public class StudyTestCookie extends Activity {
 
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
-		strComboResult += (strComboResult.length() != 0 ? "-" : "") + cntNonstopCorrect;
+		strComboResult += (strComboResult.length() != 0 ? "-" : "") + cntNonstopCorrect ;
 		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();
