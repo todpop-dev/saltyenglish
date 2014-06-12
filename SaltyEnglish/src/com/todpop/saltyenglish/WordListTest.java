@@ -106,6 +106,8 @@ public class WordListTest extends TypefaceActivity {
 	private long startTime = 10000;
 	private boolean isPause = false;
 
+	SQLiteDatabase db;
+	
 	SharedPreferences lvTextWord;
 	
 	@Override
@@ -140,6 +142,8 @@ public class WordListTest extends TypefaceActivity {
 		
 		// Database initiation
 		mHelper = new WordDBHelper(this);
+		db = mHelper.getReadableDatabase();
+		db.delete("mywordtest", null, null);
 		
 		// ArrayLists to hold words
 		englishWords = new ArrayList<String>();
@@ -162,7 +166,6 @@ public class WordListTest extends TypefaceActivity {
 		// Get Pivot Time
 		SharedPreferences prefs = getSharedPreferences("rgInfo",0);
 		pivotTime = prefs.getInt("pivotTime", 0);
-
 
 		//set first test word
 		setupTestWords(0);
@@ -372,9 +375,7 @@ public class WordListTest extends TypefaceActivity {
 	
 	
 	private void getTestWords()
-	{
-		SQLiteDatabase db = mHelper.getReadableDatabase();
-		
+	{	
 		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
 		try {
 			Cursor cursor = db.rawQuery("SELECT DISTINCT name,  mean FROM mywords ORDER BY RANDOM() LIMIT " + wordListSize, null);
@@ -538,6 +539,11 @@ public class WordListTest extends TypefaceActivity {
 			select4.setText(optionOne.get(count));
 			correctOption = 4;
 		}
+	}
+	
+	@Override
+	public void onBackPressed(){
+		finish();
 	}
 	
 	@Override

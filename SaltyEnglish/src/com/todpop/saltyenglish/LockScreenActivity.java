@@ -449,6 +449,7 @@ public class LockScreenActivity extends TypefaceActivity {
 			OnSeekBarChangeListener {
 		boolean sideFlag = false;
 		Drawable pressed = getResources().getDrawable(R.drawable.locker_common_btn_circle_pressed);
+		Drawable none = getResources().getDrawable(R.drawable.null_shape);
 		Drawable normal = getResources().getDrawable(R.drawable.locker_common_btn_circle_normal);
 		
 		@Override
@@ -471,7 +472,7 @@ public class LockScreenActivity extends TypefaceActivity {
 				else{
 					new SendLockLog().execute("http://www.todpop.co.kr/api/screen_lock/set_ad_log.json?user_id=" + userId 
 							+ "&ad_type=" + lockList.get(position - 1).getType() + "&ad_id=" + lockList.get(position - 1).getId() 
-							+ "$group=" + lockList.get(position - 1).getGroup());
+							+ "&group=" + lockList.get(position - 1).getGroup());
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(lockList.get(position - 1).getTargetUrl())));
 					finish();
 				}
@@ -499,7 +500,7 @@ public class LockScreenActivity extends TypefaceActivity {
 						vibe.vibrate(50);
 						sideFlag = true;
 					}
-					seekBar.setThumb(null);
+					seekBar.setThumb(none);
 					seekBar.setProgress(100);
 					sideFlag = true;
 				} else if (progress <= 15) {
@@ -507,7 +508,7 @@ public class LockScreenActivity extends TypefaceActivity {
 						vibe.vibrate(50);
 						sideFlag = true;
 					}
-					seekBar.setThumb(null);
+					seekBar.setThumb(none);
 					seekBar.setProgress(0);
 				} else {
 					seekBar.setThumb(pressed);

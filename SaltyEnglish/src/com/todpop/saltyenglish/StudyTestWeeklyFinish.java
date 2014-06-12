@@ -513,5 +513,10 @@ public class StudyTestWeeklyFinish extends TypefaceActivity {
 		super.onStop();
 		FlurryAgent.onEndSession(this);
 		EasyTracker.getInstance(this).activityStop(this);
+	}	
+	
+	@Override
+	public void onBackPressed(){
+		//Do nothing
 	}
 }
