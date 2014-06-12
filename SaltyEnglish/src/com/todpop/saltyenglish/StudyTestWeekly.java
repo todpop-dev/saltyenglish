@@ -181,6 +181,7 @@ public class StudyTestWeekly extends TypefaceActivity {
 		
 		mHelper = new WordDBHelper(this);
 		db = mHelper.getWritableDatabase();
+		db.delete("mywordtest", null, null);
 		
 		resetWord = new Runnable(){
 			@Override
@@ -506,7 +507,6 @@ public class StudyTestWeekly extends TypefaceActivity {
 	
 	@Override
 	public void onBackPressed(){
-		db.delete("mywordtest", null, null);
 		finish();
 	}
 	
