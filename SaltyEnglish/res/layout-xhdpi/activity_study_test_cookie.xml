@@ -205,27 +205,27 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="21dp"
-        android:visibility="gone"
-        android:src="@drawable/test_cookie_img_combo1" />
-    <ImageView 
+        android:src="@drawable/test_cookie_img_combo1"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/iv_test_cookie_super_combo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
         android:src="@drawable/test_cookie_img_supercombo"
-        />
-    <ImageView 
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/iv_test_cookie_wrong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
         android:src="@drawable/test_cookie_img_x"
-        />
-    
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/iv_test_cookie_countdown"
         android:layout_width="wrap_content"
@@ -233,21 +233,47 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/test_cookie_text_time_1"
-        />
-	<ImageView 
-	    android:id="@+id/iv_test_cookie_lightbox"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:src="#ff0000"
-	    android:alpha="0.3"
-	    />
-	<ImageView 
-	    android:id="@+id/iv_test_cookie_timesup"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_test_cookie_lightbox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:src="#ff0000"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_test_cookie_timesup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-	    android:src="@drawable/test_cookie_img_timesup"
-	    android:visibility="gone"
-	    />
+        android:src="@drawable/test_cookie_img_timesup"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rl_test_cookie_tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#7f000000"
+        android:clickable="true"
+        android:padding="16dp" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/test_cookie_img_tutorial" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/weekly_btn_tutorial_confirm"
+            android:onClick="onClickTuto" />
+    </RelativeLayout>
+
 </RelativeLayout>

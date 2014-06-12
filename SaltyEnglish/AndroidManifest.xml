@@ -352,7 +352,7 @@
 
         <activity
             android:name="com.todpop.saltyenglish.StudyTestMockCnt"
-            android:label="@string/title_activity_study_test_mock_cnt" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.todpop.saltyenglish.StudyTestMockFinish"
@@ -364,7 +364,14 @@
         </activity>
         <activity
             android:name="com.todpop.saltyenglish.StudyTestCookie"
-            android:label="@string/title_activity_study_test_cookie"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestCookieFinish"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestCookieResult"
             android:screenOrientation="portrait" >
         </activity>
     </application>

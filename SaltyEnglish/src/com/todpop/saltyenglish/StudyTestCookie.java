@@ -2,14 +2,13 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -36,26 +35,31 @@ public class StudyTestCookie extends Activity {
 	public static final int TIME_PER_TICK = 1000;
 	public static final int TIME_CNT = 40;
 
-	int cntTotalCookie = 0; // total emerged cookies, 
+	String strComboResult="";
+
+	int cntTotalEmergedCookie = 0; // total emerged cookies,, correctAnswer + wrongAnswer != emergedCookie
 	int cntCorrectCookie = 0; 
 	int cntWrongCookie = 0;
 	int timeRemain = 0;
 	int widthToTick; // timebar width to add each tick
 	int tmpStageAccumulated;
-	int cntCombo = 0;
+	int cntNonstopCorrect = 0;
 	boolean isFirstOnCreated = false; // chk onCreated
-	
+
 	TimebarCountdownTimer timebarCounter;
 	CookieFactory cookieFactory;
-	
+
 	WordDBHelper mHelper;
-	// cant duplicate key
 	HashMap<String, String[]> hashWords; // key = word , value =  { mean, wrong mean}
 
 	Animation animLeftArm;
 	Animation animRightArm;
 	Animation animLeftArmBack;
 	Animation animRightArmBack;
+	Animation animCntdown;
+	Animation animTimesup;
+	Animation animCombo;
+	Animation animSuperCombo;
 
 	Animation animHookLeft;
 	Animation animHookRight;
@@ -65,7 +69,6 @@ public class StudyTestCookie extends Activity {
 	LinearLayout llTimebarNums;
 	RelativeLayout rlTimebar;
 	RelativeLayout rlPauseView;
-	RelativeLayout rlRootView;
 	RelativeLayout rlTopView;
 
 	ImageView ivLeftArm;
@@ -77,21 +80,20 @@ public class StudyTestCookie extends Activity {
 	ImageView ivWrongAnswer;
 	ImageView ivCntdown;
 	ImageView ivLightbox;
+	ImageView ivTimesup;
 
 	Button btnLeft;
 	Button btnRight;
 
 	TextView tvNumber;
-	private ImageView ivTimesup;
+
+	RelativeLayout rlTutorial;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_cookie);
-		
-		rlRootView = (RelativeLayout) findViewById(R.id.rl_test_cookie);
-		// rlRootView.setAlpha(70);
 
 		timeRemain = TIME_CNT * TIME_PER_TICK; // init timeRemain
 		timebarCounter = new TimebarCountdownTimer((TIME_CNT+2)*TIME_PER_TICK,TIME_PER_TICK);
@@ -102,6 +104,7 @@ public class StudyTestCookie extends Activity {
 
 		cookieFactory = CookieFactory.getInstance();
 		llTestCookies =(LinearLayout)findViewById(R.id.ll_test_cookies);
+		rlTutorial = (RelativeLayout)findViewById(R.id.rl_test_cookie_tutorial);
 
 		ivTimebarFrontNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_front_num);
 		ivTimebarBackNum = (ImageView)findViewById(R.id.iv_test_cookie_timebar_back_num);
@@ -126,15 +129,20 @@ public class StudyTestCookie extends Activity {
 		initWords();
 		initAnims();
 		initCookies();
-		
-		timebarCounter.start();
+
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		String introOk = pref.getString("introTestCookieOk", "N");
+		if (introOk.equals("Y")) {
+			rlTutorial.setVisibility(View.GONE);
+			timebarCounter.start();
+		}
+
 	}
 
-	void initWords()
-	{
+	void initWords(){
 		hashWords = new HashMap<String, String[]>();
 		SQLiteDatabase db = mHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
+		Cursor cursor = db.rawQuery("SELECT DISTINCT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
 		if (cursor.getCount()>0) {
 			while(cursor.moveToNext()){
 				// get wrong mean randomly except correct mean  
@@ -165,7 +173,7 @@ public class StudyTestCookie extends Activity {
 
 	private void setCookie() {
 		String[] infos = getWordInfo();
-		View v = cookieFactory.getCookie(getApplicationContext(),infos[0] ,cntTotalCookie % 3);
+		View v = cookieFactory.getCookie(getApplicationContext(),infos[0] ,cntTotalEmergedCookie % 3);
 		v.setTag(infos); // each cookies has word, mean, wrong mean by string array
 		llTestCookies.addView(v,0);
 
@@ -175,7 +183,7 @@ public class StudyTestCookie extends Activity {
 		btnLeft.setText(targetInfos[numRand]);
 		numRand = numRand == 1 ? 2 : 1; // reverse, 1 to 2 , 2 to 1
 		btnRight.setText(targetInfos[numRand]);
-		cntTotalCookie++;
+		cntTotalEmergedCookie++;
 	}
 
 	private void initAnims() {
@@ -187,6 +195,11 @@ public class StudyTestCookie extends Activity {
 
 		animHookLeft = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_test_cookie_hooked_left);
 		animHookRight = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.anim_test_cookie_hooked_right);
+
+		animCombo = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_combo_ani);
+		animSuperCombo = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_combo_ani);
+		animCntdown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_time_ani);
+		animTimesup = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_timesup_ani);
 
 		animHookListener = new AnimationListener() {
 			@Override
@@ -226,6 +239,80 @@ public class StudyTestCookie extends Activity {
 			}
 		});
 
+		animCombo.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				ivCombo.setVisibility(View.VISIBLE);	
+			}
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				ivCombo.setVisibility(View.GONE);				
+			}
+		});
+
+		animSuperCombo.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				ivSuperCombo.setVisibility(View.VISIBLE);
+				rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_super_top);
+			}
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				ivSuperCombo.setVisibility(View.GONE);
+			}
+		});
+
+		animCntdown.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				ivLightbox.setImageResource(R.color.light_red);
+				ivLightbox.setVisibility(View.VISIBLE);
+				ivTimesup.setVisibility(View.VISIBLE);		
+			}
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				ivLightbox.setVisibility(View.GONE);
+			}
+		});
+
+		animTimesup.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+				btnLeft.setClickable(false);
+				btnRight.setClickable(false);
+				
+				ivLightbox.setImageResource(R.color.light_black);
+				ivLightbox.setVisibility(View.VISIBLE);
+				ivTimesup.setVisibility(View.VISIBLE);
+				
+				if(strComboResult.equals(""))
+					strComboResult = "0";
+				else if(cntNonstopCorrect != 0)
+					strComboResult += "-" + cntNonstopCorrect;
+
+				SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
+				Editor editor = levelPref.edit();
+				editor.putString("testComboResult", strComboResult);
+				editor.putInt("testCntCorrect", cntCorrectCookie);
+				editor.putInt("testCntWrong", cntWrongCookie);
+				editor.apply();
+			}
+			@Override
+			public void onAnimationRepeat(Animation animation) {}
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				Intent intent = new Intent(getApplicationContext(),StudyTestCookieFinish.class);
+				startActivity(intent);
+				finish();
+			}
+		});
+
 		animHookLeft.setAnimationListener(animHookListener);
 		animHookRight.setAnimationListener(animHookListener);
 
@@ -236,7 +323,7 @@ public class StudyTestCookie extends Activity {
 		getMenuInflater().inflate(R.menu.study_test_cookie, menu);
 		return true;
 	}
-	
+
 	// direction -1 = left , 1 = right
 	public boolean chkIsCorrectAnswer(int direction){
 		TextView target = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1);
@@ -256,39 +343,27 @@ public class StudyTestCookie extends Activity {
 
 	public void correctAnswer(View v){
 		cntCorrectCookie++;
-		cntCombo++;
-		if(cntCombo>=10) showSuperCombo();
-		else showCombo();
+		cntNonstopCorrect++;
+		
+		if(cntNonstopCorrect>=11) showSuperCombo();
+		else if(cntNonstopCorrect>=2) showCombo();
 		tvNumber.setText(cntCorrectCookie+"");
 		updateCorrectOrWrong("O",((Button)v).getText().toString());
 	}
 
 	private void showCombo() {
-		ivCombo.setImageResource(R.drawable.test_cookie_img_combo1+cntCombo-1);
-		ivCombo.setVisibility(View.VISIBLE);
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ivCombo.setVisibility(View.GONE);
-			}
-		}, 500);
+		ivCombo.setImageResource(R.drawable.test_cookie_img_combo1+cntNonstopCorrect-2);
+		ivCombo.startAnimation(animCombo);
 	}
 
 	private void showSuperCombo() {
-		ivSuperCombo.setVisibility(View.VISIBLE);
-		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_super_top);
-		Handler handle = new Handler();
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				ivSuperCombo.setVisibility(View.GONE);
-			}
-		}, 500);
+		ivSuperCombo.startAnimation(animSuperCombo);
 	}
 
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
-		cntCombo = 0;
+		strComboResult += (strComboResult.length() != 0 ? "-" : "") + cntNonstopCorrect;
+		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();
 		updateCorrectOrWrong("X",((Button)v).getText().toString());
@@ -321,7 +396,7 @@ public class StudyTestCookie extends Activity {
 		btnLeft.setClickable(false);
 		btnRight.setClickable(false);
 	}
-	
+
 	// cookie factory , factory pattern
 	private static class CookieFactory{
 		private static CookieFactory obj;
@@ -341,6 +416,16 @@ public class StudyTestCookie extends Activity {
 			v.setLayoutParams(params);
 			return v;
 		}
+	}
+
+	// for tutorial
+	public void onClickTuto(View v){
+		SharedPreferences pref = getSharedPreferences("rgInfo",0);
+		Editor editor = pref.edit();
+		editor.putString("introTestCookieOk", "Y");
+		editor.apply();
+		rlTutorial.setVisibility(View.GONE);
+		timebarCounter.start();
 	}
 
 	// for pause case
@@ -399,7 +484,7 @@ public class StudyTestCookie extends Activity {
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			if(timeRemain <= 0) finishCookieGame(); // end timebar remain
+			if(timeRemain == 0) ivTimesup.startAnimation(animTimesup); // end timebar remain
 			else if(timeRemain == (TIME_CNT*TIME_PER_TICK) ) widthToTick = getTimebarTickWidth(); // first timebar width init
 			else if(timeRemain<=5000 && timeRemain!=0) showCntdown();
 			llTimebarNums.getLayoutParams().width += widthToTick; // update timebar width
@@ -412,7 +497,7 @@ public class StudyTestCookie extends Activity {
 			ivCntdown.setVisibility(View.VISIBLE);
 			ivCntdown.setImageResource(R.drawable.test_cookie_text_time_1+cntdown-1);
 			ivLightbox.setVisibility(View.VISIBLE);
-			
+
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -420,7 +505,6 @@ public class StudyTestCookie extends Activity {
 					ivLightbox.setVisibility(View.GONE);
 				}
 			}, 500);
-			
 		}
 
 		private void updateTimebarNums() {
@@ -447,19 +531,6 @@ public class StudyTestCookie extends Activity {
 
 		@Override
 		public void onFinish() {}
-
-		private void finishCookieGame() {
-			ivLightbox.setImageResource(R.color.color_black);
-			ivTimesup.setVisibility(View.VISIBLE);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					Intent intent = new Intent(getApplicationContext(),StudyTestFinish.class);
-					startActivity(intent);
-					finish();
-				}
-			}, 500);
-		}
 	}
-	
+
 }
