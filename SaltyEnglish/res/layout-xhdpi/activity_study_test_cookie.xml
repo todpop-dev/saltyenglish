@@ -20,6 +20,13 @@
             android:layout_weight="1"
             android:background="@drawable/test_cookie_bg_top" >
 
+            <ImageView
+                android:id="@+id/iv_test_cookie_top_redbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/ll_test_cookies"
                 android:layout_width="match_parent"
@@ -90,6 +97,13 @@
             android:layout_width="wrap_content"
             android:layout_height="150dp"
             android:background="@drawable/test_cookie_bg_bottom" >
+
+            <ImageView
+                android:id="@+id/iv_test_cookie_bot_redbox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#80000000"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/rl_test_cookie_timebar"
@@ -236,12 +250,13 @@
         android:visibility="gone" />
 
     <ImageView
-        android:id="@+id/iv_test_cookie_lightbox"
+        android:id="@+id/iv_test_cookie_whole_black_box"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.3"
-        android:src="#ff0000"
-        android:visibility="gone" />
+        android:alpha="0.4"
+        android:visibility="gone"
+        android:src="#80000000"
+        />
 
     <ImageView
         android:id="@+id/iv_test_cookie_timesup"
@@ -258,7 +273,8 @@
         android:layout_height="match_parent"
         android:background="#7f000000"
         android:clickable="true"
-        android:padding="16dp" >
+        android:padding="16dp"
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="match_parent"

@@ -190,7 +190,7 @@ public class StudyTestMock extends TypefaceActivity {
 				);
 		
 		imageTimeBlindAni.setDuration(10000);
-		imageTimeBlindAni.setRepeatCount(10);
+		imageTimeBlindAni.setRepeatCount(cntMaxWords);
 		
 		MyAnimationListener = new Animation.AnimationListener() {
 			public void onAnimationStart(Animation animation) {
@@ -199,17 +199,12 @@ public class StudyTestMock extends TypefaceActivity {
 			public void onAnimationRepeat(Animation animation) {
 				// english word set next count
 				wordCount++;
+				Log.e("wordCount / cntMaxWords",wordCount+" / "+cntMaxWords);
 				
 				if(wordCount<cntMaxWords) {
 					crocodileTimeAni.stop();
 					stopTimeCount();				
 					crocodileNewStart();
-					// string to drawable ID
-//					String imageID = "test_9_image_number_"+(wordCount+1);
-//					int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
-					//update image
-//					pageNumber.setBackgroundResource(resID);
-					//update test word
 					if(wordCount<=cntMaxWords)
 						pageNumber.setText((wordCount + 1)+" / "+ cntMaxWords);
 					setupTestWords(wordCount);

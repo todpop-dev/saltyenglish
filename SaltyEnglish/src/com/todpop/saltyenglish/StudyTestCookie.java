@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +14,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -79,8 +79,11 @@ public class StudyTestCookie extends Activity {
 	ImageView ivSuperCombo;
 	ImageView ivWrongAnswer;
 	ImageView ivCntdown;
-	ImageView ivLightbox;
 	ImageView ivTimesup;
+
+	ImageView ivBlackLightbox;
+	ImageView ivRedLightBoxTop;
+	ImageView ivRedLightBoxBot;
 
 	Button btnLeft;
 	Button btnRight;
@@ -112,8 +115,12 @@ public class StudyTestCookie extends Activity {
 		ivSuperCombo=(ImageView) findViewById(R.id.iv_test_cookie_super_combo);
 		ivWrongAnswer=(ImageView) findViewById(R.id.iv_test_cookie_wrong);
 		ivCntdown=(ImageView) findViewById(R.id.iv_test_cookie_countdown);
-		ivLightbox=(ImageView) findViewById(R.id.iv_test_cookie_lightbox);
 		ivTimesup=(ImageView) findViewById(R.id.iv_test_cookie_timesup);
+
+		ivBlackLightbox=(ImageView) findViewById(R.id.iv_test_cookie_whole_black_box);
+
+		ivRedLightBoxTop = (ImageView) findViewById(R.id.iv_test_cookie_top_redbox);
+		ivRedLightBoxBot = (ImageView) findViewById(R.id.iv_test_cookie_bot_redbox);
 
 		ivLeftArm = (ImageView)findViewById(R.id.iv_test_cookie_left_arm);
 		ivRightArm = (ImageView)findViewById(R.id.iv_test_cookie_right_arm);
@@ -139,17 +146,26 @@ public class StudyTestCookie extends Activity {
 	}
 
 	void initWords(){
+		if(!isFirstOnCreated)
+			initWordXoByN();
 		hashWords = new HashMap<String, String[]>();
 		SQLiteDatabase db = mHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT DISTINCT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
+		Cursor cursor = db.rawQuery("SELECT DISTINCT name,  mean, xo FROM dic WHERE stage=" + tmpStageAccumulated + " order by random()", null);
 		if (cursor.getCount()>0) {
 			while(cursor.moveToNext()){
+				Log.e("INIT WORDS",cursor.getString(0)+" / "+cursor.getString(1) +" / "+cursor.getString(2));
 				// get wrong mean randomly except correct mean  
 				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 1", null);
 				otherCursor.moveToNext();
 				hashWords.put(cursor.getString(0), new String[]{cursor.getString(1),otherCursor.getString(0)});
 			}
 		}
+	}
+
+	private void initWordXoByN() {
+		// N is Not Solved Answer
+		SQLiteDatabase db = mHelper.getWritableDatabase();
+		db.execSQL("UPDATE dic SET xo='N'");
 	}
 
 	private String[] getWordInfo() {
@@ -268,15 +284,12 @@ public class StudyTestCookie extends Activity {
 		animCntdown.setAnimationListener(new AnimationListener() {
 			@Override
 			public void onAnimationStart(Animation animation) {
-				ivLightbox.setImageResource(R.color.light_red);
-				ivLightbox.setVisibility(View.VISIBLE);
-				ivTimesup.setVisibility(View.VISIBLE);		
 			}
 			@Override
 			public void onAnimationRepeat(Animation animation) {}
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				ivLightbox.setVisibility(View.GONE);
+				ivCntdown.setVisibility(View.GONE);
 			}
 		});
 
@@ -285,11 +298,10 @@ public class StudyTestCookie extends Activity {
 			public void onAnimationStart(Animation animation) {
 				btnLeft.setClickable(false);
 				btnRight.setClickable(false);
-				
-				ivLightbox.setImageResource(R.color.light_black);
-				ivLightbox.setVisibility(View.VISIBLE);
+
+				ivBlackLightbox.setVisibility(View.VISIBLE);
 				ivTimesup.setVisibility(View.VISIBLE);
-				
+
 				if(strComboResult.equals(""))
 					strComboResult = "0";
 				else if(cntNonstopCorrect != 0)
@@ -335,15 +347,20 @@ public class StudyTestCookie extends Activity {
 
 	public void updateCorrectOrWrong(String XorO,String mean){
 		SQLiteDatabase db = mHelper.getWritableDatabase();
-		ContentValues cv = new ContentValues();
-		cv.put("xo", XorO);
-		db.update("dic", cv, "mean='"+ mean + "'", null);
+		Cursor cursor = db.rawQuery("SELECT xo FROM dic WHERE mean='"+mean+"'", null);
+		while(cursor.moveToNext()){
+			String xo = cursor.getString(0);
+			if(xo.equals("N") || xo.equals("O")) // N is First inited
+				db.execSQL("UPDATE dic SET xo='"+XorO+"' WHERE mean='"+mean+"'");
+//			else if(xo.equals("N")) 
+		}
+		
 	}
 
 	public void correctAnswer(View v){
 		cntCorrectCookie++;
 		cntNonstopCorrect++;
-		
+
 		if(cntNonstopCorrect>=11) showSuperCombo();
 		else if(cntNonstopCorrect>=2) showCombo();
 		tvNumber.setText(cntCorrectCookie+"");
@@ -493,15 +510,19 @@ public class StudyTestCookie extends Activity {
 
 		private void showCntdown() {
 			int cntdown= timeRemain/1000;
-			ivCntdown.setVisibility(View.VISIBLE);
 			ivCntdown.setImageResource(R.drawable.test_cookie_text_time_1+cntdown-1);
-			ivLightbox.setVisibility(View.VISIBLE);
+			ivCntdown.setVisibility(View.VISIBLE);
+
+			ivCntdown.startAnimation(animCntdown);
+
+			ivRedLightBoxTop.setVisibility(View.VISIBLE);
+			ivRedLightBoxBot.setVisibility(View.VISIBLE);	
 
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					ivCntdown.setVisibility(View.GONE);
-					ivLightbox.setVisibility(View.GONE);
+					ivRedLightBoxTop.setVisibility(View.GONE);
+					ivRedLightBoxBot.setVisibility(View.GONE);
 				}
 			}, 500);
 		}

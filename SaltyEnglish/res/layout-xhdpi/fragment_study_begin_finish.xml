@@ -70,6 +70,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="12dp"
+            android:clickable="false"
             android:background="@drawable/studybegin_drawable_btn_gotest"
             android:onClick="showTestActivity" />
 
