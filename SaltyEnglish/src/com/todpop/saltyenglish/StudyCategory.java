@@ -1,19 +1,9 @@
 package com.todpop.saltyenglish;
 
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-import com.todpop.api.request.DownloadPronounce;
-
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,31 +12,34 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
+/* disable pronounce popup 6.13 */
 public class StudyCategory extends TypefaceActivity {
 
 	RelativeLayout mainLayout;
 	
 	SharedPreferences studyInfo;
 	
-	static String selectedCategoryString;
-	static int selectedCategoryInt;
+//	static String selectedCategoryString;
+//	static int selectedCategoryInt;
 	
-	private static final int LATER = 0;
-	private static final int NEVER = 2;
+//	private static final int LATER = 0;
+//	private static final int NEVER = 2;
 	
 	LinearLayout weeklyLayout;
 	
-	PopupWindow askPopupWindow;
-	View askPopupView;
-	TextView askPopupText;
-	TextView askPopupSize;
+//	PopupWindow askPopupWindow;
+//	View askPopupView;
+//	TextView askPopupText;
+//	TextView askPopupSize;
 
-    PopupWindow progressPopupWindow;
-    View progressPopupView;
+//    PopupWindow progressPopupWindow;
+//    View progressPopupView;
 	
-	DownloadPronounce downLoadTask;
+//	DownloadPronounce downLoadTask;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,33 +56,33 @@ public class StudyCategory extends TypefaceActivity {
 		floatingAni.setRepeatMode(Animation.REVERSE);
 		weeklyLayout.setAnimation(floatingAni);		
 		
-		askPopupView = View.inflate(this, R.layout.popup_view_download_pronunciation, null);
-		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
-		askPopupText = (TextView)askPopupView.findViewById(R.id.popup_id_text);
-		askPopupSize = (TextView)askPopupView.findViewById(R.id.popup_id_size_text);
-		TextView askPopupNotNow = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_not_now);
-		TextView askPopupWifi = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_wifi);
+//		askPopupView = View.inflate(this, R.layout.popup_view_download_pronunciation, null);
+//		askPopupWindow = new PopupWindow(askPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+//		askPopupText = (TextView)askPopupView.findViewById(R.id.popup_id_text);
+//		askPopupSize = (TextView)askPopupView.findViewById(R.id.popup_id_size_text);
+//		TextView askPopupNotNow = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_not_now);
+//		TextView askPopupWifi = (TextView)askPopupView.findViewById(R.id.popup_id_pronounce_wifi);
 		
-		setFont(askPopupText);
-		setFont(askPopupSize);
-		setFont(askPopupNotNow);
-		setFont(askPopupWifi);
+//		setFont(askPopupText);
+//		setFont(askPopupSize);
+//		setFont(askPopupNotNow);
+//		setFont(askPopupWifi);
+//		
+//		askPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+//		askPopupWindow.setOutsideTouchable(true);
+//		askPopupView.setOnKeyListener(new View.OnKeyListener() {
+//
+//	        @Override
+//	        public boolean onKey(View v, int keyCode, KeyEvent event) {
+//	            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//	            	askPopupWindow.dismiss();
+//	            }
+//	            return true;
+//	        }
+//	    });
 		
-		askPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-		askPopupWindow.setOutsideTouchable(true);
-		askPopupView.setOnKeyListener(new View.OnKeyListener() {
-
-	        @Override
-	        public boolean onKey(View v, int keyCode, KeyEvent event) {
-	            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	            	askPopupWindow.dismiss();
-	            }
-	            return true;
-	        }
-	    });
-		
-		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);
-		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+//		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);
+//		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 	}
 
 	@Override
@@ -112,87 +105,87 @@ public class StudyCategory extends TypefaceActivity {
 	
 	public void studyCategoryOneCB(View view)
 	{
-		selectedCategoryInt = 1;
-		selectedCategoryString = "basicCategorySound";
-		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
-		if(soundState == LATER){
-			askPopupText.setText(R.string.popup_pronounce_info_basic);
-			askPopupSize.setText(R.string.popup_pronounce_info_basic_size);
-			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		}
-		else{
+//		selectedCategoryInt = 1;
+//		selectedCategoryString = "basicCategorySound";
+//		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
+//		if(soundState == LATER){
+//			askPopupText.setText(R.string.popup_pronounce_info_basic);
+//			askPopupSize.setText(R.string.popup_pronounce_info_basic_size);
+//			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+//		}
+//		else{
 			this.saveInfoGotoStudyLearn(1);
-		}
+//		}
 	}
 	
 	public void studyCategoryTwoCB(View view)
 	{
-		selectedCategoryInt = 2;
-		selectedCategoryString = "middleCategorySound";
-		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
-		if(soundState == LATER){
-			askPopupText.setText(R.string.popup_pronounce_info_middle);
-			askPopupSize.setText(R.string.popup_pronounce_info_middle_size);
-			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		}
-		else{
+//		selectedCategoryInt = 2;
+//		selectedCategoryString = "middleCategorySound";
+//		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
+//		if(soundState == LATER){
+//			askPopupText.setText(R.string.popup_pronounce_info_middle);
+//			askPopupSize.setText(R.string.popup_pronounce_info_middle_size);
+//			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+//		}
+//		else{
 			this.saveInfoGotoStudyLearn(2);
-		}
+//		}
 	}
 	
 	public void studyCategoryThreeCB(View view)
 	{
-		selectedCategoryInt = 3;
-		selectedCategoryString = "highCategorySound";
-		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
-		if(soundState == LATER){
-			askPopupText.setText(R.string.popup_pronounce_info_high);
-			askPopupSize.setText(R.string.popup_pronounce_info_high_size);
-			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		}
-		else{
+//		selectedCategoryInt = 3;
+//		selectedCategoryString = "highCategorySound";
+//		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
+//		if(soundState == LATER){
+//			askPopupText.setText(R.string.popup_pronounce_info_high);
+//			askPopupSize.setText(R.string.popup_pronounce_info_high_size);
+//			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+//		}
+//		else{
 			this.saveInfoGotoStudyLearn(3);
-		}
+//		}
 	}
 	
 	public void studyCategoryFourCB(View view)
 	{
-		selectedCategoryInt = 4;
-		selectedCategoryString = "toeicCategorySound";
-		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
-		if(soundState == LATER){
-			askPopupText.setText(R.string.popup_pronounce_info_toeic);
-			askPopupSize.setText(R.string.popup_pronounce_info_toeic_size);
-			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		}
-		else{
+//		selectedCategoryInt = 4;
+//		selectedCategoryString = "toeicCategorySound";
+//		int soundState = studyInfo.getInt(selectedCategoryString, LATER);
+//		if(soundState == LATER){
+//			askPopupText.setText(R.string.popup_pronounce_info_toeic);
+//			askPopupSize.setText(R.string.popup_pronounce_info_toeic_size);
+//			askPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+//		}
+//		else{
 			this.saveInfoGotoStudyLearn(4);
-		}
+//		}
 	}
 	
-	public void downloadNever(View view) {
-		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
-		studyInfoEdit.putInt(selectedCategoryString, NEVER);
-		studyInfoEdit.apply();
-		askPopupWindow.dismiss();
-		this.saveInfoGotoStudyLearn(selectedCategoryInt);
-	}
-	public void downloadLater(View view) {
-		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
-		studyInfoEdit.putInt(selectedCategoryString, LATER);
-		studyInfoEdit.apply();
-		askPopupWindow.dismiss();
-		this.saveInfoGotoStudyLearn(selectedCategoryInt);
-	}
-	public void downloadNow(View view) {
-		askPopupWindow.dismiss();
-		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
-		//TODO insert uri
-		downLoadTask = new DownloadPronounce(getApplicationContext(), this, selectedCategoryInt, progressPopupView);
-		downLoadTask.execute("");
-		//new GetWordList().execute(""+selectedCategoryInt);
-		
-	}
+//	public void downloadNever(View view) {
+//		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+//		studyInfoEdit.putInt(selectedCategoryString, NEVER);
+//		studyInfoEdit.apply();
+//		askPopupWindow.dismiss();
+//		this.saveInfoGotoStudyLearn(selectedCategoryInt);
+//	}
+//	public void downloadLater(View view) {
+//		SharedPreferences.Editor studyInfoEdit = studyInfo.edit();
+//		studyInfoEdit.putInt(selectedCategoryString, LATER);
+//		studyInfoEdit.apply();
+//		askPopupWindow.dismiss();
+//		this.saveInfoGotoStudyLearn(selectedCategoryInt);
+//	}
+//	public void downloadNow(View view) {
+//		askPopupWindow.dismiss();
+//		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+//		//TODO insert uri
+//		downLoadTask = new DownloadPronounce(getApplicationContext(), this, selectedCategoryInt, progressPopupView);
+//		downLoadTask.execute("");
+//		//new GetWordList().execute(""+selectedCategoryInt);
+//		
+//	}
 
 	private void saveInfoGotoStudyLearn(int tmpCategory)
 	{
@@ -205,12 +198,12 @@ public class StudyCategory extends TypefaceActivity {
 		//finish();
 	}
 
-	public void cancelDownload(View view){
-		downLoadTask.cancel();
-	}
-	public void doneDownload(View view){
-		progressPopupWindow.dismiss();
-	}
+//	public void cancelDownload(View view){
+//		downLoadTask.cancel();
+//	}
+//	public void doneDownload(View view){
+//		progressPopupWindow.dismiss();
+//	}
 	
 	@Override
 	protected void onStart()
