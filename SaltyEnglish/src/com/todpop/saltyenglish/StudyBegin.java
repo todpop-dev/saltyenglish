@@ -148,7 +148,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	private static RelativeLayout fbShareLayout;
 	private static TextView fbShareReward;
 	
- 	 	
  	SharedPreferences studyInfo;
  	
  	static ArrayList<View> rootViewArr = new ArrayList<View>();

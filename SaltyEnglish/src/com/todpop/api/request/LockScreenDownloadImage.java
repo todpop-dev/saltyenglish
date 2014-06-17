@@ -80,6 +80,7 @@ public class LockScreenDownloadImage  extends AsyncTask<Void, Void, Bitmap> {
 			db.insert("history", null, rowHistory);
 			
 			db.close();
+			Log.e("ended",lockInfo.getGroupId());
     	}
     	else{
     		Log.i("STEVNE", "downloaded image file save error!!");

@@ -305,7 +305,7 @@ public class StudyTestCookie extends Activity {
 				if(strComboResult.equals(""))
 					strComboResult = "0";
 				else if(cntNonstopCorrect != 0)
-					strComboResult += "-" + cntNonstopCorrect;
+					strComboResult += "-" + (cntNonstopCorrect-1);
 
 				SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
 				Editor editor = levelPref.edit();
@@ -378,7 +378,7 @@ public class StudyTestCookie extends Activity {
 
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
-		strComboResult += (strComboResult.length() != 0 ? "-" : "") + cntNonstopCorrect ;
+		strComboResult += (strComboResult.length() != 0 ? "-" : "") + (cntNonstopCorrect - 1) ;
 		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();

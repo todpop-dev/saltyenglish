@@ -123,7 +123,6 @@ public class FbNickname extends TypefaceActivity {
 
 	}
 	
-	
 	// Sign Up -------------------------------------------------------------------------------
 	
 	private class SignUpAPI extends AsyncTask<String, Void, JSONObject> 
@@ -131,6 +130,7 @@ public class FbNickname extends TypefaceActivity {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
+			nextBtn.setClickable(false);
 			JSONObject result = null;
 			try
 			{
@@ -225,6 +225,7 @@ public class FbNickname extends TypefaceActivity {
 					isRegisterFailed = true;
 					popupText.setText(R.string.rg_register_failed);
 					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+					nextBtn.setClickable(true); //failed => clickable
 				}
 
 			} catch (Exception e) {
@@ -378,7 +379,7 @@ public class FbNickname extends TypefaceActivity {
 	
 	public void bridgeToShowLvTest(View v){
 
-		nextBtn.setClickable(false);
+//		nextBtn.setClickable(false);
 		if(!nicknamerefre.getText().toString().isEmpty()){
 			new CheckRecommendExistAPI().execute("http://todpop.co.kr/api/users/check_recommend_exist.json?recommend="+nicknamerefre.getText().toString());
 		}

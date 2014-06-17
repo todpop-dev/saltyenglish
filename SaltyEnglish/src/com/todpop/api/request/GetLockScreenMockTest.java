@@ -121,7 +121,6 @@ public class GetLockScreenMockTest extends AsyncTask<Void, Void, JSONObject> {
 						target_url = jsonObj.getString("target_url");
 						reward = jsonObj.getInt("reward");
 						point = jsonObj.getInt("point");
-						
 						//lockArray.add(new LockInfo(group, id, type, image, target_url, reward, point));
 
 						Log.i("junho", "before checkImgHishtory");
@@ -139,7 +138,11 @@ public class GetLockScreenMockTest extends AsyncTask<Void, Void, JSONObject> {
 						}
 						else{
 							Log.i("junho", "else checkImgHishtory");
+							Log.e("MOCKTEST_IMG_DOWNLOAD","START");
+							// groupd 412 id 0 groupid 4120
+							new LockScreenDownloadImage(context, new LockInfo(412, 0, 0, jsonObj.getString("test_image"), "", 0, 0)).execute();
 							new LockScreenDownloadImage(context, new LockInfo(group, id, type, image, target_url, reward, point)).execute();
+							Log.e("MOCKTEST_IMG_DOWNLOAD","START??");
 						}
 					}
 					db.close();

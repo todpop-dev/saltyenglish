@@ -273,8 +273,7 @@
         android:layout_height="match_parent"
         android:background="#7f000000"
         android:clickable="true"
-        android:padding="16dp"
-        android:visibility="gone" >
+        android:padding="16dp" >
 
         <ImageView
             android:layout_width="match_parent"

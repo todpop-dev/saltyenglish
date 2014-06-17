@@ -4,16 +4,19 @@ package com.todpop.saltyenglish;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.FileManager;
 import com.todpop.api.TypefaceActivity;
 import com.todpop.api.request.DownloadPronounce;
 
@@ -35,6 +38,8 @@ public class StudyTestMockStart extends TypefaceActivity {
     View progressPopupView;
 	
 	DownloadPronounce downLoadTask;
+
+	ImageView ivPoster;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +49,10 @@ public class StudyTestMockStart extends TypefaceActivity {
 //		Log.e("AND_ID",android_id);
 		
 		mainLayout = (RelativeLayout)findViewById(R.id.study_category_main);
+		ivPoster = (ImageView)findViewById(R.id.iv_mocktest_poster);
 		
+		Bitmap poster = new FileManager().getImgFile("4120");
+		ivPoster.setImageBitmap(poster); //4120 is mocktest intro image groupid
 		studyInfo = getSharedPreferences("studyInfo",0);
 		
 		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);

@@ -16,13 +16,17 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="21dp"
+            android:padding="5dp"
             android:background="@drawable/test_2_img_imgbox" >
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_mocktest_poster"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:maxWidth="300dp"
+                android:maxHeight="420dp"
+                android:layout_width="300dp"
+                android:layout_height="420dp"
                 android:src="@drawable/test_2_img_cpd" />
         </RelativeLayout>
 
