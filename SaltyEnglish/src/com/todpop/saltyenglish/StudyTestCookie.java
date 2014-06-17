@@ -378,7 +378,7 @@ public class StudyTestCookie extends Activity {
 
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
-		strComboResult += (strComboResult.length() != 0 ? "-" : "") + (cntNonstopCorrect - 1) ;
+		strComboResult += (strComboResult.length() != 0 ? "-" : "") + ( cntNonstopCorrect == 0 ? 0 : cntNonstopCorrect - 1) ;
 		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();
