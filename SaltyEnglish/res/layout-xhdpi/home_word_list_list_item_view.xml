@@ -36,6 +36,15 @@
             android:layout_weight="1"
             android:textColor="#000000"
             android:textSize="17dp" />
+        <ImageButton 
+            android:id="@+id/ib_word_list_add_to_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/com_drawable_btn_confirm"
+            android:layout_gravity="center"
+            android:onClick="addToListBtnHandler"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
 </LinearLayout>

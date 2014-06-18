@@ -240,6 +240,7 @@ public class StudyTestCookieResult extends TypefaceActivity {
 				if(json.getBoolean("status")==true) {
 					try {
 						JSONObject resultObj = json.getJSONObject("data");
+						Log.e("Results!!! = ",resultObj.toString());
 						resultScore = resultObj.getString("score");
 						resultReward = resultObj.getString("reward");
 						resultPoint = resultObj.getString("rank_point");

@@ -68,6 +68,15 @@
                     android:src="@drawable/test_cookie_text_number" />
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/iv_test_cookie_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/test_cookie_text_time_1"
+                android:visibility="gone" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -241,22 +250,12 @@
         android:visibility="gone" />
 
     <ImageView
-        android:id="@+id/iv_test_cookie_countdown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/test_cookie_text_time_1"
-        android:visibility="gone" />
-
-    <ImageView
         android:id="@+id/iv_test_cookie_whole_black_box"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.4"
-        android:visibility="gone"
         android:src="#80000000"
-        />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_test_cookie_timesup"

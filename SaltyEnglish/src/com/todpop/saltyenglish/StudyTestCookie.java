@@ -136,13 +136,7 @@ public class StudyTestCookie extends Activity {
 		initWords();
 		initAnims();
 		initCookies();
-
-		SharedPreferences pref = getSharedPreferences("rgInfo",0);
-		String introOk = pref.getString("introTestCookieOk", "N");
-		if (introOk.equals("Y")) {
-			rlTutorial.setVisibility(View.GONE);
-			timebarCounter.start();
-		}
+		
 	}
 
 	void initWords(){
@@ -318,9 +312,14 @@ public class StudyTestCookie extends Activity {
 			public void onAnimationRepeat(Animation animation) {}
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				Intent intent = new Intent(getApplicationContext(),StudyTestCookieFinish.class);
-				startActivity(intent);
-				finish();
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						Intent intent = new Intent(getApplicationContext(),StudyTestCookieFinish.class);
+						startActivity(intent);
+						finish();
+					}
+				}, 500);
 			}
 		});
 
@@ -378,7 +377,7 @@ public class StudyTestCookie extends Activity {
 
 	public void wrongAnswer(View v){
 		cntWrongCookie++;
-		strComboResult += (strComboResult.length() != 0 ? "-" : "") + (cntNonstopCorrect - 1) ;
+		strComboResult += (strComboResult.length() != 0 ? "-" : "") + (cntNonstopCorrect == 0 ? 0 : cntNonstopCorrect - 1) ;
 		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();
@@ -436,10 +435,6 @@ public class StudyTestCookie extends Activity {
 
 	// for tutorial
 	public void onClickTuto(View v){
-		SharedPreferences pref = getSharedPreferences("rgInfo",0);
-		Editor editor = pref.edit();
-		editor.putString("introTestCookieOk", "Y");
-		editor.apply();
 		rlTutorial.setVisibility(View.GONE);
 		timebarCounter.start();
 	}
@@ -516,13 +511,13 @@ public class StudyTestCookie extends Activity {
 			ivCntdown.startAnimation(animCntdown);
 
 			ivRedLightBoxTop.setVisibility(View.VISIBLE);
-			ivRedLightBoxBot.setVisibility(View.VISIBLE);	
+//			ivRedLightBoxBot.setVisibility(View.VISIBLE);	
 
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					ivRedLightBoxTop.setVisibility(View.GONE);
-					ivRedLightBoxBot.setVisibility(View.GONE);
+//					ivRedLightBoxBot.setVisibility(View.GONE);
 				}
 			}, 500);
 		}

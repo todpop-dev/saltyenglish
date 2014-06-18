@@ -2,23 +2,25 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-import com.todpop.saltyenglish.db.WordDBHelper;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
-import android.os.Bundle;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Point;
-import android.support.v4.app.Fragment;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -36,14 +38,20 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 public class HomeWordList extends TypefaceActivity {
 	ViewHolder viewHolder = null;
@@ -51,6 +59,8 @@ public class HomeWordList extends TypefaceActivity {
 	HomeWordViewAdapter homeWordViewAdapter;
 
 	ArrayList<HomeWordViewItem> listArray;
+	ArrayList<HomeWordViewItem> listSearchedWords;
+	
 	ArrayList<String> deleteWords;
 	
 	HomeWordViewItem mHomeWordViewItem;
@@ -141,6 +151,7 @@ public class HomeWordList extends TypefaceActivity {
 		// DB Helper
 		mHelper = new WordDBHelper(this);
 		deleteWords = new ArrayList<String>();
+		listSearchedWords =new ArrayList<HomeWordList.HomeWordViewItem>();
 		
 		deleteBtn = (Button)findViewById(R.id.home_word_list_id_delete);
 		
@@ -327,12 +338,13 @@ public class HomeWordList extends TypefaceActivity {
     
 	public void updateListView()
     {
-		if(listArray.isEmpty()){
+		if(listArray.isEmpty() || listArray.size() == 0){
 			noWord.setVisibility(View.VISIBLE);
 		}
 		else{
+			noWord.setVisibility(View.GONE);
 			listView.setAdapter(null);
-			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray);
+			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray,0);
 			listView.setAdapter(homeWordViewAdapter);
 		}
     }
@@ -361,14 +373,17 @@ public class HomeWordList extends TypefaceActivity {
 		LayoutInflater Inflater;
 		ArrayList<HomeWordViewItem> arSrc;
 		int layout;
+		int type; // 0 = my words , 1 = search words(added btn img)
 
-		public HomeWordViewAdapter(Context context,int alayout,ArrayList<HomeWordViewItem> aarSrc)
+		public HomeWordViewAdapter(Context context,int alayout,ArrayList<HomeWordViewItem> aarSrc,int type)
 		{
 			maincon = context;
 			Inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			arSrc = aarSrc;
 			layout = alayout;
+			this.type = type;
 		}
+		
 		public int getCount()
 		{
 			return arSrc.size();
@@ -393,6 +408,8 @@ public class HomeWordList extends TypefaceActivity {
 				viewHolder.textEn = (TextView)v.findViewById(R.id.home_word_list_id_word1);
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
+				if(type == 1)
+					viewHolder.addToList = (ImageButton)v.findViewById(R.id.ib_word_list_add_to_list);
 				
 				setFont(viewHolder.textEn);
 				setFont(viewHolder.textKr);
@@ -401,6 +418,8 @@ public class HomeWordList extends TypefaceActivity {
 			} else {
 				viewHolder = (ViewHolder)v.getTag();
 			}
+			
+			if(type == 1) viewHolder.addToList.setVisibility(View.VISIBLE);
 			
 			if(checkEdit==false) {
 				viewHolder.select.setVisibility(LinearLayout.GONE);
@@ -417,7 +436,6 @@ public class HomeWordList extends TypefaceActivity {
 					viewHolder.select.setChecked(false);
 				}
 			}
-			
 			
 			viewHolder.textEn.setText(arSrc.get(position).word1);
 			viewHolder.textEn.setTag(position);
@@ -463,7 +481,9 @@ public class HomeWordList extends TypefaceActivity {
 	class ViewHolder{
 		public TextView textEn = null;
 		public TextView textKr = null;
-		public CheckBox select = null;		
+		public CheckBox select = null;
+		
+		public ImageButton addToList = null;
 	}
 	
 	// on click
@@ -637,57 +657,77 @@ public class HomeWordList extends TypefaceActivity {
 	}
 	
 	// Search words
+	private void updateListViewForSearchWord()
+	{
+		if(listArray.isEmpty() || listArray.size() == 0){
+			noWord.setVisibility(View.VISIBLE);
+		}
+		else{
+			noWord.setVisibility(View.GONE);
+			listView.setAdapter(null);
+			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray,1);
+			listView.setAdapter(homeWordViewAdapter);
+		}
+	}
+	
 	public void searchWord (View v) 
 	{
 		String sT = searchText.getText().toString();
-		if (sT.length() > 0) {
-			// Get Word List
-			listArray.clear();
-			SQLiteDatabase db = mHelper.getWritableDatabase();
-			
-			
-			try {
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name LIKE '%" + sT + "%'", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-					listArray.add(mHomeWordViewItem);
-				}
-				c = db.rawQuery("SELECT name, mean FROM mywords WHERE mean LIKE '%" + sT + "%'", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-					listArray.add(mHomeWordViewItem);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			
-			updateListView();
-
-		} else {
-			// Get Word List
-			listArray.clear();
-			SQLiteDatabase db = mHelper.getWritableDatabase();
-			
-			try {
-				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
-				while (c.moveToNext()) {
-					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
-					listArray.add(mHomeWordViewItem);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			
-			updateListView();
-		}
+		listArray.clear();
+		HomeWordViewItem item1 = new HomeWordViewItem("aaa", "aaa2");
+		HomeWordViewItem item2 = new HomeWordViewItem("bbb", "bbb2");
+		HomeWordViewItem item3 = new HomeWordViewItem("ccc", "ccc2");
+		HomeWordViewItem item4 = new HomeWordViewItem("ddd", "ddd2");
+		listArray.add(item1);listArray.add(item2);listArray.add(item3);listArray.add(item4);
+		updateListViewForSearchWord();
+		
+//		if (sT.length() > 0) {
+//			// Get Word List
+//			listArray.clear();
+//			SQLiteDatabase db = mHelper.getWritableDatabase();
+//			
+//			
+//			try {
+//				Cursor c = db.rawQuery("SELECT name, mean FROM mywords WHERE name LIKE '%" + sT + "%'", null);
+//				while (c.moveToNext()) {
+//					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+//					listArray.add(mHomeWordViewItem);
+//				}
+//				c = db.rawQuery("SELECT name, mean FROM mywords WHERE mean LIKE '%" + sT + "%'", null);
+//				while (c.moveToNext()) {
+//					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+//					listArray.add(mHomeWordViewItem);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			
+//			updateListView();
+//
+//		} else {
+//			// Get Word List
+//			listArray.clear();
+//			SQLiteDatabase db = mHelper.getWritableDatabase();
+//			
+//			try {
+//				Cursor c = db.rawQuery("SELECT name, mean FROM mywords", null);
+//				while (c.moveToNext()) {
+//					mHomeWordViewItem = new HomeWordViewItem(c.getString(0), c.getString(1));
+//					listArray.add(mHomeWordViewItem);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			
+//			updateListView();
+//		}
 	}
 	
 	// Change Word position
 	public void changeWordPosition(View v)
 	{
-		
 		count++;
 		
 		String sT = searchText.getText().toString();
@@ -791,5 +831,66 @@ public class HomeWordList extends TypefaceActivity {
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
 	    EasyTracker.getInstance(this).activityStop(this);
+	}
+	
+	public void addToListBtnHandler(View v)
+	{
+		
+	}
+	
+	private class SearchWord extends AsyncTask<String, Void, JSONObject> 
+	{
+		DefaultHttpClient httpClient ;
+		@Override
+		protected JSONObject doInBackground(String... urls) 
+		{
+			JSONObject result = null;
+			try {
+				String getURL = urls[0];
+				HttpGet httpGet = new HttpGet(getURL); 
+				HttpParams httpParameters = new BasicHttpParams(); 
+				int timeoutConnection = 5000; 
+				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+				int timeoutSocket = 5000; 
+				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+
+				httpClient = new DefaultHttpClient(httpParameters); 
+				HttpResponse response = httpClient.execute(httpGet); 
+				HttpEntity resEntity = response.getEntity();
+
+				if (resEntity != null) {    
+					result = new JSONObject(EntityUtils.toString(resEntity)); 
+					//Log.d("RESPONSE ---- ", result.toString());				        	
+				}
+				return result;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		@Override
+		protected void onPostExecute(JSONObject json) {
+			try {
+				Log.e("Get Result JSON RESPONSE ---- ", json.toString());				        	
+
+				if(json.getBoolean("status")==true) {
+					try {
+						JSONObject resultObj = json.getJSONObject("data");
+//						resultScore = resultObj.getString("score");
+						
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+
+				}else{		    
+				}
+
+			} catch (Exception e) {
+				Log.d("Exception: ", e.toString());
+			}
+		}
 	}
 }
