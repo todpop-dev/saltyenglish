@@ -37,19 +37,20 @@ import android.view.View;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
@@ -151,7 +152,15 @@ public class HomeWordList extends TypefaceActivity {
 
 		// Search Text
 		searchText = (EditText)findViewById(R.id.my_word_id_edittext);
-
+		searchText.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if( actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_SEARCH)) ){
+					searchWord(searchText);
+				}
+				return false;
+			}
+		});
 		// DB Helper
 		mHelper = new WordDBHelper(this);
 		deleteWords = new ArrayList<String>();
@@ -415,7 +424,7 @@ public class HomeWordList extends TypefaceActivity {
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
 				if(type == 1)
-					viewHolder.addToList = (ImageButton)v.findViewById(R.id.ib_word_list_add_to_list);
+					viewHolder.addToList = (Button)v.findViewById(R.id.ib_word_list_add_to_list);
 
 				setFont(viewHolder.textEn);
 				setFont(viewHolder.textKr);
@@ -492,7 +501,7 @@ public class HomeWordList extends TypefaceActivity {
 		public TextView textKr = null;
 		public CheckBox select = null;
 
-		public ImageButton addToList = null;
+		public Button addToList = null;
 	}
 
 	// on click
@@ -667,6 +676,7 @@ public class HomeWordList extends TypefaceActivity {
 	{
 		if(listArray.isEmpty() || listArray.size() == 0){
 			noWord.setVisibility(View.VISIBLE);
+			listView.setAdapter(null);
 		}
 		else{
 			noWord.setVisibility(View.GONE);
