@@ -132,10 +132,9 @@ public class HomeWordList extends TypefaceActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-				if (isChecked) {
+				if (isChecked){
 					isSelectAll = true;
-
-				} else {
+				}else{
 					isSelectAll = false;
 				}
 				updateListView();
@@ -155,9 +154,8 @@ public class HomeWordList extends TypefaceActivity {
 		searchText.setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if( actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_SEARCH)) ){
+				if( actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && (event.getKeyCode() == KeyEvent.KEYCODE_SEARCH)) )
 					searchWord(searchText);
-				}
 				return false;
 			}
 		});
@@ -166,7 +164,6 @@ public class HomeWordList extends TypefaceActivity {
 		deleteWords = new ArrayList<String>();
 
 		deleteBtn = (Button)findViewById(R.id.home_word_list_id_delete);
-
 
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		Boolean introOk = pref.getBoolean("introWordListOk", false);
@@ -273,20 +270,16 @@ public class HomeWordList extends TypefaceActivity {
 			if(position == 0){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_1);
 				linear.setVisibility(View.GONE);
-			}
-			else if(position == 1){
+			} else if(position == 1){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_2);
 				linear.setVisibility(View.GONE);
-			}
-			else if(position == 2){
+			} else if(position == 2){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_3);
 				linear.setVisibility(View.GONE);
-			}
-			else if(position == 3){
+			} else if(position == 3){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_4);
 				linear.setVisibility(View.GONE);
-			}
-			else if(position == 4){
+			} else if(position == 4){
 				background.setBackgroundResource(R.drawable.wordbook_tutorial_img_5);
 				linear.setVisibility(View.VISIBLE);
 			}
@@ -308,35 +301,28 @@ public class HomeWordList extends TypefaceActivity {
 	private class WordListTutoPagerListener implements OnPageChangeListener{
 
 		@Override
-		public void onPageScrollStateChanged(int arg0) {
-		}
-
+		public void onPageScrollStateChanged(int arg0) {}
 		@Override
-		public void onPageScrolled(int arg0, float arg1, int arg2) {
-		}
+		public void onPageScrolled(int arg0, float arg1, int arg2) {}
 
 		@Override
 		public void onPageSelected(int position) {
 			if(position == 0){
 				indi_1.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
 				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
-			}
-			else if(position == 1){
+			} else if(position == 1){
 				indi_1.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
 				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
 				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
-			}
-			else if(position == 2){
+			} else if(position == 2){
 				indi_2.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
 				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
 				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
-			}
-			else if(position == 3){
+			} else if(position == 3){
 				indi_3.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
 				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
 				indi_5.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
-			}
-			else if(position == 4){
+			} else if(position == 4){
 				indi_4.setImageResource(R.drawable.wordbook_tutorial_img_indicator_normal);
 				indi_5.setImageResource(R.drawable.wordbook_tutorial_img_indicator_pressed);
 			}
@@ -353,10 +339,9 @@ public class HomeWordList extends TypefaceActivity {
 
 	public void updateListView()
 	{
-		if(listArray.isEmpty() || listArray.size() == 0){
+		if (listArray.isEmpty() || listArray.size() == 0) {
 			noWord.setVisibility(View.VISIBLE);
-		}
-		else{
+		} else {
 			noWord.setVisibility(View.GONE);
 			listView.setAdapter(null);
 			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray,0);
@@ -369,17 +354,15 @@ public class HomeWordList extends TypefaceActivity {
 		noWordPopupWindow.dismiss();
 	}
 
-
 	class HomeWordViewItem 
 	{
-		HomeWordViewItem(String aWord1,String aWord2)
-		{
-			word1 = aWord1;
-			word2 = aWord2;
-		}
+		String name;
+		String mean;
 
-		String word1;
-		String word2;
+		HomeWordViewItem(String aWord1,String aWord2){
+			name = aWord1;
+			mean = aWord2;
+		}
 	}
 
 	class HomeWordViewAdapter extends BaseAdapter
@@ -390,8 +373,7 @@ public class HomeWordList extends TypefaceActivity {
 		int layout;
 		int type; // 0 = my words , 1 = search words(added btn img)
 
-		public HomeWordViewAdapter(Context context,int alayout,ArrayList<HomeWordViewItem> aarSrc,int type)
-		{
+		public HomeWordViewAdapter(Context context,int alayout,ArrayList<HomeWordViewItem> aarSrc,int type){
 			maincon = context;
 			Inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			arSrc = aarSrc;
@@ -399,33 +381,29 @@ public class HomeWordList extends TypefaceActivity {
 			this.type = type;
 		}
 
-		public int getCount()
-		{
+		public int getCount(){
 			return arSrc.size();
 		}
 
-		public String getItem(int position)
-		{
-			return arSrc.get(position).word1;
+		public String getItem(int position){
+			return arSrc.get(position).name;
 		}
 
-		public long getItemId(int position)
-		{
+		public long getItemId(int position){
 			return position;
 		}
 
-		public View getView(int position,View convertView,ViewGroup parent)
-		{
+		public View getView(int position,View convertView,ViewGroup parent){
 			View v = convertView;
-			if(v == null) {
+			if (v == null) {
 				viewHolder = new ViewHolder();
 				v = Inflater.inflate(layout, parent,false);
 				viewHolder.textEn = (TextView)v.findViewById(R.id.home_word_list_id_word1);
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
-				if(type == 1)
+				if (type == 1) {
 					viewHolder.addToList = (Button)v.findViewById(R.id.ib_word_list_add_to_list);
-
+				}
 				setFont(viewHolder.textEn);
 				setFont(viewHolder.textKr);
 
@@ -443,26 +421,28 @@ public class HomeWordList extends TypefaceActivity {
 				viewHolder.select.setVisibility(LinearLayout.GONE);
 			} else {
 				viewHolder.select.setVisibility(LinearLayout.VISIBLE);
+
 				if (isSelectAll == true) {
 					viewHolder.select.setChecked(true);
+
 					if (checkChangeWord==false) {
-						deleteWords.add(arSrc.get(position).word1);
+						deleteWords.add(arSrc.get(position).name);
 					} else {
-						deleteWords.add(arSrc.get(position).word2);
+						deleteWords.add(arSrc.get(position).mean);
 					}
+
 				} else {
 					viewHolder.select.setChecked(false);
 				}
 			}
 
-			viewHolder.textEn.setText(arSrc.get(position).word1);
+			viewHolder.textEn.setText(arSrc.get(position).name);
 			viewHolder.textEn.setTag(position);
 
-			viewHolder.textKr.setText(arSrc.get(position).word2);
+			viewHolder.textKr.setText(arSrc.get(position).mean);
 			viewHolder.textKr.setTag(position);
 
 			viewHolder.select.setTag(position);
-			//viewHolder.select.setOnClickListener(buttonClickListener);
 			viewHolder.select.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 				@Override
@@ -470,33 +450,31 @@ public class HomeWordList extends TypefaceActivity {
 
 					if (isChecked) {
 						if (checkChangeWord==false) {
-							deleteWords.add(arSrc.get((Integer)buttonView.getTag()).word1);
+							deleteWords.add(arSrc.get((Integer)buttonView.getTag()).name);
 						} else {
-							deleteWords.add(arSrc.get((Integer)buttonView.getTag()).word2);
+							deleteWords.add(arSrc.get((Integer)buttonView.getTag()).mean);
 						}
 					} else {
-						if (checkChangeWord==false) {
-							deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).word1);
-						} else {
-							deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).word2);
+						if (checkChangeWord==false){
+							deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).name);
+						} else { 
+							deleteWords.remove(arSrc.get((Integer)buttonView.getTag()).mean);
 						}
 					}
 				}
 			});
 
-
 			if (position%2 == 1) {
 				v.setBackgroundResource(R.drawable.wordbook_1_image_separatebox_white);
-			} else {
+			}else {
 				v.setBackgroundResource(R.drawable.wordbook_1_image_separatebox_yellow);
 			}
 
-			//selectAllBtn.setChecked(false);
 			return v;
 		}
 	}
 
-	class ViewHolder{
+	class ViewHolder {
 		public TextView textEn = null;
 		public TextView textKr = null;
 		public CheckBox select = null;
@@ -505,21 +483,17 @@ public class HomeWordList extends TypefaceActivity {
 	}
 
 	// on click
-	public void onClickBack(View v)
-	{
+	public void onClickBack(View v) {
 		finish();
 	}
 
-	public void cardBlind(View v)
-	{
-
-		if(checkCardAni==false)
-		{
+	public void cardBlind(View v) {
+		if (checkCardAni==false) {
 			cardAni = ObjectAnimator.ofFloat(card,"translationX", -35f); 
 			cardAni.setDuration(500);
 			cardAni.start();
 			checkCardAni = true;
-		}else{
+		} else {
 			cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 			cardAni.setDuration(500);
 			cardAni.start();
@@ -527,20 +501,18 @@ public class HomeWordList extends TypefaceActivity {
 		}
 	}
 
-	public void changeWord(View v)
-	{
+	public void changeWord(View v) {
 		listArray.clear();
-		if(checkChangeWord == false)
-		{
+		if (checkChangeWord == false) {
 			checkChangeWord = true;
 			for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
 				mHomeWordViewItem = new HomeWordViewItem(myWord.getString("krWord"+i, ""),myWord.getString("enWord"+i, ""));
 				listArray.add(mHomeWordViewItem);
 			}
 
-		}else{
+		} else {
 			checkChangeWord = false;
-			for(int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
+			for (int i=0;!myWord.getString("enWord"+i, "").equals("");i++) {
 				mHomeWordViewItem = new HomeWordViewItem(myWord.getString("enWord"+i, ""),myWord.getString("krWord"+i, ""));
 				listArray.add(mHomeWordViewItem);
 			}
@@ -617,46 +589,38 @@ public class HomeWordList extends TypefaceActivity {
 		}
 	}
 
-	public void testBtn(View v)
-	{
-		if(wordListSize != 0){
+	public void testBtn(View v) {
+		if (wordListSize != 0) {
 			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		}
-		else{
+		} else {
 			noWordPopupText.setText(R.string.word_list_test_no_word);
 			noWordPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		}
 	}
 
-
-	public void homeWordTest15(View v)
-	{
+	public void homeWordTest15(View v) {
 		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
-		if(wordListSize >= 15){
+		if (wordListSize >= 15) {
 			intent.putExtra("testListSize", 15);
-		}
-		else{
+		} else {
 			intent.putExtra("testListSize", wordListSize);
 		}
 		popupWindow.dismiss();
 		startActivity(intent);
 	}
 
-	public void homeWordTest30(View v)
-	{
+	public void homeWordTest30(View v) {
 		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
-		if(wordListSize >= 30){
+		if(wordListSize >= 30) {
 			intent.putExtra("testListSize", 30);
-		}
-		else{
+		} else {
 			intent.putExtra("testListSize", wordListSize);
 		}
 		popupWindow.dismiss();
 		startActivity(intent);
 	}
 
-	public void homeWordTestAll(View v)
-	{
+	public void homeWordTestAll(View v) {
 		Intent intent = new Intent(getApplicationContext(), WordListTest.class);
 		intent.putExtra("testListSize", wordListSize);
 
@@ -666,19 +630,14 @@ public class HomeWordList extends TypefaceActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.home_word_list, menu);
 		return false;
 	}
 
-	// Search words
-	private void updateListViewForSearchWord()
-	{
-		if(listArray.isEmpty() || listArray.size() == 0){
+	private void updateListViewForSearchWord() {
+		if (listArray.isEmpty() || listArray.size() == 0) {
 			noWord.setVisibility(View.VISIBLE);
 			listView.setAdapter(null);
-		}
-		else{
+		} else {
 			noWord.setVisibility(View.GONE);
 			listView.setAdapter(null);
 			homeWordViewAdapter = new HomeWordViewAdapter(this,R.layout.home_word_list_list_item_view, listArray,1);
@@ -686,21 +645,19 @@ public class HomeWordList extends TypefaceActivity {
 		}
 	}
 
-	public void searchWord (View v) 
-	{
-		if(searchText.getText().toString().length() != 0){
+	public void searchWord (View v)  {
+		if (searchText.getText().toString().length() != 0) {
 			listArray.clear();
 			String keyword = searchText.getText().toString();
 			String url = "http://todpop.co.kr/api/studies/search_word.json?word="+keyword;
 			new SerachWord().execute(url);
-		}
-		else
+		} else {
 			Toast.makeText(getApplicationContext(), "한글자 이상을 입력해주세요.", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	// Change Word position
-	public void changeWordPosition(View v)
-	{
+	public void changeWordPosition(View v) {
 		count++;
 
 		String sT = searchText.getText().toString();
@@ -754,8 +711,7 @@ public class HomeWordList extends TypefaceActivity {
 	}
 
 	// Delete words
-	public void deleteWords(View v)
-	{
+	public void deleteWords(View v) {
 		for (int i=0; i<deleteWords.size(); i++) {
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			try {
@@ -773,14 +729,13 @@ public class HomeWordList extends TypefaceActivity {
 	}
 
 	@Override
-	public void onDestroy()
-	{
+	public void onDestroy() {
 		super.onDestroy();
 		mHelper.close();
 	}
+
 	@Override
-	protected void onStart()
-	{
+	protected void onStart() {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("My Word List");
@@ -788,15 +743,13 @@ public class HomeWordList extends TypefaceActivity {
 	}
 
 	@Override
-	protected void onStop()
-	{
+	protected void onStop() {
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
 		EasyTracker.getInstance(this).activityStop(this);
 	}
 
-	public void addToListBtnHandler(View v)
-	{
+	public void addToListBtnHandler(View v) {
 		ViewHolder holder = (ViewHolder)v.getTag();
 		String name = holder.textEn.getText().toString();
 		String mean = holder.textKr.getText().toString();
@@ -815,11 +768,10 @@ public class HomeWordList extends TypefaceActivity {
 		updateListView();
 	}
 
-	private class SerachWord extends AsyncTask<String, Void, JSONObject>{
+	private class SerachWord extends AsyncTask<String, Void, JSONObject> {
 		DefaultHttpClient httpClient ;
 		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
+		protected JSONObject doInBackground(String... urls) {
 			JSONObject result = null;
 			try {
 				String getURL = urls[0];
@@ -842,6 +794,7 @@ public class HomeWordList extends TypefaceActivity {
 			}
 			return result;
 		}
+
 		@Override
 		protected void onPostExecute(JSONObject json) {
 			Log.e("Get Result JSON RESPONSE ---- ", json.toString());				        	
@@ -850,7 +803,7 @@ public class HomeWordList extends TypefaceActivity {
 				if(json.getBoolean("status")==true) {
 					JSONArray resultArr = json.getJSONArray("words");
 					Log.e("ResultArr!!Words",resultArr.toString());
-					for (int i = 0; i < resultArr.length() ; i++){
+					for (int i = 0; i < resultArr.length() ; i++) {
 						String name = resultArr.getJSONObject(i).get("name").toString();
 						String mean = resultArr.getJSONObject(i).get("mean").toString();
 						HomeWordViewItem item = new HomeWordViewItem(name, mean);
