@@ -462,7 +462,7 @@ public class MainActivity extends TypefaceActivity
     		        session.closeAndClearTokenInformation();
     		            //clear your preferences if saved
     		    }
-				Intent intent = new Intent(getApplicationContext(), RgLoginAndRegister.class);
+				Intent intent = new Intent(getApplicationContext(), RgLogin.class);
 				startActivity(intent);
 				overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 			}

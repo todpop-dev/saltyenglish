@@ -330,7 +330,7 @@ public class StudyTestC extends TypefaceActivity {
 				editor.putString("testResult", Integer.toString(finalAnswerForRequest));
 				editor.apply();
 				
-				Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+				Intent intent = new Intent(getApplicationContext(), StudyTestResult.class);
 				startActivity(intent);
 				finish();
 			 }

@@ -296,7 +296,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 	}
 
-
 	public void hideIntroView(View v) 
 	{
 		introBtn.setVisibility(View.GONE);
@@ -364,8 +363,8 @@ public class StudyBegin extends TypefaceFragmentActivity {
 					break;
 				case 10:
 					if(cpdLogSent == false){
-						Log.d("------- send info -----", "info");
-						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
+//						Log.d("------- send info -----", "info");
+//						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
 						cpdLogSent = true;
 					}
 					break;
@@ -893,17 +892,17 @@ public class StudyBegin extends TypefaceFragmentActivity {
 					if (bitmapArr.size() == 10) {
 						setupPagerView();
 						// Get CPD after Get Words
-						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-						userId = rgInfo.getString("mem_id", "1");
-						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
+//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+//						userId = rgInfo.getString("mem_id", "1");
+//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 					}
 				} else if (tmpStage <=9) {
 					if (bitmapArr.size() == 7) {
 						setupPagerView();
 						// Get CPD after Get Words
-						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-						userId = rgInfo.getString("mem_id", "1");
-						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
+//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+//						userId = rgInfo.getString("mem_id", "1");
+//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 					}
 				}
 
@@ -912,118 +911,118 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		}		
 	}
 
-	private class GetCPD extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try
-			{
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 5000; 
-				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 5000; 
-				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
-
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
-
-				if (resEntity != null)
-				{    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					//Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				Log.d("Get CPD JSON RESPONSE ---- ", json.toString());				        	
-
-				if(json.getBoolean("status")==true) {
-					JSONObject cpdJsonObj = json.getJSONObject("data");
-
-					adId = cpdJsonObj.getInt("ad_id");
-					adType = cpdJsonObj.getInt("ad_type");
-
-					sharedHistory = cpdJsonObj.getString("history");
-
-					couponId = cpdJsonObj.getString("coupon");
-
-					reward = cpdJsonObj.getString("reward");
-					point = cpdJsonObj.getString("point");
-					name = cpdJsonObj.getString("name");
-					caption = cpdJsonObj.getString("caption");
-					description = cpdJsonObj.getString("description");
-					link = cpdJsonObj.getString("link");
-					picture = cpdJsonObj.getString("picture");
-
-					try {
-						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
-						URL url = new URL(imgUrl);
-						new DownloadImageTask("FRONT").execute(url.toString());
-
-						String imgUrl2 = "http://todpop.co.kr" + cpdJsonObj.getString("back_image");
-						URL url2 = new URL(imgUrl2);
-						new DownloadImageTask("BACK").execute(url2.toString());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}else{		    
-					Log.d("--------- CPD -----------", "JSON return null");
-				}
-
-			} catch (Exception e) {
-				Log.d("Exception: ", e.toString());
-			}
-		}
-
-		private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
-
-			String imgTag = null;
-			public DownloadImageTask (String imgTag) 
-			{
-				this.imgTag = imgTag;
-			}
-
-			protected Bitmap doInBackground(String... urls) 
-			{
-				String urldisplay = urls[0];
-				Bitmap mIcon11 = null;
-				try {
-					InputStream in = new java.net.URL(urldisplay).openStream();
-					mIcon11 = BitmapFactory.decodeStream(in);
-				} catch (Exception e) {
-					Log.e("Error", e.getMessage());
-					e.printStackTrace();
-				}
-				return mIcon11;
-			}
-
-			protected void onPostExecute(Bitmap result) 
-			{
-				if (imgTag.equals("FRONT")) {
-					Log.e("STEVEN CPD IMAGE FRONT", "get done");
-					cpdFrontImage = result;
-				} else if (imgTag.equals("BACK")) {
-					Log.e("STEVEN CPD IMAGE BACK", "get done");
-					cpdBackImage = result;
-				}
-			}
-		}		
-	}
+//	private class GetCPD extends AsyncTask<String, Void, JSONObject> 
+//	{
+//		DefaultHttpClient httpClient ;
+//		@Override
+//		protected JSONObject doInBackground(String... urls) 
+//		{
+//			JSONObject result = null;
+//			try
+//			{
+//				String getURL = urls[0];
+//				HttpGet httpGet = new HttpGet(getURL); 
+//				HttpParams httpParameters = new BasicHttpParams(); 
+//				int timeoutConnection = 5000; 
+//				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+//				int timeoutSocket = 5000; 
+//				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+//
+//				httpClient = new DefaultHttpClient(httpParameters); 
+//				HttpResponse response = httpClient.execute(httpGet); 
+//				HttpEntity resEntity = response.getEntity();
+//
+//				if (resEntity != null)
+//				{    
+//					result = new JSONObject(EntityUtils.toString(resEntity)); 
+//					//Log.d("RESPONSE ---- ", result.toString());				        	
+//				}
+//				return result;
+//			}
+//			catch (Exception e)
+//			{
+//				e.printStackTrace();
+//			}
+//			return result;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(JSONObject json) {
+//			try {
+//				Log.d("Get CPD JSON RESPONSE ---- ", json.toString());				        	
+//
+//				if(json.getBoolean("status")==true) {
+//					JSONObject cpdJsonObj = json.getJSONObject("data");
+//
+//					adId = cpdJsonObj.getInt("ad_id");
+//					adType = cpdJsonObj.getInt("ad_type");
+//
+//					sharedHistory = cpdJsonObj.getString("history");
+//
+//					couponId = cpdJsonObj.getString("coupon");
+//
+//					reward = cpdJsonObj.getString("reward");
+//					point = cpdJsonObj.getString("point");
+//					name = cpdJsonObj.getString("name");
+//					caption = cpdJsonObj.getString("caption");
+//					description = cpdJsonObj.getString("description");
+//					link = cpdJsonObj.getString("link");
+//					picture = cpdJsonObj.getString("picture");
+//
+//					try {
+//						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
+//						URL url = new URL(imgUrl);
+//						new DownloadImageTask("FRONT").execute(url.toString());
+//
+//						String imgUrl2 = "http://todpop.co.kr" + cpdJsonObj.getString("back_image");
+//						URL url2 = new URL(imgUrl2);
+//						new DownloadImageTask("BACK").execute(url2.toString());
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}else{		    
+//					Log.d("--------- CPD -----------", "JSON return null");
+//				}
+//
+//			} catch (Exception e) {
+//				Log.d("Exception: ", e.toString());
+//			}
+//		}
+//
+//		private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
+//
+//			String imgTag = null;
+//			public DownloadImageTask (String imgTag) 
+//			{
+//				this.imgTag = imgTag;
+//			}
+//
+//			protected Bitmap doInBackground(String... urls) 
+//			{
+//				String urldisplay = urls[0];
+//				Bitmap mIcon11 = null;
+//				try {
+//					InputStream in = new java.net.URL(urldisplay).openStream();
+//					mIcon11 = BitmapFactory.decodeStream(in);
+//				} catch (Exception e) {
+//					Log.e("Error", e.getMessage());
+//					e.printStackTrace();
+//				}
+//				return mIcon11;
+//			}
+//
+//			protected void onPostExecute(Bitmap result) 
+//			{
+//				if (imgTag.equals("FRONT")) {
+//					Log.e("STEVEN CPD IMAGE FRONT", "get done");
+//					cpdFrontImage = result;
+//				} else if (imgTag.equals("BACK")) {
+//					Log.e("STEVEN CPD IMAGE BACK", "get done");
+//					cpdBackImage = result;
+//				}
+//			}
+//		}		
+//	}
 
 	private class SendLog extends AsyncTask<String, Void, JSONObject> 
 	{
@@ -1343,14 +1342,14 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		finish();
 	}
 
-	public void showCouponPopView(View v)
-	{
-		FlurryAgent.logEvent("Coupon Get");
-		new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&coupon_id=" + couponId);
-		popupText.setText(R.string.study_finish_popup_text);
-		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		popupWindow.showAsDropDown(null);
-	}
+//	public void showCouponPopView(View v)
+//	{
+//		FlurryAgent.logEvent("Coupon Get");
+//		new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&coupon_id=" + couponId);
+//		popupText.setText(R.string.study_finish_popup_text);
+//		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+//		popupWindow.showAsDropDown(null);
+//	}
 
 	public void closePopup(View v)
 	{

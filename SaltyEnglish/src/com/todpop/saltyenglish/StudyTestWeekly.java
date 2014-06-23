@@ -429,7 +429,7 @@ public class StudyTestWeekly extends TypefaceActivity {
 		if(comboCount > 0){
 			comboList = comboList + "-" + comboCount;
 		}
-		Intent intent = new Intent(getApplicationContext(), StudyTestWeeklyFinish.class);
+		Intent intent = new Intent(getApplicationContext(), StudyTestWeeklyResult.class);
 		intent.putExtra("combo", comboList);
 		intent.putExtra("lastHigh", lastHigh);
 		startActivity(intent);

@@ -315,7 +315,7 @@ public class StudyTestCookie extends Activity {
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						Intent intent = new Intent(getApplicationContext(),StudyTestCookieFinish.class);
+						Intent intent = new Intent(getApplicationContext(),StudyTestCookieResult.class);
 						startActivity(intent);
 						finish();
 					}

@@ -379,7 +379,7 @@ public class StudyTestRenewal extends TypefaceActivity {
 		editor.putString("testResult", finalAnswerForRequest);
 		editor.apply();
 
-		Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+		Intent intent = new Intent(getApplicationContext(), StudyTestResult.class);
 		intent.putExtra("combo", comboList);
 		intent.putExtra("lastHigh", lastHigh);
 		startActivity(intent);
