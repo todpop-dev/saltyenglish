@@ -6,11 +6,30 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -18,103 +37,71 @@ import com.todpop.api.LoadingDialog;
 import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
 public class StudyTestResult extends TypefaceActivity {
 
 	ArrayList<MyItem> arItem;
 	int count = 0;
-	
- 	// Database
- 	WordDBHelper mHelper;
- 	
- 	int tmpStageAccumulated;
+
+	// Database
+	WordDBHelper mHelper;
+
+	int tmpStageAccumulated;
 	String resultScore;
 	String resultReward;
 	String resultPoint;
 	String resultAttendReward;
 	String resultAttendPoint;
 	String resultMedal;
- 	
+
 	MyItem mi;
 
 	TextView scoreView;
 	TextView rewardView;
-	
+
 	//popup view
-	RelativeLayout relative;
-	View popupView;
-	PopupWindow popupWindow;
-	
-	LinearLayout popupBoth;
-	LinearLayout popupBothNoAtt;	//w/o attendance reward
-	TextView popupBothNoAttReward;
-	TextView popupBothNoAttPoint;
-	LinearLayout popupBothAtt;	//w/ attendance reward
-	TextView popupBothAttReward;
-	TextView popupBothAttPoint;
-	TextView popupAttReward; //reward for attendance
-	TextView popupAttPoint; //point for attendance
-	
-	LinearLayout popupOnly;
-	ImageView popupOnlyTitle;
-	ImageView popupOnlyType;
-	ImageView popupOnlyImg;
-	TextView popupOnlyAmount;
-	
+	//	RelativeLayout relative;
+	//	View popupView;
+	//	PopupWindow popupWindow;
+	//	
+	//	LinearLayout popupBoth;
+	//	LinearLayout popupBothNoAtt;	//w/o attendance reward
+	//	TextView popupBothNoAttReward;
+	//	TextView popupBothNoAttPoint;
+	//	LinearLayout popupBothAtt;	//w/ attendance reward
+	//	TextView popupBothAttReward;
+	//	TextView popupBothAttPoint;
+	//	TextView popupAttReward; //reward for attendance
+	//	TextView popupAttPoint; //point for attendance
+	//	
+	//	LinearLayout popupOnly;
+	//	ImageView popupOnlyTitle;
+	//	ImageView popupOnlyType;
+	//	ImageView popupOnlyImg;
+	//	TextView popupOnlyAmount;
+	//	
 	//loading progress dialog
 	LoadingDialog loadingDialog;
-	
+
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_study_test_result);
-		
+
 		studyInfo = getSharedPreferences("studyInfo",0);
 		studyInfoEdit = studyInfo.edit();
-		
+
 		mHelper = new WordDBHelper(this);
-		
+
 		arItem = new ArrayList<MyItem>();
-		
+
 		scoreView = (TextView)findViewById(R.id.lvtest_result_id_level);
 		rewardView = (TextView)findViewById(R.id.study_test_result_id_score_view);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
-		
-		
+
+
 		// Database to store words for My Word list
 		SQLiteDatabase db = mHelper.getWritableDatabase();
 		try {
@@ -129,7 +116,7 @@ public class StudyTestResult extends TypefaceActivity {
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
-		
+
 		// ----------- Request Result -------------
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
@@ -149,200 +136,206 @@ public class StudyTestResult extends TypefaceActivity {
 		else					{studyInfoEdit.putInt("levelLast4", level);Log.e("STR4",String.valueOf(level));}
 		studyInfoEdit.apply();
 		// ----------------------------
-		
-		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
-		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
-		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-		
-		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
-		// w/o attendace
-		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
-		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
-		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
 
-		setFont(popupBothNoAttReward);
-		setFont(popupBothNoAttPoint);
-		
-		// w/ attendace
-		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
-		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
-		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
-		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
-		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
-		
-		setFont(popupBothAttReward);
-		setFont(popupBothAttPoint);
-		setFont(popupAttReward);
-		setFont(popupAttPoint);
-		
-		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
-		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
-		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
-		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
-		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
-		
-		setFont(popupOnlyAmount);
-		
-		
-		if (tmpStageAccumulated%10 != 0) {
-			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-					"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
-		} else {
-			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
-		}
-		
-		loadingDialog = new LoadingDialog(this);
-		loadingDialog.show();
-		
-		new GetTestResult().execute(resultUrl);
-		Log.d("-------- result url ------- ", resultUrl);
+		//		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
+		//		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
+		//		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+		//		
+		//		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
+		//		// w/o attendace
+		//		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
+		//		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
+		//		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
+		//
+		//		setFont(popupBothNoAttReward);
+		//		setFont(popupBothNoAttPoint);
+		//		
+		//		// w/ attendace
+		//		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
+		//		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
+		//		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
+		//		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
+		//		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
+		//		
+		//		setFont(popupBothAttReward);
+		//		setFont(popupBothAttPoint);
+		//		setFont(popupAttReward);
+		//		setFont(popupAttPoint);
+		//		
+		//		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
+		//		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
+		//		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
+		//		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
+		//		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
+		//		
+		//		setFont(popupOnlyAmount);
+
+
+		//		if (tmpStageAccumulated%10 != 0) {
+		//			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+		//					"&stage=" + tmpStageAccumulated%10 + "&result=" + finalAnswerForRequest + "&count=10&user_id=" + userId + "&category=" + category;
+		//		} else {
+		//			resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+		//					"&stage=" + 10 + "&result=" + finalAnswerForRequest + "&count=36&user_id=" + userId + "&category=" + category;
+		//		}
+		//		
+		//		loadingDialog = new LoadingDialog(this);
+		//		loadingDialog.show();
+		//		
+		//		new GetTestResult().execute(resultUrl);
+		//		Log.d("-------- result url ------- ", resultUrl);
 		// ----------- End of  Request Result -------------
 
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
-		
+
 		ListView MyList;
 		MyList=(ListView)findViewById(R.id.lvtestresult_id_listview);
 		MyList.setAdapter(MyAdapter);
 	}
-	
-	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try {
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 5000; 
-				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 5000; 
-				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
 
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
+	//	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
+	//	{
+	//		DefaultHttpClient httpClient ;
+	//		@Override
+	//		protected JSONObject doInBackground(String... urls) 
+	//		{
+	//			JSONObject result = null;
+	//			try {
+	//				String getURL = urls[0];
+	//				HttpGet httpGet = new HttpGet(getURL); 
+	//				HttpParams httpParameters = new BasicHttpParams(); 
+	//				int timeoutConnection = 5000; 
+	//				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+	//				int timeoutSocket = 5000; 
+	//				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+	//
+	//				httpClient = new DefaultHttpClient(httpParameters); 
+	//				HttpResponse response = httpClient.execute(httpGet); 
+	//				HttpEntity resEntity = response.getEntity();
+	//
+	//				if (resEntity != null) {    
+	//					result = new JSONObject(EntityUtils.toString(resEntity)); 
+	//					//Log.d("RESPONSE ---- ", result.toString());				        	
+	//				}
+	//				return result;
+	//			} catch (Exception e) {
+	//				e.printStackTrace();
+	//			}
+	//			return result;
+	//		}
+	//
+	//		@Override
+	//		protected void onPostExecute(JSONObject json) {
+	//			try {
+	//				loadingDialog.dissmiss();
+	//				Log.d("Get Result JSON RESPONSE ---- ", json.toString());				        	
+	//
+	//				if(json.getBoolean("status")==true) {
+	//					try {
+	//						JSONObject resultObj = json.getJSONObject("data");
+	//						resultScore = resultObj.getString("score");
+	//						resultReward = resultObj.getString("reward");
+	//						resultPoint = resultObj.getString("rank_point");
+	//						resultMedal = resultObj.getString("medal");
+	//						
+	//						resultAttendReward = resultObj.getString("attend_reward");
+	//						resultAttendPoint = resultObj.getString("attend_point");
+	//
+	//            			String stageInfo = resultObj.getString("stage_info");		// stageInfo
+	//            			studyInfoEdit.putString("stageInfo", stageInfo);
+	//            			studyInfoEdit.apply();
+	//					
+	//						rewardView.setText(resultReward);
+	//						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
+	//						
+	//						if(resultAttendReward.equals("null")){
+	//							if(resultReward.equals("0")){
+	//								if(resultPoint.equals("0")){
+	//									//no popup
+	//								}
+	//								else{
+	//									popupBoth.setVisibility(View.GONE);
+	//									popupOnly.setVisibility(View.VISIBLE);
+	//									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
+	//									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
+	//									popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigpoint);
+	//									popupOnlyAmount.setText("+" + resultPoint);
+	//									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//								}
+	//							}
+	//							else if(resultPoint.equals("0")){
+	//								popupBoth.setVisibility(View.GONE);
+	//								popupOnly.setVisibility(View.VISIBLE);
+	//								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
+	//								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
+	//								popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigcoin);
+	//								popupOnlyAmount.setText("+" + resultReward);
+	//								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//							}
+	//							else{
+	//								popupBoth.setVisibility(View.VISIBLE);
+	//								popupOnly.setVisibility(View.GONE);
+	//								popupBothAtt.setVisibility(View.GONE);
+	//								popupBothNoAtt.setVisibility(View.VISIBLE);
+	//								popupBothNoAttReward.setText("+" + resultReward);
+	//								popupBothNoAttPoint.setText("+" + resultPoint);
+	//								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//							}
+	//						}
+	//						else{
+	//							popupBoth.setVisibility(View.VISIBLE);
+	//							popupOnly.setVisibility(View.GONE);
+	//							popupBothAtt.setVisibility(View.VISIBLE);
+	//							popupBothNoAtt.setVisibility(View.GONE);
+	//							
+	//							popupBothAttReward.setText("+" + resultReward);
+	//							popupBothAttPoint.setText("+" + resultPoint);
+	//							popupAttReward.setText("+ " + resultAttendReward);
+	//							popupAttPoint.setText("+ " + resultAttendPoint);
+	//							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//						}
+	//						
+	//
+	//					} catch (Exception e) {
+	//						e.printStackTrace();
+	//					}
+	//
+	//
+	//				}else{		    
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				Log.d("Exception: ", e.toString());
+	//			}
+	//		}
+	//	}
 
-				if (resEntity != null) {    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					//Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				loadingDialog.dissmiss();
-				Log.d("Get Result JSON RESPONSE ---- ", json.toString());				        	
-
-				if(json.getBoolean("status")==true) {
-					try {
-						JSONObject resultObj = json.getJSONObject("data");
-						resultScore = resultObj.getString("score");
-						resultReward = resultObj.getString("reward");
-						resultPoint = resultObj.getString("rank_point");
-						resultMedal = resultObj.getString("medal");
-						
-						resultAttendReward = resultObj.getString("attend_reward");
-						resultAttendPoint = resultObj.getString("attend_point");
-
-            			String stageInfo = resultObj.getString("stage_info");		// stageInfo
-            			studyInfoEdit.putString("stageInfo", stageInfo);
-            			studyInfoEdit.apply();
-					
-						rewardView.setText(resultReward);
-						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
-						
-						if(resultAttendReward.equals("null")){
-							if(resultReward.equals("0")){
-								if(resultPoint.equals("0")){
-									//no popup
-								}
-								else{
-									popupBoth.setVisibility(View.GONE);
-									popupOnly.setVisibility(View.VISIBLE);
-									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
-									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
-									popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigpoint);
-									popupOnlyAmount.setText("+" + resultPoint);
-									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-								}
-							}
-							else if(resultPoint.equals("0")){
-								popupBoth.setVisibility(View.GONE);
-								popupOnly.setVisibility(View.VISIBLE);
-								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
-								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
-								popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigcoin);
-								popupOnlyAmount.setText("+" + resultReward);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-							else{
-								popupBoth.setVisibility(View.VISIBLE);
-								popupOnly.setVisibility(View.GONE);
-								popupBothAtt.setVisibility(View.GONE);
-								popupBothNoAtt.setVisibility(View.VISIBLE);
-								popupBothNoAttReward.setText("+" + resultReward);
-								popupBothNoAttPoint.setText("+" + resultPoint);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-						}
-						else{
-							popupBoth.setVisibility(View.VISIBLE);
-							popupOnly.setVisibility(View.GONE);
-							popupBothAtt.setVisibility(View.VISIBLE);
-							popupBothNoAtt.setVisibility(View.GONE);
-							
-							popupBothAttReward.setText("+" + resultReward);
-							popupBothAttPoint.setText("+" + resultPoint);
-							popupAttReward.setText("+ " + resultAttendReward);
-							popupAttPoint.setText("+ " + resultAttendPoint);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						}
-						
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-
-				}else{		    
-				}
-
-			} catch (Exception e) {
-				Log.d("Exception: ", e.toString());
-			}
-		}
-	}
-	
-	public void dismissPopup(View v){
-		popupWindow.dismiss();
-	}
+	//	public void dismissPopup(View v){
+	//		popupWindow.dismiss();
+	//	}
 
 	private void getTestWords()
 	{
-		
+
 		try {
 			SQLiteDatabase db = mHelper.getReadableDatabase();
+			int totalScore = 0;
+			int avgScore = 0;
 
 			if (tmpStageAccumulated%10 == 0) {
 				Cursor cursor = db.rawQuery("SELECT name, mean, xo FROM flip;", null);
-				
+
 				Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 				if (cursor.getCount() > 0) {
 					while(cursor.moveToNext()) {
+						if(cursor.getString(2).equals("O")){
+							totalScore += 1;
+						}
 						Log.d("D E F ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
 						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
 						arItem.add(mi);
 					}
+					avgScore = Math.round(((float)totalScore / 36) * 36);
 					db.delete("flip", null, null);
 				}
 			} else {
@@ -351,22 +344,51 @@ public class StudyTestResult extends TypefaceActivity {
 				Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 				if (cursor.getCount() > 0) {
 					while(cursor.moveToNext()) {
+						if(cursor.getString(2).equals("O")){
+							totalScore += 1;
+						}
 						Log.e("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
 						mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
 						arItem.add(mi);
 					}
+					avgScore = Math.round(((float)totalScore / 10) * 100);
 				}
-
 			}
+			SharedPreferences pref = getSharedPreferences("studyInfo", 0);
+			Editor prefEdit = pref.edit();
+
+			StringBuffer stageInfo = new StringBuffer(pref.getString("stageInfo", null));
+			int nMedals = avgScore >= 80 ? 2: (avgScore >= 40 ? 1 : 0);
+			
+			char curStageInfo= stageInfo.charAt(tmpStageAccumulated-1);
+			int curStageMedals = (curStageInfo == '2' ? 2 : (curStageInfo == '1' ? 1 : 0));
+			
+			char nextStageInfo= stageInfo.charAt(tmpStageAccumulated);
+			
+			// set medals num
+			if(curStageMedals < nMedals){
+				stageInfo.deleteCharAt(tmpStageAccumulated-1);
+				stageInfo.insert(tmpStageAccumulated-1, nMedals+"");
+			}
+
+			if(nMedals >= 1 && nextStageInfo == 'x'){ // open next stage
+				stageInfo.deleteCharAt(tmpStageAccumulated);
+				stageInfo.insert(tmpStageAccumulated, "Y");
+			}
+
+			prefEdit.putString("stageInfo", stageInfo.toString());
+			prefEdit.apply();
+
+			scoreView.setText(avgScore+"점");
 		} catch (Exception e) {
 			Log.e("AFDSDFDSFSDFDSF", "catch error");
 			e.printStackTrace();
 		}
-		
+
 
 
 	}
-	
+
 	class MyItem{
 		MyItem(String aEn,String aKr,String Check)
 		{
@@ -385,7 +407,7 @@ public class StudyTestResult extends TypefaceActivity {
 		LayoutInflater Inflater;
 		ArrayList<MyItem> arSrc;
 		int layout;
-		
+
 		public MyListAdapter(Context context,int alayout,ArrayList<MyItem> aarSrc)
 		{
 			maincon = context;
@@ -395,39 +417,39 @@ public class StudyTestResult extends TypefaceActivity {
 		}
 		public int getCount()
 		{
-			
+
 			return arSrc.size();
 		}
-		
+
 		public String getItem(int position)
 		{
 			return arSrc.get(position).en;
 		}
-		
+
 		public long getItemId(int position)
 		{
 			return position;
 		}
-		
+
 		public View getView(int position,View convertView,ViewGroup parent)
 		{
 			count++;
 			if(convertView == null){
 				convertView = Inflater.inflate(layout, parent,false);
 			}
-			
+
 			TextView textEn = (TextView)convertView.findViewById(R.id.lv_test_english);
 			textEn.setText(arSrc.get(position).en);
-			
+
 			TextView textKr = (TextView)convertView.findViewById(R.id.lv_test_kr);
 			textKr.setText(arSrc.get(position).kr);
-			
+
 			setFont(textEn);
 			setFont(textKr);
-			
+
 			ImageView checkView = (ImageView)convertView.findViewById(R.id.lv_test_check_correct);
 			//Button itemBtn = (Button)convertView.findViewById(R.id.lv_test_btn);
-			
+
 			if(arSrc.get(position).check.equals("O")) {
 				checkView.setImageResource(R.drawable.lvtest_10_text_correct);
 				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_on);
@@ -435,65 +457,65 @@ public class StudyTestResult extends TypefaceActivity {
 				checkView.setImageResource(R.drawable.lvtest_10_text_incorrect);
 				//itemBtn.setBackgroundResource(R.drawable.lvtest_10_btn_pencil_off);
 			}
-			
+
 			if (count%2 == 1) {
 				convertView.setBackgroundResource(R.drawable.weekly_2_img_saparatebox_1);
 			} else {
 				convertView.setBackgroundResource(R.drawable.weekly_2_img_saparatebox_2);
 			}
-			
+
 			CheckBox wordListCB = (CheckBox)convertView.findViewById(R.id.lv_test_btn);
 			wordListCB.setTag(position);
-			
+
 			// Check if word is in word list
 			try {
-	    		SQLiteDatabase db = mHelper.getWritableDatabase();
-	    		Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
-	    		if (c.getCount() > 0) {
-	    			wordListCB.setChecked(true);
-	    		} else {
-	    			wordListCB.setChecked(false);
-	    		}
+				SQLiteDatabase db = mHelper.getWritableDatabase();
+				Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
+				if (c.getCount() > 0) {
+					wordListCB.setChecked(true);
+				} else {
+					wordListCB.setChecked(false);
+				}
 			} catch (Exception e) {
 
 			}
 
-    		
+
 			wordListCB.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                	try {
-                        if (isChecked) {
-                        	// Insert word to DB
-                    		SQLiteDatabase db = mHelper.getWritableDatabase();
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					try {
+						if (isChecked) {
+							// Insert word to DB
+							SQLiteDatabase db = mHelper.getWritableDatabase();
 
-                			ContentValues cv = new ContentValues();
-                			cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
-                			cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
-                			db.replace("mywords", null, cv);
-                        } else {
-                        	// Delete word to DB
-                    		SQLiteDatabase db = mHelper.getWritableDatabase();       
-                    		try {
-                        		db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
-                    		} catch(Exception e) {
-                    			e.printStackTrace();
-                    		}
-                        }
-                	} catch (Exception e) {
-                		e.printStackTrace();
-                	}
+							ContentValues cv = new ContentValues();
+							cv.put("name", arSrc.get((Integer)(buttonView.getTag())).en);
+							cv.put("mean", arSrc.get((Integer)(buttonView.getTag())).kr);
+							db.replace("mywords", null, cv);
+						} else {
+							// Delete word to DB
+							SQLiteDatabase db = mHelper.getWritableDatabase();       
+							try {
+								db.delete("mywords", "name='" + arSrc.get((Integer)(buttonView.getTag())).en+"'", null);
+							} catch(Exception e) {
+								e.printStackTrace();
+							}
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 
-                }
-            });
-			
+				}
+			});
+
 			return convertView;
 		}
-			
-		
+
+
 	}
-	
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) 
 	{
 		// TODO Auto-generated method stub
@@ -503,12 +525,12 @@ public class StudyTestResult extends TypefaceActivity {
 		}
 		return false;
 	}
-	
+
 	public void showStudyLearnActivity(View v)
 	{
 		finish();
 	}
-	
+
 	public void showHomeActivity(View v)
 	{
 		goHome();
@@ -556,7 +578,7 @@ public class StudyTestResult extends TypefaceActivity {
 					int adId = adDetails.getInt("ad_id");
 					int adType = adDetails.getInt("ad_type");
 					Log.d("CPX Type: ---------- ", Integer.toString(adType));
-					
+
 					String adImageUrl = "http://todpop.co.kr/" + adDetails.getString("ad_image");
 					String adText = adDetails.getString("ad_text");
 					String adAction = adDetails.getString("ad_action");
@@ -580,15 +602,15 @@ public class StudyTestResult extends TypefaceActivity {
 					cpxInfoEditor.putString("reward", reward);
 					cpxInfoEditor.putString("point", point);
 					cpxInfoEditor.putInt("questionCount", questionCount);
-					
+
 					cpxInfoEditor.apply();
-					
+
 					// TODO: Add more CPX Support. Now only support CPI and CPS
 
-						Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-						startActivity(intent);
-						finish();
-					
+					Intent intent = new Intent(getApplicationContext(), StudyHome.class);
+					startActivity(intent);
+					finish();
+
 				} else {		   
 					// In the case CPX Request Failed
 					Intent intent = new Intent(getApplicationContext(), StudyHome.class);
@@ -613,14 +635,14 @@ public class StudyTestResult extends TypefaceActivity {
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
-	    EasyTracker.getInstance(this).activityStart(this);
+		EasyTracker.getInstance(this).activityStart(this);
 	}
-	 
+
 	@Override
 	protected void onStop()
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
-	    EasyTracker.getInstance(this).activityStop(this);
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 }

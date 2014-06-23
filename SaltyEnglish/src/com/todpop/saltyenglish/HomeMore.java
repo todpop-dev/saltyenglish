@@ -9,18 +9,17 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 public class HomeMore extends TypefaceActivity {
 	
@@ -40,11 +39,7 @@ public class HomeMore extends TypefaceActivity {
 	public void onResume()
 	{
 		super.onResume();
-
-		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		new CheckPw().execute("http://todpop.co.kr/api/users/"+rgInfo.getString("mem_id", "NO")+"/is_set_facebook_password.json");
-		
-		
 	}
 
 
@@ -127,8 +122,8 @@ public class HomeMore extends TypefaceActivity {
 	
 	public void showAccountInfoActivity(View view)
 	{
-		Intent intent = new Intent(getApplicationContext(), HomeMoreAccountInfo.class);
-		startActivity(intent);
+//		Intent intent = new Intent(getApplicationContext(), HomeMoreAccountInfo.class);
+//		startActivity(intent);
 	}
 	
 	public void showHelpActivity(View view)

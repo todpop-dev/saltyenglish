@@ -3,25 +3,12 @@ package com.todpop.saltyenglish;
 
 import java.io.File;
 
-import org.json.JSONObject;
-
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-import com.todpop.api.request.DownloadPronounce;
-import com.todpop.saltyenglish.db.PronounceDBHelper;
-import com.todpop.saltyenglish.db.WordDBHelper;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -33,78 +20,83 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
+import com.todpop.api.request.DownloadPronounce;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+
 public class HomeMorePronounce extends TypefaceActivity {
 
 	private static final int NO = 0;
-	
+
 	private static final int BASIC = 1;
 	private static final int MIDDLE = 2;
 	private static final int HIGH = 3;
 	private static final int TOEIC = 4;
 	private static final int ALL = 0;
-	
+
 	LinearLayout mainLayout;
-	
-    PopupWindow progressPopupWindow;
-    View progressPopupView;
-    TextView progressPopupText;
-    TextView progressPopupCountText;
-    ProgressBar progressPopupLoadProgBar;
-    ProgressBar progressPopupProgBar;
-    Button progressPopupCancel;
-    Button progressPopupDone;
-    
-    boolean deletingFlag;
-    
+
+	PopupWindow progressPopupWindow;
+	View progressPopupView;
+	TextView progressPopupText;
+	TextView progressPopupCountText;
+	ProgressBar progressPopupLoadProgBar;
+	ProgressBar progressPopupProgBar;
+	Button progressPopupCancel;
+	Button progressPopupDone;
+
+	boolean deletingFlag;
+
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
-	
+
 	DownloadPronounce downloadPronounce;
 	DeleteFile deleteFile;
 
 	PronounceDBHelper pHelper;
 	SQLiteDatabase db;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_more_pronounce);
-		
+
 		mainLayout = (LinearLayout)findViewById(R.id.homemore_pronounce_id_layout);
-		
+
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
 
 		progressPopupView = View.inflate(this, R.layout.popup_view_download_progressbar, null);
 		progressPopupWindow = new PopupWindow(progressPopupView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		progressPopupText = (TextView)progressPopupView.findViewById(R.id.popup_id_text);
-    	progressPopupCountText = (TextView)progressPopupView.findViewById(R.id.popup_download_id_count);	
-    	progressPopupLoadProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_loading_progressbar);
-    	progressPopupProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_progressbar);
-    	progressPopupCancel = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_cancel);
-    	progressPopupDone = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_done);
+		progressPopupCountText = (TextView)progressPopupView.findViewById(R.id.popup_download_id_count);	
+		progressPopupLoadProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_loading_progressbar);
+		progressPopupProgBar = (ProgressBar)progressPopupView.findViewById(R.id.popup_download_id_progressbar);
+		progressPopupCancel = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_cancel);
+		progressPopupDone = (Button)progressPopupView.findViewById(R.id.popup_download_id_btn_done);
 
 		setFont(progressPopupText);
 		setFont(progressPopupCountText);
-    	
+
 		pHelper = new PronounceDBHelper(this);
-		
+
 		deletingFlag = false;
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 	}
 
 	public void deleteBasic(View view){
 		deleteFile = new DeleteFile();
 		deleteFile.execute(BASIC);
 	}
-	
+
 	public void downBasic(View view){
 		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
@@ -116,54 +108,54 @@ public class HomeMorePronounce extends TypefaceActivity {
 		deleteFile = new DeleteFile();
 		deleteFile.execute(MIDDLE);	
 	}
-	
+
 	public void downMiddle(View view){
 		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, MIDDLE, progressPopupView);
 		downloadPronounce.execute("");
-		
+
 	}
-	
+
 	public void deleteHigh(View view){
 		deleteFile = new DeleteFile();
 		deleteFile.execute(HIGH);
 	}
-	
+
 	public void downHigh(View view){
 		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, HIGH, progressPopupView);
 		downloadPronounce.execute("");
-		
+
 	}
-	
+
 	public void deleteToeic(View view){
 		deleteFile = new DeleteFile();
 		deleteFile.execute(TOEIC);	
 	}
-	
+
 	public void downToeic(View view){
 		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, TOEIC, progressPopupView);
 		downloadPronounce.execute("");
-		
+
 	}
-	
+
 	public void deleteAll(View view){
 		deleteFile = new DeleteFile();
 		deleteFile.execute(ALL);
 	}
-	
+
 	public void downAll(View view){
 		deletingFlag = false;
 		progressPopupWindow.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 		downloadPronounce = DownloadPronounce.getTask(getApplicationContext(), this, ALL, progressPopupView);
 		downloadPronounce.execute("");
-		
+
 	}
-	
+
 	private class DeleteFile extends AsyncTask<Integer, Integer, Boolean>{
 		int category;
 		boolean noFile;
@@ -177,9 +169,9 @@ public class HomeMorePronounce extends TypefaceActivity {
 			deletingFlag = true;
 
 			progressPopupProgBar.setVisibility(View.VISIBLE);
-	        progressPopupLoadProgBar.setVisibility(View.GONE);
+			progressPopupLoadProgBar.setVisibility(View.GONE);
 			progressPopupCountText.setVisibility(View.VISIBLE);
-	        progressPopupProgBar.setIndeterminate(false);
+			progressPopupProgBar.setIndeterminate(false);
 		}
 		@Override
 		protected Boolean doInBackground(Integer... params) {
@@ -217,7 +209,7 @@ public class HomeMorePronounce extends TypefaceActivity {
 									+ "/Android/data/com.todpop.saltyenglish/pronounce/" + find.getString(0) + ".data";
 							//Log.i("STEVEN", "DELETE FILE name = " + name);
 							File file = new File(name);
-							
+
 							if(!file.delete()){ //if fail to delete file	
 								runOnUiThread(new Runnable(){
 									@Override
@@ -251,7 +243,7 @@ public class HomeMorePronounce extends TypefaceActivity {
 						@Override
 						public void run(){
 							progressPopupText.setText(getResources().getIdentifier("popup_view_download_progressbar_deleting_" + category, "string", getPackageName()));
-					        progressPopupProgBar.setMax(find.getCount());
+							progressPopupProgBar.setMax(find.getCount());
 						}
 					});
 					int count = 1;
@@ -297,15 +289,15 @@ public class HomeMorePronounce extends TypefaceActivity {
 			}
 			return true;
 		}	   
-		
+
 		@Override
-	    protected void onProgressUpdate(Integer... progress) {
-	        super.onProgressUpdate(progress);
-	        progressPopupProgBar.setProgress(progress[0]);
-	        progressPopupCountText.setText(progress[0] + "/" + progress[1]);
-	    }
+		protected void onProgressUpdate(Integer... progress) {
+			super.onProgressUpdate(progress);
+			progressPopupProgBar.setProgress(progress[0]);
+			progressPopupCountText.setText(progress[0] + "/" + progress[1]);
+		}
 		@Override
-	    protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(Boolean result) {
 			deletingFlag = false;
 			if(result){ 	//delete complete
 				progressPopupText.setText(R.string.popup_view_download_progressbar_delete_done);
@@ -331,7 +323,7 @@ public class HomeMorePronounce extends TypefaceActivity {
 			return;
 		}
 	}
-	
+
 	private void cancelDeleteFunc(){
 		progressPopupText.setText(R.string.popup_view_download_progressbar_canceled);
 		progressPopupProgBar.setVisibility(View.GONE);
@@ -348,12 +340,12 @@ public class HomeMorePronounce extends TypefaceActivity {
 	}
 	private void noFileFunc(){
 		progressPopupText.setText(R.string.popup_view_download_progressbar_delete_no_list);
-        progressPopupLoadProgBar.setVisibility(View.GONE);
+		progressPopupLoadProgBar.setVisibility(View.GONE);
 		progressPopupProgBar.setVisibility(View.GONE);
 		progressPopupCountText.setVisibility(View.GONE);
 		progressPopupCancel.setVisibility(View.GONE);
 		progressPopupDone.setVisibility(View.VISIBLE);
-		
+
 	}
 	public void cancelDownload(View view){
 		Log.i("STEVEN", String.valueOf(deletingFlag));
@@ -373,34 +365,34 @@ public class HomeMorePronounce extends TypefaceActivity {
 		progressPopupProgBar.setProgress(0);
 		progressPopupCountText.setText("");
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//getMenuInflater().inflate(R.menu.home_more, menu);
 		return false;
 	}
-	
+
 	// on click
 	public void onClickBack(View view)
 	{
 		finish();
 	}
-	
+
 	@Override
 	protected void onStart()
 	{
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("See More");
-	    EasyTracker.getInstance(this).activityStart(this);
+		EasyTracker.getInstance(this).activityStart(this);
 	}
-	 
+
 	@Override
 	protected void onStop()
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
-	    EasyTracker.getInstance(this).activityStop(this);
+		EasyTracker.getInstance(this).activityStop(this);
 	}	
 }

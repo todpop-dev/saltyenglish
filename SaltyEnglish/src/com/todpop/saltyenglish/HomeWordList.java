@@ -240,7 +240,6 @@ public class HomeWordList extends TypefaceActivity {
 	{
 		super.onResume();
 
-		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 		cardAni.setDuration(500);
 		cardAni.start();

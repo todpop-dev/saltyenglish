@@ -11,29 +11,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.facebook.FacebookRequestError;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +30,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 public class StudyTestFinish extends TypefaceActivity {
 	// popup view
@@ -317,77 +307,6 @@ public class StudyTestFinish extends TypefaceActivity {
 	/*
 	 * for facebook share
 	 */
-	public void publishAdBtn(View v) {
-		shareTried = true;
-		
-		shareBtn.setEnabled(false);
-		
-		Session session = Session.getActiveSession();
-		if (session == null || session.isClosed()) {
-			view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
-			Session.openActiveSession(this, true, callback);
-		} else {
-			publishAd();
-		}
-	}
-
-	public void publishAd() {
-		Session session = Session.getActiveSession();
-		List<String> permissions = session.getPermissions();
-		if (!isSubsetOf(PERMISSIONS, permissions)) {
-			pendingPublishReauthorization = true;
-			Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
-					this, PERMISSIONS);
-			session.requestNewPublishPermissions(newPermissionsRequest);
-			return;
-		} else {
-			Bundle postParams = new Bundle();
-			postParams.putString("link", link);
-			if(!name.equals("null"))
-				postParams.putString("name", name);
-			if(!caption.equals("null"))
-				postParams.putString("caption", caption);
-			if(!description.equals("null"))
-				postParams.putString("description", description);
-			if(!picture.equals("null"))
-				postParams.putString("picture", picture);
-
-			Request.Callback callback = new Request.Callback() {
-				public void onCompleted(Response response) {
-					try{
-						JSONObject graphResponse = response.getGraphObject()
-								.getInnerJSONObject();
-						try {
-							sharedId = graphResponse.getString("id");
-						} catch (JSONException e) {
-						}
-						FacebookRequestError error = response.getError();
-						if (error != null) {
-							popupText.setText(R.string.facebook_share_error);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							Toast.makeText(getApplicationContext(),
-									error.getErrorMessage(), Toast.LENGTH_SHORT)
-									.show();
-						} else {
-							shareDone = true;
-							shareBtn.setEnabled(false);
-							popupText.setText(R.string.facebook_share_done);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						}
-					}catch(Exception e){
-						popupText.setText(R.string.facebook_share_error);
-						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-					}
-				}
-			};
-
-			Request request = new Request(session,
-					"me/feed", postParams, HttpMethod.POST, callback);
-
-			RequestAsyncTask task = new RequestAsyncTask(request);
-			task.execute();
-		}
-	}
 
 	private boolean isSubsetOf(Collection<String> subset,
 			Collection<String> superset) {
@@ -397,24 +316,6 @@ public class StudyTestFinish extends TypefaceActivity {
 			}
 		}
 		return true;
-	}
-
-	private Session.StatusCallback callback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			onSessionStateChange(session, state, exception);
-		}
-	};
-
-	private void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			if(!pendingPublishReauthorization)
-				publishAd();
-			else{
-			}
-		}
 	}
 	
 	public void closePopup(View v)
@@ -435,16 +336,6 @@ public class StudyTestFinish extends TypefaceActivity {
 	@Override
 	public void onRestart() {
 		super.onRestart();
-		if(shareTried){
-			skipBtn.setEnabled(true);
-			Session session = Session.getActiveSession();
-			if (session == null || session.isClosed()) {
-				view_time = (int) Math.floor(video.getCurrentPosition() / 1000);
-				Session.openActiveSession(this, true, callback);
-			} else {
-				publishAd();
-			}
-		}
 	}
 	@Override
 	public void onPause() {
@@ -456,8 +347,6 @@ public class StudyTestFinish extends TypefaceActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
 	}
 
 	@Override

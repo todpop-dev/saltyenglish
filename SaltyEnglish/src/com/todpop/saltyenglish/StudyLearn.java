@@ -1,8 +1,5 @@
 package com.todpop.saltyenglish;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,16 +13,11 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceFragmentActivity;
-
-import android.os.AsyncTask;
-import android.os.Bundle;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -43,6 +35,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceFragmentActivity;
 
 public class StudyLearn extends TypefaceFragmentActivity {
 
@@ -867,7 +863,6 @@ public class StudyLearn extends TypefaceFragmentActivity {
 	public void onResume() 
 	{
 		super.onResume();
-		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 	}
 	
 	@Override

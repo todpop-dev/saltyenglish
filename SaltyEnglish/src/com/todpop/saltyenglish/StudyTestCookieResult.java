@@ -2,26 +2,13 @@ package com.todpop.saltyenglish;
 
 import java.util.ArrayList;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
-
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +26,6 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.LoadingDialog;
 import com.todpop.api.TypefaceActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
@@ -86,7 +72,7 @@ public class StudyTestCookieResult extends TypefaceActivity {
 	TextView popupOnlyAmount;
 
 	//loading progress dialog
-	LoadingDialog loadingDialog;
+	//	LoadingDialog loadingDialog;
 
 	SharedPreferences studyInfo;
 	SharedPreferences.Editor studyInfoEdit;
@@ -131,12 +117,41 @@ public class StudyTestCookieResult extends TypefaceActivity {
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		// levelCount could be 1, 16, 61, 121 etc... 
 		int category = studyInfo.getInt("tmpCategory", 1);
-		String userId = pref.getString("mem_id", "0");
+		//		String userId = pref.getString("mem_id", "0");
 		SharedPreferences levelPref = getSharedPreferences("StudyLevelInfo",0);
-		String testComboResult = levelPref.getString("testComboResult", "");
+		//		String testComboResult = levelPref.getString("testComboResult", "");
 		int testCntCorrect = levelPref.getInt("testCntCorrect", 0);
 		int testCntWrong = levelPref.getInt("testCntWrong", 0);
-		String resultUrl;
+		//		String resultUrl;
+
+		int avgScore = Math.round(((float)testCntCorrect / testCntCorrect+testCntWrong) * 100);
+
+		//		Editor prefEdit = studyInfoEdit
+
+		StringBuffer stageInfo = new StringBuffer(studyInfo.getString("stageInfo", null));
+		int nMedals = avgScore >= 80 ? 2: (avgScore >= 40 ? 1 : 0);
+
+		char curStageInfo= stageInfo.charAt(tmpStageAccumulated-1);
+		int curStageMedals = (curStageInfo == '2' ? 2 : (curStageInfo == '1' ? 1 : 0));
+
+		char nextStageInfo= stageInfo.charAt(tmpStageAccumulated);
+
+		// set medals num
+		if(curStageMedals < nMedals){
+			stageInfo.deleteCharAt(tmpStageAccumulated-1);
+			stageInfo.insert(tmpStageAccumulated-1, nMedals+"");
+		}
+
+		if(nMedals >= 1 && nextStageInfo == 'x'){ // open next stage
+			stageInfo.deleteCharAt(tmpStageAccumulated);
+			stageInfo.insert(tmpStageAccumulated, "Y");
+		}
+
+		studyInfoEdit.putString("stageInfo", stageInfo.toString());
+		studyInfoEdit.apply();
+
+		scoreView.setText(avgScore+"점");
+
 
 		// ------- cys added -----------
 		studyInfoEdit.putInt("currentCategory", category);
@@ -149,48 +164,48 @@ public class StudyTestCookieResult extends TypefaceActivity {
 		studyInfoEdit.apply();
 		// ----------------------------
 
-		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
-		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
-		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+		//		relative = (RelativeLayout)findViewById(R.id.test_result_id_main);
+		//		popupView = View.inflate(this, R.layout.popup_view_test_result, null);
+		//		popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+		//
+		//		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
+		//		// w/o attendace
+		//		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
+		//		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
+		//		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
+		//
+		//		setFont(popupBothNoAttReward);
+		//		setFont(popupBothNoAttPoint);
+		//
+		//		// w/ attendace
+		//		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
+		//		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
+		//		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
+		//		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
+		//		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
+		//
+		//		setFont(popupBothAttReward);
+		//		setFont(popupBothAttPoint);
+		//		setFont(popupAttReward);
+		//		setFont(popupAttPoint);
 
-		popupBoth = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both);
-		// w/o attendace
-		popupBothNoAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance);
-		popupBothNoAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_reward);
-		popupBothNoAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_no_attendance_point);
-
-		setFont(popupBothNoAttReward);
-		setFont(popupBothNoAttPoint);
-
-		// w/ attendace
-		popupBothAtt = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_both_attendance);
-		popupBothAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_reward);
-		popupBothAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_both_attendance_point);
-		popupAttReward = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_reward);
-		popupAttPoint = (TextView)popupView.findViewById(R.id.popup_test_result_id_attendance_point);
-
-		setFont(popupBothAttReward);
-		setFont(popupBothAttPoint);
-		setFont(popupAttReward);
-		setFont(popupAttPoint);
-
-		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
-		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
-		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
-		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
-		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
+		//		popupOnly = (LinearLayout)popupView.findViewById(R.id.popup_test_result_id_only);
+		//		popupOnlyTitle = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_title);
+		//		popupOnlyType = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_type);
+		//		popupOnlyImg = (ImageView)popupView.findViewById(R.id.popup_test_result_id_only_image);
+		//		popupOnlyAmount = (TextView)popupView.findViewById(R.id.popup_test_result_id_only_amount);
 
 		setFont(popupOnlyAmount);
 
-		resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
-				"&stage=" + tmpStageAccumulated%10 + "&result=" + testCntCorrect + "&count="+ (testCntCorrect+testCntWrong) +
-				"&user_id=" + userId + "&category=" + category+"&combo="+testComboResult;
-		
+		//		resultUrl = "http://todpop.co.kr/api/studies/send_word_result.json?level=" + ((tmpStageAccumulated-1)/10+1) + 
+		//				"&stage=" + tmpStageAccumulated%10 + "&result=" + testCntCorrect + "&count="+ (testCntCorrect+testCntWrong) +
+		//				"&user_id=" + userId + "&category=" + category+"&combo="+testComboResult;
 
-		loadingDialog = new LoadingDialog(this);
-		loadingDialog.show();
-		new GetTestResult().execute(resultUrl);
-		Log.e("-------- result url ------- ", resultUrl);
+
+		//		loadingDialog = new LoadingDialog(this);
+		//		loadingDialog.show();
+		//		new GetTestResult().execute(resultUrl);
+		//		Log.e("-------- result url ------- ", resultUrl);
 		// ----------- End of  Request Result -------------
 
 		MyListAdapter MyAdapter = new MyListAdapter(this,R.layout.lvtest_result_list_item_view, arItem);
@@ -200,127 +215,127 @@ public class StudyTestCookieResult extends TypefaceActivity {
 		MyList.setAdapter(MyAdapter);
 	}
 
-	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
-	{
-		DefaultHttpClient httpClient ;
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try {
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL); 
-				HttpParams httpParameters = new BasicHttpParams(); 
-				int timeoutConnection = 5000; 
-				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-				int timeoutSocket = 5000; 
-				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+	//	private class GetTestResult extends AsyncTask<String, Void, JSONObject> 
+	//	{
+	//		DefaultHttpClient httpClient ;
+	//		@Override
+	//		protected JSONObject doInBackground(String... urls) 
+	//		{
+	//			JSONObject result = null;
+	//			try {
+	//				String getURL = urls[0];
+	//				HttpGet httpGet = new HttpGet(getURL); 
+	//				HttpParams httpParameters = new BasicHttpParams(); 
+	//				int timeoutConnection = 5000; 
+	//				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+	//				int timeoutSocket = 5000; 
+	//				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+	//
+	//				httpClient = new DefaultHttpClient(httpParameters); 
+	//				HttpResponse response = httpClient.execute(httpGet); 
+	//				HttpEntity resEntity = response.getEntity();
+	//
+	//				if (resEntity != null) {    
+	//					result = new JSONObject(EntityUtils.toString(resEntity)); 
+	//					//Log.d("RESPONSE ---- ", result.toString());				        	
+	//				}
+	//				return result;
+	//			} catch (Exception e) {
+	//				e.printStackTrace();
+	//			}
+	//			return result;
+	//		}
+	//
+	//		@Override
+	//		protected void onPostExecute(JSONObject json) {
+	//			try {
+	//				loadingDialog.dissmiss();
+	//				Log.e("Get Result JSON RESPONSE ---- ", json.toString());				        	
+	//
+	//				if(json.getBoolean("status")==true) {
+	//					try {
+	//						JSONObject resultObj = json.getJSONObject("data");
+	//						Log.e("Results!!! = ",resultObj.toString());
+	//						resultScore = resultObj.getString("score");
+	//						resultReward = resultObj.getString("reward");
+	//						resultPoint = resultObj.getString("rank_point");
+	//						resultMedal = resultObj.getString("medal");
+	//
+	//						resultAttendReward = resultObj.getString("attend_reward");
+	//						resultAttendPoint = resultObj.getString("attend_point");
+	//
+	//						String stageInfo = resultObj.getString("stage_info");		// stageInfo
+	//						studyInfoEdit.putString("stageInfo", stageInfo);
+	//						studyInfoEdit.apply();
+	//
+	//						rewardView.setText(resultReward);
+	//						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
+	//
+	//						if(resultAttendReward.equals("null")){
+	//							if(resultReward.equals("0")){
+	//								if(resultPoint.equals("0")){
+	//									//no popup
+	//								}
+	//								else{
+	//									popupBoth.setVisibility(View.GONE);
+	//									popupOnly.setVisibility(View.VISIBLE);
+	//									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
+	//									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
+	//									popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigpoint);
+	//									popupOnlyAmount.setText("+" + resultPoint);
+	//									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//								}
+	//							}
+	//							else if(resultPoint.equals("0")){
+	//								popupBoth.setVisibility(View.GONE);
+	//								popupOnly.setVisibility(View.VISIBLE);
+	//								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
+	//								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
+	//								popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigcoin);
+	//								popupOnlyAmount.setText("+" + resultReward);
+	//								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//							}
+	//							else{
+	//								popupBoth.setVisibility(View.VISIBLE);
+	//								popupOnly.setVisibility(View.GONE);
+	//								popupBothAtt.setVisibility(View.GONE);
+	//								popupBothNoAtt.setVisibility(View.VISIBLE);
+	//								popupBothNoAttReward.setText("+" + resultReward);
+	//								popupBothNoAttPoint.setText("+" + resultPoint);
+	//								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//							}
+	//						}
+	//						else{
+	//							popupBoth.setVisibility(View.VISIBLE);
+	//							popupOnly.setVisibility(View.GONE);
+	//							popupBothAtt.setVisibility(View.VISIBLE);
+	//							popupBothNoAtt.setVisibility(View.GONE);
+	//
+	//							popupBothAttReward.setText("+" + resultReward);
+	//							popupBothAttPoint.setText("+" + resultPoint);
+	//							popupAttReward.setText("+ " + resultAttendReward);
+	//							popupAttPoint.setText("+ " + resultAttendPoint);
+	//							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//						}
+	//
+	//
+	//					} catch (Exception e) {
+	//						e.printStackTrace();
+	//					}
+	//
+	//
+	//				}else{		    
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				Log.d("Exception: ", e.toString());
+	//			}
+	//		}
+	//	}
 
-				httpClient = new DefaultHttpClient(httpParameters); 
-				HttpResponse response = httpClient.execute(httpGet); 
-				HttpEntity resEntity = response.getEntity();
-
-				if (resEntity != null) {    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					//Log.d("RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-			try {
-				loadingDialog.dissmiss();
-				Log.e("Get Result JSON RESPONSE ---- ", json.toString());				        	
-
-				if(json.getBoolean("status")==true) {
-					try {
-						JSONObject resultObj = json.getJSONObject("data");
-						Log.e("Results!!! = ",resultObj.toString());
-						resultScore = resultObj.getString("score");
-						resultReward = resultObj.getString("reward");
-						resultPoint = resultObj.getString("rank_point");
-						resultMedal = resultObj.getString("medal");
-
-						resultAttendReward = resultObj.getString("attend_reward");
-						resultAttendPoint = resultObj.getString("attend_point");
-
-						String stageInfo = resultObj.getString("stage_info");		// stageInfo
-						studyInfoEdit.putString("stageInfo", stageInfo);
-						studyInfoEdit.apply();
-
-						rewardView.setText(resultReward);
-						scoreView.setText(resultScore + getResources().getString(R.string.study_result_score_text));
-
-						if(resultAttendReward.equals("null")){
-							if(resultReward.equals("0")){
-								if(resultPoint.equals("0")){
-									//no popup
-								}
-								else{
-									popupBoth.setVisibility(View.GONE);
-									popupOnly.setVisibility(View.VISIBLE);
-									popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_3_img_title);
-									popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_point);
-									popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigpoint);
-									popupOnlyAmount.setText("+" + resultPoint);
-									popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-								}
-							}
-							else if(resultPoint.equals("0")){
-								popupBoth.setVisibility(View.GONE);
-								popupOnly.setVisibility(View.VISIBLE);
-								popupOnlyTitle.setBackgroundResource(R.drawable.study_popup_4_img_title);
-								popupOnlyType.setBackgroundResource(R.drawable.study_popup_1_text_money);
-								popupOnlyImg.setBackgroundResource(R.drawable.study_popup_common_img_bigcoin);
-								popupOnlyAmount.setText("+" + resultReward);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-							else{
-								popupBoth.setVisibility(View.VISIBLE);
-								popupOnly.setVisibility(View.GONE);
-								popupBothAtt.setVisibility(View.GONE);
-								popupBothNoAtt.setVisibility(View.VISIBLE);
-								popupBothNoAttReward.setText("+" + resultReward);
-								popupBothNoAttPoint.setText("+" + resultPoint);
-								popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							}
-						}
-						else{
-							popupBoth.setVisibility(View.VISIBLE);
-							popupOnly.setVisibility(View.GONE);
-							popupBothAtt.setVisibility(View.VISIBLE);
-							popupBothNoAtt.setVisibility(View.GONE);
-
-							popupBothAttReward.setText("+" + resultReward);
-							popupBothAttPoint.setText("+" + resultPoint);
-							popupAttReward.setText("+ " + resultAttendReward);
-							popupAttPoint.setText("+ " + resultAttendPoint);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-						}
-
-
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-
-				}else{		    
-				}
-
-			} catch (Exception e) {
-				Log.d("Exception: ", e.toString());
-			}
-		}
-	}
-
-	public void dismissPopup(View v){
-		popupWindow.dismiss();
-	}
+	//	public void dismissPopup(View v){
+	//		popupWindow.dismiss();
+	//	}
 
 	private void getTestWords()
 	{
@@ -329,13 +344,17 @@ public class StudyTestCookieResult extends TypefaceActivity {
 			SQLiteDatabase db = mHelper.getReadableDatabase();
 
 			Cursor cursor = db.rawQuery("SELECT DISTINCT name, mean, xo FROM dic WHERE stage=" + tmpStageAccumulated + ";", null);
-
+			int totalScore = 0;
+			int avgScore = 0;
 			Log.e("cursor.getCount()", "cursor.getCount() : "+cursor.getCount());
 			if (cursor.getCount() > 0) {
 				while(cursor.moveToNext()) {
 					Log.e("A B C ------", cursor.getString(0) + "  " + cursor.getString(1) + "   " + cursor.getString(2));
 					mi = new MyItem(cursor.getString(0), cursor.getString(1), cursor.getString(2));
 					arItem.add(mi);
+					if(cursor.getString(2).equals("O")){
+						totalScore += 1;
+					}
 				}
 			}
 
@@ -495,90 +514,6 @@ public class StudyTestCookieResult extends TypefaceActivity {
 	private void goHome(){
 		SharedPreferences pref = getSharedPreferences("rgInfo",0);
 		String userId = pref.getString("mem_id", "1");
-		String cpxRequestUrl = "http://todpop.co.kr/api/advertises/get_cpx_ad.json?user_id="+userId;
-		Log.d("CPX URL ---- ", cpxRequestUrl);
-		new GetCPX().execute(cpxRequestUrl);
-	}
-	// Get CPX - here we get CPI first
-	private class GetCPX extends AsyncTask<String, Void, JSONObject> 
-	{
-		@Override
-		protected JSONObject doInBackground(String... urls) 
-		{
-			JSONObject result = null;
-			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				String getURL = urls[0];
-				HttpGet httpGet = new HttpGet(getURL);
-				HttpResponse httpResponse = httpClient.execute(httpGet);
-				HttpEntity resEntity = httpResponse.getEntity();
-
-				if (resEntity != null) {    
-					result = new JSONObject(EntityUtils.toString(resEntity)); 
-					Log.d("CPX RESPONSE ---- ", result.toString());				        	
-				}
-				return result;
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-			return result;
-		}
-
-		@Override
-		protected void onPostExecute(JSONObject json) {
-
-			try {
-				//TODO cpx function to be remove
-				if(json.getBoolean("status")==true) {
-					JSONObject adDetails = json.getJSONObject("data");
-					int adId = adDetails.getInt("ad_id");
-					int adType = adDetails.getInt("ad_type");
-					Log.d("CPX Type: ---------- ", Integer.toString(adType));
-
-					String adImageUrl = "http://todpop.co.kr/" + adDetails.getString("ad_image");
-					String adText = adDetails.getString("ad_text");
-					String adAction = adDetails.getString("ad_action");
-					String targetUrl = adDetails.getString("target_url");
-					String packageName = adDetails.getString("package_name");
-					String confirmUrl = adDetails.getString("confirm_url");
-					String reward = adDetails.getString("reward");
-					String point = adDetails.getString("point");
-					int questionCount = adDetails.getInt("n_question");
-
-					SharedPreferences cpxInfo = getSharedPreferences("cpxInfo",0);
-					SharedPreferences.Editor cpxInfoEditor = cpxInfo.edit();
-					cpxInfoEditor.putInt("adId", adId);					
-					cpxInfoEditor.putInt("adType", adType);		
-					cpxInfoEditor.putString("adImageUrl", adImageUrl);
-					cpxInfoEditor.putString("adText", adText);
-					cpxInfoEditor.putString("adAction", adAction);
-					cpxInfoEditor.putString("targetUrl", targetUrl);
-					cpxInfoEditor.putString("packageName", packageName);
-					cpxInfoEditor.putString("confirmUrl", confirmUrl);
-					cpxInfoEditor.putString("reward", reward);
-					cpxInfoEditor.putString("point", point);
-					cpxInfoEditor.putInt("questionCount", questionCount);
-
-					cpxInfoEditor.apply();
-
-					// TODO: Add more CPX Support. Now only support CPI and CPS
-
-					Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-					startActivity(intent);
-					finish();
-
-				} else {		   
-					// In the case CPX Request Failed
-					Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-					startActivity(intent);
-					finish();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
 	}
 
 	@Override

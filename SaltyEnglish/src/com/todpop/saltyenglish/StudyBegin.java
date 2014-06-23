@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,21 +23,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.facebook.FacebookRequestError;
-import com.facebook.HttpMethod;
-import com.facebook.Request;
-import com.facebook.RequestAsyncTask;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.SessionState;
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.FileManager;
-import com.todpop.api.LoadingDialog;
-import com.todpop.api.TypefaceFragmentActivity;
-import com.todpop.saltyenglish.db.PronounceDBHelper;
-import com.todpop.saltyenglish.db.WordDBHelper;
-
+import android.content.ContentValues;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
@@ -47,29 +38,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -80,6 +59,14 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.FileManager;
+import com.todpop.api.LoadingDialog;
+import com.todpop.api.TypefaceFragmentActivity;
+import com.todpop.saltyenglish.db.PronounceDBHelper;
+import com.todpop.saltyenglish.db.WordDBHelper;
 
 public class StudyBegin extends TypefaceFragmentActivity {
 	// popup view
@@ -100,7 +87,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	// Fragment attached to pageView
 	StudyStartFragment studyStartFragment;
 	// word json
-//	static JSONArray jsonWords;
+	//	static JSONArray jsonWords;
 	static JSONArray curJsonWords=null;
 	// word json bitmap array
 	static ArrayList<Bitmap> bitmapArr;
@@ -363,8 +350,8 @@ public class StudyBegin extends TypefaceFragmentActivity {
 					break;
 				case 10:
 					if(cpdLogSent == false){
-//						Log.d("------- send info -----", "info");
-//						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
+						//						Log.d("------- send info -----", "info");
+						//						new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=1");
 						cpdLogSent = true;
 					}
 					break;
@@ -892,17 +879,17 @@ public class StudyBegin extends TypefaceFragmentActivity {
 					if (bitmapArr.size() == 10) {
 						setupPagerView();
 						// Get CPD after Get Words
-//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-//						userId = rgInfo.getString("mem_id", "1");
-//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
+						//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+						//						userId = rgInfo.getString("mem_id", "1");
+						//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 					}
 				} else if (tmpStage <=9) {
 					if (bitmapArr.size() == 7) {
 						setupPagerView();
 						// Get CPD after Get Words
-//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
-//						userId = rgInfo.getString("mem_id", "1");
-//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
+						//						SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
+						//						userId = rgInfo.getString("mem_id", "1");
+						//						new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 					}
 				}
 
@@ -911,118 +898,118 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		}		
 	}
 
-//	private class GetCPD extends AsyncTask<String, Void, JSONObject> 
-//	{
-//		DefaultHttpClient httpClient ;
-//		@Override
-//		protected JSONObject doInBackground(String... urls) 
-//		{
-//			JSONObject result = null;
-//			try
-//			{
-//				String getURL = urls[0];
-//				HttpGet httpGet = new HttpGet(getURL); 
-//				HttpParams httpParameters = new BasicHttpParams(); 
-//				int timeoutConnection = 5000; 
-//				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
-//				int timeoutSocket = 5000; 
-//				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
-//
-//				httpClient = new DefaultHttpClient(httpParameters); 
-//				HttpResponse response = httpClient.execute(httpGet); 
-//				HttpEntity resEntity = response.getEntity();
-//
-//				if (resEntity != null)
-//				{    
-//					result = new JSONObject(EntityUtils.toString(resEntity)); 
-//					//Log.d("RESPONSE ---- ", result.toString());				        	
-//				}
-//				return result;
-//			}
-//			catch (Exception e)
-//			{
-//				e.printStackTrace();
-//			}
-//			return result;
-//		}
-//
-//		@Override
-//		protected void onPostExecute(JSONObject json) {
-//			try {
-//				Log.d("Get CPD JSON RESPONSE ---- ", json.toString());				        	
-//
-//				if(json.getBoolean("status")==true) {
-//					JSONObject cpdJsonObj = json.getJSONObject("data");
-//
-//					adId = cpdJsonObj.getInt("ad_id");
-//					adType = cpdJsonObj.getInt("ad_type");
-//
-//					sharedHistory = cpdJsonObj.getString("history");
-//
-//					couponId = cpdJsonObj.getString("coupon");
-//
-//					reward = cpdJsonObj.getString("reward");
-//					point = cpdJsonObj.getString("point");
-//					name = cpdJsonObj.getString("name");
-//					caption = cpdJsonObj.getString("caption");
-//					description = cpdJsonObj.getString("description");
-//					link = cpdJsonObj.getString("link");
-//					picture = cpdJsonObj.getString("picture");
-//
-//					try {
-//						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
-//						URL url = new URL(imgUrl);
-//						new DownloadImageTask("FRONT").execute(url.toString());
-//
-//						String imgUrl2 = "http://todpop.co.kr" + cpdJsonObj.getString("back_image");
-//						URL url2 = new URL(imgUrl2);
-//						new DownloadImageTask("BACK").execute(url2.toString());
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}else{		    
-//					Log.d("--------- CPD -----------", "JSON return null");
-//				}
-//
-//			} catch (Exception e) {
-//				Log.d("Exception: ", e.toString());
-//			}
-//		}
-//
-//		private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
-//
-//			String imgTag = null;
-//			public DownloadImageTask (String imgTag) 
-//			{
-//				this.imgTag = imgTag;
-//			}
-//
-//			protected Bitmap doInBackground(String... urls) 
-//			{
-//				String urldisplay = urls[0];
-//				Bitmap mIcon11 = null;
-//				try {
-//					InputStream in = new java.net.URL(urldisplay).openStream();
-//					mIcon11 = BitmapFactory.decodeStream(in);
-//				} catch (Exception e) {
-//					Log.e("Error", e.getMessage());
-//					e.printStackTrace();
-//				}
-//				return mIcon11;
-//			}
-//
-//			protected void onPostExecute(Bitmap result) 
-//			{
-//				if (imgTag.equals("FRONT")) {
-//					Log.e("STEVEN CPD IMAGE FRONT", "get done");
-//					cpdFrontImage = result;
-//				} else if (imgTag.equals("BACK")) {
-//					Log.e("STEVEN CPD IMAGE BACK", "get done");
-//					cpdBackImage = result;
-//				}
-//			}
-//		}		
-//	}
+	//	private class GetCPD extends AsyncTask<String, Void, JSONObject> 
+	//	{
+	//		DefaultHttpClient httpClient ;
+	//		@Override
+	//		protected JSONObject doInBackground(String... urls) 
+	//		{
+	//			JSONObject result = null;
+	//			try
+	//			{
+	//				String getURL = urls[0];
+	//				HttpGet httpGet = new HttpGet(getURL); 
+	//				HttpParams httpParameters = new BasicHttpParams(); 
+	//				int timeoutConnection = 5000; 
+	//				HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection); 
+	//				int timeoutSocket = 5000; 
+	//				HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket); 
+	//
+	//				httpClient = new DefaultHttpClient(httpParameters); 
+	//				HttpResponse response = httpClient.execute(httpGet); 
+	//				HttpEntity resEntity = response.getEntity();
+	//
+	//				if (resEntity != null)
+	//				{    
+	//					result = new JSONObject(EntityUtils.toString(resEntity)); 
+	//					//Log.d("RESPONSE ---- ", result.toString());				        	
+	//				}
+	//				return result;
+	//			}
+	//			catch (Exception e)
+	//			{
+	//				e.printStackTrace();
+	//			}
+	//			return result;
+	//		}
+	//
+	//		@Override
+	//		protected void onPostExecute(JSONObject json) {
+	//			try {
+	//				Log.d("Get CPD JSON RESPONSE ---- ", json.toString());				        	
+	//
+	//				if(json.getBoolean("status")==true) {
+	//					JSONObject cpdJsonObj = json.getJSONObject("data");
+	//
+	//					adId = cpdJsonObj.getInt("ad_id");
+	//					adType = cpdJsonObj.getInt("ad_type");
+	//
+	//					sharedHistory = cpdJsonObj.getString("history");
+	//
+	//					couponId = cpdJsonObj.getString("coupon");
+	//
+	//					reward = cpdJsonObj.getString("reward");
+	//					point = cpdJsonObj.getString("point");
+	//					name = cpdJsonObj.getString("name");
+	//					caption = cpdJsonObj.getString("caption");
+	//					description = cpdJsonObj.getString("description");
+	//					link = cpdJsonObj.getString("link");
+	//					picture = cpdJsonObj.getString("picture");
+	//
+	//					try {
+	//						String imgUrl = "http://todpop.co.kr" + cpdJsonObj.getString("front_image");
+	//						URL url = new URL(imgUrl);
+	//						new DownloadImageTask("FRONT").execute(url.toString());
+	//
+	//						String imgUrl2 = "http://todpop.co.kr" + cpdJsonObj.getString("back_image");
+	//						URL url2 = new URL(imgUrl2);
+	//						new DownloadImageTask("BACK").execute(url2.toString());
+	//					} catch (Exception e) {
+	//						e.printStackTrace();
+	//					}
+	//				}else{		    
+	//					Log.d("--------- CPD -----------", "JSON return null");
+	//				}
+	//
+	//			} catch (Exception e) {
+	//				Log.d("Exception: ", e.toString());
+	//			}
+	//		}
+	//
+	//		private class DownloadImageTask  extends AsyncTask<String, Void, Bitmap> {
+	//
+	//			String imgTag = null;
+	//			public DownloadImageTask (String imgTag) 
+	//			{
+	//				this.imgTag = imgTag;
+	//			}
+	//
+	//			protected Bitmap doInBackground(String... urls) 
+	//			{
+	//				String urldisplay = urls[0];
+	//				Bitmap mIcon11 = null;
+	//				try {
+	//					InputStream in = new java.net.URL(urldisplay).openStream();
+	//					mIcon11 = BitmapFactory.decodeStream(in);
+	//				} catch (Exception e) {
+	//					Log.e("Error", e.getMessage());
+	//					e.printStackTrace();
+	//				}
+	//				return mIcon11;
+	//			}
+	//
+	//			protected void onPostExecute(Bitmap result) 
+	//			{
+	//				if (imgTag.equals("FRONT")) {
+	//					Log.e("STEVEN CPD IMAGE FRONT", "get done");
+	//					cpdFrontImage = result;
+	//				} else if (imgTag.equals("BACK")) {
+	//					Log.e("STEVEN CPD IMAGE BACK", "get done");
+	//					cpdBackImage = result;
+	//				}
+	//			}
+	//		}		
+	//	}
 
 	private class SendLog extends AsyncTask<String, Void, JSONObject> 
 	{
@@ -1216,86 +1203,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 			}
 		}
 	}
-	/*
-	 * for facebook share
-	 */
-	public void publishAdBtn(View v) {
-		shareTried = true;
 
-		cpdFbShare.setEnabled(false);
-
-		Session session = Session.getActiveSession();
-		if (session == null || session.isClosed()) {
-			Log.i("STEVEN", "publishAdBtn if");
-			Session.openActiveSession(this, true, callback);
-		} else {
-			Log.i("STEVEN", "publishAdBtn else");
-			publishAd();
-		}
-	}
-
-	public void publishAd() {
-		Session session = Session.getActiveSession();
-		List<String> permissions = session.getPermissions();
-		if (!isSubsetOf(PERMISSIONS, permissions)) {
-			pendingPublishReauthorization = true;
-			Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(
-					this, PERMISSIONS);
-			session.requestNewPublishPermissions(newPermissionsRequest);
-			return;
-		} else {
-			Bundle postParams = new Bundle();
-			postParams.putString("link", link);
-			if(!name.equals("null"))
-				postParams.putString("name", name);
-			if(!caption.equals("null"))
-				postParams.putString("caption", caption);
-			if(!description.equals("null"))
-				postParams.putString("description", description);
-			if(!picture.equals("null"))
-				postParams.putString("picture", picture);
-
-			Request.Callback callback = new Request.Callback() {
-				public void onCompleted(Response response) {
-					Log.i("STEVEN", "callback response : " + response);
-					try{
-						JSONObject graphResponse = response.getGraphObject()
-								.getInnerJSONObject();
-						String postId = null;
-						try {
-							postId = graphResponse.getString("id");
-						} catch (JSONException e) {
-							Log.i("Facebook StudyTestFinish",
-									"JSON error " + e.getMessage());
-						}
-						FacebookRequestError error = response.getError();
-						if (error != null) {
-							popupText.setText(R.string.facebook_share_error);
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);					
-							Toast.makeText(getApplicationContext(),
-									error.getErrorMessage(), Toast.LENGTH_SHORT)
-									.show();
-						} else {
-							cpdFbShare.setEnabled(false);
-							popupText.setText(R.string.facebook_share_done);							
-							popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-							new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&facebook_id=" + postId);
-						}
-					}catch(Exception e){
-						popupText.setText(R.string.facebook_share_error);
-						popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);						
-					}
-				}
-			};
-
-			Request request = new Request(Session.getActiveSession(),
-					"me/feed", postParams, HttpMethod.POST, callback);
-
-			RequestAsyncTask task = new RequestAsyncTask(request);
-			task.execute();
-		}
-
-	}
 	private boolean isSubsetOf(Collection<String> subset,
 			Collection<String> superset) {
 		for (String string : subset) {
@@ -1306,33 +1214,9 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		return true;
 	}
 
-	private Session.StatusCallback callback = new Session.StatusCallback() {
-		@Override
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			onSessionStateChange(session, state, exception);
-		}
-	};
-
-	private void onSessionStateChange(Session session, SessionState state,
-			Exception exception) {
-		if (state.isOpened()) {
-			if(!pendingPublishReauthorization){
-				publishAd();
-			}
-			else{
-			}
-		}
-	}
 
 	//----button onClick----
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
-	}
 
 	public void onClickBack(View view)
 	{
@@ -1342,14 +1226,14 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		finish();
 	}
 
-//	public void showCouponPopView(View v)
-//	{
-//		FlurryAgent.logEvent("Coupon Get");
-//		new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&coupon_id=" + couponId);
-//		popupText.setText(R.string.study_finish_popup_text);
-//		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-//		popupWindow.showAsDropDown(null);
-//	}
+	//	public void showCouponPopView(View v)
+	//	{
+	//		FlurryAgent.logEvent("Coupon Get");
+	//		new SendLog().execute("http://todpop.co.kr/api/advertises/set_cpd_log.json?ad_id=" + adId + "&ad_type=" + adType + "&user_id=" + userId + "&act=2&coupon_id=" + couponId);
+	//		popupText.setText(R.string.study_finish_popup_text);
+	//		popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+	//		popupWindow.showAsDropDown(null);
+	//	}
 
 	public void closePopup(View v)
 	{
@@ -1359,7 +1243,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	public void showTestActivity(View view)
 	{		
 		if(tmpStage==1 || tmpStage==2 || tmpStage==4 || tmpStage==5 || tmpStage==7 || tmpStage==8) {
-//			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
+			//			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
 			Intent intent = new Intent(getApplicationContext(), StudyTestRenewal.class);
 			startActivity(intent);
 			finish();
@@ -1388,18 +1272,8 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	public void onRestart() {
 		super.onRestart();
 		Log.i("STEVEN", "onRestart()");
-		if(shareTried){
-			Session session = Session.getActiveSession();
-			if (session == null || session.isClosed()) {
-				Log.i("STEVEN", "publishAdBtn if");
-				Session.openActiveSession(this, true, callback);
-			} else {
-				Log.i("STEVEN", "publishAdBtn else");
-				publishAd();
-			}
-		}
 	}
-	
+
 	@Override
 	public void onDestroy()
 	{
