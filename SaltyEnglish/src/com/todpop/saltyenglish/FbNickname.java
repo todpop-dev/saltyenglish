@@ -16,18 +16,13 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import com.flurry.android.FlurryAgent;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.todpop.api.TypefaceActivity;
-
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +35,10 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.flurry.android.FlurryAgent;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.TypefaceActivity;
 
 public class FbNickname extends TypefaceActivity {
 

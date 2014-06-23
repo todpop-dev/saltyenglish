@@ -1,0 +1,273 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/weekly_1_bg_blue"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/v_test_renewal_light_box"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80ff0000"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="90" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/test_18_text_testtitle" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="650" >
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_best"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/weekly_1_img_bestscore" />
+
+            <ProgressBar
+                android:id="@+id/pb_test_renewal_progress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/weekly_shape_ring_back"
+                android:indeterminate="false"
+                android:progress="0"
+                android:progressDrawable="@drawable/weekly_shape_ring" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@id/iv_test_renewal_best"
+                android:layout_alignLeft="@id/iv_test_renewal_best"
+                android:layout_alignTop="@id/iv_test_renewal_best"
+                android:orientation="horizontal" >
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="135" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="116"
+                    android:gravity="center"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/tv_test_renewal_best"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#FEEEC3"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="개"
+                        android:textColor="#FEEEC3"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_o"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/weekly_1_img_o"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/weekly_1_img_x"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_test_renewal_eng"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="18dp"
+                android:textColor="#FEEEC3"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="0"
+                android:textColor="#FEEEC3"
+                android:textSize="8dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text="5"
+                android:textColor="#FEEEC3"
+                android:textSize="8dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_combo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="19dp"
+                android:layout_marginTop="77dp"
+                android:src="@drawable/weekly_1_img_combo"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/weekly_1_img_cloud" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="540"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:splitMotionEvents="false" >
+
+            <Button
+                android:id="@+id/btn_test_renewal_opt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/studytest_drawable_btn_select"
+                android:gravity="center"
+                android:textColor="#235F69"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_test_renewal_opt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/studytest_drawable_btn_select"
+                android:gravity="center"
+                android:textColor="#235F69"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_test_renewal_opt3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/studytest_drawable_btn_select"
+                android:gravity="center"
+                android:textColor="#235F69"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_test_renewal_opt4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/studytest_drawable_btn_select"
+                android:gravity="center"
+                android:textColor="#235F69"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_test_renewal_tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#7f000000"
+        android:clickable="true"
+        android:padding="16dp" >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/weekly_tutorial_img_all" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/weekly_btn_tutorial_confirm"
+            android:onClick="onClickTuto" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_test_renewal_timesup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#7f000000"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="338" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="942" >
+
+            <ImageView
+                android:id="@+id/iv_test_renewal_timseup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/weekly_1_img_timesup" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

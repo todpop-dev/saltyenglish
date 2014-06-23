@@ -1360,7 +1360,8 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	public void showTestActivity(View view)
 	{		
 		if(tmpStage==1 || tmpStage==2 || tmpStage==4 || tmpStage==5 || tmpStage==7 || tmpStage==8) {
-			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
+//			Intent intent = new Intent(getApplicationContext(), StudyTestA.class);
+			Intent intent = new Intent(getApplicationContext(), StudyTestRenewal.class);
 			startActivity(intent);
 			finish();
 		} else if(tmpStage==3 || tmpStage==6 || tmpStage==9) {
