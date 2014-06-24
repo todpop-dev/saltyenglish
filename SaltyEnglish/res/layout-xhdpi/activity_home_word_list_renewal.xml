@@ -1,0 +1,172 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_home_word_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/common_bg"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/rl_wordlist_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/common_bg_bluebar" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="17dp"
+            android:background="@drawable/wordlist_btn_back"
+            android:onClick="onClickBack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="내단어장"
+            android:textColor="#ffffff"
+            android:textSize="19dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="17dp"
+            android:background="@drawable/wordlist_btn_edit"
+            android:onClick="editWord" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_wordlist_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_img_bar"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp" >
+
+        <EditText
+            android:id="@+id/et_wordlist_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/wordbook_1_img_searchbar"
+            android:hint="찾고자 하는 단어를 입력해주세요"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingLeft="41dp"
+            android:paddingRight="17dp"
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/btn_wordlist_blind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:background="@drawable/wordlist_btn_blind"
+            android:onClick="reverseWord" />
+
+        <Button
+            android:id="@+id/btn_wordlist_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/wordlist_btn_test" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_wordlist_edit_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/common_img_bar"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:visibility="gone" >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="21dp"
+            android:layout_marginRight="6dp"
+            android:background="@drawable/wordlist_btn_add_group"
+            android:onClick="addNewGroup" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="새로운 그룹만들기"
+            android:textColor="#000000"
+            android:textSize="13dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/wordlist_btn_all_select"
+            android:onClick="allSelect" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1000" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/lv_wordlist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/ll_wordlist_edit_bar_bot"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:visibility="gone" >
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/wordlist_btn_export_words"
+                    android:onClick="exportWords" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/wordlist_btn_delete_words"
+                    android:onClick="deleteWords" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/home_word_list_id_middle"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="-25dp" />
+
+        <Button
+            android:id="@+id/btn_wordlist_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/home_word_list_id_middle"
+            android:background="@drawable/wordbook_4_image_card"
+            android:onClick="cardBlind" />
+    </RelativeLayout>
+
+</LinearLayout>

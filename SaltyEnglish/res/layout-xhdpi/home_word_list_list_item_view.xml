@@ -38,12 +38,11 @@
             android:textColor="#000000"
             android:textSize="17dp" />
         <Button 
-            android:id="@+id/ib_word_list_add_to_list"
+            android:id="@+id/home_word_list_id_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/homewordlist_drawable_btn_add"
             android:layout_gravity="center"
-            android:onClick="addToListBtnHandler"
             android:visibility="gone"
             />
     </LinearLayout>

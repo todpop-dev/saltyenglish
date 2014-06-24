@@ -173,6 +173,15 @@
             android:label="@string/title_activity_home_word_list"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.HomeWordListRenewal"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.todpop.saltyenglish.HomeWordListGroup"
+            android:screenOrientation="portrait" >
+        </activity>
         <activity
             android:name="com.todpop.saltyenglish.WordListTest"
             android:label="@string/title_activity_wordlist_test"

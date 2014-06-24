@@ -401,7 +401,7 @@ public class HomeWordList extends TypefaceActivity {
 				viewHolder.textKr = (TextView)v.findViewById(R.id.home_word_list_id_word2);
 				viewHolder.select = (CheckBox)v.findViewById(R.id.home_word_list_id_check);
 				if (type == 1) {
-					viewHolder.addToList = (Button)v.findViewById(R.id.ib_word_list_add_to_list);
+					viewHolder.addToList = (Button)v.findViewById(R.id.home_word_list_id_add);
 				}
 				setFont(viewHolder.textEn);
 				setFont(viewHolder.textKr);

@@ -348,7 +348,7 @@ public class StudyHome extends TypefaceActivity {
 
 	public void showHomeWordList(View v)
 	{
-		Intent intent = new Intent(getApplicationContext(), HomeWordList.class);
+		Intent intent = new Intent(getApplicationContext(), HomeWordListGroup.class);
 		startActivity(intent);
 	}
 
@@ -413,7 +413,7 @@ public class StudyHome extends TypefaceActivity {
 	public void onClickQuitLater(View v){
 		quitView.setVisibility(View.GONE);
 	}
-	
+
 	public void onClickQuitRightnow(View v){
 		finish();
 	}
@@ -459,6 +459,10 @@ public class StudyHome extends TypefaceActivity {
 	{
 		super.onDestroy();
 		mHelper.close();
+	}
+
+	public void closeCpxPopup(View v){
+		quitView.setVisibility(View.GONE);
 	}
 
 }
