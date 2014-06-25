@@ -65,8 +65,9 @@ public class HomeWordListRenewal extends TypefaceActivity {
 	private WordDBHelper dbHelper;
 	private EditText etSearchText;
 	private LinearLayout mainLayout;
-	
+
 	private GroupPopupItem selectedItem;
+	private int cntSelectedItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,19 +190,22 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			wordCursor.moveToNext();
 			arrGroups.add(new GroupPopupItem(groupCursor.getString(0), wordCursor.getInt(0)));
 		}
-		GroupPopupAdapter adapter = new GroupPopupAdapter(arrGroups);
+		final GroupPopupAdapter adapter = new GroupPopupAdapter(arrGroups);
 
 		lvPopupGroup.setAdapter(adapter);
-		
+
 		lvPopupGroup.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				view.setBackgroundResource(R.color.light_red);
+				if(selectedItem != null)
+					selectedItem.isSelected = false;
 				selectedItem = arrGroups.get(position);
+				selectedItem.isSelected = true;
+				adapter.notifyDataSetChanged();
 			}
 		});
-		
+
 		vPopupExport.findViewById(R.id.iv_wordlist_export_popup_cancel).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -212,7 +216,14 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			@Override
 			public void onClick(View v) {
 				SQLiteDatabase db = dbHelper.getWritableDatabase();
-//				db.execSQL("UPDATE mywords SET group_name='"+selectedItem.groupName+"' WHERE name='"++"'");
+				for ( HomeWordViewItem word : arrWords) {
+					if(word.isChecked){
+						db.execSQL("UPDATE mywords SET group_name='"+selectedItem.groupName+"' WHERE name='"+word.word1+"'");
+					}
+				}
+				initWords();
+				adapterWords.notifyDataSetChanged();
+				popupExport.dismiss();
 			}
 		});
 
@@ -234,9 +245,11 @@ public class HomeWordListRenewal extends TypefaceActivity {
 	class GroupPopupItem{
 		String groupName;
 		int cnt;
+		boolean isSelected;
 		public GroupPopupItem(String groupName,int cnt) {
 			this.groupName = groupName;
 			this.cnt = cnt;
+			this.isSelected = false;
 		}
 	}
 
@@ -276,6 +289,12 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			GroupPopupItem item = getItem(position);
 			viewHolder.groupName.setText(item.groupName);
 			viewHolder.cnt.setText("("+item.cnt+")");
+
+			if(item.isSelected){
+				convertView.setBackgroundResource(R.color.light_red);
+			}else{
+				convertView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+			}
 
 			return convertView;
 		}
