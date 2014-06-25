@@ -88,7 +88,6 @@ public class HomeWordListGroup extends TypefaceActivity {
 				Intent intent = new Intent(getApplicationContext(),HomeWordListRenewal.class);
 				intent.putExtra("groupName", cv.getAsString("name"));
 				startActivity(intent);
-				finish();
 			}
 		});
 		lvGroups.setOnItemClickListener(new OnItemClickListener() {
@@ -100,7 +99,6 @@ public class HomeWordListGroup extends TypefaceActivity {
 				Intent intent = new Intent(getApplicationContext(),HomeWordListRenewal.class);
 				intent.putExtra("groupName", item.getTitle());
 				startActivity(intent);
-				finish();
 			}
 		});
 
@@ -119,6 +117,11 @@ public class HomeWordListGroup extends TypefaceActivity {
 	public void addNewGroup(View v){
 		popupNewGroup.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 	}
+	
+	public void onClickBack(View v){
+		finish();
+	}
+	
 
 	class WordGroup{
 		private String title;

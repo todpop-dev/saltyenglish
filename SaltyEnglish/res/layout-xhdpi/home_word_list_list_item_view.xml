@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/wordbook_9_btn_checkbox_off"
+        android:background="@drawable/wordbook_3_btn_checkbox_normal"
         android:button="@drawable/popup_view_home_word_list_chegebox" />
 
     <LinearLayout

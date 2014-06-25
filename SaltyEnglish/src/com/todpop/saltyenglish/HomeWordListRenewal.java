@@ -17,9 +17,11 @@ import org.json.JSONObject;
 import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,6 +70,9 @@ public class HomeWordListRenewal extends TypefaceActivity {
 
 	private GroupPopupItem selectedItem;
 	private int cntSelectedItem;
+	private boolean isTestPopupShown;
+	private View vPopupTest;
+	private PopupWindow popupTest;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +152,51 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			arrWords.add(new HomeWordViewItem(item.word2, item.word1,true));
 		}
 		adapterWords.notifyDataSetChanged();
+	}
+
+	public void showTestPopup(View v){
+		vPopupTest = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popup_wordlist_test, null);
+		vPopupTest.findViewById(R.id.iv_wordlist_test_15).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				if (arrWords.size() >= 15) {
+					intent.putExtra("testListSize", 15);
+				} else {
+					intent.putExtra("testListSize", arrWords.size());
+				}
+				startActivity(intent);
+			}
+		});
+
+		vPopupTest.findViewById(R.id.iv_wordlist_test_30).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				if (arrWords.size() >= 30) {
+					intent.putExtra("testListSize", 30);
+				} else {
+					intent.putExtra("testListSize", arrWords.size());
+				}
+				startActivity(intent);
+			}
+		});
+
+		vPopupTest.findViewById(R.id.iv_wordlist_test_all).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				intent.putExtra("testListSize", arrWords.size());
+				startActivity(intent);
+			}
+		});
+
+
+		popupTest = new PopupWindow(vPopupTest, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+		popupTest.setOutsideTouchable(true);
+		popupTest.setBackgroundDrawable(new BitmapDrawable()) ;
+		popupTest.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
+		isTestPopupShown=true;
 	}
 
 	public void editWord(View v){
@@ -241,6 +291,21 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		initWords();
 		adapterWords.notifyDataSetChanged();
 	}
+	//	
+	//	public boolean onKeyDown(int keyCode, KeyEvent event) 
+	//	{
+	//		Log.e("BACKPRESSED","TT");
+	//		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	//			if(isTestPopupShown){
+	//				popupTest.dismiss();
+	//				isTestPopupShown=false;
+	//			}else{
+	//				finish();
+	//			}
+	//			return false;
+	//		}
+	//		return false;
+	//	}
 
 	class GroupPopupItem{
 		String groupName;
@@ -291,7 +356,7 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			viewHolder.cnt.setText("("+item.cnt+")");
 
 			if(item.isSelected){
-				convertView.setBackgroundResource(R.color.light_red);
+				convertView.setBackgroundResource(R.drawable.wordbook_5_img_popup_selectbox);
 			}else{
 				convertView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 			}
