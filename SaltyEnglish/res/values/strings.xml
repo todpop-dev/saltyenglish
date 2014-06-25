@@ -258,5 +258,6 @@
     <string name="str_btn_mock_test">레벨테스트 시</string>
     <string name="title_activity_study_test_mock_cnt">StudyTestMockCnt</string>
     <string name="title_activity_study_test_cookie">StudyTestCookie</string>
-
+	<string name="wordlist_search_no">한글자 이상 입력해주세요.</string>
+	<string name="wordlist_search_added">단어가 추가되었습니다.</string>
 </resources>

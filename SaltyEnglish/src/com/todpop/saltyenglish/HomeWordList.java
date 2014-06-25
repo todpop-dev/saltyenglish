@@ -695,7 +695,7 @@ public class HomeWordList extends TypefaceActivity {
 			new SerachWord().execute(url);
 		}
 		else
-			Toast.makeText(getApplicationContext(), "한글자 이상을 입력해주세요.", Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.wordlist_search_no), Toast.LENGTH_LONG).show();
 	}
 
 	// Change Word position
@@ -807,7 +807,7 @@ public class HomeWordList extends TypefaceActivity {
 		cv.put("mean", mean);
 		db.insert("mywords", null, cv);
 
-		Toast.makeText(getApplicationContext(), "단어가 단어장에 추가되었습니다.", Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), getResources().getString(R.string.wordlist_search_added), Toast.LENGTH_LONG).show();
 		searchText.setText("");
 		listArray.clear();
 
