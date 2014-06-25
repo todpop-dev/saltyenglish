@@ -33,19 +33,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      
         <activity
             android:name="com.todpop.saltyenglish.RgLogin"
             android:label="@string/title_activity_rg_login"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.RgRegisterTutorial"
             android:label="@string/title_activity_rg_register_tutorial"
             android:screenOrientation="portrait" >
         </activity>
-       
         <activity
             android:name="com.todpop.saltyenglish.StudyTestPause"
             android:label="@string/title_activity_lvtest_pause"
@@ -107,7 +104,6 @@
             android:label="@string/title_activity_study_test_result"
             android:screenOrientation="portrait" >
         </activity>
-       
         <activity
             android:name="com.todpop.saltyenglish.HomeMore"
             android:label="@string/title_activity_home_more"
@@ -173,7 +169,6 @@
             android:label="@string/title_activity_home_word_list"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.HomeWordListRenewal"
             android:screenOrientation="portrait" >
@@ -188,6 +183,10 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.todpop.saltyenglish.WordListTestRenewal"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.todpop.saltyenglish.WordListTestFinish"
             android:label="@string/title_activity_wordlist_test_finish"
             android:screenOrientation="portrait" >
@@ -197,8 +196,6 @@
             android:label="@string/title_activity_wordlist_test_result"
             android:screenOrientation="portrait" >
         </activity>
-
-       
         <activity
             android:name="com.todpop.saltyenglish.StudyTestResult"
             android:label="@string/title_activity_study_test_result"
@@ -227,7 +224,6 @@
             android:label="@string/title_activity_home_more_pronounce"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.PopupNotification"
             android:label="@string/title_activity_popup_notification"
@@ -304,7 +300,6 @@
             android:name="com.todpop.saltyenglish.StudyTestCookieResult"
             android:screenOrientation="portrait" >
         </activity>
-        
         <activity
             android:name="com.todpop.saltyenglish.StudyTestRenewal"
             android:screenOrientation="portrait" >

@@ -40,6 +40,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -48,6 +49,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.todpop.api.TypefaceActivity;
+import com.todpop.saltyenglish.HomeWordListGroup.WordGroup;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 public class HomeWordListRenewal extends TypefaceActivity {
@@ -73,6 +75,12 @@ public class HomeWordListRenewal extends TypefaceActivity {
 	private boolean isTestPopupShown;
 	private View vPopupTest;
 	private PopupWindow popupTest;
+	private PopupWindow popupNewGroup;
+	private View vPopupNewGroup;
+	private EditText etPopupNewGroupTitle;
+	private Object findViewById;
+	private ImageView ivPopupNewGroupCancel;
+	private ImageView ivPopupNewGroupSave;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +106,41 @@ public class HomeWordListRenewal extends TypefaceActivity {
 			}
 		});
 
+		initPopupView();
+		initListeners();
+
+		popupNewGroup = new PopupWindow(vPopupNewGroup, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
+
 		displaySize = new Point();
 		getWindowManager().getDefaultDisplay().getSize(displaySize);
 		initWords();
+	}
+
+	private void initPopupView() {
+		vPopupNewGroup = LayoutInflater.from(getApplicationContext()).inflate(R.layout.popup_wordlist_group_new, null);
+		etPopupNewGroupTitle = (EditText)vPopupNewGroup.findViewById(R.id.et_wordlist_group_new_title);
+		ivPopupNewGroupCancel = (ImageView)vPopupNewGroup.findViewById(R.id.iv_wordlist_group_cancel);
+		ivPopupNewGroupSave = (ImageView)vPopupNewGroup.findViewById(R.id.iv_wordlist_group_save);
+	}
+
+	private void initListeners() {
+		ivPopupNewGroupCancel.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				popupNewGroup.dismiss();
+			}
+		});
+
+		ivPopupNewGroupSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				ContentValues cv = new ContentValues();
+				cv.put("name", etPopupNewGroupTitle.getText().toString());
+				db.insert("word_groups", null, cv);
+				popupNewGroup.dismiss();
+			}
+		});
 
 	}
 
@@ -120,14 +160,27 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		groupName = getIntent().getExtras().getString("groupName");
 		arrWords = new ArrayList<HomeWordViewItem>();
 		dbHelper = new WordDBHelper(getApplicationContext());
+
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor cursor = db.rawQuery("SELECT name,mean FROM mywords WHERE group_name='"+groupName+"'",null);
+		String query=null;
+
+		if(groupName.equals("전체 단어")){
+			query = "SELECT name,mean FROM mywords"; 
+		}else{
+			query = "SELECT name,mean FROM mywords WHERE group_name='"+groupName+"'";	
+		}
+
+		Cursor cursor = db.rawQuery(query,null);
 		while(cursor.moveToNext()){
 			arrWords.add(new HomeWordViewItem(cursor.getString(0), cursor.getString(1), true));
 		}
 
 		adapterWords = new HomeWordViewAdapter(getApplicationContext(), R.layout.home_word_list_list_item_view, arrWords);
 		lvWordList.setAdapter(adapterWords);
+	}
+
+	public void addNewGroup(View v){
+		popupNewGroup.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 	}
 
 	public void cardBlind(View v) {
@@ -159,38 +212,46 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		vPopupTest.findViewById(R.id.iv_wordlist_test_15).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				Intent intent = new Intent(getApplicationContext(), WordListTestRenewal.class);
+				intent.putExtra("testGroupName", groupName);
 				if (arrWords.size() >= 15) {
 					intent.putExtra("testListSize", 15);
 				} else {
 					intent.putExtra("testListSize", arrWords.size());
 				}
+				popupTest.dismiss();
 				startActivity(intent);
+				finish();
 			}
 		});
 
 		vPopupTest.findViewById(R.id.iv_wordlist_test_30).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				Intent intent = new Intent(getApplicationContext(), WordListTestRenewal.class);
+				intent.putExtra("testGroupName", groupName);
 				if (arrWords.size() >= 30) {
 					intent.putExtra("testListSize", 30);
 				} else {
 					intent.putExtra("testListSize", arrWords.size());
 				}
+				popupTest.dismiss();
 				startActivity(intent);
+				finish();
 			}
 		});
 
 		vPopupTest.findViewById(R.id.iv_wordlist_test_all).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getApplicationContext(), WordListTest.class);
+				Intent intent = new Intent(getApplicationContext(), WordListTestRenewal.class);
+				intent.putExtra("testGroupName", groupName);
 				intent.putExtra("testListSize", arrWords.size());
+				popupTest.dismiss();
 				startActivity(intent);
+				finish();
 			}
 		});
-
 
 		popupTest = new PopupWindow(vPopupTest, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupTest.setOutsideTouchable(true);
@@ -265,12 +326,24 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		vPopupExport.findViewById(R.id.iv_wordlist_export_popup_save).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ArrayList<HomeWordViewItem> arrWordsClone = (ArrayList<HomeWordViewItem>) arrWords.clone();
+
 				SQLiteDatabase db = dbHelper.getWritableDatabase();
-				for ( HomeWordViewItem word : arrWords) {
+				for ( HomeWordViewItem word : arrWordsClone) {
 					if(word.isChecked){
 						db.execSQL("UPDATE mywords SET group_name='"+selectedItem.groupName+"' WHERE name='"+word.word1+"'");
+
+						for(int i=0;i<arrWords.size();i++){
+							HomeWordViewItem item = arrWords.get(i);
+							if(item.word1.equals(word.word1)){
+								arrWords.remove(i);
+								break;
+							}
+						}
+
 					}
 				}
+
 				initWords();
 				adapterWords.notifyDataSetChanged();
 				popupExport.dismiss();
@@ -291,21 +364,6 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		initWords();
 		adapterWords.notifyDataSetChanged();
 	}
-	//	
-	//	public boolean onKeyDown(int keyCode, KeyEvent event) 
-	//	{
-	//		Log.e("BACKPRESSED","TT");
-	//		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	//			if(isTestPopupShown){
-	//				popupTest.dismiss();
-	//				isTestPopupShown=false;
-	//			}else{
-	//				finish();
-	//			}
-	//			return false;
-	//		}
-	//		return false;
-	//	}
 
 	class GroupPopupItem{
 		String groupName;
@@ -557,4 +615,6 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		cardAni.setDuration(500);
 		cardAni.start();
 	}
+
+
 }

@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,20 +42,18 @@ public class HomeWordListGroup extends TypefaceActivity {
 	private EditText etPopupNewGroupTitle;
 	private ImageView ivPopupNewGroupCancel;
 	private ImageView ivPopupNewGroupSave;
+	private boolean isEditMode;
+	private Button btnEditbarDel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_word_list_group);
 
+		btnEditbarDel= (Button)findViewById(R.id.btn_wordlist_group_del);
+
 		dbHelper = new WordDBHelper(getApplicationContext());
-		arrGroups = new ArrayList<HomeWordListGroup.WordGroup>();
 		lvGroups = (ListView)findViewById(R.id.lv_wordlist_group);
-
-		initGroupList();
-
-		adapter = new WordGroupAdapter(arrGroups);
-		lvGroups.setAdapter(adapter);
 
 		mainLayout = (LinearLayout)findViewById(R.id.ll_home_word_list_group);
 
@@ -97,7 +99,7 @@ public class HomeWordListGroup extends TypefaceActivity {
 					int position, long id) {
 				WordGroup item = arrGroups.get(position);
 				Intent intent = new Intent(getApplicationContext(),HomeWordListRenewal.class);
-				intent.putExtra("groupName", item.getTitle());
+				intent.putExtra("groupName", item.title);
 				startActivity(intent);
 			}
 		});
@@ -105,50 +107,75 @@ public class HomeWordListGroup extends TypefaceActivity {
 	}
 
 	private void initGroupList() {
+		arrGroups = new ArrayList<HomeWordListGroup.WordGroup>();
+
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor allCursor = db.rawQuery("SELECT COUNT(*) FROM mywords", null);
+		allCursor.moveToNext();
+		arrGroups.add(new WordGroup("전체 단어", allCursor.getInt(0)));
+
 		Cursor groupCursor = db.rawQuery("SELECT name FROM word_groups", null);
 		while(groupCursor.moveToNext()){
 			Cursor wordCursor = db.rawQuery("SELECT COUNT(*) FROM mywords WHERE group_name='"+groupCursor.getString(0)+"'", null); 
 			wordCursor.moveToNext();
 			arrGroups.add(new WordGroup(groupCursor.getString(0), wordCursor.getInt(0)));
 		}
+
+		adapter = new WordGroupAdapter(arrGroups);
+		lvGroups.setAdapter(adapter);
 	}
 
 	public void addNewGroup(View v){
 		popupNewGroup.showAtLocation(mainLayout, Gravity.CENTER, 0, 0);
 	}
-	
+
+	public void editGroup(View v){
+		isEditMode = !isEditMode;
+		adapter.notifyDataSetChanged();
+		if(isEditMode){
+			btnEditbarDel.setVisibility(View.VISIBLE);
+		}else{
+			btnEditbarDel.setVisibility(View.GONE);
+		}
+	}
+	public void delGroup(View v){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		for(WordGroup group : arrGroups){
+			if(group.isChecked){
+				String query = "DELETE FROM word_groups WHERE name='"+group.title+"'";	
+				db.execSQL(query);
+
+				query = "DELETE FROM mywords WHERE group_name='"+group.title+"'";
+				db.execSQL(query);
+			}
+		}
+		initGroupList();
+		adapter.notifyDataSetChanged();
+	}
+
 	public void onClickBack(View v){
 		finish();
 	}
-	
 
 	class WordGroup{
-		private String title;
-		private int cnt;
+		String title;
+		int cnt;
+		boolean isChecked;
 		public WordGroup(String title, int cnt){
-			this.setTitle(title);
-			this.setCnt(cnt);
-		}
-		public String getTitle() {
-			return title;
-		}
-		public void setTitle(String title) {
 			this.title = title;
-		}
-		public int getCnt() {
-			return cnt;
-		}
-		public void setCnt(int cnt) {
 			this.cnt = cnt;
+			this.isChecked = false;
 		}
 	}
 
 	class WordGroupAdapter extends BaseAdapter{
 
 		class ViewHolder{
+			CheckBox delChk;
 			TextView title;
 			TextView cnt;
+			ImageView icon;
+			ImageView arrow;
 		}
 
 		ArrayList<WordGroup> arrGroups;
@@ -180,16 +207,45 @@ public class HomeWordListGroup extends TypefaceActivity {
 				convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.wordlist_group_item, null);
 				holder.title = (TextView) convertView.findViewById(R.id.tv_wordlist_group_item_title);
 				holder.cnt = (TextView) convertView.findViewById(R.id.tv_wordlist_group_item_cnt);
+				holder.delChk = (CheckBox) convertView.findViewById(R.id.cb_wordlist_group_item_del);
+				holder.icon = (ImageView) convertView.findViewById(R.id.iv_wordlist_group_item_book);
+				holder.arrow = (ImageView) convertView.findViewById(R.id.iv_wordlist_group_item_arrow);
 				convertView.setTag(holder);
 			}else{
 				holder = (ViewHolder) convertView.getTag();
 			}
-			WordGroup item = (WordGroup) getItem(position);
+			final WordGroup item = (WordGroup) getItem(position);
 			holder.title.setText(item.title);
 			holder.cnt.setText("("+item.cnt+")");
 
+			if(item.title.equals("전체 단어")){
+				holder.icon.setBackgroundResource(R.drawable.wordbook_1_img_basicgroup);
+			}
+
+			if(isEditMode){
+				holder.arrow.setVisibility(View.GONE);
+				if(!item.title.equals("전체 단어")){
+					holder.delChk.setVisibility(View.VISIBLE);
+					holder.delChk.setChecked(item.isChecked);
+					holder.delChk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+							item.isChecked = isChecked;
+						}
+					});
+				}
+			}else{
+				holder.delChk.setVisibility(View.GONE);
+				holder.arrow.setVisibility(View.VISIBLE);
+			}
 			return convertView;
 		}
 
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		initGroupList();
 	}
 }

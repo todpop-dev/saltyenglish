@@ -209,7 +209,7 @@ public class WordListTest extends TypefaceActivity {
 					stopTimeCount();
 					isTestFinish = true;
 					imageTimeBlindAni.cancel();
-					Intent intent = new Intent(getApplicationContext(), WordListTestFinish.class);
+					Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
 					startActivity(intent);
 					finish();
 				}
@@ -496,15 +496,12 @@ public class WordListTest extends TypefaceActivity {
 			} else if (wordCount == wordListSize) {
 				stopTimeCount();
 				isTestFinish = true;
-				Intent intent = new Intent(getApplicationContext(), WordListTestFinish.class);
+				Intent intent = new Intent(getApplicationContext(), WordListTestResult.class);
 				startActivity(intent);
 				finish();
 			}
 		}
 	}
-	
-
-	
 	
 	private void setupTestWords(int count)
 	{

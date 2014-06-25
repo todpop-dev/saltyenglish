@@ -51,6 +51,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -130,13 +131,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	ImageView lowBanner;
 
 	// CPD image view
-	private static ImageView cpdView;
-	private static Button cpdCoupon;
-	private static Button cpdFbShare;
-
-	private static RelativeLayout fbShareLayout;
-	private static TextView fbShareReward;
-
 	SharedPreferences studyInfo;
 
 	static ArrayList<View> rootViewArr = new ArrayList<View>();
@@ -467,46 +461,7 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 			} else {
 				rootView = inflater.inflate(R.layout.fragment_study_begin_finish, container, false);
-				cpdView = (ImageView)rootView.findViewById(R.id.studyfinish_id_pop);
-				cpdCoupon = (Button)rootView.findViewById(R.id.studyfinish_id_coupon);
-				cpdFbShare = (Button)rootView.findViewById(R.id.studyfinish_id_facebook_share);
-				fbShareLayout = (RelativeLayout)rootView.findViewById(R.id.studyfinish_fb_share_layout);
-				fbShareReward = (TextView)rootView.findViewById(R.id.studyfinish_fb_share_reward);
-
-				setFont(fbShareReward);
-
-				cpdView.setOnClickListener(new CPDFlipListener());
-				cpdView.setImageBitmap(cpdFrontImage);
-				if(adType == 102){
-					FlurryAgent.logEvent("CPD (Coupon)");
-					cpdCoupon.setVisibility(View.VISIBLE);
-				}
-				else if(adType == 103){
-					FlurryAgent.logEvent("CPD (Facebook)");
-					cpdFbShare.setVisibility(View.VISIBLE);
-					fbShareLayout.setVisibility(View.VISIBLE);
-					if(sharedHistory.equals("0") || shareTried){
-						cpdFbShare.setEnabled(false);
-						fbShareReward.setText(R.string.facebook_share_history);
-					}
-					else{
-						if(reward.equals("0") || reward.equals("null")){
-							fbShareReward.setText(point + " point");
-						}
-						else{
-							fbShareReward.setText(reward + getResources().getString(R.string.testname8));
-						}
-					}
-				}
-				else{
-					FlurryAgent.logEvent("CPD (none)");
-				}
-
-				if (cpdFrontImage == null || cpdBackImage == null) {
-					cpdView.setVisibility(View.INVISIBLE);
-				} else {
-					cpdView.setVisibility(View.VISIBLE);
-				}
+				
 			}
 
 			// Add Image, Text to ListArray
@@ -585,41 +540,48 @@ public class StudyBegin extends TypefaceFragmentActivity {
 				}
 			}
 		} 
+	
+	}
+	
+	class ReviewListItem{
+		String word;
+		String name;
+	}
+	
+	class ReviewListAdapter extends BaseAdapter{
+		class ViewHolder{
+			TextView tvWord;
+			TextView tvName;
+		}
+		
+		ArrayList<ReviewListItem> arrItems;
+		
+		public ReviewListAdapter(ArrayList<ReviewListItem> arrItems){
+			this.arrItems = arrItems;
+		}
+		
+		@Override
+		public int getCount() {
+			return arrItems.size();
+		}
 
-		class CPDFlipListener implements OnClickListener 
-		{ 
-			private boolean isCardBack = false;
-			public void onClick(View v)
-			{
+		@Override
+		public Object getItem(int position) {
+			return arrItems.get(position);
+		}
 
-				FlurryAgent.logEvent("CPD Image Flipped");
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 
-				animation = AnimationUtils.loadAnimation( getActivity(), R.drawable.studytestc_drawable_flip_card_back_scale); 
-				animation.setAnimationListener(new Animation.AnimationListener() 
-				{ 
-					@Override 
-					public void onAnimationStart(Animation animation) { 
-					} 
-					@Override 
-					public void onAnimationRepeat(Animation animation) { 
-					} 
-					@Override 
-					public void onAnimationEnd(Animation animation) { 	
-						if (isCardBack == false) {
-							cpdView.setImageBitmap(cpdBackImage);
-							isCardBack = true;
-						} else {
-							cpdView.setImageBitmap(cpdFrontImage);
-							isCardBack = false;
-						}
-
-						animation = AnimationUtils.loadAnimation( getActivity(), R.drawable.studytestc_drawable_flip_card_front_scale); 
-						cpdView.startAnimation(animation);
-					}
-				});
-				cpdView.startAnimation(animation);
-			} 
-		} 
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 
 
