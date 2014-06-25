@@ -374,6 +374,11 @@
             android:name="com.todpop.saltyenglish.StudyTestCookieResult"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <activity
+            android:name="com.todpop.saltyenglish.StudyTestRenewal"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
