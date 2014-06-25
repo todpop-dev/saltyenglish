@@ -1,29 +1,26 @@
 package com.todpop.saltyenglish;
 
-
-
-
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
-import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,501 +31,462 @@ import com.todpop.saltyenglish.db.WordDBHelper;
 
 
 public class StudyTestMock extends TypefaceActivity {
-	
-	//test word
-	TextView enWordText;
-	//select word button
-	Button select1;
-	Button select2;
-	Button select3;
-	Button select4;
-	//page number
-	TextView pageNumber;
-	
-	// Total Stage
-	int tmpStageAccumulated;
-	
- 	// Database
- 	WordDBHelper mHelper;
-	
-	//english word
-//	ArrayList<String> enWords;
-//	int[] meanWords;
-//	int[] krWords1;
-//	int[] krWords2;
-//	int[] krWords3;
- 	
- 	static int cntMaxWords;
-	
-	ArrayList<String> englishWords;
-	ArrayList<String> optionOne;
-	ArrayList<String> optionTwo;
-	ArrayList<String> optionThree;
-	ArrayList<String> optionFour;
-	String finalAnswerForRequest = "";
-	static int correctOption;
-	
- 	// Manage Pause case
- 	static boolean isRunning;
- 	static boolean isTestFinish;
- 	
- 	// Pause View
- 	RelativeLayout pauseView;
-	
-	//check word count
-	int wordCount=0;
-	
-	//blind and blind animation
-	ImageView blindView;
-	BlindAnim imageTimeBlindAni;
-	TranslateAnimation.AnimationListener MyAnimationListener;
-	
-	//crocodile Time animation
-	ImageView crocodileTime;
-	AnimationDrawable crocodileTimeAni;
-	AnimationDrawable crocodileCurrent;
-	Drawable currentFrame, checkFrame;
-	boolean crocoPause = false;
-	
-	// System pivot time
-	int pivotTime = 0;
-	CountDownTimer progressTimer;
-	private long timeSpent = 0;
-	private long startTime = 10000;
-	private boolean isPause = false;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_study_test_mock);
-		FlurryAgent.logEvent("Study Test");
-		//test word
 
-		pageNumber = (TextView)findViewById(R.id.study_testmock_id_view_number);
-		enWordText = (TextView)findViewById(R.id.study_testmock_id_enword);
+	View redBack;
+
+	TextView qCnt;
+	
+	TextView bestScore;
+
+	TextView english;
+
+	//answer Buttons
+	Button option1;
+	Button option2;
+	Button option3;
+	Button option4;
+
+	ImageView timeImg;
+	Animation timeAni;
+
+	ProgressBar circularProgress; 
+
+	ImageView correctImg;
+	ImageView incorrectImg;
+
+	ImageView comboImg;
+	Animation comboAni;
+
+	TotalTimer timer;
+	ProgressTimer progressTimer;
+
+	private static long TIME = 10000;
+
+	private ArrayList<Word> wordList;
+
+	private static int qTotal;
+	private int qCount = -1;
+	private int cntCorrect = 0;
+	private int cntSolvedAnswer= 0;
+
+	private int comboCount = -1;
+
+	private String comboList = "0";
+	private String lastHigh;
+
+	private static Runnable resetWord;
+	private static Runnable redTime;
+	private static Runnable goNext;
+
+	LinearLayout timesUp;
+	ImageView timesUpImg;
+	Animation timesUpAni;
+
+	WordDBHelper mHelper;
+	SQLiteDatabase db;
+
+	int tmpStageAccumulated;
+
+	private String finalAnswerForRequest = "";
+
+
+	private class Word{
+		public Word(String word, String mean, String incorrect1, String incorrect2, String incorrect3){
+			this.word = word;
+			this.mean = mean;
+			this.incorrect1 = incorrect1;
+			this.incorrect2 = incorrect2;
+			this.incorrect3 = incorrect3;
+		}
+		public String getWord(){
+			return word;
+		}
+		public String getMean(){
+			return mean;
+		}
+		public String getIncorrect1(){
+			return incorrect1;
+		}
+		public String getIncorrect2(){
+			return incorrect2;
+		}
+		public String getIncorrect3(){
+			return incorrect3;
+		}
+
+		private String word;
+		private String mean;
+		private String incorrect1;
+		private String incorrect2;
+		private String incorrect3;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_study_test_renewal);
+
+		redBack = (View)findViewById(R.id.v_test_renewal_light_box);
 		
-		//select word button
-		select1 = (Button)findViewById(R.id.study_testmock_id_select1);
-		select2 = (Button)findViewById(R.id.study_testmock_id_select2);
-		select3 = (Button)findViewById(R.id.study_testmock_id_select3);
-		select4 = (Button)findViewById(R.id.study_testmock_id_select4);
-		select1.setOnClickListener(new ButtonListener());
-		select2.setOnClickListener(new ButtonListener());
-		select3.setOnClickListener(new ButtonListener());
-		select4.setOnClickListener(new ButtonListener());
+		qCnt = (TextView)findViewById(R.id.tv_test_renewal_cnt);
+
+		bestScore = (TextView)findViewById(R.id.tv_test_renewal_best);
+
+		english = (TextView)findViewById(R.id.tv_test_renewal_eng);
+
+		option1 = (Button)findViewById(R.id.btn_test_renewal_opt1);
+		option2 = (Button)findViewById(R.id.btn_test_renewal_opt2);
+		option3 = (Button)findViewById(R.id.btn_test_renewal_opt3);
+		option4 = (Button)findViewById(R.id.btn_test_renewal_opt4);
+
+		option1.setOnClickListener(new ButtonListener());
+		option2.setOnClickListener(new ButtonListener());
+		option3.setOnClickListener(new ButtonListener());
+		option4.setOnClickListener(new ButtonListener());
+
+		timeImg = (ImageView)findViewById(R.id.iv_test_renewal_time);
+		timeAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_time_ani);
+		timeImg.setAnimation(timeAni);
+
+		circularProgress = (ProgressBar)findViewById(R.id.pb_test_renewal_progress);
+		circularProgress.setMax((int)TIME/10);
+
+		correctImg = (ImageView)findViewById(R.id.iv_test_renewal_o);
+		incorrectImg = (ImageView)findViewById(R.id.iv_test_renewal_x);
+
+		comboImg = (ImageView)findViewById(R.id.iv_test_renewal_combo);
+		comboAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_combo_ani);
+		comboImg.setAnimation(comboAni);
+
+		timesUp = (LinearLayout)findViewById(R.id.ll_test_renewal_timesup);
+		timesUpImg = (ImageView)findViewById(R.id.iv_test_renewal_timseup);
+		timesUpAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_timesup_ani);
+		timesUpImg.setAnimation(timesUpAni);
 		
-		// For correct answer comparison 
-		select1.setTag(1);
-		select2.setTag(2);
-		select3.setTag(3);
-		select4.setTag(4);
-		
-		// Database initiation
+
+		wordList = new ArrayList<Word>();
+
 		mHelper = new WordDBHelper(this);
-		
-		// ArrayLists to hold words
-		englishWords = new ArrayList<String>();
-		optionOne = new ArrayList<String>();
-		optionTwo = new ArrayList<String>();
-		optionThree = new ArrayList<String>();
-		optionFour = new ArrayList<String>();
-		
+
+		resetWord = new Runnable(){
+			@Override
+			public void run() {	
+				correctImg.setVisibility(View.INVISIBLE);
+				incorrectImg.setVisibility(View.INVISIBLE);
+				setWord();
+			}
+		};
+		redTime = new Runnable(){
+			@Override
+			public void run() {		
+				redBack.setVisibility(View.INVISIBLE);
+			}
+		};
+		goNext = new Runnable(){
+			@Override
+			public void run() {		
+				goNextActivity();
+			}
+		};
+
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
 		
-		//page number
-		
-//		pageNumber.setBackgroundResource(R.drawable.test_9_image_number_1);
-		
-		
-		// Relative Layout for pausing
-		pauseView = (RelativeLayout)findViewById(R.id.study_testmock_id_pause_layout);
-		pauseView.setVisibility(View.GONE);
-		
-		isRunning = true;
-		isTestFinish = false;
-		
-		// Get Pivot Time
-		SharedPreferences prefs = getSharedPreferences("rgInfo",0);
-		pivotTime = prefs.getInt("pivotTime", 0);
-		
-		//set first test word
-		setupTestWords(0);
+	}
 
-		pageNumber.setText(1+" / "+ cntMaxWords);
-		//crocodile Time animation
-		
-		crocodileTime = (ImageView) findViewById(R.id.study_testmock_id_crocodile_time);
-		crocodileTime.setBackgroundResource(R.drawable.lvtest_begin_drawable_time_img);
-		crocodileTimeAni = (AnimationDrawable)crocodileTime.getBackground();
-		//blind time animation
-		blindView = (ImageView)findViewById(R.id.study_testmock_id_image_timeblind);
-		imageTimeBlindAni = new BlindAnim(
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 1.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f,
-				TranslateAnimation.RELATIVE_TO_PARENT, 0.0f
-				);
-		
-		imageTimeBlindAni.setDuration(10000);
-		imageTimeBlindAni.setRepeatCount(cntMaxWords);
-		
-		MyAnimationListener = new Animation.AnimationListener() {
-			public void onAnimationStart(Animation animation) {
-				// TODO Auto-generated method stub			
-			}		
-			public void onAnimationRepeat(Animation animation) {
-				// english word set next count
-				wordCount++;
-				Log.e("wordCount / cntMaxWords",wordCount+" / "+cntMaxWords);
-				
-				if(wordCount<cntMaxWords) {
-					crocodileTimeAni.stop();
-					stopTimeCount();				
-					crocodileNewStart();
-					if(wordCount<=cntMaxWords)
-						pageNumber.setText((wordCount + 1)+" / "+ cntMaxWords);
-					setupTestWords(wordCount);
-					if (wordCount>1) {
-						finalAnswerForRequest+="0";
-					}
-					startTime = 10000;
-					startTimeCount(startTime);
-				} else {
-					stopTimeCount();
-					isTestFinish = true;
-					imageTimeBlindAni.cancel();
-					Intent intent = new Intent(getApplicationContext(), StudyTestMockFinish.class);
-					startActivity(intent);
-					finish();
-				}
-			}		
-			
-			public void onAnimationEnd(Animation animation) 
-			{
-				
-			}
-		};
-		
-		imageTimeBlindAni.setAnimationListener(MyAnimationListener);
-		blindView.setAnimation(imageTimeBlindAni);
-		crocodileTimeAni.start();
-		
-		startTimeCount(10000);
-
-	}
-	
-	private class BlindAnim extends TranslateAnimation {
-		
-		public BlindAnim(int fromXType, float fromXValue, int toXType,
-				float toXValue, int fromYType, float fromYValue, int toYType,
-				float toYValue) {
-			super(fromXType, fromXValue, toXType, toXValue, fromYType, fromYValue, toYType,
-					toYValue);
-		}
-
-		private long mPauseTime =0;
-		private boolean mPaused = false;
-		@Override
-		public boolean getTransformation(long currentTime,
-				Transformation outTransformation) {
-			if(mPaused && mPauseTime == 0) {
-				mPauseTime = currentTime-getStartTime();
-			}
-			if(mPaused) {
-				setStartTime(currentTime-mPauseTime);
-			}
-			return super.getTransformation(currentTime, outTransformation);
-		}
-		
-		public void pause() {
-			mPauseTime = 0;
-			mPaused = true;
-		}
-		
-		public void resume() {
-			mPaused = false;
-		}
-	}
-	
-	@SuppressLint("NewApi")
-	public void crocodilePause() {
-		crocoPause = true;
-		currentFrame = crocodileTimeAni.getCurrent();
-		crocodileTimeAni.stop();
-		crocodileCurrent = new AnimationDrawable();
-		boolean flag = false;
-		int sync = 1;
-		for(int i =0; i < crocodileTimeAni.getNumberOfFrames();i++) {
-			checkFrame = crocodileTimeAni.getFrame(i);
-			
-			if(checkFrame == currentFrame || flag) {
-				flag = true;
-				crocodileCurrent.addFrame(checkFrame, 422);
-			}
-		}
-		crocodileTimeAni = crocodileCurrent;
-		int sdk = android.os.Build.VERSION.SDK_INT;
-		if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-			crocodileTime.setBackgroundDrawable(crocodileTimeAni);
-		} else {
-			crocodileTime.setBackground(crocodileTimeAni);
-		}
-	}
-	
-	public void crocodileNewStart() {
-		crocoPause = false;
-		crocodileTime.setBackgroundResource(R.drawable.lvtest_begin_drawable_time_img);
-		crocodileTimeAni = (AnimationDrawable)crocodileTime.getBackground();
-		crocodileTimeAni.start();
-	}
-	
-	public void crocodileResume() {
-		crocoPause = false;
-		crocodileTimeAni.start();
-	}
-	
-	@Override
-	public void onPause()
-	{
-		super.onPause();
-		isRunning = false;
-		if (isTestFinish == false) {
-			pauseView.setVisibility(View.VISIBLE);
-			imageTimeBlindAni.pause();
-			if(!isPause) {
-				stopTimeCount();
-			}
-			if(!crocoPause) {
-				crocodilePause();
-			}
-		}
-	}
-	
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		if(isPause) {
-			startTimeCount(startTime);
-		}
-		if(crocoPause) {
-			crocodileResume();
-		}
-	}
-	
-	public void pauseTestCB(View v) 
-	{
-		pauseView.setVisibility(View.VISIBLE);
-		isRunning = false;
-		imageTimeBlindAni.pause();
-		crocodilePause();
-		stopTimeCount();
-	}
-	
-	// Pause view call back
-	public void pauseViewContinueTest(View v)
-	{
-		pauseView.setVisibility(View.GONE);
-		isRunning = true;
-		imageTimeBlindAni.resume();
-		crocodileResume();
-		startTimeCount(startTime);
-	}
-	
-	public void pauseViewFinishTest(View v) 
-	{
-		Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-		startActivity(intent);
-		finish();
-	}
-	
-	public void startTimeCount(long start) {
-		Log.d("start time----", Long.toString(start));
-		progressTimer =  new CountDownTimer(start, 1000) {
-			 public void onTick(long millisUntilFinished) {
-				 startTime = millisUntilFinished;
-				 timeSpent = (10000-(int)millisUntilFinished)/1000;
-				 Log.d("time spent --- xxxx --- ", Long.toString(timeSpent));
-			 }
-			 
-			 public void onFinish() {
-	
-			 }
-		};
-		isPause = false;
-		progressTimer.start();
-	}
-	public void stopTimeCount() {
-		isPause = true;
-		progressTimer.cancel();
-	}
-	
-	
 	private void getTestWords()
 	{
 		SQLiteDatabase db = mHelper.getReadableDatabase();
-		//Cursor cursor = db.query("dic", new String[] {"name",  "mean"}, null, null, null, null, null);
 		try {
 			Cursor cursor = db.rawQuery("SELECT name,  mean FROM dic WHERE stage=" + tmpStageAccumulated + " ORDER BY RANDOM();", null);
-			
+			qTotal = cursor.getCount();
 			if (cursor.getCount()>0) {
-				cntMaxWords = cursor.getCount();
-				Log.e("cntMaxWords",cntMaxWords+"");
 				while(cursor.moveToNext()) {
-					englishWords.add(cursor.getString(0));
-					optionOne.add(cursor.getString(1));
-					
+					String word = cursor.getString(0);
+					String mean = cursor.getString(1);
+
 					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
 					otherCursor.moveToNext();
-					optionTwo.add(otherCursor.getString(0));
+					String incor1 = otherCursor.getString(0);
 					otherCursor.moveToNext();
-					optionThree.add(otherCursor.getString(0));
+					String incor2 = otherCursor.getString(0);
 					otherCursor.moveToNext();
-					optionFour.add(otherCursor.getString(0));
+					String incor3 = otherCursor.getString(0);
+
+					wordList.add(new Word(word, mean, incor1, incor2, incor3));
 				}
 			}
+
+			setWord();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
 
 
+	@Override
+	public void onResume(){
+		super.onResume();
+
+		//if(timeLeft != 0){
+//			timer = new TotalTimer(timeLeft, 1000);
+//			progressTimer = new ProgressTimer(timeLeft, 10);
+			timer = new TotalTimer(TIME, 1000);
+			progressTimer = new ProgressTimer(TIME, 10);
+			timer.start();
+			progressTimer.start();
+		/*} else{
+			timer = new TotalTimer(TIME, 1000);
+			progressTimer = new ProgressTimer(TIME, 10);
+		}*/
+
+	}
+	@Override
+	public void onPause(){
+		super.onPause();
+		timer.cancel();
+		progressTimer.cancel();
+	}
+	private void setWord(){
+		qCount++;
+		qCnt.setText((qCount+1) + "/" + qTotal);
+		if(qTotal > qCount){
+			english.setText(wordList.get(qCount).getWord());
+
+			int ran = new Random().nextInt(4);
+
+			switch(ran){
+			case 0:
+				option1.setText(wordList.get(qCount).getMean());
+				option2.setText(wordList.get(qCount).getIncorrect1());
+				option3.setText(wordList.get(qCount).getIncorrect2());
+				option4.setText(wordList.get(qCount).getIncorrect3());
+				option1.setTag(true);
+				option2.setTag(false);
+				option3.setTag(false);
+				option4.setTag(false);
+				break;
+			case 1:
+				option1.setText(wordList.get(qCount).getIncorrect1());
+				option2.setText(wordList.get(qCount).getMean());
+				option3.setText(wordList.get(qCount).getIncorrect2());
+				option4.setText(wordList.get(qCount).getIncorrect3());
+				option1.setTag(false);
+				option2.setTag(true);
+				option3.setTag(false);
+				option4.setTag(false);
+				break;
+			case 2:
+				option1.setText(wordList.get(qCount).getIncorrect1());
+				option2.setText(wordList.get(qCount).getIncorrect2());
+				option3.setText(wordList.get(qCount).getMean());
+				option4.setText(wordList.get(qCount).getIncorrect3());
+				option1.setTag(false);
+				option2.setTag(false);
+				option3.setTag(true);
+				option4.setTag(false);
+				break;
+			case 3:
+				option1.setText(wordList.get(qCount).getIncorrect1());
+				option2.setText(wordList.get(qCount).getIncorrect2());
+				option3.setText(wordList.get(qCount).getIncorrect3());
+				option4.setText(wordList.get(qCount).getMean());
+				option1.setTag(false);
+				option2.setTag(false);
+				option3.setTag(false);
+				option4.setTag(true);
+				break;
+			}
+			option1.setClickable(true);
+			option2.setClickable(true);
+			option3.setClickable(true);
+			option4.setClickable(true);
+		} else{	//finish test
+			if(cntSolvedAnswer >= 10){
+				goNextActivity();
+				//new Handler().postDelayed(goNext, 2500);
+			}
+		}
 	}
 
 	private class ButtonListener implements OnClickListener{
-		public void onClick(View v)
-		{
-			//wordCount++;
-			stopTimeCount();
+		@Override
+		public void onClick(View v) {
+			disableAndStop();
+			cntSolvedAnswer++;
+			db = mHelper.getWritableDatabase();
+			if((Boolean)v.getTag()){ //correct
+				correct();
+			}else{
+				incorrect();
+			}
+			timer.cancel();
+			progressTimer.cancel();
 
-			// english word set next count
-			
-			//blind animation start
-			imageTimeBlindAni.cancel();
-			imageTimeBlindAni.start();
-			crocodileTimeAni.stop();
-			crocodileNewStart();
-			// string to drawable ID
-			
-			// ------- Compare Answer First!! ---------------
-			SQLiteDatabase db = mHelper.getWritableDatabase();
+			timer = new TotalTimer(TIME, 1000);
+			progressTimer = new ProgressTimer(TIME, 10);
 
-			// Here we get correct answer, so save to database as 'O'
-			int buttonTag = (Integer)v.getTag();
-			Log.d("correct Option", Integer.toString(correctOption));
-			if (buttonTag == correctOption) {
-				try {
-					//Cursor cs = db.rawQuery("UPDATE dic SET xo='O' WHERE name='" + englishWords.get(wordCount) + "'", null);
-					ContentValues cv = new ContentValues();
-					cv.put("xo", "O");
-					db.update("dic", cv, "name='"+ englishWords.get(wordCount) +"'", null);
-					Log.d("------- save word o --------", englishWords.get(wordCount));
-					
-					if(timeSpent<=3) {
-						finalAnswerForRequest+="2";
-					} else {
-						finalAnswerForRequest+="1";
-					}
+			timer.start();
+			progressTimer.start();
 
-					
-				} catch (Exception e) {
-					e.printStackTrace();
+		}
+	}
+
+	private void correct() {
+		comboCount++;
+		cntCorrect++;
+		bestScore.setText(cntCorrect+""); 
+
+		correctImg.setVisibility(View.VISIBLE);
+		try{
+			ContentValues row = new ContentValues();
+			row.put("xo", "O");
+			db.update("dic", row, "name='" + wordList.get(qCount).getWord()+"'", null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		new Handler().postDelayed(resetWord, 500);
+		if(comboCount > 0){
+			comboImg.setImageResource(R.drawable.weekly_1_img_combo);
+			comboAni.start();
+		}
+
+		finalAnswerForRequest+="1";
+	}
+
+	private void incorrect(){
+		disableAndStop();
+		if(comboCount > 0){
+			comboList = comboList + "-" + comboCount;
+		}
+		comboCount = -1;
+		incorrectImg.setVisibility(View.VISIBLE);
+		try{
+			ContentValues row = new ContentValues();
+			row.put("xo", "X");
+			db.update("dic", row, "name='" + wordList.get(qCount).getWord()+"'", null);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		new Handler().postDelayed(resetWord, 500);
+
+		finalAnswerForRequest+="0";
+	}
+	private void goNextActivity(){
+		if(comboCount > 0){
+			comboList = comboList + "-" + comboCount;
+		}
+
+		SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putString("testResult", finalAnswerForRequest);
+		editor.apply();
+
+		Intent intent = new Intent(getApplicationContext(), StudyTestFinish.class);
+		intent.putExtra("combo", comboList);
+		intent.putExtra("lastHigh", lastHigh);
+		startActivity(intent);
+		finish();
+	}
+
+	private void disableAndStop(){
+		option1.setClickable(false);
+		option2.setClickable(false);
+		option3.setClickable(false);
+		option4.setClickable(false);
+	}
+
+	private class TotalTimer extends CountDownTimer{
+
+		public TotalTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onFinish() {	//time up
+			//time's up effect and end activity
+			cntSolvedAnswer++;
+
+			if(cntSolvedAnswer < 10){
+				setWord();
+				this.start();
+			}else{
+				goNextActivity();
+			}
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			if(millisUntilFinished < 6000){	
+				redBack.setVisibility(View.VISIBLE);
+				new Handler().postDelayed(redTime, 500);
+
+				if(millisUntilFinished < 2000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_1);
+					timeAni.start();
+				}else if(millisUntilFinished < 3000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_2);
+					timeAni.start();
+				}else if(millisUntilFinished < 4000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_3);
+					timeAni.start();
+				}else if(millisUntilFinished < 5000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_4);
+					timeAni.start();
+				}else if(millisUntilFinished < 6000){
+					timeImg.setImageResource(R.drawable.weekly_1_text_time_5);
+					timeAni.start();
 				}
-			} else {
-				finalAnswerForRequest+="0";
 			}
-			// ------- Compare Answer First!! ---------------
+		}
 
-			wordCount++;
-			
-			// Setup Label
-			//String imageID = "test_9_image_number_"+(wordCount+1);
-			//int resID = getResources().getIdentifier(imageID , "drawable", getPackageName());
-			//pageNumber.setBackgroundResource(resID);
+	}
 
-			// Setup Words
-			if (wordCount <= cntMaxWords-1) {
-				pageNumber.setText((wordCount + 1)+" / "+ cntMaxWords);
-				setupTestWords(wordCount);
-				startTime = 10000;
-				startTimeCount(startTime);
-			} else if (wordCount == cntMaxWords) {
-				// Send Final Request to Server
-				Log.d("funny result: -----", finalAnswerForRequest);
-				SharedPreferences sp = getSharedPreferences("StudyLevelInfo", 0);
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putString("testResult", finalAnswerForRequest);
-				editor.apply();
-				
-				stopTimeCount();
-				isTestFinish = true;
-				Intent intent = new Intent(getApplicationContext(), StudyTestMockFinish.class);
-				startActivity(intent);
-				finish();
-			}
+	private class ProgressTimer extends CountDownTimer{
 
+		public ProgressTimer(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+		}
+
+		@Override
+		public void onFinish() {
+			this.start();
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			circularProgress.setProgress((int) ((TIME - millisUntilFinished) / 10));
 		}
 	}
-	
 
-	
-	
-	private void setupTestWords(int count)
-	{
-		enWordText.setText(englishWords.get(count));
-		
-		int ran = new Random().nextInt(4);
-		Log.e("ran number ------ ", Integer.toString(ran));
-		
-		if (ran == 0) {
-			select1.setText(optionOne.get(count));
-			select2.setText(optionTwo.get(count));
-			select3.setText(optionThree.get(count));
-			select4.setText(optionFour.get(count));
-			correctOption = 1;
-		} else if (ran == 1) {
-			select1.setText(optionTwo.get(count));
-			select2.setText(optionOne.get(count));
-			select3.setText(optionThree.get(count));
-			select4.setText(optionFour.get(count));
-			correctOption = 2;
-		} else if (ran == 2) {
-			select1.setText(optionTwo.get(count));
-			select2.setText(optionThree.get(count));
-			select3.setText(optionOne.get(count));
-			select4.setText(optionFour.get(count));
-			correctOption = 3;
-		} else if (ran == 3) {
-			select1.setText(optionTwo.get(count));
-			select2.setText(optionThree.get(count));
-			select3.setText(optionFour.get(count));
-			select4.setText(optionOne.get(count));
-			correctOption = 4;
-		}
-	}
-	
 	@Override
-	public void onDestroy()
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
+
+	@Override
+	public void onBackPressed(){
+		finish();
+	}
+
+	@Override
+	public void onDestroy(){
 		super.onDestroy();
 		mHelper.close();
 	}
-	
+
 	@Override
-	protected void onStart()
-	{
+	protected void onStart(){
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
-		FlurryAgent.logEvent("MockTest Activity");
-	    EasyTracker.getInstance(this).activityStart(this);
+		EasyTracker.getInstance(this).activityStart(this);
 	}
-	 
+
 	@Override
-	protected void onStop()
-	{
+	protected void onStop(){
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
-	    EasyTracker.getInstance(this).activityStop(this);
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 }

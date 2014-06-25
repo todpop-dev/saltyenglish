@@ -34,6 +34,15 @@
             android:layout_height="0dp"
             android:layout_weight="650" >
 
+            <TextView
+                android:id="@+id/tv_test_renewal_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#F1F1CC"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:textStyle="bold"/>
+            
             <ImageView
                 android:id="@+id/iv_test_renewal_time"
                 android:layout_width="wrap_content"
@@ -218,29 +227,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_test_renewal_tutorial"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#7f000000"
-        android:clickable="true"
-        android:padding="16dp" >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:src="@drawable/weekly_tutorial_img_all" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/weekly_btn_tutorial_confirm"
-            android:onClick="onClickTuto" />
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_test_renewal_timesup"

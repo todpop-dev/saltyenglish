@@ -77,8 +77,6 @@ public class StudyTestRenewal extends TypefaceActivity {
 	private static Runnable redTime;
 	private static Runnable goNext;
 
-	RelativeLayout tutorial;
-
 	LinearLayout timesUp;
 	ImageView timesUpImg;
 	Animation timesUpAni;
@@ -157,8 +155,6 @@ public class StudyTestRenewal extends TypefaceActivity {
 		comboAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_combo_ani);
 		comboImg.setAnimation(comboAni);
 
-		tutorial = (RelativeLayout)findViewById(R.id.rl_test_renewal_tutorial);
-
 		timesUp = (LinearLayout)findViewById(R.id.ll_test_renewal_timesup);
 		timesUpImg = (ImageView)findViewById(R.id.iv_test_renewal_timseup);
 		timesUpAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_timesup_ani);
@@ -193,6 +189,7 @@ public class StudyTestRenewal extends TypefaceActivity {
 		SharedPreferences studyInfo = getSharedPreferences("studyInfo", 0);
 		tmpStageAccumulated = studyInfo.getInt("tmpStageAccumulated", 1);
 		getTestWords();
+		
 	}
 
 	private void getTestWords()
@@ -217,6 +214,8 @@ public class StudyTestRenewal extends TypefaceActivity {
 					wordList.add(new Word(word, mean, incor1, incor2, incor3));
 				}
 			}
+
+			setWord();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,17 +226,17 @@ public class StudyTestRenewal extends TypefaceActivity {
 	public void onResume(){
 		super.onResume();
 
-		if(timeLeft != 0){
+		//if(timeLeft != 0){
 //			timer = new TotalTimer(timeLeft, 1000);
 //			progressTimer = new ProgressTimer(timeLeft, 10);
 			timer = new TotalTimer(TIME, 1000);
 			progressTimer = new ProgressTimer(TIME, 10);
 			timer.start();
 			progressTimer.start();
-		} else{
+		/*} else{
 			timer = new TotalTimer(TIME, 1000);
 			progressTimer = new ProgressTimer(TIME, 10);
-		}
+		}*/
 
 	}
 	@Override
@@ -301,9 +300,8 @@ public class StudyTestRenewal extends TypefaceActivity {
 			option4.setClickable(true);
 		} else{	//finish test
 			if(cntSolvedAnswer >= 10){
-				timesUp.setVisibility(View.VISIBLE);
-				timesUpAni.start();
-				new Handler().postDelayed(goNext, 2500);
+				goNextActivity();
+				//new Handler().postDelayed(goNext, 2500);
 			}
 		}
 	}
@@ -345,8 +343,10 @@ public class StudyTestRenewal extends TypefaceActivity {
 			e.printStackTrace();
 		}
 		new Handler().postDelayed(resetWord, 500);
-		comboImg.setImageResource(R.drawable.weekly_1_img_combo);
-		comboAni.start();
+		if(comboCount > 0){
+			comboImg.setImageResource(R.drawable.weekly_1_img_combo);
+			comboAni.start();
+		}
 
 		finalAnswerForRequest+="1";
 	}
@@ -393,13 +393,6 @@ public class StudyTestRenewal extends TypefaceActivity {
 		option4.setClickable(false);
 	}
 
-	public void onClickTuto(View v){
-		tutorial.setVisibility(View.GONE);
-		setWord();
-		timer.start();
-		progressTimer.start();
-	}
-
 	private class TotalTimer extends CountDownTimer{
 
 		public TotalTimer(long millisInFuture, long countDownInterval) {
@@ -415,9 +408,11 @@ public class StudyTestRenewal extends TypefaceActivity {
 				setWord();
 				this.start();
 			}else{
-				timesUp.setVisibility(View.VISIBLE);
+				/*timesUp.setVisibility(View.VISIBLE);
 				timesUpAni.start();
-				new Handler().postDelayed(goNext, 2500);
+				new Handler().postDelayed(goNext, 2500);*/
+
+				goNextActivity();
 			}
 		}
 

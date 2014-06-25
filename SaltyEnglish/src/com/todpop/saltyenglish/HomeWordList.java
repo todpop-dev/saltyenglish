@@ -651,15 +651,9 @@ public class HomeWordList extends TypefaceActivity {
 			String keyword = searchText.getText().toString();
 			String url = "http://todpop.co.kr/api/studies/search_word.json?word="+keyword;
 			new SerachWord().execute(url);
-<<<<<<< HEAD
 		}
 		else
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.wordlist_search_no), Toast.LENGTH_LONG).show();
-=======
-		} else {
-			Toast.makeText(getApplicationContext(), "한글자 이상을 입력해주세요.", Toast.LENGTH_LONG).show();
-		}
->>>>>>> 973b6e944df67d252ecb1ddae4084703a65952a1
 	}
 
 	// Change Word position

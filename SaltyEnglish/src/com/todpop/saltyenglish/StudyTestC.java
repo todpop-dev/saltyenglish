@@ -418,7 +418,8 @@ public class StudyTestC extends TypefaceActivity {
 	private void getTestWords()
 	{
 		SQLiteDatabase db = mHelper.getWritableDatabase();
-
+		db.delete("flip", null, null);
+		
 		try {
 			
 			// It should be 66 words 11 sets
