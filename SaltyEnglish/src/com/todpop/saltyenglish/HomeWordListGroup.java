@@ -86,10 +86,10 @@ public class HomeWordListGroup extends TypefaceActivity {
 				ContentValues cv = new ContentValues();
 				cv.put("name", etPopupNewGroupTitle.getText().toString());
 				db.insert("word_groups", null, cv);
-
-				Intent intent = new Intent(getApplicationContext(),HomeWordListRenewal.class);
-				intent.putExtra("groupName", cv.getAsString("name"));
-				startActivity(intent);
+				popupNewGroup.dismiss();
+				
+				initGroupList();
+				adapter.notifyDataSetChanged();
 			}
 		});
 		lvGroups.setOnItemClickListener(new OnItemClickListener() {

@@ -351,6 +351,12 @@ public class StudyHome extends TypefaceActivity {
 		Intent intent = new Intent(getApplicationContext(), HomeWordListGroup.class);
 		startActivity(intent);
 	}
+	
+	//사이드 메뉴 작업을 위한 더미 버튼,
+	public void forTest(View v){
+		Intent intent = new Intent(getApplicationContext(), HomeMoreGoal.class);
+		startActivity(intent);
+	}
 
 	// Check if Application is installed
 	private boolean checkIsAppInstalled (String uri)

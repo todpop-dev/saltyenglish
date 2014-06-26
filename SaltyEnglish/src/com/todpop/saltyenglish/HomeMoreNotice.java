@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -122,8 +123,9 @@ public class HomeMoreNotice extends TypefaceActivity {
 								textView.setLayoutParams(lp);
 								textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 								textView.setPadding(70, 20, 0, 20);
+								textView.setBackgroundResource(R.drawable.faq_img_answerbox);
 								textView.setTextColor(Color.rgb(0, 0, 0));
-								textView.setTextSize(19);
+								textView.setTextSize(12);
 								setFont(textView);
 								return textView;
 							}
@@ -154,12 +156,14 @@ public class HomeMoreNotice extends TypefaceActivity {
 							public View getGroupView(int groupPosition, boolean isExpanded,
 									View convertView, ViewGroup parent)
 							{
-								LinearLayout ll = new LinearLayout(HomeMoreNotice.this);
-								ll.setOrientation(0);
-								TextView textView = getTextView();
-								textView.setText(getGroup(groupPosition).toString());				
-								ll.addView(textView);			
-								return ll;
+								if(convertView == null){
+									convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.notice_item, null);
+								}
+								
+								((TextView)convertView.findViewById(R.id.tv_notice_item_title)).setText(getGroup(groupPosition).toString());
+								convertView.findViewById(R.id.iv_notice_item_arrow).setSelected(isExpanded);
+								
+								return convertView;
 							}
 							@Override
 							public boolean isChildSelectable(int groupPosition, int childPosition)

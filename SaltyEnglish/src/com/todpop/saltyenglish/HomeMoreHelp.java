@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 public class HomeMoreHelp extends TypefaceActivity {
-	
+
 	//declare define popup view
 	PopupWindow popupWindow;
 	View popupview;
@@ -59,7 +60,7 @@ public class HomeMoreHelp extends TypefaceActivity {
 		popupWindow = new PopupWindow(popupview, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);
 		setFont(popupText);
-		
+
 		new GetHelp().execute("http://todpop.co.kr/api/app_infos/get_helps.json");
 	}
 
@@ -141,6 +142,7 @@ public class HomeMoreHelp extends TypefaceActivity {
 								textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 								textView.setPadding(70, 20, 0, 20);
 								textView.setTextColor(Color.rgb(0, 0, 0));
+								textView.setBackgroundResource(R.drawable.faq_img_answerbox);
 								textView.setTextSize(15);
 								setFont(textView);
 								return textView;
@@ -173,12 +175,13 @@ public class HomeMoreHelp extends TypefaceActivity {
 							public View getGroupView(int groupPosition, boolean isExpanded,
 									View convertView, ViewGroup parent)
 							{
-								LinearLayout ll = new LinearLayout(HomeMoreHelp.this);
-								ll.setOrientation(0);
-								TextView textView = getTextView();
-								textView.setText(getGroup(groupPosition).toString());				
-								ll.addView(textView);			
-								return ll;
+								if(convertView == null){
+									convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.notice_item, null);
+								}
+
+								((TextView)convertView.findViewById(R.id.tv_notice_item_title)).setText(getGroup(groupPosition).toString());
+								convertView.findViewById(R.id.iv_notice_item_arrow).setSelected(isExpanded);
+								return convertView;
 							}
 							@Override
 							public boolean isChildSelectable(int groupPosition, int childPosition)
@@ -222,15 +225,15 @@ public class HomeMoreHelp extends TypefaceActivity {
 		super.onStart();
 		FlurryAgent.onStartSession(this, "ZKWGFP6HKJ33Y69SP5QY");
 		FlurryAgent.logEvent("Help");
-	    EasyTracker.getInstance(this).activityStart(this);
+		EasyTracker.getInstance(this).activityStart(this);
 	}
-	 
+
 	@Override
 	protected void onStop()
 	{
 		super.onStop();		
 		FlurryAgent.onEndSession(this);
-	    EasyTracker.getInstance(this).activityStop(this);
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 	public void onClickAsk(View view){
 		popupText.setText(getResources().getString(R.string.home_more_help_info));

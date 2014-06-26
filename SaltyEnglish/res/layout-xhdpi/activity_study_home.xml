@@ -200,6 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
+                    android:onClick="forTest"
                     android:background="@drawable/studyhome_drawable_btn_mypage" />
             </RelativeLayout>
         </LinearLayout>

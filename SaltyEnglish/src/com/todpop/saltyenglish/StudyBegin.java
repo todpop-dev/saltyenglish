@@ -52,10 +52,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -127,8 +127,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 	// Start Intro Button
 	ImageButton introBtn;
-
-	ImageView lowBanner;
 
 	// CPD image view
 	SharedPreferences studyInfo;
@@ -205,11 +203,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 		point9 = (ImageView)findViewById(R.id.studybigin_id_point9);
 		point10 = (ImageView)findViewById(R.id.studybigin_id_point10);
 		// End of Saving TMP data to Shared Preference
-
-		lowBanner = (ImageView)findViewById(R.id.studybegin_id_banner);
-		if(tmpCategory == 3){
-			lowBanner.setImageResource(R.drawable.study_8_img_kingkong);
-		}
 
 		// Add Intro Button
 		introBtn = (ImageButton)findViewById(R.id.studybegin_id_intro_button);
@@ -386,6 +379,67 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 		View rootView;
 		Animation animation;
+		
+		class ReviewListItem{
+			String word;
+			String name;
+			
+			public ReviewListItem(String word, String name){
+				this.word = word;
+				this.name = name;
+			}
+		}
+		
+		class ReviewListAdapter extends BaseAdapter{
+			
+			class ViewHolder{
+				TextView tvWord;
+				TextView tvName;
+			}
+			
+			ArrayList<ReviewListItem> arrItems;
+			
+			public ReviewListAdapter(ArrayList<ReviewListItem> arrItems){
+				this.arrItems = arrItems;
+			}
+			
+			@Override
+			public int getCount() {
+				return arrItems.size();
+			}
+
+			@Override
+			public ReviewListItem getItem(int position) {
+				return arrItems.get(position);
+			}
+
+			@Override
+			public long getItemId(int position) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				ViewHolder holder;
+				if(convertView == null){
+					holder = new ViewHolder();
+					convertView = LayoutInflater.from(getActivity()).inflate(R.layout.review_item, null);
+					holder.tvName = (TextView) convertView.findViewById(R.id.tv_review_item_name);
+					holder.tvWord = (TextView) convertView.findViewById(R.id.tv_review_item_mean);
+					convertView.setTag(holder);
+				}else{
+					holder = (ViewHolder) convertView.getTag();
+				}
+				
+				ReviewListItem item = getItem(position);
+				holder.tvName.setText(item.name);
+				holder.tvWord.setText(item.word);
+				
+				return convertView;
+			}
+			
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -461,6 +515,21 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 			} else {
 				rootView = inflater.inflate(R.layout.fragment_study_begin_finish, container, false);
+				ListView lvReviews = (ListView)rootView.findViewById(R.id.lv_study_begin_finish_words);
+				ArrayList<ReviewListItem> reviews = new ArrayList<ReviewListItem>();
+				for(int i=0;i<curJsonWords.length();i++){
+					try {
+						reviews.add(new ReviewListItem(
+								curJsonWords.getJSONObject(i).getString("name"),
+								curJsonWords.getJSONObject(i).getString("mean")
+								));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				ReviewListAdapter reviewAdapter = new ReviewListAdapter(reviews); 
+				lvReviews.setAdapter(reviewAdapter);
 				
 			}
 
@@ -543,48 +612,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 	
 	}
 	
-	class ReviewListItem{
-		String word;
-		String name;
-	}
-	
-	class ReviewListAdapter extends BaseAdapter{
-		class ViewHolder{
-			TextView tvWord;
-			TextView tvName;
-		}
-		
-		ArrayList<ReviewListItem> arrItems;
-		
-		public ReviewListAdapter(ArrayList<ReviewListItem> arrItems){
-			this.arrItems = arrItems;
-		}
-		
-		@Override
-		public int getCount() {
-			return arrItems.size();
-		}
-
-		@Override
-		public Object getItem(int position) {
-			return arrItems.get(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-	}
-
-
 	private class GetWord extends AsyncTask<String, Void, JSONObject> 
 	{
 		DefaultHttpClient httpClient ;

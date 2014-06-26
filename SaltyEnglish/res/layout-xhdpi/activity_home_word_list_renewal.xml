@@ -19,10 +19,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="17dp"
-            android:background="@drawable/wordlist_btn_back"
+            android:background="@drawable/common_btn_back"
             android:onClick="onClickBack" />
 
         <TextView
+            android:id="@+id/tv_wordlist_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

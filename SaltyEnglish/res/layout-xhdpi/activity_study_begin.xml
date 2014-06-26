@@ -3,7 +3,7 @@
     android:id="@+id/studybegin_id_main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/study_8_bg_lemon" >
+    android:background="@drawable/study_1_bg" >
 
     <!-- Back Button -->
 
@@ -25,6 +25,7 @@
             android:layout_height="0dp"
             android:layout_weight="45"
             android:gravity="center"
+            android:layout_marginBottom="22dp"
             android:orientation="horizontal" >
 
             <ImageView
@@ -124,20 +125,6 @@
                 android:src="@drawable/study_8_image_indicator_blue_off" />
         </LinearLayout>
         <!-- page point -->
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="102" >
-
-            <ImageView
-                android:id="@+id/studybegin_id_banner"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/study_8_img_saltyeng" />
-        </RelativeLayout>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
@@ -156,6 +143,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:background="@drawable/study_1_bg_yellowbar"
             android:layout_weight="90" >
 
             <Button
@@ -164,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="6dp"
-                android:background="@drawable/rg_drawable_btn_back"
+                android:background="@drawable/common_btn_back"
                 android:onClick="onClickBack" />
         </RelativeLayout>
 

@@ -110,6 +110,10 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.todpop.saltyenglish.HomeMoreGoal"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.todpop.saltyenglish.HomeMoreSetting"
             android:label="@string/title_activity_home_more_setting"
             android:screenOrientation="portrait" >

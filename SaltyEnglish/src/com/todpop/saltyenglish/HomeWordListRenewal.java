@@ -81,6 +81,7 @@ public class HomeWordListRenewal extends TypefaceActivity {
 	private Object findViewById;
 	private ImageView ivPopupNewGroupCancel;
 	private ImageView ivPopupNewGroupSave;
+	private TextView tvTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,7 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		btnCard = (Button) findViewById(R.id.btn_wordlist_card);
 		mainLayout = (LinearLayout)findViewById(R.id.ll_home_word_list);
 
+		tvTitle = (TextView)findViewById(R.id.tv_wordlist_title);
 		lvWordList = (ListView)findViewById(R.id.lv_wordlist);
 
 		llEditBar = (LinearLayout)findViewById(R.id.ll_wordlist_edit_bar);
@@ -114,6 +116,8 @@ public class HomeWordListRenewal extends TypefaceActivity {
 		displaySize = new Point();
 		getWindowManager().getDefaultDisplay().getSize(displaySize);
 		initWords();
+		
+		tvTitle.setText(groupName);
 	}
 
 	private void initPopupView() {

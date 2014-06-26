@@ -129,6 +129,8 @@ public class WordListTestRenewal extends TypefaceActivity {
 		Bundle extras = getIntent().getExtras();
 		groupName = extras.getString("testGroupName");
 		testSize = extras.getInt("testListSize");
+		Log.e("testGroupName",groupName+"");
+		Log.e("testSize",testSize+"");
 
 		setContentView(R.layout.activity_study_test_renewal);
 
@@ -169,7 +171,6 @@ public class WordListTestRenewal extends TypefaceActivity {
 		timesUpAni = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.weekly_pop_timesup_ani);
 		timesUpImg.setAnimation(timesUpAni);
 
-
 		wordList = new ArrayList<Word>();
 
 		mHelper = new WordDBHelper(this);
@@ -201,7 +202,13 @@ public class WordListTestRenewal extends TypefaceActivity {
 	private void getTestWords()
 	{
 		SQLiteDatabase db = mHelper.getReadableDatabase();
-		String query= "SELECT name, mean FROM mywords WHERE group_name='" + groupName + "' ORDER BY RANDOM() LIMIT "+testSize;
+		String query="";
+		if(groupName.equals("전체 단어")){
+			query = "SELECT name, mean FROM mywords ORDER BY RANDOM()";
+			
+		}else{
+			query = "SELECT name, mean FROM mywords WHERE group_name='" + groupName + "' ORDER BY RANDOM() LIMIT "+testSize;	
+		}
 		Log.e("Start",query);
 		try {
 			Cursor cursor = db.rawQuery(query, null);
