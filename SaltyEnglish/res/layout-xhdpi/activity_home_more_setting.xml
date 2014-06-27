@@ -59,6 +59,7 @@
                 android:layout_weight="1" />
 
             <ImageView
+                android:id="@+id/iv_setting_mypicture"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_alignParentLeft="true"
@@ -68,19 +69,19 @@
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="@drawable/setting_img_blindphoto" />
+                android:src="@drawable/setting_img_blindphoto" />
 
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:background="@drawable/sidebar_img_photoline" />
+                android:src="@drawable/sidebar_img_photoline" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/setting_btn_camera"
+                android:src="@drawable/setting_btn_camera"
                 android:onClick="setMyPicture" />
         </RelativeLayout>
 
