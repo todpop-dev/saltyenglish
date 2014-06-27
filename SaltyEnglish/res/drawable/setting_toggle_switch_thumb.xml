@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/setting_btn_onoff_circle" android:state_enabled="false"/>
+    <item android:drawable="@drawable/setting_btn_onoff_circle" android:state_pressed="true"/>
+    <item android:drawable="@drawable/setting_btn_onoff_circle" android:state_checked="true"/>
+    <item android:drawable="@drawable/setting_btn_onoff_circle"/>
+
+</selector>

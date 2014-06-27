@@ -1,188 +1,266 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_home_more_help"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_pinkpattern"
+    android:background="@drawable/faq_bg"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="90" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/common_bgimg_setting" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/faq_bg_navybar" >
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10.5dp"
-            android:background="@drawable/rg_drawable_btn_back"
-            android:onClick="onClickBack" />
-    </RelativeLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10.5dp"
+                android:background="@drawable/common_btn_back"
+                android:onClick="onClickBack" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="환경설정"
+                android:textColor="#ffffff"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1190"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingLeft="17dp"
-        android:paddingRight="17dp" >
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="78" />
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp" >
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="225"
-            android:background="@drawable/store_52_image_alarmtext" >
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp" >
 
-            <CheckBox
-                android:id="@+id/home_more_setting_id_alarm_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="9dp"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/home_more_setting_btn_alarm"
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/sidebar_img_basicphoto" />
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/setting_img_blindphoto" />
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/sidebar_img_photoline" />
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/setting_btn_camera"
+                android:onClick="setMyPicture" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/et_setting_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/setting_img_nicknamebox"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="짭짤한영어"
+            android:textColor="#000000" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:id="@+id/rl_setting_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/setting_img_section_bigbox"
+            android:orientation="vertical"
+            android:padding="10dp" >
+
+            <ImageView
+                android:id="@+id/iv_setting_alarm_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/setting_text_alarm" />
+
+            <Switch
+                android:id="@+id/sw_setting_alarm_onoff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:maxHeight="10dp"
+                android:maxWidth="100dp"
+                android:minHeight="10dp"
+                android:minWidth="10dp"
+                android:switchMinWidth="50dp"
+                android:textOff=" "
+                android:textOn=" "
+                android:thumb="@drawable/setting_toggle_switch_thumb"
+                android:track="@drawable/setting_toggle_switch_track" />
+
+            <ImageView
+                android:id="@+id/iv_setting_alarm_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_setting_alarm_title"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/setting_text_alarmsub" />
+
+            <LinearLayout
+                android:id="@+id/ll_setting_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_setting_alarm_subtitle"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/store_52_drop_time"
-                android:gravity="left"
-                android:onClick="setStudyAlarm"
-                android:paddingTop="7dp"
-                android:textSize="30dp" />
+                android:background="@drawable/setting_img_section_clockbox"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/tv_setting_alarm_time_front"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textColor="#19b3e8"
+                    android:textSize="40dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" : "
+                    android:textColor="#000000"
+                    android:textSize="40dp" />
+
+                <TextView
+                    android:id="@+id/tv_setting_alarm_time_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:textColor="#19b3e8"
+                    android:textSize="40dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:onClick="setAlarmTime"
+                    android:src="@drawable/setting_btn_clock" />
+            </LinearLayout>
         </RelativeLayout>
 
         <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="58" />
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="72"
-            android:background="@drawable/store_52_image_popuptext"
-            android:paddingRight="15dp" >
+            android:layout_weight="1" />
 
-            <CheckBox
-                android:id="@+id/home_more_setting_id_popup_box"
+        <RelativeLayout
+            android:id="@+id/rl_setting_popup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/setting_img_section_smallbox"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/setting_text_popup" />
+
+            <Switch
+                android:id="@+id/sw_setting_popup_onoff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox"
-                android:enabled="false" />
+                android:maxHeight="10dp"
+                android:maxWidth="100dp"
+                android:minHeight="10dp"
+                android:minWidth="10dp"
+                android:switchMinWidth="50dp"
+                android:textOff=" "
+                android:textOn=" "
+                android:thumb="@drawable/setting_toggle_switch_thumb"
+                android:track="@drawable/setting_toggle_switch_track" />
         </RelativeLayout>
 
         <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="58" />
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="72"
-            android:background="@drawable/store_52_image_alarmbelltext"
-            android:paddingRight="15dp" >
+            android:layout_weight="1" />
 
-            <CheckBox
+        <RelativeLayout
+            android:id="@+id/rl_setting_init"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/setting_img_section_smallbox"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/setting_text_reset" />
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox"
-                android:enabled="false" />
+                android:background="@drawable/setting_btn_reset"
+                android:onClick="initStudyInfo" />
         </RelativeLayout>
 
         <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="58" />
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="72"
-            android:background="@drawable/store_52_image_bgmtext"
-            android:paddingRight="15dp" >
+            android:layout_weight="1" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox"
-                android:enabled="false" />
-        </RelativeLayout>
-
-        <View
+        <ImageView
+            android:id="@+id/iv_setting_save"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="58" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="72"
-            android:background="@drawable/store_52_image_soundtext"
-            android:paddingRight="15dp" >
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox"
-                android:enabled="false" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="58" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="72"
-            android:background="@drawable/store_52_image_locktext"
-            android:paddingRight="15dp" >
-
-            <CheckBox
-                android:id="@+id/home_more_setting_id_locker_box"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/store_52_btn_setting_off"
-                android:button="@drawable/homemoresetting_drawable_checkbox" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="238" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/setting_btn_save"
+            android:onClick="saveSetting" />
     </LinearLayout>
 
 </LinearLayout>

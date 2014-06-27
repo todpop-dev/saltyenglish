@@ -354,7 +354,7 @@ public class StudyHome extends TypefaceActivity {
 	
 	//사이드 메뉴 작업을 위한 더미 버튼,
 	public void forTest(View v){
-		Intent intent = new Intent(getApplicationContext(), HomeMoreGoal.class);
+		Intent intent = new Intent(getApplicationContext(), HomeMoreSetting.class);
 		startActivity(intent);
 	}
 

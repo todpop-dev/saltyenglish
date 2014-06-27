@@ -97,7 +97,7 @@
                                 android:layout_centerInParent="true"
                                 android:background="@android:color/transparent"
                                 android:onClick="addGoal"
-                                android:src="@drawable/goal_btn_up_normal" />
+                                android:src="@drawable/goal_btn_up" />
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -112,7 +112,7 @@
                                 android:layout_centerInParent="true"
                                 android:background="@android:color/transparent"
                                 android:onClick="subGoal"
-                                android:src="@drawable/goal_btn_down_normal" />
+                                android:src="@drawable/goal_btn_down" />
                         </RelativeLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -124,7 +124,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="19dp"
-                android:background="@drawable/goal_btn_goal_normal"
+                android:background="@drawable/goal_btn_save"
                 android:onClick="setGoal" />
         </RelativeLayout>
     </LinearLayout>
