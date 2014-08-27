@@ -6,46 +6,43 @@
     android:background="@drawable/com_main_bg" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="10dp"
         android:orientation="vertical" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1073" >
-        </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:text="현재 누적 지급 장학금"
+            android:textColor="#302b28"
+            android:textSize="15dp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="207" >
-
-            <TextView
-                android:id="@+id/main_id_total_reward_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="22.5dp"
-                android:layout_centerHorizontal="true"
-                android:gravity="right|center_vertical"
-                android:text="Loading..."
-                android:textColor="#FAF8DF"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-            <!--
-                 <ImageView
-                android:id="@+id/main_id_loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true" />
-            -->
-
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/main_id_total_reward_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2.5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:text="Loading..."
+            android:textColor="#302b28"
+            android:textSize="15dp" />
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="47dp" />
 
 </RelativeLayout>

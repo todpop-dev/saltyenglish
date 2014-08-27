@@ -1,8 +1,5 @@
 package com.todpop.saltyenglish;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.http.HttpEntity;
 
 import com.facebook.Session;
@@ -15,28 +12,19 @@ import com.todpop.saltyenglish.db.PronounceDBHelper;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,9 +34,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -116,34 +101,6 @@ public class MainActivity extends TypefaceActivity
 			}
 		}
 		
-		// Force create Database
-		
-		SQLiteDatabase db = mHelper.getReadableDatabase();
-		try {
-			Log.e("STEVEN", "Main Activity line 98");
-			db.execSQL("CREATE TABLE mywordtest ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT, mean TEXT, xo TEXT);");
-			db.execSQL("CREATE TABLE dic ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT, mean TEXT, example_en TEXT, example_ko TEXT, phonetics TEXT, picture INTEGER, image_url TEXT, stage INTEGER, xo TEXT);");
-			db.execSQL("CREATE TABLE mywords ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT NOT NULL UNIQUE, mean TEXT);");
-			db.execSQL("CREATE TABLE flip ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-						"name TEXT, mean TEXT, xo TEXT);");
-			db.execSQL("CREATE TABLE cpxInfo ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"name TEXT NOT NULL UNIQUE, ad_id INTEGER, ad_type INTEGER, reward INTEGER, installed TEXT);");
-			Log.e("STEVEN", "Main Activity line 107");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		SQLiteDatabase pDB = pHelper.getReadableDatabase();
-		try {
-			pDB.execSQL("CREATE TABLE pronounce ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + 
-					"word TEXT NOT NULL UNIQUE, version TEXT, category INTEGER);");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		if(setting.getBoolean("lockerEnabled", true)){
 			Intent i = new Intent(this, LockScreenService.class);
 			startService(i);
@@ -156,82 +113,12 @@ public class MainActivity extends TypefaceActivity
 		finish();
 	}
 	
-	/*private class SignInAPI extends AsyncTask<String, Void, JSONObject> 
-	{
-        @Override
-        protected JSONObject doInBackground(String... urls) 
-        {
-        	JSONObject json = null;
-
-        	try
-        	{  
-        		String postURL = urls[0];
-        		HttpPost post = new HttpPost(postURL);
-        		HttpParams httpParams = new BasicHttpParams();
-        		
-        		List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-        		String user_id = rgInfo.getString("mem_id", "");
-        		params.add(new BasicNameValuePair("user_id", user_id));
-        		
-        		UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
-        		post.setEntity(ent);
-        		
-        		HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
-        		HttpConnectionParams.setSoTimeout(httpParams, 5000);
-        		DefaultHttpClient httpClient = new DefaultHttpClient(httpParams);
-        		HttpResponse response = httpClient.execute(post);
-        		
-        		HttpEntity resEntity = response.getEntity();
-
-        		if (resEntity != null)
-        		{    
-        			json = new JSONObject(EntityUtils.toString(resEntity)); 
-        			Log.d("[Register-1] user info check", json.toString());				        	
-        			return json;
-        		}
-        		return json;
-        	}
-        	catch (Exception e)
-        	{
-			    Log.e("STEVEN", e.toString());
-            	return json;
-			}
-        	
-        }
-        
-        @Override
-        protected void onPostExecute(JSONObject result) {
-        	try {
-        		if(result != null){
-        			if (result.getBoolean("status")==true) {
-	        			new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-	        		} else {
-	        			// something wrong (ex: user deleted) = logout
-	        			settingEdit = setting.edit();
-	        			settingEdit.putString("isLogin","NO");
-	        			settingEdit.apply();
-	        			
-	        			finish();
-	        		}
-        		}
-        		else{
-					popupText.setText(R.string.popup_common_timeout);
-					popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-        		}
-        	}catch (Exception e) {
-        	}
-        }
-	}*/
-	
 	// -------------- get stage info ---------------------------------------------------------------
 
 	private class GetStageInfoAPI extends AsyncTask<String, Void, JSONObject> {
 		@Override
 		protected JSONObject doInBackground(String... urls) 
 		{
-			Log.d("M A","183");
-			
 			JSONObject result = null;
 			try
 			{
@@ -249,8 +136,6 @@ public class MainActivity extends TypefaceActivity
 				HttpResponse httpResponse = httpClient.execute(httpGet);
 				HttpEntity resEntity = httpResponse.getEntity();
 
-				Log.d("M A","194");
-				
 				if (resEntity != null)
 				{    
 					result = new JSONObject(EntityUtils.toString(resEntity)); 
@@ -261,7 +146,6 @@ public class MainActivity extends TypefaceActivity
 			}
 			catch (Exception e)
 			{
-			    Log.e("STEVEN", e.toString());
             	return null;
 			}
 		}
@@ -270,8 +154,6 @@ public class MainActivity extends TypefaceActivity
 		protected void onPostExecute(JSONObject json) {
 			try {
 				if(json != null){
-					Log.d("FbNickname","243");
-					
 					if(json.getBoolean("status")) {
 						
 						String stage_info = json.getJSONObject("data").getString("stage");
@@ -366,7 +248,6 @@ public class MainActivity extends TypefaceActivity
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			
 			
 			SQLiteDatabase oldDB = mHelper.getWritableDatabase();
 			SQLiteDatabase newDB = pHelper.getWritableDatabase();
