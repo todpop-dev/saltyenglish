@@ -48,8 +48,9 @@
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:layout_centerHorizontal="true"
+                    android:background="#ffffff"
                     android:layout_marginTop="61dp"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"/>
             </RelativeLayout>
 
             <RelativeLayout

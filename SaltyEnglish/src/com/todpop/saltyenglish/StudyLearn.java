@@ -385,7 +385,8 @@ public class StudyLearn extends TypefaceFragmentActivity {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 									getActivity().startActivity(myIntent);
 								} else {
-									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									Intent myIntent = new Intent(getActivity(), StudyBeginReBuild.class);
+									myIntent.putExtra("tmpStageAccumulated", currentBtnClickStage);
 									getActivity().startActivity(myIntent);
 								}
 	
@@ -524,7 +525,8 @@ public class StudyLearn extends TypefaceFragmentActivity {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 									getActivity().startActivity(myIntent);
 								} else {
-									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									Intent myIntent = new Intent(getActivity(), StudyBeginReBuild.class);
+									myIntent.putExtra("tmpStageAccumulated", currentBtnClickStage);
 									getActivity().startActivity(myIntent);
 								}
 								
@@ -679,7 +681,8 @@ public class StudyLearn extends TypefaceFragmentActivity {
 									Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 									getActivity().startActivity(myIntent);
 								} else {
-									Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+									Intent myIntent = new Intent(getActivity(), StudyBeginReBuild.class);
+									myIntent.putExtra("tmpStageAccumulated", currentBtnClickStage);
 									getActivity().startActivity(myIntent);
 								}
 							} else {
@@ -800,7 +803,8 @@ public class StudyLearn extends TypefaceFragmentActivity {
 								Intent myIntent = new Intent(getActivity(), StudyTestC.class);
 								getActivity().startActivity(myIntent);
 							} else {
-								Intent myIntent = new Intent(getActivity(), StudyBegin.class);
+								Intent myIntent = new Intent(getActivity(), StudyBeginReBuild.class);
+								myIntent.putExtra("tmpStageAccumulated", currentBtnStage);
 								getActivity().startActivity(myIntent);
 							}
 						} else {

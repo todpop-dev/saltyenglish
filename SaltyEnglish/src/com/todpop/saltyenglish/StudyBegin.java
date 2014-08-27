@@ -424,7 +424,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 				int pageNum = studyBeginArgs.getInt("studyStartPage");
 				switch(pageNum)
-
 				{
 				case 0:
 					wordOn.setBackgroundResource(R.drawable.study_8_img_number_1);
@@ -1337,9 +1336,6 @@ public class StudyBegin extends TypefaceFragmentActivity {
 
 	public void onClickBack(View view)
 	{
-		//		Intent intent = new Intent(getApplicationContext(), StudyLearn.class);
-		//		startActivity(intent);
-		//		finish();
 		finish();
 	}
 

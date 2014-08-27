@@ -91,7 +91,6 @@
             android:layout_above="@id/studyfinish_id_gotest"
             android:layout_centerHorizontal="true"
             android:background="@drawable/studytestfinish_drawable_btn_facebook_share"
-            android:onClick="publishAdBtn"
             android:visibility="invisible" />
 
         <RelativeLayout
