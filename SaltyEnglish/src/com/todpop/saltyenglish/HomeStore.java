@@ -407,7 +407,9 @@ public class HomeStore extends TypefaceActivity {
 			StoreListViewItem item = (StoreListViewItem) arSrc.get(position);
 			
 			holder.name1.setText(item.title);
+			holder.name1.setSelected(true);
 			holder.name2.setText(item.provider);
+			holder.name2.setSelected(true);
 			holder.coins.setText(item.price);
 			
 			if(holder.item != null){
