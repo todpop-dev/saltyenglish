@@ -86,6 +86,8 @@ public class LockScreenActivity extends TypefaceActivity {
 	
 	SharedPreferences rgInfo;
 	String userId;
+	SharedPreferences setting;
+	private boolean lockerVibeEnabled;
 	
 	static FileManager fm;
 	
@@ -106,7 +108,6 @@ public class LockScreenActivity extends TypefaceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_locker);
-		Log.e("STEVEN", "onCreate");
 		getWindow().addFlags(
 				WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
 						| WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -119,6 +120,9 @@ public class LockScreenActivity extends TypefaceActivity {
 
 		rgInfo = getSharedPreferences("rgInfo",0);
 		userId = rgInfo.getString("mem_id", "1");
+		
+        setting = getSharedPreferences("setting", 0);
+        lockerVibeEnabled = setting.getBoolean("lockerVibeEnabled", true);
 		
 		verViewPager = (VerticalViewPager) findViewById(R.id.locker_id_viertical_view_pager);
 		verViewPager.setAdapter(new DummyAdapter(getFragmentManager()));
@@ -504,7 +508,8 @@ public class LockScreenActivity extends TypefaceActivity {
 			if (fromUser) {
 				if (progress >= 85) {
 					if (sideFlag == false) {
-						vibe.vibrate(50);
+						if(lockerVibeEnabled)
+							vibe.vibrate(50);
 						sideFlag = true;
 					}
 					seekBar.setThumb(none);
@@ -512,7 +517,8 @@ public class LockScreenActivity extends TypefaceActivity {
 					sideFlag = true;
 				} else if (progress <= 15) {
 					if (sideFlag == false) {
-						vibe.vibrate(50);
+						if(lockerVibeEnabled)
+							vibe.vibrate(50);
 						sideFlag = true;
 					}
 					seekBar.setThumb(none);

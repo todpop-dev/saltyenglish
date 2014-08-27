@@ -46,6 +46,7 @@ public class HomeMoreSetting extends TypefaceActivity {
 	CheckBox alarmCheckBox;
 	CheckBox popupCheckBox;
 	CheckBox lockerCheckBox;
+	CheckBox lockerVibeCheckBox;
 	
 	NotificationManager notificationManager;
 	AlarmManager alarmManager;
@@ -85,6 +86,7 @@ public class HomeMoreSetting extends TypefaceActivity {
 		alarmCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_alarm_box);
 		popupCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_popup_box);
 		lockerCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_locker_box);
+		lockerVibeCheckBox = (CheckBox)findViewById(R.id.home_more_setting_id_locker_vibe_box);
 		
 		if(stdInfo.getBoolean("alarm", false)){
 			alarmCheckBox.setChecked(true);
@@ -103,6 +105,10 @@ public class HomeMoreSetting extends TypefaceActivity {
 
 		if(setting.getBoolean("lockerEnabled", true)){
 			lockerCheckBox.setChecked(true);
+		}
+		
+		if(setting.getBoolean("lockerVibeEnabled", true)){
+			lockerVibeCheckBox.setChecked(true);
 		}
 		
 		alarmCheckBox.setOnCheckedChangeListener(
@@ -170,6 +176,22 @@ public class HomeMoreSetting extends TypefaceActivity {
 						settingEdit.apply();
 					}
 			});
+		
+		lockerVibeCheckBox.setOnCheckedChangeListener(
+				new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						if(isChecked){
+							settingEdit.putBoolean("lockerVibeEnabled", true);
+						}
+						else{
+							settingEdit.putBoolean("lockerVibeEnabled", false);				
+						}
+						settingEdit.apply();
+					}
+				}
+		);
+		
 	}
 		   
 

@@ -182,7 +182,29 @@
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_weight="238" />
+            android:layout_weight="58" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="72"
+            android:background="@drawable/store_52_image_vibration"
+            android:paddingRight="15dp" >
+
+            <CheckBox
+                android:id="@+id/home_more_setting_id_locker_vibe_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/store_52_btn_setting_off"
+                android:button="@drawable/homemoresetting_drawable_checkbox" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="108" />
     </LinearLayout>
 
 </LinearLayout>
