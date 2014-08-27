@@ -1,6 +1,8 @@
 package com.todpop.saltyenglish;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +17,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,10 +36,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.format.DateFormat;
-import android.text.format.Time;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -50,9 +50,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.flurry.android.FlurryAgent;
 import com.todpop.api.FileManager;
 import com.todpop.api.LockInfo;
-import com.todpop.api.LockScreenClock;
 import com.todpop.api.TypefaceActivity;
-import com.todpop.api.LockScreenClock.OnClockTickListener;
 import com.todpop.api.request.LockScreenDownloadImage;
 import com.todpop.api.VerticalViewPager;
 import com.todpop.saltyenglish.db.LockerDBHelper;
@@ -97,6 +95,10 @@ public class LockScreenActivity extends TypefaceActivity {
 	SQLiteDatabase db;
 	
 	//MainApplication mainApp;
+	BroadcastReceiver timeTickReceiver;	
+	private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+	private final SimpleDateFormat apmFormat = new SimpleDateFormat("a");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("M.dd cccc");
 	
 	Vibrator vibe;
 
@@ -142,6 +144,19 @@ public class LockScreenActivity extends TypefaceActivity {
 		lockList = new ArrayList<LockInfo>();
 		engList = new ArrayList<String>();
 		korList = new ArrayList<String>();
+		
+		setTime();
+		
+		timeTickReceiver = new BroadcastReceiver(){
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if(intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0){
+					setTime();
+				}
+			}
+		};
+		
+		registerReceiver(timeTickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
 
 		verViewPager.setOnPageChangeListener(new OnPageChangeListener(){
 
@@ -194,37 +209,29 @@ public class LockScreenActivity extends TypefaceActivity {
 		});	
 	}
 	
+	private void setTime(){
+		Date currentDate = new Date();
+		String time = timeFormat.format(currentDate);
+		if(time.charAt(0) == '0'){
+			StringBuilder sb = new StringBuilder(time);
+			sb.deleteCharAt(0);
+			time = sb.toString();
+		}
+		hhmm.setText(time);
+		String apm = apmFormat.format(currentDate);
+		if(apm.equals(getResources().getString(R.string.locker_am))){
+			apm = "AM";
+		}
+		else if(apm.equals(getResources().getString(R.string.locker_pm))){
+			apm = "PM";
+		}
+		aa.setText(apm);
+		date.setText(dateFormat.format(currentDate));
+	}
+	
 	@Override
 	protected void onResume(){
 		super.onResume();
-
-		Log.e("STEVEN", "onResume");
-		LockScreenClock clock = new LockScreenClock(this, 0);
-		clock.AddClockTickListener(new OnClockTickListener(){
-			@Override
-			public void OnSecondTick(Time currentTime){
-				String time = DateFormat.format("hh:mm", currentTime.toMillis(true)).toString();
-				if(time.charAt(0) == '0'){
-					StringBuilder sb = new StringBuilder(time);
-					sb.deleteCharAt(0);
-					time = sb.toString();
-				}
-				hhmm.setText(time);
-				String apm = DateFormat.format("a", currentTime.toMillis(true)).toString();
-				if(apm.equals(getResources().getString(R.string.locker_am))){
-					apm = "AM";
-				}
-				else if(apm.equals(getResources().getString(R.string.locker_pm))){
-					apm = "PM";
-				}
-				aa.setText(apm);
-				date.setText(DateFormat.format("M.dd EEEE", currentTime.toMillis(true)).toString());
-			}
-			@Override
-			public void OnMinuteTick(Time currentTime){
-				
-			}
-		});
 		
 		db = lHelper.getReadableDatabase();
 		Cursor find = db.rawQuery("SELECT * FROM latest order by category asc", null);
