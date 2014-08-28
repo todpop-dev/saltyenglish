@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.todpop.api.LoadingDialog;
 import com.todpop.api.TypefaceFragmentActivity;
 
 import android.os.AsyncTask;
@@ -83,6 +84,8 @@ public class StudyLearn extends TypefaceFragmentActivity {
 	static RelativeLayout relative;
 	static TextView popupText;
 
+	private static LoadingDialog loadingDialog;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -173,6 +176,7 @@ public class StudyLearn extends TypefaceFragmentActivity {
  		
 		new SendPivotTime().execute("http://todpop.co.kr/api/app_infos/get_fast_pivot_time.json");
 		
+		loadingDialog = new LoadingDialog(this);
 	}
 	
 	//--- request class ---
@@ -263,12 +267,12 @@ public class StudyLearn extends TypefaceFragmentActivity {
 	}
 
 	public static class LevelFragment extends Fragment {
-
+		View rootView;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_study_learn, container, false);
+			rootView = inflater.inflate(R.layout.fragment_study_learn, container, false);
 
 
 
@@ -288,7 +292,7 @@ public class StudyLearn extends TypefaceFragmentActivity {
 			levelText2.setText("level  "+Integer.toString(labelNumber+1));
 			levelText3.setText("level  "+Integer.toString(labelNumber+2));
 
-			adjustLevelStageButtonStatus(rootView, labelNumber);
+			adjustLevelStageButtonStatus(labelNumber);
 
 
 			//((TextView) rootView.findViewById(android.R.id.text1)).setText(
@@ -296,7 +300,7 @@ public class StudyLearn extends TypefaceFragmentActivity {
 			return rootView;
 		}
 		
-		public void adjustLevelStageButtonStatus(View rootView, final int firstLevel)
+		public void adjustLevelStageButtonStatus(final int firstLevel)
 		{
 			
 			
@@ -750,7 +754,10 @@ public class StudyLearn extends TypefaceFragmentActivity {
 			{
 				currentBtnStage = stageCount;
 			}
-			
+			@Override
+			protected void onPreExecute(){
+				loadingDialog.show();
+			}
 			@Override
 			protected JSONObject doInBackground(String... urls) 
 			{
@@ -786,6 +793,7 @@ public class StudyLearn extends TypefaceFragmentActivity {
 			@Override
 			protected void onPostExecute(JSONObject json) {
 				try {
+					loadingDialog.dissmiss();
 					Log.d("CHECK STAGE CLEAR JSON RESPONSE ---- ", json.toString());				        	
 
 					if(json.getBoolean("status")==true) {
