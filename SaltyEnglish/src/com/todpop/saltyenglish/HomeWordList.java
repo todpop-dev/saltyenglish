@@ -2,9 +2,7 @@ package com.todpop.saltyenglish;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -14,7 +12,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -659,6 +656,7 @@ public class HomeWordList extends TypefaceActivity {
 		if (searchText.getText().toString().length() != 0) {
 			listArray.clear();
 			String keyword = searchText.getText().toString();
+			keyword = keyword.replace(' ', '+');
 			String url = "http://todpop.co.kr/api/studies/search_word.json?word="+keyword;
 			new SerachWord().execute(url);
 			
@@ -732,7 +730,10 @@ public class HomeWordList extends TypefaceActivity {
 		for (int i=0; i<deleteWords.size(); i++) {
 			SQLiteDatabase db = mHelper.getWritableDatabase();
 			try {
-				db.delete("mywords", "name='" + deleteWords.get(i) + "'", null);
+				String word = deleteWords.get(i);
+				if(word.contains("'"))
+					word = word.replace("'", "''");
+				db.delete("mywords", "name='" + word + "'", null);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
