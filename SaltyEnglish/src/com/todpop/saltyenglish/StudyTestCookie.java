@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -85,8 +86,10 @@ public class StudyTestCookie extends Activity {
 	ImageView ivRedLightBoxTop;
 	ImageView ivRedLightBoxBot;
 
-	Button btnLeft;
-	Button btnRight;
+	ImageButton btnLeft;
+	ImageButton btnRight;
+	TextView txtLeft;
+	TextView txtRight;
 
 	TextView tvNumber;
 
@@ -124,8 +127,10 @@ public class StudyTestCookie extends Activity {
 
 		ivLeftArm = (ImageView)findViewById(R.id.iv_test_cookie_left_arm);
 		ivRightArm = (ImageView)findViewById(R.id.iv_test_cookie_right_arm);
-		btnLeft = (Button)findViewById(R.id.btn_test_cookie_left);
-		btnRight = (Button)findViewById(R.id.btn_test_cookie_right);
+		btnLeft = (ImageButton)findViewById(R.id.btn_test_cookie_left_btn);
+		btnRight = (ImageButton)findViewById(R.id.btn_test_cookie_right_btn);
+		txtLeft = (TextView)findViewById(R.id.btn_test_cookie_left_txt);
+		txtRight = (TextView)findViewById(R.id.btn_test_cookie_right_txt);
 		tvNumber = (TextView)findViewById(R.id.tv_test_cookie_number);
 
 		rlTimebar = (RelativeLayout)findViewById(R.id.rl_test_cookie_timebar);
@@ -189,9 +194,9 @@ public class StudyTestCookie extends Activity {
 		TextView targetCookie = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1); // bottom cookie
 		String[] targetInfos = (String[]) targetCookie.getTag();
 		int numRand = (int)(Math.random()*2)+1; // set Text in Left or Right Btn
-		btnLeft.setText(targetInfos[numRand]);
+		txtLeft.setText(targetInfos[numRand]);
 		numRand = numRand == 1 ? 2 : 1; // reverse, 1 to 2 , 2 to 1
-		btnRight.setText(targetInfos[numRand]);
+		txtRight.setText(targetInfos[numRand]);
 		cntTotalEmergedCookie++;
 	}
 
@@ -339,8 +344,8 @@ public class StudyTestCookie extends Activity {
 		TextView target = (TextView) llTestCookies.getChildAt(llTestCookies.getChildCount()-1);
 		String[] infos = (String[]) target.getTag();
 		String correctAnswer = infos[1];
-		if(direction == -1) return btnLeft.getText().toString().equals(correctAnswer);
-		else if(direction == 1) return btnRight.getText().toString().equals(correctAnswer);
+		if(direction == -1) return txtLeft.getText().toString().equals(correctAnswer);
+		else if(direction == 1) return txtRight.getText().toString().equals(correctAnswer);
 		else return false;
 	}
 
@@ -363,7 +368,7 @@ public class StudyTestCookie extends Activity {
 		if(cntNonstopCorrect>=11) showSuperCombo();
 		else if(cntNonstopCorrect>=2) showCombo();
 		tvNumber.setText(cntCorrectCookie+"");
-		updateCorrectOrWrong("O",((Button)v).getText().toString());
+		updateCorrectOrWrong("O",((TextView)v).getText().toString());
 	}
 
 	private void showCombo() {
@@ -381,7 +386,7 @@ public class StudyTestCookie extends Activity {
 		cntNonstopCorrect = 0;
 		rlTopView.setBackgroundResource(R.drawable.test_cookie_bg_top);
 		showWrongAnswer();
-		updateCorrectOrWrong("X",((Button)v).getText().toString());
+		updateCorrectOrWrong("X",((TextView)v).getText().toString());
 	}
 
 	private void showWrongAnswer() {
@@ -395,8 +400,8 @@ public class StudyTestCookie extends Activity {
 	}
 
 	public void onLeftBtnClick(View v) {	
-		if(chkIsCorrectAnswer(-1)) correctAnswer(v);
-		else wrongAnswer(v);
+		if(chkIsCorrectAnswer(-1)) correctAnswer(txtLeft);
+		else wrongAnswer(txtLeft);
 
 		ivLeftArm.startAnimation(animLeftArm);
 		btnLeft.setClickable(false);
@@ -404,8 +409,8 @@ public class StudyTestCookie extends Activity {
 	}
 
 	public void onRightBtnClick(View v) {	
-		if(chkIsCorrectAnswer(1)) correctAnswer(v);
-		else wrongAnswer(v);
+		if(chkIsCorrectAnswer(1)) correctAnswer(txtRight);
+		else wrongAnswer(txtRight);
 
 		ivRightArm.startAnimation(animRightArm);
 		btnLeft.setClickable(false);
@@ -426,6 +431,7 @@ public class StudyTestCookie extends Activity {
 			TextView v = (TextView) LayoutInflater.from(con).inflate(R.layout.textview_study_test_cookie, null);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, 30, 0, 0);
+			params.weight = 1;
 			v.setBackgroundResource(R.drawable.test_cookie_img_biscuit_1 + color);
 			v.setText(word);
 			v.setLayoutParams(params);
@@ -511,13 +517,13 @@ public class StudyTestCookie extends Activity {
 			ivCntdown.startAnimation(animCntdown);
 
 			ivRedLightBoxTop.setVisibility(View.VISIBLE);
-//			ivRedLightBoxBot.setVisibility(View.VISIBLE);	
+			ivRedLightBoxBot.setVisibility(View.VISIBLE);	
 
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					ivRedLightBoxTop.setVisibility(View.GONE);
-//					ivRedLightBoxBot.setVisibility(View.GONE);
+					ivRedLightBoxBot.setVisibility(View.GONE);
 				}
 			}, 500);
 		}
