@@ -1,5 +1,10 @@
 package com.todpop.saltyenglish;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -9,10 +14,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.animation.ObjectAnimator;
 import android.content.ContentValues;
@@ -651,6 +661,13 @@ public class HomeWordList extends TypefaceActivity {
 			String keyword = searchText.getText().toString();
 			String url = "http://todpop.co.kr/api/studies/search_word.json?word="+keyword;
 			new SerachWord().execute(url);
+			
+			try {
+				String daum = "http://alldic.daum.net/search.do?q=" + URLEncoder.encode(keyword, "UTF-8") + "&dic=eng&search_first=Y";
+				new SearchFromInternet().execute(daum);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		else
 			Toast.makeText(getApplicationContext(), getResources().getString(R.string.wordlist_search_no), Toast.LENGTH_LONG).show();
@@ -768,6 +785,52 @@ public class HomeWordList extends TypefaceActivity {
 		updateListView();
 	}
 
+	private class SearchFromInternet extends AsyncTask<String, Void, Boolean>{
+		@Override
+		protected Boolean doInBackground(String... urls) {
+			boolean hasResult = false;
+			try {
+				Document doc = Jsoup.connect(urls[0]).get();
+				Elements result = doc.select("div");
+				
+				for(Element insideResult : result){
+					if(insideResult.className().equals("wrap_search")){
+						
+						Elements a = insideResult.select("a");
+						
+						String eng = null;
+						String kor = null;
+						
+						for(Element aElement : a){
+							if(aElement.className().equals("link_txt")){
+								eng = aElement.text();
+							}
+						}
+						
+						Elements div = insideResult.select("div");
+						for(Element divElement : div){
+							if(divElement.className().equals("txt_means_KUEK")){
+								kor = divElement.text();
+							}
+						}
+						if(eng != null && kor != null){
+							HomeWordViewItem item = new HomeWordViewItem(eng, kor);
+							listArray.add(item);
+							hasResult = true;
+						}
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return hasResult;
+		}
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result)
+				updateListViewForSearchWord();
+		}
+	}
 	private class SerachWord extends AsyncTask<String, Void, JSONObject> {
 		DefaultHttpClient httpClient ;
 		@Override

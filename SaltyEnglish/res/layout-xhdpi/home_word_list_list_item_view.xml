@@ -2,22 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="20dp"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:paddingRight="20dp" >
 
-    <CheckBox
-        android:id="@+id/home_word_list_id_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/wordbook_9_btn_checkbox_off"
-        android:button="@drawable/popup_view_home_word_list_chegebox" />
+    <RelativeLayout
+        android:layout_width="30dp"
+        android:layout_height="match_parent" >
+
+        <CheckBox
+            android:id="@+id/home_word_list_id_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/wordbook_9_btn_checkbox_off"
+            android:button="@drawable/popup_view_home_word_list_chegebox" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="25dp"
         android:orientation="horizontal" >
 
         <TextView
@@ -33,20 +36,20 @@
             android:id="@+id/home_word_list_id_word2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:textColor="#000000"
             android:textSize="17dp" />
-        <Button 
+
+        <Button
             android:id="@+id/ib_word_list_add_to_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/homewordlist_drawable_btn_add"
             android:layout_gravity="center"
+            android:background="@drawable/homewordlist_drawable_btn_add"
             android:onClick="addToListBtnHandler"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>
