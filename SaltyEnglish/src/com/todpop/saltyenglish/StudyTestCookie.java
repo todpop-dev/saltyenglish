@@ -154,7 +154,12 @@ public class StudyTestCookie extends Activity {
 			while(cursor.moveToNext()){
 				Log.e("INIT WORDS",cursor.getString(0)+" / "+cursor.getString(1) +" / "+cursor.getString(2));
 				// get wrong mean randomly except correct mean  
-				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 1", null);
+
+				String word = cursor.getString(1);
+				if(word.contains("'"));
+					word = word.replace("'", "''");
+					
+				Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + word + "' ORDER BY RANDOM() LIMIT 1", null);
 				otherCursor.moveToNext();
 				hashWords.put(cursor.getString(0), new String[]{cursor.getString(1),otherCursor.getString(0)});
 			}
@@ -351,11 +356,16 @@ public class StudyTestCookie extends Activity {
 
 	public void updateCorrectOrWrong(String XorO,String mean){
 		SQLiteDatabase db = mHelper.getWritableDatabase();
-		Cursor cursor = db.rawQuery("SELECT xo FROM dic WHERE mean='"+mean+"'", null);
+		
+		String word = mean;
+		if(word.contains("'"));
+			word = word.replace("'", "''");
+			
+		Cursor cursor = db.rawQuery("SELECT xo FROM dic WHERE mean='"+word+"'", null);
 		while(cursor.moveToNext()){
 			String xo = cursor.getString(0);
 			if(xo.equals("N") || xo.equals("O")) // N is First inited
-				db.execSQL("UPDATE dic SET xo='"+XorO+"' WHERE mean='"+mean+"'");
+				db.execSQL("UPDATE dic SET xo='"+XorO+"' WHERE mean='"+word+"'");
 //			else if(xo.equals("N")) 
 		}
 		

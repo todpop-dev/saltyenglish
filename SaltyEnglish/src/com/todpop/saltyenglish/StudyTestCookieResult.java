@@ -107,7 +107,6 @@ public class StudyTestCookieResult extends TypefaceActivity {
 
 		studyInfo = getSharedPreferences("studyInfo", 0);
 		int score = studyInfo.getInt("cookieTestScore", 0);
-		//		scoreView.setText(score+"쩜");
 
 		rewardView = (TextView)findViewById(R.id.study_test_result_id_score_view);
 		//level.setText(resultScore + " " +  getResources().getString(R.string.study_result_score_text));
@@ -427,7 +426,12 @@ public class StudyTestCookieResult extends TypefaceActivity {
 			// Check if word is in word list
 			try {
 				SQLiteDatabase db = mHelper.getWritableDatabase();
-				Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + arSrc.get(position).en + "'" , null);
+
+				String word = arSrc.get(position).en;
+				if(word.contains("'"));
+					word = word.replace("'", "''");
+					
+				Cursor c = db.rawQuery("SELECT * FROM mywords WHERE name='" + word + "'" , null);
 				if (c.getCount() > 0) {
 					wordListCB.setChecked(true);
 				} else {

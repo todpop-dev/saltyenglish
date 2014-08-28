@@ -39,6 +39,8 @@ public class DownloadAndPlayPronounce {
 		this.category = category;
 
 		pDB = pHelper.getWritableDatabase();
+		if(word.contains("'"));
+			word = word.replace("'", "''");
 		Cursor find = pDB.rawQuery("SELECT word, version FROM pronounce WHERE word=\'" + word + "\'", null);
 
 		if(find.getCount() > 0){

@@ -299,9 +299,14 @@ public class StudyTestWeeklyResult extends TypefaceActivity {
 
 			// Check if word is in word list
 			SQLiteDatabase db = mHelper.getWritableDatabase();
+
+			String word = arSrc.get(position).en;
+			if(word.contains("'"));
+				word = word.replace("'", "''");
+				
 			Cursor c = db.rawQuery(
 					"SELECT * FROM mywords WHERE name='"
-							+ arSrc.get(position).en + "'", null);
+							+ word + "'", null);
 			if (c.getCount() > 0) {
 				viewHolder.selectBtn.setChecked(true);
 			} else {

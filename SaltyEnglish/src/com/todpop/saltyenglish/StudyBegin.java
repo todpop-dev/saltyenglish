@@ -727,7 +727,12 @@ public class StudyBegin extends TypefaceFragmentActivity {
 								jsonObj.put("image_url", otherCursor.getString(6));
 
 								pDB = pHelper.getReadableDatabase();
-								Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + otherCursor.getString(0) + "'", null);
+
+								String word = otherCursor.getString(0);
+								if(word.contains("'"));
+									word = word.replace("'", "''");
+									
+								Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + word + "'", null);
 
 								if(soundCursor.getCount() > 0){
 									soundCursor.moveToFirst();
@@ -783,6 +788,11 @@ public class StudyBegin extends TypefaceFragmentActivity {
 									Log.i("STEVEN", "SELECT version FROM pronounce WHERE word='" + otherCursor2.getString(0) + "'");
 
 									pDB = pHelper.getReadableDatabase();
+
+									String word = otherCursor2.getString(0);
+									if(word.contains("'"));
+										word = word.replace("'", "''");
+										
 									Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + otherCursor2.getString(0) + "'", null);
 
 									if(soundCursor.getCount() > 0){
@@ -1084,6 +1094,10 @@ public class StudyBegin extends TypefaceFragmentActivity {
 			e.printStackTrace();
 		}
 		pDB = pHelper.getWritableDatabase();
+
+		if(word.contains("'"));
+			word = word.replace("'", "''");
+			
 		Cursor find = pDB.rawQuery("SELECT word, version FROM pronounce WHERE word=\'" + word + "\'", null);
 		//TODO Testing
 

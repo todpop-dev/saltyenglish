@@ -203,7 +203,10 @@ public class StudyTestRenewal extends TypefaceActivity {
 					String word = cursor.getString(0);
 					String mean = cursor.getString(1);
 
-					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
+
+					String tmpMean = mean.replace("'", "''");
+						
+					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + tmpMean + "' ORDER BY RANDOM() LIMIT 3", null);
 					otherCursor.moveToNext();
 					String incor1 = otherCursor.getString(0);
 					otherCursor.moveToNext();

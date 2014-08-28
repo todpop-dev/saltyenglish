@@ -394,7 +394,11 @@ public class StudyTestA extends TypefaceActivity {
 					englishWords.add(cursor.getString(0));
 					optionOne.add(cursor.getString(1));
 					
-					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + cursor.getString(1) + "' ORDER BY RANDOM() LIMIT 3", null);
+					String word = cursor.getString(1);
+					if(word.contains("'"));
+						word = word.replace("'", "''");	
+					
+					Cursor otherCursor = db.rawQuery("SELECT DISTINCT mean FROM dic WHERE mean <> '" + word + "' ORDER BY RANDOM() LIMIT 3", null);
 					otherCursor.moveToNext();
 					optionTwo.add(otherCursor.getString(0));
 					otherCursor.moveToNext();

@@ -222,7 +222,10 @@ public class DownloadPronounce extends AsyncTask<String, Void, JSONObject> {
                     	return;
                     }
 					db = pHelper.getWritableDatabase();
-					Cursor find = db.rawQuery("SELECT distinct word, version FROM pronounce WHERE word=\'" + wordList.get(i).getWord() + "\'", null);
+					String word = wordList.get(i).getWord();
+					if(word.contains("'"));
+						word = word.replace("'", "''");
+					Cursor find = db.rawQuery("SELECT distinct word, version FROM pronounce WHERE word=\'" + word + "\'", null);
 					if(find.moveToFirst()){
 						if(!wordList.get(i).getVersion().equals(find.getString(1))){
 							db.delete("pronounce", "word='" + wordList.get(i).getWord() + "'", null);

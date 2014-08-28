@@ -334,7 +334,12 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 				/*
 				 * save review words for study and test 
 				 */
-				Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + cursor.getString(0) + "'", null);
+
+				String word = cursor.getString(0);
+				if(word.contains("'"));
+					word = word.replace("'", "''");
+				
+				Cursor soundCursor = pDB.rawQuery("SELECT version FROM pronounce WHERE word='" + word + "'", null);
 
 				if(soundCursor.moveToFirst()){
 					words.add(new StudyBeginWord(cursor.getString(0), cursor.getString(1), cursor.getString(2)
