@@ -21,8 +21,11 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 
 public class HomeMore extends TypefaceActivity {
+	private int count = 0;
+	private ImageView makers;
 	
 	SharedPreferences rgInfo;
 	SharedPreferences.Editor rgInfoEdit;
@@ -31,6 +34,8 @@ public class HomeMore extends TypefaceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home_more);
+		
+		makers = (ImageView)findViewById(R.id.homemore_id_makers);
 		
 		rgInfo = getSharedPreferences("rgInfo",0);
 		rgInfoEdit = rgInfo.edit();
@@ -123,6 +128,17 @@ public class HomeMore extends TypefaceActivity {
 	{
 		Intent intent = new Intent(getApplicationContext(), HomeMoreNotice.class);
 		startActivity(intent);
+	}
+	
+	public void showMore(View view){
+		count++;
+		if(count >= 5){
+			makers.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	public void dismiss(View view){
+		makers.setVisibility(View.GONE);
 	}
 	
 	public void showAccountInfoActivity(View view)
