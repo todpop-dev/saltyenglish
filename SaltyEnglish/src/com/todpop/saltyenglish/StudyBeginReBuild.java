@@ -24,7 +24,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.AudioManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -101,6 +103,7 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 	
 	private LoadingDialog loadingDialog;
 	
+	private int threadDoneCnt = 0;
 	private boolean oneOfThreadIsDone = false;
 	
 	private boolean shareTried = false;
@@ -147,7 +150,41 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 		SharedPreferences rgInfo = getSharedPreferences("rgInfo",0);
 		userId = rgInfo.getString("mem_id", "0");
 		
-		new GetWord().execute("http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level);
+		final String wordUrl = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + stage + "&level=" + level;
+		final String wordUrl2 = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + (stage-1) + "&level=" + level;
+		final String wordUrl3 = "http://todpop.co.kr/api/studies/get_level_words.json?stage=" + (stage-2) + "&level=" + level;
+		
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			new GetWord(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wordUrl);
+			if(stage == 3 || stage == 6 || stage == 9)
+			{
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {new GetWord(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wordUrl2);}
+				}, 50);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {new GetWord(false).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wordUrl3);}
+				}, 50);
+			}
+		}
+		else
+		{
+			new GetWord(true).execute(wordUrl);
+			if(stage == 3 || stage == 6 || stage == 9)
+			{
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {new GetWord(false).execute(wordUrl2);}
+				}, 50);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {new GetWord(false).execute(wordUrl3);}
+				}, 50);
+			}
+		}
+		
 		new GetCPD().execute("http://todpop.co.kr/api/advertises/get_cpd_ad.json?user_id=" + userId);
 		
 		//popupview
@@ -160,10 +197,15 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 	}
 	
 	private class GetWord extends AsyncTask<String, Void, Boolean>{
+		boolean isMain = false;
+		
 		DefaultHttpClient httpClient ;
 		
 		WordDBHelper wHelper;
 		SQLiteDatabase db;
+		public GetWord(boolean isMain){
+			this.isMain = isMain;
+		}
 		@Override
 		protected Boolean doInBackground(String... urls) {
 			JSONObject result = null;
@@ -189,8 +231,8 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 					if(result.getBoolean("status") == true) {
 						wHelper = new WordDBHelper(StudyBeginReBuild.this);
 						db = wHelper.getWritableDatabase();
-						
-						db.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
+						if(isMain)
+							db.execSQL("DELETE FROM dic WHERE stage=" + tmpStageAccumulated + ";");
 						
 						JSONArray jsonWords = result.getJSONArray("data");
 						JSONObject jsonObj;
@@ -237,12 +279,21 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 			catch(Exception e){
 				
 			}
-			wHelper.close();
+			if((stage % 3) != 0)
+				wHelper.close();
+			else{
+				if(threadDoneCnt >= 2){
+					wHelper.close();
+				}
+				else{
+					threadDoneCnt++;
+				}
+			}
 			return false;
 		}
 		@Override
 		protected void onPostExecute(Boolean result){
-			if(result == true){
+			if(isMain && result){
 				if(oneOfThreadIsDone){
 					viewPager.setAdapter(new StudyBeginPagerAdapter(getSupportFragmentManager(), words, adType, hasHistory, reward, point, frontImg, backImg));
 					loadingDialog.dissmiss();
@@ -252,7 +303,6 @@ public class StudyBeginReBuild extends TypefaceFragmentActivity{
 				}
 			}
 			else{
-				//TODO show popup and kick back
 			}
 		}
 		private void jsonObjToWordsAndDB(JSONObject jsonObj){
