@@ -657,7 +657,9 @@ public class HomeWordList extends TypefaceActivity {
 			listArray.clear();
 			String keyword = searchText.getText().toString();
 			keyword = keyword.replace(' ', '+');
-			String url = "http://todpop.co.kr/api/studies/search_word.json?word="+keyword;
+			keyword = keyword.replace('"', '+');
+			
+			String url = "http://todpop.co.kr/api/studies/search_word.json?word=" + keyword;
 			new SerachWord().execute(url);
 			
 			try {
