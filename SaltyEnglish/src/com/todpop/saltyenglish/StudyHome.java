@@ -227,7 +227,6 @@ public class StudyHome extends TypefaceActivity {
 
 		//setting category ViewPager.
 		categoryPager = (ViewPager)findViewById(R.id.study_home_id_pager);
-		Log.i("STVEN", "407");
 		categoryPager.setAdapter(new StudyHomePagerAdapter(this));
 		categoryPager.setOffscreenPageLimit(3);
 		categoryPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
