@@ -520,17 +520,13 @@ public class RgRegisterEmailInfo extends TypefaceActivity {
 						
 						Log.d("RgRegisterEmailInfo","400");
 						Log.d("chk=",result.getJSONObject("data").getString("mem_id") + "     " + result.getJSONObject("data").getString("level_test"));
+
+						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
 						
-						if(result.getJSONObject("data").getInt("level_test")==0)
-						{
-							Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
-							startActivity(intent);
-							finish();
-						}
-						else
-						{
-							new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-						}
+						Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
+						startActivity(intent);
+						finish();
+						
 					} else {
 						doneBtn.setClickable(true);
 						int code = result.getInt("code");
@@ -608,10 +604,6 @@ public class RgRegisterEmailInfo extends TypefaceActivity {
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
 					studyInfoEdit.apply();
-					
-	    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-	    				startActivity(intent);
-						finish();
 				}
 				else
 				{

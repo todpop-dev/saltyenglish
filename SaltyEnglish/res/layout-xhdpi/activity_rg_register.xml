@@ -1,144 +1,188 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/id_rg_regster_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/common_bg_darkyellowpattern" >
+    android:background="@drawable/common_bg_darkyellowpattern"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-     <RelativeLayout
-        android:layout_width="360dp"
-        android:layout_height="640dp"
-        android:layout_centerInParent="true" >
-
-
-
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10.5dp"
-        android:layout_marginTop="10.5dp"
-        android:background="@drawable/rg_drawable_btn_back"
-        android:onClick="onClickBack" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="175.5dp"
-        android:background="@drawable/register_19_textbox_info" />
-
-    <ImageView
-        android:id="@+id/register_17_email_notice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="203dp"
-        android:textSize="14dp" />
-    
-    <TextView
-        android:id="@+id/register_17_no_mobile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="203dp"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:text="짭짤한영어는 현재 공기계에서\n회원가입이 불가능합니다."
-        android:textSize="14dp"
-        android:visibility="invisible"/>
-
-    <com.facebook.widget.LoginButton
-        xmlns:fb="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/register_id_facebook_btn"
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        fb:login_text=""
-        fb:logout_text="" />
+        android:layout_weight="90" >
 
-    <Button
-        android:id="@+id/register_id_facebook_btn_checkPoint"
+        <!-- back button -->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10.5dp"
+            android:background="@drawable/rg_drawable_btn_back"
+            android:onClick="onClickBack" />
+
+        <!-- title image -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/common_bgimg_register" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="210" />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="296.5dp"
-        android:enabled="false"
-        android:onClick="checkAgreementAndClickFB" />
-    
-    <Button
-        android:id="@+id/register_17_email_btn"
+        android:layout_height="0dp"
+        android:layout_weight="175" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/register_19_textbox_info" />
+
+        <ImageView
+            android:id="@+id/register_17_email_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/register_17_no_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="짭짤한영어는 현재 공기계에서\n회원가입이 불가능합니다."
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="80" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="140" >
+
+        <com.facebook.widget.LoginButton
+            xmlns:fb="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/register_id_facebook_btn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            fb:login_text=""
+            fb:logout_text="" />
+
+        <Button
+            android:id="@+id/register_id_facebook_btn_checkPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:onClick="checkAgreementAndClickFB" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="48dp"
+            android:layout_marginBottom="7dp"
+            android:src="@drawable/register_19_image_facebookman" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40" />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="370dp"
-        android:background="@drawable/rgregister_drawable_btn_email"
-        android:enabled="false"
-        android:onClick="showRgRegisterEmailActivity" />
+        android:layout_height="0dp"
+        android:layout_weight="140" >
 
-    <CheckBox
-        android:id="@+id/rg_register_id_checkbox"
+        <Button
+            android:id="@+id/register_17_email_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/rgregister_drawable_btn_email"
+            android:enabled="false"
+            android:onClick="showRgRegisterEmailActivity" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="37dp"
+            android:layout_marginBottom="7dp"
+            android:src="@drawable/register_19_image_emailman" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20" />
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="70.5dp"
-        android:layout_marginTop="431.5dp"
-        android:button="@drawable/rgregister_drawable_checkbox"
-        android:checked="true" />
+        android:layout_height="0dp"
+        android:layout_weight="55"
+        android:gravity="center"
+        android:orientation="horizontal" >
 
-    <ImageView
+        <CheckBox
+            android:id="@+id/rg_register_id_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/rgregister_drawable_checkbox"
+            android:checked="false" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/register_19_btn_agreement"
+            android:onClick="showProvisionActivity_user" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/register_19_btn_personalinfo"
+            android:onClick="showProvisionActivity_personal" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/register_19_text_agree" />
+    </LinearLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="101.5dp"
-        android:layout_marginTop="444.5dp"
-        android:background="@drawable/register_19_btn_agreement"
-        android:onClick="showProvisionActivity_user" />
+        android:layout_height="0dp"
+        android:layout_weight="365" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="138.5dp"
-        android:layout_marginTop="444.5dp"
-        android:background="@drawable/register_19_btn_personalinfo"
-        android:onClick="showProvisionActivity_personal" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="35dp"
+            android:src="@drawable/common_image_bgcharacter3" />
+    </RelativeLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="207.5dp"
-        android:layout_marginTop="444.5dp"
-        android:background="@drawable/register_19_text_agree" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="288dp"
-        android:layout_marginTop="279.5dp"
-        android:src="@drawable/register_19_image_facebookman" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="39.5dp"
-        android:layout_marginTop="349dp"
-        android:src="@drawable/register_19_image_emailman" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="35dp"
-        android:src="@drawable/common_image_bgcharacter3" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/common_bgimg_register" />
-
-
-
-
-
-     </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

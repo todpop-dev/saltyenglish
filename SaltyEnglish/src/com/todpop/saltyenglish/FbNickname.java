@@ -207,17 +207,11 @@ public class FbNickname extends TypefaceActivity {
 					rgInfoEdit.putString("facebook",json.getJSONObject("data").getString("facebook"));
 					rgInfoEdit.putString("mem_id", json.getJSONObject("data").getString("mem_id"));
 					rgInfoEdit.apply();
-					
-					if(json.getJSONObject("data").getInt("level_test")==0)
-					{
-						Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
-						startActivity(intent);
-					}
-					else
-					{
-						new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
-					}
-					
+
+					new GetStageInfoAPI().execute("http://todpop.co.kr/api/studies/get_stage_info.json?user_id=" + rgInfo.getString("mem_id",null));
+
+					Intent intent = new Intent(getApplicationContext(), RgRegisterTutorial.class);
+					startActivity(intent);					
 					finish();
 					
 				}else{		        
@@ -271,9 +265,6 @@ public class FbNickname extends TypefaceActivity {
 					String stage_info = json.getJSONObject("data").getString("stage");
 					studyInfoEdit.putString("stageInfo",stage_info);
 					studyInfoEdit.apply();
-					
-    				Intent intent = new Intent(getApplicationContext(), StudyHome.class);
-    				startActivity(intent);
 				}
 				else
 				{

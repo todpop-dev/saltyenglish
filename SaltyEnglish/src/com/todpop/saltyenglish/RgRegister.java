@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import com.todpop.api.LoadingDialog;
 import com.todpop.api.TypefaceActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,18 +26,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.*;
-import com.facebook.model.*;
 import com.facebook.widget.LoginButton;
 import com.flurry.android.FlurryAgent;
 import com.facebook.Request;
@@ -70,7 +64,7 @@ public class RgRegister extends TypefaceActivity {
     
 	PopupWindow popupWindow;
 	View popupview;
-	RelativeLayout relative;
+	LinearLayout relative;
 	TextView popupText;
 	
 	//loading progress dialog
@@ -101,7 +95,7 @@ public class RgRegister extends TypefaceActivity {
 		rgCheckbox = (CheckBox)findViewById(R.id.rg_register_id_checkbox);
 		
 		//popupview
-		relative = (RelativeLayout)findViewById(R.id.id_rg_regster_relative_layout);;
+		relative = (LinearLayout)findViewById(R.id.id_rg_regster_relative_layout);
 		popupview = View.inflate(this, R.layout.popup_view, null);
 		popupWindow = new PopupWindow(popupview,ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,true);
 		popupText = (TextView)popupview.findViewById(R.id.popup_id_text);

@@ -10207,7 +10207,7 @@ com.todpop.saltyenglish.RgRegister -> com.todpop.saltyenglish.RgRegister:
     android.widget.CheckBox rgCheckbox -> k
     android.widget.PopupWindow popupWindow -> l
     android.view.View popupview -> m
-    android.widget.RelativeLayout relative -> n
+    android.widget.LinearLayout relative -> n
     android.widget.TextView popupText -> o
     com.todpop.api.LoadingDialog loadingDialog -> p
     com.facebook.widget.LoginButton fb_btn -> q
