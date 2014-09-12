@@ -23,7 +23,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.todpop.api.LoadingDialog;
 import com.todpop.api.NoticeInfo;
-import com.todpop.api.TypefaceActivity;
+import com.todpop.api.TypefaceFragmentActivity;
 import com.todpop.saltyenglish.db.WordDBHelper;
 
 import android.net.Uri;
@@ -33,7 +33,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -42,6 +41,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
@@ -69,7 +69,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StudyHome extends TypefaceActivity {
+public class StudyHome extends TypefaceFragmentActivity {
 	boolean isOnSlide = false;
 
 	// CPI View show in return from study test
@@ -118,6 +118,9 @@ public class StudyHome extends TypefaceActivity {
 	ImageView popupImage;
 	TextView popupTitle;
 	TextView popupText;
+	
+	//reward popup
+	DialogFragment fragmentDialog;
 	
 	//loading progress dialog
 	LoadingDialog loadingDialog;
@@ -328,6 +331,10 @@ public class StudyHome extends TypefaceActivity {
 		//popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
 		popupTitle = (TextView)popupview.findViewById(R.id.popup_notice_id_content_title);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_content);
+		
+		//reward popup
+		fragmentDialog = RewardStopDialog.newInstance();
+		fragmentDialog.show(getSupportFragmentManager(), "noReward");
 		
 		setFont(popupTitle);
 		setFont(popupText);
