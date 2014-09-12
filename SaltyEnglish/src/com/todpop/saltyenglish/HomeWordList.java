@@ -223,12 +223,9 @@ public class HomeWordList extends TypefaceActivity {
 		listArray = new ArrayList<HomeWordViewItem>();
 		listView=(ListView)findViewById(R.id.home_word_list_id_list_view);
 
-		// Get Word List
-		initMyWords();
-
-		updateListView();
 	}
 	private void initMyWords() {
+		listArray.clear();
 		SQLiteDatabase db = mHelper.getWritableDatabase();
 
 		try {
@@ -247,6 +244,11 @@ public class HomeWordList extends TypefaceActivity {
 	{
 		super.onResume();
 
+		// Get Word List
+		initMyWords();
+
+		updateListView();
+		
 		com.facebook.AppEventsLogger.activateApp(this, "218233231697811");
 		cardAni = ObjectAnimator.ofFloat(card,"translationX",-size.x/2); 
 		cardAni.setDuration(500);
@@ -597,11 +599,22 @@ public class HomeWordList extends TypefaceActivity {
 	}
 
 	public void testBtn(View v) {
-		if (wordListSize != 0) {
-			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
-		} else {
+		SQLiteDatabase db = mHelper.getReadableDatabase();
+		Cursor c = db.rawQuery("SELECT COUNT(1) FROM dic", null);
+		
+		c.moveToFirst();
+		int size = c.getInt(0);
+		
+		if(wordListSize == 0){
 			noWordPopupText.setText(R.string.word_list_test_no_word);
 			noWordPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
+		}
+		else if(size < 3){
+			noWordPopupText.setText(R.string.word_list_test_no_word_in_dic);
+			noWordPopupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);			
+		}
+		else{
+			popupWindow.showAtLocation(relative, Gravity.CENTER, 0, 0);
 		}
 	}
 
