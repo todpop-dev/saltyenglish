@@ -118,14 +118,17 @@ public class StudyTestFinish extends TypefaceActivity {
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
 						+ rgInfo.getString("mem_id", "0"));
+
+		skipBtn.setEnabled(true);
+		skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 	}
 
 	private Runnable mLaunchTaskMain = new Runnable() {
 		public void run() {
 			marking.setVisibility(View.INVISIBLE);
 			markingDone.setVisibility(View.VISIBLE);
-			skipBtn.setEnabled(true);
-			skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
+			//skipBtn.setEnabled(true);
+			//skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 		}
 	};
 
@@ -256,7 +259,7 @@ public class StudyTestFinish extends TypefaceActivity {
 
 		@Override
 		public void onCompletion(MediaPlayer mp) {
-			skipBtn.setEnabled(false);
+			//skipBtn.setEnabled(false);
 			new SetCPDMlog()
 					.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
 							+ ad_id

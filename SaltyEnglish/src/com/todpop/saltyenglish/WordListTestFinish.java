@@ -119,6 +119,9 @@ public class WordListTestFinish extends TypefaceActivity {
 		
 		audio = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 		oldVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+		skipBtn.setEnabled(true);
+		skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 		
 		new GetCPDM()
 				.execute("http://todpop.co.kr/api/advertises/get_cpdm_ad.json?user_id="
@@ -131,8 +134,8 @@ public class WordListTestFinish extends TypefaceActivity {
 		public void run() {
 			marking.setVisibility(View.INVISIBLE);
 			markingDone.setVisibility(View.VISIBLE);
-			skipBtn.setEnabled(true);
-			skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
+			//skipBtn.setEnabled(true);
+			//skipBtn.setBackgroundResource(R.drawable.studytestfinish_drawable_btn_skip);
 		}
 	};
 	
@@ -262,7 +265,7 @@ public class WordListTestFinish extends TypefaceActivity {
 		
 		@Override
 		public void onCompletion(MediaPlayer mp) {
-			skipBtn.setEnabled(false);
+			//skipBtn.setEnabled(false);
 			Log.d("cpdm view_time----", String.valueOf(video_length));
 			new SetCPDMlog()
 			.execute("http://todpop.co.kr/api/advertises/set_cpdm_log.json?ad_id="
