@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -331,10 +333,15 @@ public class StudyHome extends TypefaceFragmentActivity {
 		//popupImage = (ImageView)popupview.findViewById(R.id.popup_notice_id_img);
 		popupTitle = (TextView)popupview.findViewById(R.id.popup_notice_id_content_title);
 		popupText = (TextView)popupview.findViewById(R.id.popup_notice_id_content);
-		
+
 		//reward popup
-		fragmentDialog = RewardStopDialog.newInstance();
-		fragmentDialog.show(getSupportFragmentManager(), "noReward");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+		Calendar cal = Calendar.getInstance();
+		int date = Integer.valueOf(dateFormat.format(cal.getTime()));
+		if(date >= 20140915){
+			fragmentDialog = RewardStopDialog.newInstance();
+			fragmentDialog.show(getSupportFragmentManager(), "noReward");
+		}
 		
 		setFont(popupTitle);
 		setFont(popupText);
